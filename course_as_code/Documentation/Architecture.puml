@@ -1,0 +1,152 @@
+@startuml CourseAsCode
+' Model to represent a moodle course
+' https://docs.moodle.org/405/de/Aufbau_einer_Moodle-Site
+
+package Model <<Frame>> {
+    class Course {
+        int id
+        String name
+        String shortName
+        List<Section> sections
+    }
+
+    class Section {
+        int id
+        String name
+        String description
+        List<Activity> activities
+    }
+
+    ' https://docs.moodle.org/405/en/Activities
+    package Activities <<Folder>> {
+        abstract class Activity {
+            int id
+            String name
+            String description
+        }
+
+        'Assignments - Enable teachers to grade and give comments on uploaded files and assignments created on and off line
+        class Assignment {
+            String openDate
+            String dueDate
+            String submissionType
+            int grade
+        }
+
+        'Forum - Allows participants to have asynchronous discussions
+        class Forum {
+            String type
+            String openDate
+            String closeDate
+            List<ForumPost> posts
+        }
+
+        class ForumPost {
+            String author
+            DateTime postDate
+            String content
+            List<ForumComment> comments
+        }
+
+        class ForumComment {
+            String author
+            DateTime commentDate
+            String content
+        }
+
+        'Quiz - Allows the teacher to design and set quiz tests, which may be automatically marked and feedback and/or to correct answers shown
+        class Quiz {
+            String openDate
+            String closeDate
+            int timeLimit
+            int grade
+            List<QuizQuestion> questions
+        }
+
+        abstract class QuizQuestion {
+            int id
+            String questionType
+            String title
+        }
+
+        class MultipleChoiceQuestion {
+            List<String> options
+            String correctAnswer
+        }
+
+        class TrueFalseQuestion {
+            boolean correctAnswer
+        }
+
+        class CodeRunnerQuestion {
+            String code
+            String language
+            List<CodeRunnerTestCase> testCases
+        }
+
+        class CodeRunnerTestCase {
+            String input
+            String output
+        }
+    }
+
+
+    ' https://docs.moodle.org/405/en/Resources
+    package Resources <<Folder>> {
+        abstract class Resource {
+            int id
+            String name
+            String description
+            String type
+        }
+
+        ' File - A picture, PDF file, spreadsheet, sound file, video file or any other file type. Where possible, the file will be displayed within the course interface; otherwise students will be prompted to download it.
+        class File {
+            int size
+            String fileType
+            String filePath
+        }
+
+        ' URL - For providing a web link as a course resource.
+        class URL {
+            String url
+        }
+    }
+}
+
+' A course consists of multiple sections
+Course "1" *-- "0..*" Section : contains
+
+' A section consists of multiple activities
+Section "1" *-- "0..*" Activity : contains
+
+' A section can contain multiple resources
+Section "1" *-- "0..*" Resource : contains
+
+' A forum can contain multiple posts
+Forum "1" *-- "0..*" ForumPost : contains
+
+' A forum post can contain multiple comments
+ForumPost "1" *-- "0..*" ForumComment : contains
+
+' A quiz contains one or multiple questions
+Quiz "1" *-- "1..*" QuizQuestion : contains
+
+' A code runner question contains one or multiple test cases
+CodeRunnerQuestion "1" *-- "0..*" CodeRunnerTestCase : contains
+
+' A quiz question can be a multiple choice, True/False or CodeRunner question
+QuizQuestion <|-- MultipleChoiceQuestion
+QuizQuestion <|-- TrueFalseQuestion
+QuizQuestion <|-- CodeRunnerQuestion
+
+' A resource can be a file or a URL
+Resource <|-- File
+Resource <|-- URL
+
+' An activity can be an assignment, forum or quiz
+Activity <|-- Assignment
+Activity <|-- Forum
+Activity <|-- Quiz
+
+@enduml
