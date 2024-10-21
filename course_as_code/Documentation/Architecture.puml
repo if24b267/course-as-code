@@ -114,6 +114,81 @@ package Model <<Frame>> {
     }
 }
 
+package Reader <<Frame>> {
+    Interface CourseReader {
+        Course Read(String path)
+    }
+
+    class Reader implements CourseReader {
+        
+    }
+
+    Interface IModelObjectReader<T, TFileObject> {
+        T Read(TFileObject fileObject)
+    }
+
+    class AssignmentReader implements IModelObjectReader {
+        
+    }
+
+    class ForumReader implements IModelObjectReader {
+        
+    }
+
+    class QuizReader implements IModelObjectReader {
+        
+    }
+
+    class FileReader implements IModelObjectReader {
+        
+    }
+
+    class URLReader implements IModelObjectReader {
+        
+    }
+}
+
+package Writer <<Frame>> {
+    Interface IWriter {
+        bool writeXML(Course course, String path)
+        bool writePDF(Course course, String path)
+        bool writeSCORM(Course course, String path)
+        bool writeHTML(Course course, String path)    
+    }
+
+    class Writer implements IWriter {
+        
+    }
+
+    Interface IModelObjectWriter<T> {
+        string writeXML(T modelObject)
+        string writePDF(T modelObject)
+        string writeSCORM(T modelObject)
+        string writeHTML(T modelObject)
+    }
+
+    class AssignmentWriter implements IModelObjectWriter {
+        
+    }
+
+    class ForumWriter implements IModelObjectWriter {
+        
+    }
+
+    class QuizWriter implements IModelObjectWriter {
+        
+    }
+
+    class FileWriter implements IModelObjectWriter {
+        
+    }
+
+    class URLWriter implements IModelObjectWriter {
+        
+    }
+
+}
+
 ' A course consists of multiple sections
 Course "1" *-- "0..*" Section : contains
 
@@ -148,5 +223,7 @@ Resource <|-- URL
 Activity <|-- Assignment
 Activity <|-- Forum
 Activity <|-- Quiz
+
+' TODO: Writer implements classes that implement IModelObjectWriter
 
 @enduml
