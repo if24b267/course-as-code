@@ -120,7 +120,8 @@ Everything written as a `command` is a description of the file or directory name
   - `empty XML file`
 
 ### Course.xml
-Explanation of the fields in the course.xml file
+Contains general information about the course, mostly the information provided in the course creation process
+
 - `course id="2" contextid="14"`
   - wrapper for the course information
   - `id` is the course id as can be seen in the URL
@@ -238,6 +239,62 @@ Explanation of the fields in the course.xml file
     - Probably corresponds to the "Hidden sections" setting in the course creation process
 
 ### enrolments.xml
+`enrol` seems to define the different enrolment methods available for the course.
+`user_enrolments` seems to define the individual users enrolled in the course.
+
+#### Top-Level Structure
+- `<enrolments>`: The root element containing all enrolment information.
+- `<enrols>`: A container for individual enrolment methods.
+
+#### Inside each `<enrol>` tag
+- `id`: Unique identifier, TBD
+  - `1`
+  - TODO: Determine how the id is generated
+- `enrol`: Type of enrolment method (e.g. manual, self, guest, etc.)
+  - `manual`
+  - See [Enrolment methods](https://docs.moodle.org/405/en/Enrolment_methods)
+- `status`: Indicates if the enrolment method is active
+  - `0` for active
+- `name`: Name of the enrolment method
+  - `$@NULL@$` signifies no specific name?
+- `enrolperiod`: Duration for which the enrolment is valid
+  - `0` means unlimited
+- `enrolstartdate` and `enrolenddate`: Start and end dates for the enrolment period
+  - represented as Unix timestamps
+  - `0` indicates no date set?
+- `expirynotify`: Whether expiration notifications are enabled?
+  - `0`
+- `expirythreshold`: TBD
+  - `86400`
+- `notifyall`: TBD
+  - `0`
+- `password`: Password required for enrolment?
+  - `$@NULL@$` means no password?
+- `cost` and `currency`: Used for paid enrolments?
+  - `$@NULL@$` means not applicable?
+- `roleid`: Default role assigned upon enrolment?
+  - `5` 
+  - TODO: Determine what the role id corresponds to
+- `customintX`, `customcharX`, `customdecX`, `customtextX`: Custom fields for additional configurations?
+  - `$@NULL@$` indicates unused?
+- `timecreated` and `timemodified`: Timestamps for when the enrolment was created and last modified?
+  - saved as Unix timestamps
+
+#### `<user_enrolments>` Section
+Contains the individual enrolled users for this method.
+The one entry in this section corresponds to the Admin User who created the course.
+- `enrolment id`: Unique ID for the enrolment instance?
+  - `1`
+  - TODO: Determine how the id is generated
+- `status`: Active (0) or suspended (1).
+  - Corresponds to: EmptyCourse -> Participants -> Status -> *Pencil Symbol* of a participant -> Status
+- `userid`: ID of the user enrolled?
+- `timestart` and `timeend`: Start and end of the enrolment period for this user.
+  - Corresponds to: EmptyCourse -> Participants -> Status -> *Pencil Symbol* of a participant -> Enrolment starts and Enrolment ends
+- `modifierid`: ID of the user who last modified the enrolment?
+  - `2` corresponds to the Admin User who created the course?
+- `timemodified`: Timestamp of the last modification.
+  - saved as Unix timestamps 
 
 
 ### inforef.xml
