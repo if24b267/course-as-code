@@ -273,7 +273,7 @@ Contains general information about the course, mostly the information provided i
 - `cost` and `currency`: Used for paid enrolments?
   - `$@NULL@$` means not applicable?
 - `roleid`: Default role assigned upon enrolment?
-  - `5` 
+  - `5` corresponds to the role of a student?
   - TODO: Determine what the role id corresponds to
 - `customintX`, `customcharX`, `customdecX`, `customtextX`: Custom fields for additional configurations?
   - `$@NULL@$` indicates unused?
@@ -296,9 +296,27 @@ The one entry in this section corresponds to the Admin User who created the cour
 - `timemodified`: Timestamp of the last modification.
   - saved as Unix timestamps 
 
-
 ### inforef.xml
+Contains references to users, roles, and files associated with the course.
+Probably ensures that the correct users, roles, and files are associated with the course during the restore process.
+
+- `<inforef>`: root element of the file
+- `<userref>`: contains references to users who are part of the Moodle course?
+  - `<user>`: Each user has an `<id>` tag.
+    - `<id>2</id>`: Refers to a user with the internal ID `2` in the Moodle system.
+    - This ID likely corresponds to the Admin User who created the course.
+- `<roleref>`: lists roles associated with the course?
+  - `<role>`: Each role has an `<id>` tag.
+    - `<id>3</id>` and `<id>5</id>`: could correspond to specific roles like student, teacher, or manager within the Moodle course.
+    - `5` corresponds to the role of a student?
+    - TODO: Determine the role corresponding to each ID.
+- `<fileref>`: references files linked to the course?
+  - `<file>`: Each file has an `<id>` tag.
+    - `<id>11</id>` and `<id>12</id>`: These IDs correspond to the id of the two files that appear in files.xml
+      - `11` corresponds to the logo.png file uploaded to the course.
+      - `12` corresponds to an unknown file.
 
 ### roles.xml
+
 
 ### moodle_backup.xml
