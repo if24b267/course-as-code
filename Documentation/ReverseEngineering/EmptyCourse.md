@@ -128,7 +128,7 @@ Explanation of the fields in the course.xml file
     - TODO: Determine how the course id is generated
   - `contextid` is used by other files to identify this course
     - e.g. files.xml has a field `contextid="14"` stating that the file is related to this course
-- `shortname
+- `shortname`
   - The short name of the course as provided in the course creation process
   - `EmpCo`
 - `fullname`
@@ -225,7 +225,6 @@ Explanation of the fields in the course.xml file
   - `0`
 - `category id="1"`
   - The category of the course as provided in the course creation process
-- `Category1`
   - TODO: Determine how the id is determined
 - `tags`
   - The tags of the course as provided in the course creation process
@@ -239,6 +238,7 @@ Explanation of the fields in the course.xml file
     - Probably corresponds to the "Hidden sections" setting in the course creation process
 
 ### enrolments.xml
+
 
 ### inforef.xml
 
