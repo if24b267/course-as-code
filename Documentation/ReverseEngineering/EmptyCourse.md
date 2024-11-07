@@ -297,13 +297,13 @@ The one entry in this section corresponds to the Admin User who created the cour
   - saved as Unix timestamps 
 
 ### inforef.xml
-Contains references to users, roles, and files associated with the course.
+Contains references to users, roles, and files associated with the course.\
 Probably ensures that the correct users, roles, and files are associated with the course during the restore process.
 
 - `<inforef>`: root element of the file
 - `<userref>`: contains references to users who are part of the Moodle course?
   - `<user>`: Each user has an `<id>` tag.
-    - `<id>2</id>`: Refers to a user with the internal ID `2` in the Moodle system.
+    - `<id>2</id>`: Refers to a user with the internal ID `2` in Moodle
     - This ID likely corresponds to the Admin User who created the course.
 - `<roleref>`: lists roles associated with the course?
   - `<role>`: Each role has an `<id>` tag.
@@ -317,6 +317,25 @@ Probably ensures that the correct users, roles, and files are associated with th
       - `12` corresponds to an unknown file.
 
 ### roles.xml
+Seems to contain information about the roles assigned to users in the course.
 
+- `<roles>`: root element that encapsulates all role-related data.
+- `<role_overrides>`: used to store any custom permissions or overrides for specific roles?
+- `<role_assignments>`: contains role assignments for users?
+
+#### Within `<role_assignments>`:
+- `<assignment id="1">`:
+  - represents a single role assignment?
+  - `id="1"` indicates this is the first assignment entry in the system?
+- `<roleid>`: specifies the role assigned to the user
+  - `3` likely corresponds to a specific role in Moodle
+- `<userid>`: identifies the user to whom the role is assigned
+  - `2` likely corresponds to the Admin User who created the course.
+- `<timemodified>`: indicates when the role assignment was last modified?
+  - stored as a Unix timestamp
+- `<modifierid>`: refers to the user who last modified this role assignment?
+  - `2` likely corresponds to the Admin User who created the course.
+- `<component>` and `<itemid>`: TBD
+- `<sortorder>`: TBD
 
 ### moodle_backup.xml
