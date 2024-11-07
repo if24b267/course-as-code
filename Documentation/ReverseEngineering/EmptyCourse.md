@@ -120,6 +120,123 @@ Everything written as a `command` is a description of the file or directory name
   - `empty XML file`
 
 ### Course.xml
+Explanation of the fields in the course.xml file
+- `course id="2" contextid="14"`
+  - wrapper for the course information
+  - `id` is the course id as can be seen in the URL
+    - http://localhost/course/view.php?id=2
+    - TODO: Determine how the course id is generated
+  - `contextid` is used by other files to identify this course
+    - e.g. files.xml has a field `contextid="14"` stating that the file is related to this course
+- `shortname
+  - The short name of the course as provided in the course creation process
+  - `EmpCo`
+- `fullname`
+  - The full name of the course as provided in the course creation process
+  - `EmptyCourse`
+- `idnumber`
+  - The id number of the course as provided in the course creation process
+  - `empty`
+- `summary`
+  - The summary of the course as provided in the course creation process
+  - `<p>Test Summary</p>`
+- `summaryformat`
+  - The format of the summary - 1 probably means HTML
+  - `1`
+- `format`
+  - The format of the course as provided in the course creation process
+  - `topics`
+  - `topics` seemingly corresponds to "Format: Custom Sections" in the course creation process
+  - TODO: Determine the possible values for this field
+- `showgrades`
+  - Whether to show grades to students as provided in the course creation process
+  - `0` means No
+  - `1` means Yes
+- `newsitems`
+  - The number of announcements to show as provided in the course creation process
+  - `0`
+- `startdate`
+  - The start date of the course as provided in the course creation process
+  - saved as a Unix timestamp
+  - `1731024000` corresponds to `08 November 2024 00:00`
+- `enddate`
+  - The end date of the course as provided in the course creation process
+  - saved as a Unix timestamp
+  - `1762560000` corresponds to `08 November 2025 00:00`
+- `marker`
+  - `0`
+- `maxbytes`
+  - The maximum upload size as provided in the course creation process
+  - `0`
+  - TODO: Determine the possible values for this field
+    - `0` means Site upload limit(40 MB)?
+- `legacyfiles`
+  - `0`
+- `showreports`
+  - Whether to show activity reports as provided in the course creation process
+  - `0` means No
+  - `1` means Yes
+- `visible`
+  - The visibility of the course as provided in the course creation process
+  - `1` means Show
+  - `0` means Hide
+- `groupmode`
+  - The group mode of the course as provided in the course creation process
+  - `0` means No groups
+  - `1` means Separate groups?
+  - `2` means Visible groups?
+- `groupmodeforce`
+  - Whether to force the group mode as provided in the course creation process
+  - `0` means No
+  - `1` means Yes
+- `defaultgroupingid`
+  - The default grouping of the course as provided in the course creation process
+  - `0` means None
+- `lang`
+  - The force language setting as provided in the course creation process
+  - `""` means Do not force
+- `theme`
+  - `""`
+- `timecreated`
+  - The time the course was created
+  - saved as a Unix timestamp
+  - `1731001588` corresponds to `Thu Nov 07 2024 18:46:28`
+- `timemodified`
+  - The time the course was last modified
+  - saved as a Unix timestamp
+  - `1731001588` corresponds to `Thu Nov 07 2024 18:46:28`
+- `requested`
+  - `0`
+- `showActivityDates`
+  - Whether to show activity dates as provided in the course creation process
+  - `1` means Yes
+  - `0` means No
+- `showCompletionConditions`
+  - Whether to show activity completion conditions as provided in the course creation process
+  - `1` means Yes
+  - `0` means No
+- `pdfexportfont`
+    - `"$@NULL@$"`
+- `enableCompletion`
+  - Whether to enable completion tracking as provided in the course creation process
+  - `1` means Yes
+  - `0` means No
+- `completionnotify`
+  - `0`
+- `category id="1"`
+  - The category of the course as provided in the course creation process
+- `Category1`
+  - TODO: Determine how the id is determined
+- `tags`
+  - The tags of the course as provided in the course creation process
+  - `testTag`
+- `customfields`
+  - `""`
+- `courseformatoptions`
+  - `courseformatoption`
+    - TBD
+  - `courseformatoption`
+    - Probably corresponds to the "Hidden sections" setting in the course creation process
 
 ### enrolments.xml
 
