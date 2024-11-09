@@ -106,7 +106,7 @@ See [Moodle FAQ](https://docs.moodle.org/405/en/Backup_and_restore_FAQ#How_can_I
 - `groups.xml`
   - empty XML file
 - `moodle_backup.xml`
-  - TBD
+  - seems to contain metadata about the backup
 - `outcomes.xml`
   - empty XML file
 - `questions.xml`
@@ -338,3 +338,128 @@ Seems to contain information about the roles assigned to users in the course.
 - `<sortorder>`: TBD
 
 ### moodle_backup.xml
+contains various metadata about the backup process and the backup itself
+
+- `<moodle_backup>`: root element for the backup metadata
+
+#### Information Section
+- `<name>`: The name of the backup file `backup-moodle2-course-2-empco-20241107-1749.mbz`
+- `<moodle_version>`: The version of Moodle used to create the backup
+  - `2024100700`
+  - Corresponds to Moodle version 4.5, see [Moodle versions](https://moodledev.io/general/releases)
+- `<moodle_release>`: The release of Moodle used to create the backup
+  - `4.5 (Build: 20241007)`
+- `<backup_version>` & `<backup_release>`
+  - Correspond to `<moodle_version>` and `<moodle_release>`
+  - TODO: Determine the difference between these fields
+- `<backup_date>`: timestamp when the backup was created
+  - `1731001753`
+  - saved as a Unix timestamp
+  - Corresponds to `Thu Nov 07 2024 18:49:13 GMT+0100`
+- `<mnet_remoteusers>`: TBD
+  - `0` means disabled?
+  - Seems to be [deprecated](https://docs.moodle.org/405/en/MNet)
+- `<include_files>`: Indicates whether files are included in the backup
+  - `1` means files are included
+  - Determined in the backup settings when creating the backup
+- `<include_file_references_to_external_content>`: TBD
+  - `0` means disabled?
+- `<original_wwwroot>`: URL of the Moodle instance that was backed up?
+  - `http://127.0.0.1:8080`
+- `<original_course_id>`: ID of the ?original? course in Moodle
+  - `2`
+  - Original refers to the name the course had when the backup was created?
+  - **These values seem to be the same as in the course.xml file**
+- `<original_course_format>`: The format of the original course
+  - `topics`
+- `<original_course_fullname>`: Full name of the original course
+  - `EmptyCourse`
+- `<original_course_shortname>`: Short name of the original course
+  - `EmpCo`
+- `<original_course_startdate>`: Start date of the original course as unix timestamp
+  - `1731024000`
+- `<original_course_enddate>`: End date of the original course as unix timestamp
+  - `1762560000`
+- `<original_course_contextid>`: Context ID of the original course
+  - `14`
+- `<original_system_contextid>`: TBD
+  - `1`
+  - This value doesn't appear in the course.xml file
+
+#### Details Section
+- `<detail>`: Wrapper for the course details
+- `<detail backup_id="c11e1f6cbc2ae39039d726d36c3e6a4a">`: Unique ID for the backup
+  - TODO: Determine how the backup ID is generated
+  - Only appears in the moodle_backup.xml file
+- `<type>`: Type of the backup?
+  - `course`
+  - TODO: Determine the possible values for this field
+- `<format>`: Format of the backup?
+  - `moodle2`
+  - Seems to refer to the ["new" backup format](https://docs.moodle.org/dev/Backup_2.0)
+- `<interactive>`: TBD
+  - `1`
+- `<mode>`: TBD
+  - `70`
+- `<execution>`: TBD
+  - `2`
+- `<executiontime>`: TBD
+  - `0`
+
+#### Contents Section
+- `<sections>`: wrapper for the course sections
+  - contains multiple `<section>` elements 
+    - corresponding to the 5 sections in the course
+  - Seemingly used to determine the order of the sections in the course
+- `<sectionid>`: Unique ID of the section.
+  - `1`, `2`, `3`, `4`, `5`
+  - TODO: Determine how the section ID is generated
+    - simply ascending numbers?
+- `<title>`: Section title?
+  - `0`, `1`, `2`, `3`, `4`
+  - Why are these values numbers?
+  - TODO: Try giving the sections names in the course creation process and see if they appear here
+- `<directory>`: Path in the backup directory for the section.
+  - `sections/section_1`
+- `<parentcmid/>`: TBD
+  - empty
+- `<modname/>`: TBD
+  - empty
+
+##### Course Section
+- `<course>`: wrapper for the course information
+- `<courseid>`: Course ID
+  - `2`
+  - Corresponds to the course ID in the URL and in the course.xml file
+- `<title>`: Course title
+  - `EmpCo`
+  - Corresponds to the short name of the course in the course.xml file
+- `<directory>`: Path in the backup directory for the course
+  - `course`
+
+#### Settings Section
+Contains the settings that were selected when the backup was created.
+Corresponds to the UI settings when creating the backup.
+
+- `<settings>`: wrapper for various backup settings
+- `<setting>`: contains individual settings
+  - `<level>`: indicates whether the setting applies to the root, section, or other components
+    - `root` refers to the course level?
+    - `section` refers to the individual sections?
+  - `<section>`: The section to which the setting applies?
+    - `section_1`, `section_2`, `section_3`, `section_4`, `section_5`
+    - only appears for settings that apply to sections
+  - `<name>`: name of the setting
+    - Seemingly a key-value pair in the form of `<name>` and `<value>`
+  - `<value>`: value of the setting
+    - `1` or `0` for boolean settings
+
+States which elements are included in the backup, e.g.:
+- `users=1`: User data is included
+- `logs=0`: Logs are excluded
+
+### gradebook.xml
+
+### roles.xml
+
+### files.xml
