@@ -618,3 +618,50 @@ seems to contain information about the roles assigned to users in the course
     - "editing teacher" is the default role assigned to individuals who create course content and then use this content to teach students, see [moodle docs](https://docs.moodle.org/2x/pl/Hosting_for_moodle_teachers)
 
 ### files.xml
+seems to contain information about the files uploaded to the course
+
+- `<files>`: root element containing all file information
+- `<file>`: represents a single file's metadata
+  - each file is identified by an `<id>` tag, other files in the backup reference this ID
+  - the two entries in this file correspond to the two files mentioned in inforef.xml
+  - `<contenthash>`: `4e3d7ade69bbaeaacd2e664327cc7e9952b0fbf0`
+    - the file content hash is calculated by taking a **SHA1 hash** of the content of the file, see [moodle docs](https://moodledev.io/docs/4.3/apis/subsystems/files/internals#file-system)
+    - used to uniquely identify the file
+  - `<contextid>`: `14`
+    - probably has something to do with [this](https://docs.moodle.org/405/en/Context) and [this](https://docs.moodle.org/405/en/Override_permissions)
+  - `<component>`: `course`
+    - moodle component associated with the file?
+  - `<filearea>`: `overviewfiles`
+  - `<itemid>`: `0`
+  - `<filepath>`: ` ` (empty)
+    - Why is this field empty? Shouldn't it contain the path to the file?
+    - the `logo.png` file is stored in the `4e` directory inside the `files` directory
+  - `<filename>`: `logo.png`
+    - the original name of the file
+  - `<userid>`: `3`
+    - identifies the user who uploaded the file
+    - seems to correspond to the Admin User who created the course
+  - `<filesize>`: `27519`
+    - size of the file in bytes
+  - `<mimetype>`: `image/png`
+    - describes the file's MIME type
+  - `<status>`: `0`
+  - `<timecreated>`: `1731136235`
+    - timestamp for when the file was created
+    - Unix timestamp
+  - `<timemodified>`: `1731136235`
+    - timestamp for when the file was last modified
+    - Unix timestamp
+  - `<source>`: `logo.png`
+    - How does this differ from `<filename>`?
+  - `<author>`: `Admin User`
+    - the name of the user who created/uploaded the file
+  - `<license>`: `unknown`
+    - seems to specify the file's license
+  - `<sortorder>`: `0`
+    - determines the order of files when displayed?
+  - `<repositorytype>`: `$@NULL@$`
+  - `<repositoryid>`: `$@NULL@$`
+  - `<reference>`: `$@NULL@$`
+
+The second file entry in the file.xml file seems to correspond to a file marker of the UNIX file system (`.`)
