@@ -459,7 +459,139 @@ States which elements are included in the backup, e.g.:
 - `logs=0`: Logs are excluded
 
 ### gradebook.xml
+Contains information about the gradebook setup for the course.\
+It's probably necessary to understand how grading in moodle works to fully understand this file.
 
+- `<attributes>`: probably a placeholder for additional metadata
+- `<grade_categories>`: groups grade items into categories
+  - probably refers to [this](https://docs.moodle.org/405/en/Grade_categories)
+  - `<grade_category>`: contains information about a single grade category
+    - `id`: unique identifier for the grade category
+  - `<parent>`: `"$@NULL@$"`
+    - ID of the parent category; `$@NULL@$` indicates no parent.
+    - probably an integer value if a parent category exists
+  - `<depth>`: `"1"`
+    - probably indicates the category's depth in the hierarchy
+  - `<path>`: `"/1/"`
+    - probably path to the category's position in the hierarchy
+    - based on IDs
+  - `<fullname>`: `"?"`
+    - name of the category?
+  - `<aggregation>`: `"13"`
+    - Maybe the aggregation method used for the category?
+    - See [Grade aggregation](https://docs.moodle.org/405/en/Grade_aggregation)
+  - `<keephigh>`: `"0"`
+    - only retain the X highest grades, X being the selected value for this option
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_categories#Keep_the_highest)
+  - `<droplow>`: `"0"`
+    - drop the X lowest grades, X being the selected value for this option
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_categories#Drop_the_lowest)
+  - `<aggregateonlygraded>`: `"1"`
+    - whether to treat non-graded items in the category as 0 zero points reached (0) or ignore them (1)
+    - boolean value (1 or 0)
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_categories#Aggregate_only_non-empty_grades)
+  - `<aggregateoutcomes>`: `"0"`
+    - whether to include outcomes in aggregation (whatever that means)
+    - boolean value (1 or 0)
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_categories#Include_outcomes_in_aggregation)
+  - `<timecreated>`: `"1731001607"`
+    - timestamp for when the category was created
+    - Unix timestamp
+  - `<timemodified>`: `"1731001607"`
+    - timestamp for when the category was last modified
+    - Unix timestamp
+  - `<hidden>`: `"0"`
+    - whether the category is hidden; `0` probably means visible
+    - boolean value (1 or 0)
+- `<grade_items>`
+  - defines individual gradeable items.
+  - probably refers to [this](https://docs.moodle.org/405/en/Grade_items)
+  - `<grade_item>`: `id="1"`
+    - contains information about a single grade item
+    - unique identifier for the grade item.
+  - `<categoryid>`: `"$@NULL@$"`
+    - probably ID of the category to which the item belongs.
+    - `$@NULL@$` indicates no category.
+  - `<itemname>`: `"$@NULL@$"`
+    - name of the grade item, e.g. the assignment name.
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)
+  - `<itemtype>`: `"course"`
+    - type of the grade item
+    - possible values: assigment, workshop, lesson, quiz?
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)
+  - `<itemmodule>`: `"$@NULL@$"`
+  - `<iteminstance>`: `1`
+  - `<itemnumber>`: `"$@NULL@$"`
+  - `<iteminfo>`: `"$@NULL@$"`
+    - general information about the grade item; optional
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)
+  - `<idnumber>`: `"$@NULL@$"`
+  - `<calculation>`: `"$@NULL@$"`
+    - probably has something to do with [this](https://docs.moodle.org/405/en/Grade_calculations)
+  - `<gradetype>`: `"1"` 
+    - type of grading
+    - There are 4 grade types:
+      - None - No grading possible 
+      - Value - A numerical value with a maximum and minimum 
+      - Scale - An item in a list - see Scales 
+      - Text - Feedback only
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)
+  - `<grademax>`: `"0.00000"`
+    - The maximum grade that can be given
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Manual_grade_items)
+  - `<grademin>`: `"0.00000"`
+    - The minimum grade that can be given
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Manual_grade_items)
+  - `<scaleid>`: `"$@NULL@$"`
+  - `<outcomeid>`: `"$@NULL@$"`
+  - `<gradepass>`: `"0.00000"`
+    - minimum grade a student must achieve to be considered to have passed this item
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)
+  - `<multfactor>`: `1.00000`
+    - factor by which all grade for this grade item will be multiplied
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)
+  - `<plusfactor>`: `0.00000`
+    - number that will be added to every grade for this grade item, after the Multiplicator is applied
+    - can be negative
+    - maybe refers to **offset** in [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)?
+  - `<aggregationcoef>`: `0.00000`
+  - `<aggregationcoef2>`: `"0.00000"`
+  - `<weightoverride>`: `"0"`
+    - probably somehow refers to the **weight** as seen on the screenshots in the [moodle docs](https://docs.moodle.org/405/en/Grade_items#/media/File:editingradeitem.png)
+  - `<sortorder>`: `"1"`
+    - position in the list of grade items?
+  - `<display>`: `"0"`
+  - `<decimals>`: `$@NULL@$`
+    - the number of decimal points to display for each grade?
+    - refers to **overall decimal points** on [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)?
+  - `<hidden>`: `"0"`
+    - whether the grade item is hidden from students
+  - `<locked>`: `"0"`
+    - whether to lock this grade item
+    - A locked grade item doesn't accept changes to its settings or grades from its related module.
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)
+  - `<locktime>`: `"0"`
+    - a date after which the locking will be effective, usually after the grades release date
+    - probably a Unix timestamp
+    - See [moodle docs](https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items)
+  - `<needsupdate>`: `"0"`
+    - whether the grade item needs updating???
+  - `<timecreated>`: `"1731001607"`
+    - timestamp for when the grade item was created.
+    - Unix timestamp
+  - `<timemodified>`: `"1731001607"`
+    - timestamp for when the grade item was last modified.
+    - Unix timestamp
+  - `<grade_grades>`:
+- `<grade_letters>`: 
+  - probably refers to [this](https://docs.moodle.org/405/en/Grade_letters)
+- `<grade_settings>`: stores global gradebook settings?
+  - it seems that each setting is stored as a `<grade_setting>` element
+  - `<grade_setting>`:
+    - `id`: `"1"`
+    - `<name>`: `"minmaxtouse"`
+    - `<value>`: `"1"`
+  
 ### roles.xml
 
 ### files.xml
