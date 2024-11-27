@@ -593,5 +593,28 @@ It's probably necessary to understand how grading in moodle works to fully under
     - `<value>`: `"1"`
   
 ### roles.xml
+seems to contain information about the roles assigned to users in the course
+
+- `<roles_definition>`
+  - Root element containing all role definitions
+  - encapsulates multiple `<role>` elements
+- `<role>`: `id="3"`
+  - defines a single role
+  - each `<role>` element seems to represent a specific role in Moodle
+  - `<name>`: ` ` (empty)
+    - full name of the role
+    - only needed for custom roles, see [moodle docs](https://docs.moodle.org/2x/ca/Creating_custom_roles#Creating_a_new_role)
+  - `<shortname>`: `editingteacher`
+    - short name of the role
+  - `<nameincourse>`: `$@NULL@$`
+    - custom name for the role specific to the course?
+    - `$@NULL@$` if no custom name is set
+  - `<description>`: ` ` (empty)
+    - optional description of the role, see [moodle docs](https://docs.moodle.org/2x/ca/Creating_custom_roles#Creating_a_new_role)
+  - `<sortorder>`:  `3`
+    - position in the list of roles?
+  - `<archetype>`: `editingteacher`
+    - A role archetype is a template for a role, see [moodle docs](https://moodledev.io/docs/4.4/apis/subsystems/roles#programming-interface)
+    - "editing teacher" is the default role assigned to individuals who create course content and then use this content to teach students, see [moodle docs](https://docs.moodle.org/2x/pl/Hosting_for_moodle_teachers)
 
 ### files.xml
