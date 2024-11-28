@@ -24,5 +24,7 @@ class Program
         ContentbankWriter contentbankWriter = new ContentbankWriter();
         contentbankWriter.WriteContentbank();
         
+        CourseWriter courseWriter = new CourseWriter();
+        courseWriter.WriteCourse();
     }
 }
