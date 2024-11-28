@@ -12,15 +12,16 @@ public class CalendarWriter
         OmitXmlDeclaration = true // Removes the XML declaration
     };
     
-    public void WriteCalendar(string filePath = "calendar.xml")
+    public void WriteCalendar(string filePath = "course/calendar.xml")
     {
-        // Use XmlWriter to create the file
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
+            
             writer.WriteStartElement("events");
             writer.WriteString(" ");
             writer.WriteEndElement(); // Close the <events> tag
+            
             writer.WriteEndDocument();
         }
     }

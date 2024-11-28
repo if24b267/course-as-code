@@ -6,9 +6,23 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        // Create course directory if it does not exist
+        System.IO.Directory.CreateDirectory("course");
 
         CalendarWriter calendarWriter = new CalendarWriter();
         calendarWriter.WriteCalendar();
+        
+        CommentsWriter commentsWriter = new CommentsWriter();
+        commentsWriter.WriteComments();
+        
+        CompetenciesWriter competenciesWriter = new CompetenciesWriter();
+        competenciesWriter.WriteCompetencies();
+        
+        CompletiondefaultsWriter completiondefaultsWriter = new CompletiondefaultsWriter();
+        completiondefaultsWriter.WriteCompletionDefaults();
+        
+        ContentbankWriter contentbankWriter = new ContentbankWriter();
+        contentbankWriter.WriteContentbank();
+        
     }
 }
