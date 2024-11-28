@@ -165,13 +165,16 @@ Contains general information about the course, mostly the information provided i
   - `1762560000` corresponds to `08 November 2025 00:00`
 - `marker`
   - `0`
+  - [Not helpful](https://moodle.org/mod/forum/discuss.php?d=388688)
 - `maxbytes`
   - The maximum upload size as provided in the course creation process
   - `0`
   - TODO: Determine the possible values for this field
     - `0` means Site upload limit(40 MB)?
 - `legacyfiles`
-  - `0`
+  - Moodle uses a new file system since version 2.0; this setting probably tells moodle if this backup uses the new or old file system
+  - See [moodle docs](https://docs.moodle.org/405/en/Legacy_course_files)
+  - `0` means new file system (no legacy files)
 - `showreports`
   - Whether to show activity reports as provided in the course creation process
   - `0` means No
@@ -197,6 +200,8 @@ Contains general information about the course, mostly the information provided i
   - `""` means Do not force
 - `theme`
   - `""`
+  - if the course uses a custom theme, it would probably be specified here
+  - the value probably must match the name of a theme in the Moodle installation, see [moodle docs](https://moodledev.io/docs/4.4/apis/plugintypes/theme#getting-your-theme-to-appear-correctly-in-theme-selector)
 - `timecreated`
   - The time the course was created
   - saved as a Unix timestamp
@@ -207,6 +212,7 @@ Contains general information about the course, mostly the information provided i
   - `1731001588` corresponds to `Thu Nov 07 2024 18:46:28`
 - `requested`
   - `0`
+  - This might have something to do with automatic backups, see [here](https://moodle.org/mod/forum/discuss.php?d=442987) and [here](https://docs.moodle.org/405/en/Automated_course_backup)
 - `showActivityDates`
   - Whether to show activity dates as provided in the course creation process
   - `1` means Yes
@@ -217,12 +223,17 @@ Contains general information about the course, mostly the information provided i
   - `0` means No
 - `pdfexportfont`
     - `"$@NULL@$"`
+    - probably refers to the name of the font used for PDF exports
+    - if empty, the default font is used?
 - `enableCompletion`
   - Whether to enable completion tracking as provided in the course creation process
+  - refers either to [this](https://docs.moodle.org/405/en/Using_Activity_completion) or [that](https://docs.moodle.org/405/en/Course_completion)
   - `1` means Yes
   - `0` means No
 - `completionnotify`
   - `0`
+  - whether to send a notification when a course/activity is completed?
+  - maybe see [here](https://docs.moodle.org/405/en/Notifications#List_of_notification_types)
 - `category id="1"`
   - The category of the course as provided in the course creation process
   - TODO: Determine how the id is determined
@@ -231,6 +242,7 @@ Contains general information about the course, mostly the information provided i
   - `testTag`
 - `customfields`
   - `""`
+  - probably refers to [this](https://moodledev.io/docs/4.4/apis/plugintypes/customfield)
 - `courseformatoptions`
   - `courseformatoption`
     - TBD
