@@ -74,7 +74,7 @@ See [Moodle FAQ](https://docs.moodle.org/405/en/Backup_and_restore_FAQ#How_can_I
   - `inforef.xml`
     - contains references to users, roles, and files associated with the course
   - `roles.xml`
-    - seems to contain information about the roles assigned to users in the course
+    - seems to contain the assignment of roles to users in the course
 - `files`
   - `4e`
     - `4e3d7ade69bbaeaacd2e664327cc7e9952b0fbf0`
@@ -96,13 +96,13 @@ See [Moodle FAQ](https://docs.moodle.org/405/en/Backup_and_restore_FAQ#How_can_I
 - `completion.xml`
   - empty XML file
 - `files.xml`
-  - contains information about the files uploaded to the course
+  - seems to contain information about the files uploaded to the course
   - one of the entries correspons to the logo.png file
   - one unknown entry
 - `grade_history.xml`
   - empty XML file
 - `gradebook.xml`
-  - TBD
+  - Contains information about the gradebook setup for the course
 - `groups.xml`
   - empty XML file
 - `moodle_backup.xml`
@@ -112,7 +112,7 @@ See [Moodle FAQ](https://docs.moodle.org/405/en/Backup_and_restore_FAQ#How_can_I
 - `questions.xml`
   - empty XML file
 - `roles.xml`
-  - TBD
+  - seems to contain information about the roles available in the course
 - `scales.xml`
   - empty XML file
 - `users.xml`
@@ -327,8 +327,8 @@ Probably ensures that the correct users, roles, and files are associated with th
       - `11` corresponds to the logo.png file uploaded to the course.
       - `12` corresponds to an unknown file.
 
-### roles.xml
-Seems to contain information about the roles assigned to users in the course.
+### roles.xml (inside the course directory)
+seems to contain the assignment of roles to users in the course
 
 - `<roles>`: root element that encapsulates all role-related data.
 - `<role_overrides>`: used to store any custom permissions or overrides for specific roles?
@@ -471,7 +471,7 @@ States which elements are included in the backup, e.g.:
 - `logs=0`: Logs are excluded
 
 ### gradebook.xml
-Contains information about the gradebook setup for the course.\
+contains information about the gradebook setup for the course.\
 It's probably necessary to understand how grading in moodle works to fully understand this file.
 
 - `<attributes>`: probably a placeholder for additional metadata
@@ -605,7 +605,7 @@ It's probably necessary to understand how grading in moodle works to fully under
     - `<value>`: `"1"`
   
 ### roles.xml
-seems to contain information about the roles assigned to users in the course
+seems to contain information about the roles available in the course
 
 - `<roles_definition>`
   - Root element containing all role definitions
