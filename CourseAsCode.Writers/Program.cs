@@ -1,4 +1,6 @@
-﻿namespace CourseAsCode.Writers;
+﻿using CourseAsCode.Writers.XML.Course;
+
+namespace CourseAsCode.Writers;
 
 class Program
 {
