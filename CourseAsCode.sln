@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "course_as_code", "course_as_code\course_as_code.csproj", "{F375B1FA-1B0A-4869-8560-1AF5B7E9468D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseAsCode", "CourseAsCode\CourseAsCode.csproj", "{F375B1FA-1B0A-4869-8560-1AF5B7E9468D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "course_as_code.writers", "course_as_code.writers\course_as_code.writers.csproj", "{FC921F70-D28A-4ACD-AC98-A61AE0BCBF99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseAsCode.Writers", "CourseAsCode.Writers\CourseAsCode.Writers.csproj", "{FC921F70-D28A-4ACD-AC98-A61AE0BCBF99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

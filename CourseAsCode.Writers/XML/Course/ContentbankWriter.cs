@@ -1,8 +1,8 @@
 using System.Xml;
 
-namespace course_as_code.writers.XML.course;
+namespace CourseAsCode.Writers.XML.Course;
 
-public class CompletiondefaultsWriter
+public class ContentbankWriter
 {
     private readonly XmlWriterSettings _settings = new()
     {
@@ -11,13 +11,13 @@ public class CompletiondefaultsWriter
         OmitXmlDeclaration = true
     };
     
-    public void WriteCompletionDefaults(string filePath = "course/completiondefaults.xml")
+    public void WriteContentbank(string filePath = "course/contentbank.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
             
-            writer.WriteStartElement("course_completion_defaults");
+            writer.WriteStartElement("contents");
             writer.WriteString(" ");
             writer.WriteEndElement();
             

@@ -1,9 +1,8 @@
-using System;
 using System.Xml;
 
-namespace course_as_code.writers.XML;
+namespace CourseAsCode.Writers.XML;
 
-public class ScalesWriter
+public class QuestionsWriter
 {
     private readonly XmlWriterSettings _settings = new()
     {
@@ -12,15 +11,15 @@ public class ScalesWriter
         OmitXmlDeclaration = true
     };
 
-    public void WriteScales(string filePath = "scales.xml")
+    public void WriteQuestions(string filePath = "questions.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
 
-            writer.WriteStartElement("scales_definition"); // Root element
+            writer.WriteStartElement("question_categories"); // Root element
             writer.WriteString(" ");
-            writer.WriteEndElement(); // Close </scales_definition>
+            writer.WriteEndElement(); // Close 
 
             writer.WriteEndDocument();
         }

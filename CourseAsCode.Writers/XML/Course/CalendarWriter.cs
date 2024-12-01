@@ -1,7 +1,6 @@
-using System;
 using System.Xml;
 
-namespace course_as_code.writers.XML.course;
+namespace CourseAsCode.Writers.XML.course;
 
 public class CalendarWriter
 {

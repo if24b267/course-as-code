@@ -1,8 +1,8 @@
 using System.Xml;
 
-namespace course_as_code.writers.XML.course;
+namespace CourseAsCode.Writers.XML;
 
-public class ContentbankWriter
+public class GradebookWriter
 {
     private readonly XmlWriterSettings _settings = new()
     {
@@ -10,17 +10,22 @@ public class ContentbankWriter
         NewLineOnAttributes = false,
         OmitXmlDeclaration = true
     };
-    
-    public void WriteContentbank(string filePath = "course/contentbank.xml")
+
+    public void WriteGradebook(string filePath = "gradebook.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
+
+            writer.WriteStartElement("gradebook"); // Root element
             
-            writer.WriteStartElement("contents");
+            writer.WriteStartElement("attributes");
             writer.WriteString(" ");
-            writer.WriteEndElement();
+            writer.WriteEndElement(); // Close </attributes>
+
             
+
+            writer.WriteEndElement(); // Close </gradebook>
             writer.WriteEndDocument();
         }
     }

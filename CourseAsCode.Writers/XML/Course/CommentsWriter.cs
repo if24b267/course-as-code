@@ -1,9 +1,8 @@
-using System;
 using System.Xml;
 
-namespace course_as_code.writers.XML;
+namespace CourseAsCode.Writers.XML.Course;
 
-public class OutcomesWriter
+public class CommentsWriter
 {
     private readonly XmlWriterSettings _settings = new()
     {
@@ -11,17 +10,17 @@ public class OutcomesWriter
         NewLineOnAttributes = false,
         OmitXmlDeclaration = true
     };
-
-    public void WriteOutcomes(string filePath = "outcomes.xml")
+    
+    public void WriteComments(string filePath = "course/comments.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
-
-            writer.WriteStartElement("outcomes_definition"); // Root element
+            
+            writer.WriteStartElement("comments");
             writer.WriteString(" ");
-            writer.WriteEndElement(); // Close </outcomes_definition>
-
+            writer.WriteEndElement();
+            
             writer.WriteEndDocument();
         }
     }

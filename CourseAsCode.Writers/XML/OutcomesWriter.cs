@@ -1,9 +1,8 @@
-using System;
 using System.Xml;
 
-namespace course_as_code.writers.XML;
+namespace CourseAsCode.Writers.XML;
 
-public class QuestionsWriter
+public class OutcomesWriter
 {
     private readonly XmlWriterSettings _settings = new()
     {
@@ -12,15 +11,15 @@ public class QuestionsWriter
         OmitXmlDeclaration = true
     };
 
-    public void WriteQuestions(string filePath = "questions.xml")
+    public void WriteOutcomes(string filePath = "outcomes.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
 
-            writer.WriteStartElement("question_categories"); // Root element
+            writer.WriteStartElement("outcomes_definition"); // Root element
             writer.WriteString(" ");
-            writer.WriteEndElement(); // Close 
+            writer.WriteEndElement(); // Close </outcomes_definition>
 
             writer.WriteEndDocument();
         }

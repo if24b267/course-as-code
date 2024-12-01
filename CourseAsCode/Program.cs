@@ -1,4 +1,4 @@
-﻿namespace course_as_code
+﻿namespace CourseAsCode
 {
     internal class Program
     {

@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace course_as_code.writers.XML.course;
+namespace CourseAsCode.Writers.XML.Course;
 
 public class CompetenciesWriter
 {

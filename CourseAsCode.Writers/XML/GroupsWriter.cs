@@ -1,7 +1,6 @@
-using System;
 using System.Xml;
 
-namespace course_as_code.writers.XML;
+namespace CourseAsCode.Writers.XML;
 
 public class GroupsWriter
 {

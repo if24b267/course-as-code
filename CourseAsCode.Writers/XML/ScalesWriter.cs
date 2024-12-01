@@ -1,8 +1,8 @@
 using System.Xml;
 
-namespace course_as_code.writers.XML.course;
+namespace CourseAsCode.Writers.XML;
 
-public class CommentsWriter
+public class ScalesWriter
 {
     private readonly XmlWriterSettings _settings = new()
     {
@@ -10,17 +10,17 @@ public class CommentsWriter
         NewLineOnAttributes = false,
         OmitXmlDeclaration = true
     };
-    
-    public void WriteComments(string filePath = "course/comments.xml")
+
+    public void WriteScales(string filePath = "scales.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
-            
-            writer.WriteStartElement("comments");
+
+            writer.WriteStartElement("scales_definition"); // Root element
             writer.WriteString(" ");
-            writer.WriteEndElement();
-            
+            writer.WriteEndElement(); // Close </scales_definition>
+
             writer.WriteEndDocument();
         }
     }
