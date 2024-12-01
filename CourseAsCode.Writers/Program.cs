@@ -1,6 +1,4 @@
-﻿using course_as_code.writers.XML.course;
-
-namespace course_as_code.writers;
+﻿namespace CourseAsCode.Writers;
 
 class Program
 {

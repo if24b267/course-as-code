@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace CourseAsCode.Writers.XML.course;
+namespace CourseAsCode.Writers.XML.Course;
 
 public class CalendarWriter
 {
