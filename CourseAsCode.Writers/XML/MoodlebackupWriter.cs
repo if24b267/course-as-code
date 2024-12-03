@@ -10,7 +10,7 @@ public class MoodleBackupWriter
         NewLineOnAttributes = false,
         OmitXmlDeclaration = true
     };
-    public void WriteMoodleBackup(string filePath = "course/backup/moodle_backup.xml")
+    public void WriteMoodleBackup(string filePath = "moodle_backup.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
