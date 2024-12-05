@@ -1,26 +1,8 @@
 ﻿using System.ComponentModel;
+using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model
 {
-	public enum CourseFormat
-	{
-		CustomSections, // course is divided into customisable sections
-		WeeklySections, // course is divided into sections corresponding to each week
-		SingleActivity, // course contains only one activity or resource
-		Social // course is centred around a main forum on the course page
-	}
-
-	public enum GroupMode
-	{
-		NoGroups, // no groups are used in the course
-		SeparateGroups, // students are divided into separate groups and can only see their own groups' work
-		VisibleGroups // students are divided into separate groups but can see other groups' work
-	}
-	
-	public enum Language
-	{
-		English
-	}
 	
 	public class Course
 	{
@@ -80,7 +62,7 @@ namespace CourseAsCode.Model
 			public DateTime TimeCreated { get; set; }
 			[Description("the time the course was last modified")]
 			public DateTime TimeModified { get; set; }
-			[Description("the font used for PDF exports, blank for default")]
+			[Description("the font used for PDF exports, blank for default - relevant for languages with non-latin scripts")]
 			public string? PdfExportFont { get; set; }
 			[Description("necessary if the course uses custom fields, blank for no custom fields")]
 			public string CustomFields { get; set; }
