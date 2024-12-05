@@ -1,6 +1,6 @@
 ﻿namespace CourseAsCode.Model.Resources;
 
-public class FileResource : Resource
+public class File : Resource
 {
 	public int Size { get; set; }
 	public string Path { get; set; }
