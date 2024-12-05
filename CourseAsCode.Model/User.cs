@@ -88,7 +88,6 @@ public class User
     public class SystemDefaults
     {
         public int Id { get; set; }
-        public int ContextId { get; set; }
         [Description("can be used to map the user to an external system, e.g. LDAP")]
         public int ExternalId { get; set; }
         [Description("the IP address of the user's last login")]

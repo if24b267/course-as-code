@@ -51,7 +51,6 @@ namespace CourseAsCode.Model
 		public class SystemDefaults
 		{
 			public int Id { get; set; }
-			public int ContextId { get; set; }
 			[Description("the format in which the CourseSummary is stored")]
 			public int SummaryFormat { get; set; }
 			[Description("whether this backup uses the legacy file system")]
