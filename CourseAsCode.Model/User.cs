@@ -120,6 +120,8 @@ public class User
         public DateTime LastAccess { get; set; }
         [Description("timestamp of the user's last successful login attempt")]
         public DateTime LastLogin { get; set; }
+        [Description("time the user's role was last changed")]
+        public DateTime RoleChange { get; set; }
         
         [Description("if allowed by the site policy, the user can choose a custom theme")]
         public string? Theme { get; set; }

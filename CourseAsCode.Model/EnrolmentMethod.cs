@@ -13,6 +13,13 @@ public abstract class EnrolmentMethod
     public bool Enabled { get; set; }
     [Description("the default role that is assigned to students when they are enrolled via this method")]
     public required Role DefaultRole { get; set; }
-    [Description("unique identifier for the enrolment method, used for referencing")]
-    public int EnrolmentId { get; set; }
+
+    public class SystemDef
+    {
+        [Description("unique identifier for the enrolment method, used for referencing")]
+        public int EnrolmentId { get; set; }
+        
+        public DateTime TimeCreated { get; set; }
+        public DateTime TimeModified { get; set; }
+    }
 }

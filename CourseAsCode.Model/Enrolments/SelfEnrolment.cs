@@ -35,6 +35,8 @@ public class SelfEnrolment : EnrolmentMethod
         public int? UnenrolInactiveAfter { get; set; }
         [Description("if set, the maximum number of users that can self enrol is limited")]
         public int? MaximumNumberOfEnrolments { get; set; }
+        [Description("the threshold in days before the enrolment expires when the notifications are sent")]
+        public int NotifyThreshold { get; set; }
     }
 
     public class SystemDefaults

@@ -23,6 +23,8 @@ namespace CourseAsCode.Model
 		public List<Role> Roles { get; set; } = new List<Role>();
 		[Description("list of enrolment methods that are activated for this course")]
 		public List<EnrolmentMethod> EnrolmentMethods { get; set; } = new List<EnrolmentMethod>();
+		[Description("list of users that are enrolled in the course")]
+		public List<User> EnrolledUsers { get; set; } = new List<User>();
 		
 		// Defaults
 		public class SensibleDefaults
@@ -47,8 +49,10 @@ namespace CourseAsCode.Model
 			public bool ShowActivityCompletionConditions { get; set; }
 			[Description("if enabled, students can track their progress through the course")]
 			public bool EnableCompletionTracking { get; set; }
-			[Description("course categories organize courses for all Moodle site participants, blank for default category")]
-			public int? CourseCategory { get; set; }
+			[Description("moodle courses can be organized in categories, blank for default category")]
+			public string? CategoryName { get; set; }
+			[Description("description of the course category, blank for default category")]
+			public string? CategoryDescription { get; set; }
 		}
 		
 		public class SystemDefaults
