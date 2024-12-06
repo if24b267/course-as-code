@@ -9,6 +9,7 @@ Most of the tags in this file are represented by the `Course` class, though thei
 
 A selection of a few mappings that may be especially hard to infer:  
 - `<newsitems>` -> `NumberOfAnnouncementsToDisplay`
+- `<idnumber>` -> `CourseIdNumber`
 - some tags like `<marker>` aren't represented in the internal data model as their purpose is still unclear
 
 ### /course/enrolments.xml

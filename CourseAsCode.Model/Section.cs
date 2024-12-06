@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CourseAsCode.Model.Activities;
+using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model;
 
@@ -24,7 +25,7 @@ public class Section
         [Description("path to the corresponding section folder in the backup directory")]
         public required string PathToSection { get; set; }
         [Description("the format in which the SectionSummary is stored")]
-        public int SummaryFormat { get; set; }
+        public FormattingFormat SummaryFormat { get; set; }
         [Description("the date and time that the section was last modified")]
         public DateTime LastModified { get; set; }
     }

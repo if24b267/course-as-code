@@ -105,7 +105,7 @@ public class User
         [Description("the IP address of the user's last login")]
         public IPAddress LastIP { get; set; }
         [Description("the format in which the User Description is stored")]
-        public int DescriptionFormat { get; set; }
+        public FormattingFormat DescriptionFormat { get; set; }
         [Description("if the user has confirmed their account, depends on the authentication method (e.g. confirmation email)")]
         public bool IsConfirmed { get; set; }
         [Description("whether the user has agreed to the site policy")]

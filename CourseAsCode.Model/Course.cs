@@ -37,7 +37,7 @@ namespace CourseAsCode.Model
 			[Description("used to connect the course to external systems (optional)")]
 			public int CourseIdNumber { get; set; }
 			[Description("the maximum upload size for student submissions")]
-			public int MaximumUploadSize { get; set; }
+			public uint MaximumUploadSize { get; set; } // int overflow if MaximumUploadSize > ~4GB
 			[Description("whether the course is visible to students or teachers only")]
 			public bool VisibleToStudents { get; set; }
 			[Description("if true, the group mode can't be changed for individual activities")]
@@ -60,7 +60,7 @@ namespace CourseAsCode.Model
 		{
 			public int Id { get; set; }
 			[Description("the format in which the CourseSummary is stored")]
-			public int SummaryFormat { get; set; }
+			public FormattingFormat SummaryFormat { get; set; }
 			[Description("whether this backup uses the legacy file system")]
 			public bool UsesLegacyFiles { get; set; }
 			[Description("if set, the course will be displayed in this language despite the user's preferences")]

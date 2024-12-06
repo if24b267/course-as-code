@@ -12,7 +12,6 @@ public class SelfEnrolment : EnrolmentMethod
     [Description("if set, users must provide a password to enrol in the course")]
     public string? Password { get; set; }
     
-    
     [Description("default length of the time that the enrolment is valid starting from the users' enrolment date, blank for unlimited")]
     public int EnrolmentDuration { get; set; }
     [Description("if enabled, the person who enrolled the user is notified when the user's enrollment in the course is about to expire")]
