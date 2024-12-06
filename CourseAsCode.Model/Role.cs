@@ -1,35 +1,29 @@
-using CourseAsCode.Model.Defaults.Roles;
-using CourseAsCode.Model.Enums;
 using System.ComponentModel;
+using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model;
 
 public class Role
 {
 	[Description("optional for standard roles, required for custom roles")]
-	public string? Name { get; set; } = DefaultStudent.DEFAULT_NAME;
+	public string? Name { get; set; }
 	[Description("low level role identifier in which only ASCII alphanumeric characters are allowed")]
-	public required string ShortName { get; set; } = DefaultStudent.DEFAULT_SHORT_NAME;
+	public required string ShortName { get; set; }
 	[Description("can be used to override the default name of the role for a specific course only")]
-	public string? LocalName { get; set; } = DefaultStudent.DEFAULT_LOCAL_NAME;
+	public string? LocalName { get; set; }
 	[Description("description of the role; automatically generated for standard roles if not provided")]
-	public string? Description { get; set; } = DefaultStudent.DEFAULT_DESCRIPTION;
+	public string? Description { get; set; }
 	[Description("Blueprint for the role, defines a standard set of permissions")]
-	public Archetype Archetype { get; set; } = DefaultStudent.DEFAULT_ARCHETYPE;
-
-	public SensibleDefaultsRole SensibleDefaults { get; set; } = new SensibleDefaultsRole();
-	public SystemDefaultsRole SystemDefaults { get; set; } = new SystemDefaultsRole();
-
+	public Archetype Archetype { get; set; }
 
 	// Defaults
-	public class SensibleDefaultsRole
+	public class SensibleDefaults
 	{
 
 	}
-
-
-	public class SystemDefaultsRole
+	
+	public class SystemDefaults
 	{
-		public int RoleId { get; set; } = DefaultStudent.DEFAULT_ID;
+		public int Id { get; set; }
 	}
 }
