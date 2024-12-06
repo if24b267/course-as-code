@@ -8,8 +8,6 @@ namespace CourseAsCode.Model
 		public required string FullName { get; set; }
 		public required string ShortName { get; set; }
 		public string? Summary { get; set; }
-		[Description("how many recent announcements are displayed in the \"latest announcements\" block, blank to disable announcements")]
-		public int? NumberOfAnnouncementsToDisplay { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
 		[Description("which group mode to use as default in the course")]
@@ -25,10 +23,13 @@ namespace CourseAsCode.Model
 		public List<EnrolmentMethod> EnrolmentMethods { get; set; } = new List<EnrolmentMethod>();
 		[Description("list of users that are enrolled in the course")]
 		public List<User> EnrolledUsers { get; set; } = new List<User>();
+		public required BackupMetadata BackupMetadata { get; set; }
 		
 		// Defaults
 		public class SensibleDefaults
 		{
+			[Description("how many recent announcements are displayed in the \"latest announcements\" block, blank to disable announcements")]
+			public int? NumberOfAnnouncementsToDisplay { get; set; }
 			[Description("format of the course as provided in the course creation process")]
 			public CourseFormat Format { get; set; }
 			[Description("whether to allow students to view a list of all their grades in the course")]

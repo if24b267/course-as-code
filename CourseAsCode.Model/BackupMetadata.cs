@@ -21,7 +21,7 @@ public class BackupMetadata
     [Description("the version of Moodle that the backup was created in")]
     public MoodleVersion MoodleVersion { get; set; }
     [Description("the URL of the Moodle site that the backup was created from")]
-    public string MoodleUrl { get; set; }
+    public required Uri MoodleUrl { get; set; }
     
 		// Defaults
 		public class SensibleDefaults
@@ -39,7 +39,7 @@ public class BackupMetadata
 			[Description("Unknown Purpose")]
 			public bool IncludeFileReferencesToExternalContent { get; set; }
 			[Description("unique ID of the backup")]
-			public string BackupId { get; set; }
+			public required string BackupId { get; set; }
 			[Description("whether the backup is a whole site backup or only a single course backup")]
 			public bool WholeSiteBackup { get; set; }
 			[Description("whether the backup uses the 'new' Moodle Backup 2.0")]

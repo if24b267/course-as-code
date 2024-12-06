@@ -10,11 +10,11 @@ public abstract class Activity
 	[Description("name of the activity (quiz, file, etc.) as it will be displayed to the user")]
 	public required string Name { get; set; }
 	public string? Description { get; set; }
-	[Description("list of tags that are used to describe the activity")]
-	public List<string>? Tags { get; set; }
-	
 	[Description("which group mode to use for the activity")]
 	public GroupMode GroupMode { get; set; }
+	
+	[Description("list of tags that are used to describe the activity")]
+	public List<string>? Tags { get; set; }
 	
 	// Defaults
 	public class SensibleDefaults
