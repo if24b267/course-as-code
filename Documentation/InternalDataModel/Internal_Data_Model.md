@@ -165,30 +165,54 @@ See [moodle docs #1](https://docs.moodle.org/405/en/Activity_completion) and [mo
 ![ShowActivityCompletionConditions = True](assets/ShowActivityCompletionConditionsFalse.png)
 
 ### UsesLegacyFiles  
-Moodle uses a new file system since version 2.0; this setting probably tells Moodle if this backup uses the new or old file system  
-See [moodle docs](https://docs.moodle.org/405/en/Legacy_course_files)  
+Moodle uses a "new" file system since version 2.0. This setting tells Moodle if this backup uses the new or old file system
 
-corresponds to `<summaryformat>` in `/course/course.xml`, possible values:  
-0 -> backup uses the new file system (no legacy files)  
+| Value in Data Model | Value in Moodle XML | Description                                       |
+|---------------------|---------------------|---------------------------------------------------|
+| false               | 0                   | backup uses the new file system (no legacy files) |
+| true                | 1                   | backup uses the old file system                   |
+
+See [moodle docs](https://docs.moodle.org/405/en/Legacy_course_files) for more information
 
 ### CourseLanguage  
 By default, Moodle detects a user's language from their browser setting and displays the course in the corresponding language.  
 Using this setting, the teacher can force the course to use a specific language setting  
 
-corresponds to `<lang>` in `/course/course.xml`, possible values:  
--> empty for "Do not force"  
+| Value in Data Model | Value in Moodle XML | Description                                      |
+|---------------------|---------------------|--------------------------------------------------|
+| `Null`              | ` `                 | don't force a language                           |
+| English             | en                  | force the course page to be displayed in English |
 
 ### CourseCategory  
-Course categories organize courses for all Moodle site participants. The default course category on a new Moodle site is "Category 1".  
-A Course creator, Administrator, or Manager can put all courses in the Category 1 category. However, teachers and students will find it easier to find their classes if they are organized in descriptive categories.  
-See [moodle docs](https://docs.moodle.org/405/en/Course_categories)  
+Course categories are used to organize courses into descriptive categories, making them easier to find for teachers and students. The default course category on a new Moodle site is `Category 1`.  
+A course can (and must) only be in one category at a time.
 
-corresponds to `<category id="1">` in `/course/course.xml`, possible values:  
-1 -> default course category  
+See [moodle docs](https://docs.moodle.org/405/en/Course_categories) for more information
 
 ### Custom Fields  
 Custom fields can be used to create field types to be used for custom fields. Instances of these field types can be added to the respective areas that implement Custom fields API.  
-See [moodle docs](https://moodledev.io/docs/4.4/apis/plugintypes/customfield)  
 
-corresponds to `<customfields>` in `/course/course.xml`, possible values:  
--> empty for "No custom fields"  
+See [moodle docs](https://moodledev.io/docs/4.4/apis/plugintypes/customfield) for more information
+
+| Value in Data Model | Value in Moodle XML | Description                           |
+|---------------------|---------------------|---------------------------------------|
+| `Null`              | ` `                 | Course does not use any custom fields |
+| TBD                 | TBD                 | TBD                                   |
+
+### PdfExportFont
+Used to specify a custom font for PDF Exports. Only relevant for languages with non-latin scripts (e.g. Arabic, Chinese, Japanese, Korean, etc.) to ensure that the text is displayed correctly in the PDF.
+
+See [moodle docs](https://docs.moodle.org/405/en/Language_settings#Enable_PDF_fonts) for more information
+
+## User.cs
+
+### EnrolmentSuspended
+Suspended users are no longer able to access any of their courses on Moodle but their data is preserved, so it is possible for them to return to their course at a later time.
+
+| Value in Data Model | Value in Moodle XML | Description                 |
+|---------------------|---------------------|-----------------------------|
+| false               | 0                   | Enrolment Status: Active    |
+| true                | 1                   | Enrolment Status: Suspended |
+
+See [moodle docs](https://docs.moodle.org/405/en/Unenrolment#Suspended_or_Unenrolled?) for more information
+
