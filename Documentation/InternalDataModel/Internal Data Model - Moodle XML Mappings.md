@@ -34,7 +34,7 @@ A selection of a few mappings that may be especially hard to infer:
 
 #### User Enrolments
 The User-Enrolment-Mappings are represented by the User Class in the data model.  
-Each User has an EnrolmentMethod, EnrolmentStartDate, EnrolmentEndDate and EnrolmentStatus which correspond to the XML data.
+Each User has an EnrolmentMethod, EnrolmentStartDate, EnrolmentEndDate and EnrolmentStatus (`EnrolmentSuspended`) which correspond to the XML data.
 
 ## /course/inforef.xml
 This file is not represented in the internal data model as it contains merely references to components of the course.  
@@ -64,7 +64,12 @@ Most tags in this file are represented by the `Role` class in the internal data 
 - `<sortorder>` is not explicitly saved as it's not clear yet what this tag does - probably can be inferred from the data model anyways and doesn't have to be saved explicitly
 
 ## files.xml
-A file is a type of activity. Most of the tags in this file are represented by the `Activites/Resources/MoodleFile` class and its' parent class `Activities/Activity`  
+A file is a type of resource which is a type of activity. Most of the tags in this file are represented by the `Activites/Resources/MoodleFile` class and its' parent class `Activities/Activity`  
 
 - some tags aren't yet represented by the internal data model as their purpose is unclear
 - some tags aren't explicitly saved as they can be inferred from other fields, e.g. `<filesize>` and `<mimetype>` aren't explcitily saved as these values can be inferred by analyzing the file specified in `FilePath`
+
+## /sections/section_*/section.xml
+
+- the `<number>` tag (which defines the order in which the sections are displayed) is not saved explicitly in the data model since the sections are stored in an ordered list in the `Course` class and the order should be infered from their position in this list
+- each section consists of a list of activities (as represented in the `Section` class). In Moodle XML, the `<sequence>` field defines which activities belong to this section (referenced by their ID)
