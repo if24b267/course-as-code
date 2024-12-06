@@ -32,7 +32,7 @@ package Model <<Frame>> {
     
     class SystemDefaults {
         int Id
-        int SummaryFormat
+        enum SummaryFormat
         bool UsesLegacyFiles
         enum CourseLanguage
         DateTime TimeCreated
