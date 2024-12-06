@@ -51,7 +51,7 @@ namespace CourseAsCode.Model
 			[Description("if enabled, students can track their progress through the course")]
 			public bool EnableCompletionTracking { get; set; }
 			[Description("moodle courses can be organized in categories, blank for default category")]
-			public string? CategoryName { get; set; }
+			public required string CategoryName { get; set; }
 			[Description("description of the course category, blank for default category")]
 			public string? CategoryDescription { get; set; }
 		}

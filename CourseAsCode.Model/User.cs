@@ -125,7 +125,7 @@ public class User
         
         [Description("if allowed by the site policy, the user can choose a custom theme")]
         public string? Theme { get; set; }
-        [Description("the status of the enrolment in the course, blank for active")]
-        public int EnrolmentStatus { get; set; }
+        [Description("if enabled, the enrolment of the in the course is suspended")]
+        public bool EnrolmentSuspended { get; set; }
     }
 }
