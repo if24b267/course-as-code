@@ -5,8 +5,8 @@ namespace CourseAsCode.Model;
 
 public class Section
 {
-    public string Name { get; set; }
-    public string Summary { get; set; }
+    public required string Name { get; set; }
+    public string? Summary { get; set; }
     [Description("whether the section is visible to students or teachers only")]
     public bool VisibleToStudents { get; set; }
     
@@ -22,7 +22,7 @@ public class Section
     public class SystemDefaults
     {
         [Description("path to the corresponding section folder in the backup directory")]
-        public string FilePath { get; set; }
+        public required string PathToSection { get; set; }
         [Description("the format in which the SectionSummary is stored")]
         public int SummaryFormat { get; set; }
         [Description("the date and time that the section was last modified")]

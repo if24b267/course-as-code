@@ -3,7 +3,6 @@ using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model
 {
-	
 	public class Course
 	{
 		public required string FullName { get; set; }
@@ -15,9 +14,15 @@ namespace CourseAsCode.Model
 		public DateTime EndDate { get; set; }
 		[Description("which group mode to use as default in the course")]
 		public GroupMode GroupMode { get; set; }
+		[Description("list of tags that are used to describe the course")]
+		public List<string>? Tags { get; set; }
 
+		[Description("ordered list of sections in the course")]
 		public List<Section> Sections { get; set; } = new List<Section>();
-		
+		[Description("list of roles that are available in the course")]
+		public List<Role> Roles { get; set; } = new List<Role>();
+		[Description("list of enrolment methods that are activated for this course")]
+		public List<EnrolmentMethod> EnrolmentMethods { get; set; } = new List<EnrolmentMethod>();
 		
 		// Defaults
 		public class SensibleDefaults
@@ -42,8 +47,6 @@ namespace CourseAsCode.Model
 			public bool ShowActivityCompletionConditions { get; set; }
 			[Description("if enabled, students can track their progress through the course")]
 			public bool EnableCompletionTracking { get; set; }
-			[Description("list of tags that are used to describe the course")]
-			public List<string> Tags { get; set; }
 			[Description("course categories organize courses for all Moodle site participants, blank for default category")]
 			public int? CourseCategory { get; set; }
 		}
@@ -64,9 +67,9 @@ namespace CourseAsCode.Model
 			[Description("the font used for PDF exports, blank for default - relevant for languages with non-latin scripts")]
 			public string? PdfExportFont { get; set; }
 			[Description("necessary if the course uses custom fields, blank for no custom fields")]
-			public string CustomFields { get; set; }
+			public string? CustomFields { get; set; }
 			[Description("path to the course folder in the backup directory")]
-			public string FilePath { get; set; }
+			public required string FilePath { get; set; }
 		}
 	}
 }

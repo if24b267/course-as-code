@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
-using CourseAsCode.Model.Activities;
 
-namespace CourseAsCode.Model.Resources;
+namespace CourseAsCode.Model.Activities.Resources;
 
 public enum License
 {
@@ -14,12 +13,8 @@ public enum FileArea
 	// TODO: Determine possible values
 }
 
-public class File : Activity
+public class MoodleFile : Activity
 {
-	public int Size { get; set; }
-	// maybe change this to file extension?
-	public string Type { get; set; }
-	
 	[Description("name of the file that is to be included in the backup")]
 	public string FileName { get; set; }
 	[Description("path to the file that is to be included in the backup")]
@@ -28,7 +23,7 @@ public class File : Activity
 	public int FileSize { get; set; }
 	
 	// Defaults
-	public class SensibleDefaults
+	public class SensibleDefaultsFile
 	{
 		[Description("name of the user who uploaded the file")]
 		public string Author { get; set; }
@@ -36,7 +31,7 @@ public class File : Activity
 		public License License { get; set; }
 	}
 
-	public class SystemDefaults
+	public class SystemDefaultsFile
 	{
 		[Description("SHA1 Hash of the file content")]
 		public string ContentHash { get; set; }

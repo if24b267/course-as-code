@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Net.Mail;
 using System.Net;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Activities.Resources;
 
 namespace CourseAsCode.Model;
 
@@ -13,7 +14,6 @@ public class User
     public string LastName { get; set; }
     public string City { get; set; }
     public Country Country { get; set; }
-    // Use an enum for this?
     [Description("will be displayed on the users' profile page")]
     public string Description { get; set; }
     
@@ -21,9 +21,16 @@ public class User
     public bool HasPicture { get; set; }
     [Description("Alt text for the profile picture")]
     public string? PictureDescription { get; set; }
+    [Description("the user's profile picture")]
+    public MoodleFile Picture { get; set; }
     
     [Description("the authentication method used for when the user logs in")]
     public AuthenticationMethod AuthMethod { get; set; }
+    [Description("the enrolment method used for when the user was enrolled in this course")]
+    public EnrolmentMethod EnrolmentMethod { get; set; }
+    
+    [Description("the user's role in the system")]
+    public Role Role { get; set; }
     
     // Defaults
     public class SensibleDefaults
@@ -41,6 +48,11 @@ public class User
         public string? Address { get; set; }
         
         public Enums.TimeZone TimeZone { get; set; }
+        
+        [Description("the date and time the user was enrolled in the course")]
+        public DateTime EnrolmentStartDate { get; set; }
+        [Description("the date and time the enrolment ends -> the user loses access to the course")]
+        public DateTime EnrolmentEndDate { get; set; }
     }
 
     public class UserPreferences
@@ -111,5 +123,7 @@ public class User
         
         [Description("if allowed by the site policy, the user can choose a custom theme")]
         public string? Theme { get; set; }
+        [Description("the status of the enrolment in the course, blank for active")]
+        public int EnrolmentStatus { get; set; }
     }
 }
