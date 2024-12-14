@@ -1,4 +1,5 @@
 using System.Xml;
+using CourseAsCode.Model;
 
 namespace CourseAsCode.Writers.XML;
 
@@ -10,37 +11,32 @@ public class RolesWriter
         NewLineOnAttributes = false,
         OmitXmlDeclaration = true
     };
-    public void WriteRoles(string filePath = "roles.xml")
+
+    public void WriteRoles(List<Role> roles, string filePath = "roles.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
-            writer.WriteStartElement("roles_definition"); 
+            writer.WriteStartElement("roles_definition");
 
-            writer.WriteStartElement("role");
-            writer.WriteAttributeString("id", "3");
+            foreach (var role in roles)
+            {
+                writer.WriteStartElement("role");
+                writer.WriteAttributeString("id", role.SystemDefaults.Id.ToString());
 
-            writer.WriteElementString("name", "");
-            writer.WriteElementString("shortname", "editingteacher");
-            writer.WriteElementString("nameincourse", "$@NULL@$");
-            writer.WriteElementString("description", "");
-            writer.WriteElementString("sortorder", "3");
-            writer.WriteElementString("archetype", "editingteacher");
-            writer.WriteEndElement();
+                writer.WriteElementString("name", role.Name ?? string.Empty);
+                writer.WriteElementString("shortname", role.ShortName);
+                writer.WriteElementString("nameincourse", role.LocalName ?? "$@NULL@$");
+                writer.WriteElementString("description", role.Description ?? string.Empty);
+                writer.WriteElementString("sortorder", role.SystemDefaults.Id.ToString());
+                writer.WriteElementString("archetype", role.Archetype.ToString().ToLower());
+                writer.WriteEndElement(); // Close <role>
+            }
 
-            writer.WriteStartElement("role");
-            writer.WriteAttributeString("id", "5");
-
-            writer.WriteElementString("name", "");
-            writer.WriteElementString("shortname", "student");
-            writer.WriteElementString("nameincourse", "$@NULL@$");
-            writer.WriteElementString("description", "");
-            writer.WriteElementString("sortorder", "5");
-            writer.WriteElementString("archetype", "student");
-            writer.WriteEndElement();
-
-            writer.WriteEndElement(); 
+            writer.WriteEndElement(); // Close <roles_definition>
             writer.WriteEndDocument();
         }
     }
 }
+
+
