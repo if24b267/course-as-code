@@ -13,6 +13,7 @@
   <ItemGroup>
     <Folder Include="AbstractClasses\" />
     <Folder Include="Helper\" />
+    <Folder Include="YAML\Model\" />
   </ItemGroup>
 
   <ItemGroup>

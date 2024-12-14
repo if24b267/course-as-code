@@ -1,0 +1,10 @@
+CourseName: PokemonCourse
+# ShortName has to be unique
+# ShortName: PC
+Summary: We will learn Pokemon
+Description: Pokemon and more Pokemon. This is a description!
+Visible: true
+Category: miscellaneous 
+StartDate: 31-01-2023 23:59
+EndDate: 31-08-2025 23:59
+IdNumber: 123456
