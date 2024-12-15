@@ -3,104 +3,124 @@ using CourseAsCode.Model;
 
 namespace CourseAsCode.Writers.XML.Course;
 
-public class CourseWriter
+public class CourseWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true,
-        NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
-    };
-
     public void WriteCourse(Course course, string filePath = "course/course.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
-
-            writer.WriteStartElement("course");
-            writer.WriteAttributeString("id", course.Id.ToString());
-            writer.WriteAttributeString("contextid", "14");
-
-            // child elements of <course>
-            writer.WriteElementString("shortname", course.ShortName);
-            writer.WriteElementString("fullname", course.FullName);
-            writer.WriteElementString("idnumber", course.CourseIdNumber.ToString());
-            writer.WriteElementString("summary", course.Summary ?? string.Empty);
-            writer.WriteElementString("summaryformat", ((int)course.SummaryFormat).ToString());
-            writer.WriteElementString("format", course.Format.ToString().ToLower());
-            writer.WriteElementString("showgrades", course.ShowGrades ? "1" : "0");
-            writer.WriteElementString("newsitems", course.NumberOfAnnouncementsToDisplay?.ToString() ?? "0");
-            writer.WriteElementString("startdate", ((DateTimeOffset)course.StartDate).ToUnixTimeSeconds().ToString());
-            writer.WriteElementString("enddate", ((DateTimeOffset)course.EndDate).ToUnixTimeSeconds().ToString());
-            writer.WriteElementString("marker", "0");
-            writer.WriteElementString("maxbytes", course.MaximumUploadSize.ToString());
-            writer.WriteElementString("legacyfiles", course.UsesLegacyFiles ? "1" : "0");
-            writer.WriteElementString("showreports", "0");
-            writer.WriteElementString("visible", course.VisibleToStudents ? "1" : "0");
-            writer.WriteElementString("groupmode", ((int)course.GroupMode).ToString());
-            writer.WriteElementString("groupmodeforce", course.ForceGroupMode ? "1" : "0");
-            writer.WriteElementString("defaultgroupingid", "0");
-            writer.WriteElementString("lang", course.CourseLanguage?.ToString() ?? string.Empty);
-            writer.WriteElementString("theme", course.Theme ?? string.Empty);
-            writer.WriteElementString("timecreated", ((DateTimeOffset)course.TimeCreated).ToUnixTimeSeconds().ToString());
-            writer.WriteElementString("timemodified", ((DateTimeOffset)course.TimeModified).ToUnixTimeSeconds().ToString());
-            writer.WriteElementString("requested", "0");
-            writer.WriteElementString("showactivitydates", course.ShowActivityDates ? "1" : "0");
-            writer.WriteElementString("showcompletionconditions", course.ShowActivityCompletionConditions ? "1" : "0");
-            writer.WriteElementString("pdfexportfont", course.PdfExportFont ?? "$@NULL@$");
-            writer.WriteElementString("enablecompletion", course.EnableCompletionTracking ? "1" : "0");
-            writer.WriteElementString("completionnotify", "0");
-
-            // <category> element
-            writer.WriteStartElement("category");
-            writer.WriteAttributeString("id", "1");
-            writer.WriteElementString("name", course.CategoryName);
-            writer.WriteElementString("description", course.CategoryDescription ?? "$@NULL@$");
-            writer.WriteEndElement(); // Close <category>
-
-            // <tags> element
-            writer.WriteStartElement("tags");
-            if (course.Tags != null)
+            WriteStartElementWithAttributes(writer, "course", new Dictionary<string, string>
             {
-                foreach (var tag in course.Tags)
-                {
-                    writer.WriteStartElement("tag");
-                    writer.WriteAttributeString("id", "1");
-                    writer.WriteElementString("name", tag);
-                    writer.WriteElementString("rawname", tag);
-                    writer.WriteEndElement(); // Close <tag>
-                }
-            }
-            writer.WriteEndElement(); // Close <tags>
+                { "id", course.Id.ToString() },
+                { "contextid", "14" }
+            });
 
-            writer.WriteStartElement("customfields");
-            writer.WriteString(course.CustomFields ?? " ");
-            writer.WriteEndElement(); // Close <customfields>
-
-            // <courseformatoptions> element
-            writer.WriteStartElement("courseformatoptions");
-
-            // Add <courseformatoption> elements
-            writer.WriteStartElement("courseformatoption");
-            writer.WriteElementString("format", course.Format.ToString().ToLower());
-            writer.WriteElementString("sectionid", "0");
-            writer.WriteElementString("name", "coursedisplay");
-            writer.WriteElementString("value", "0");
-            writer.WriteEndElement(); // Close <courseformatoption>
-
-            writer.WriteStartElement("courseformatoption");
-            writer.WriteElementString("format", course.Format.ToString().ToLower());
-            writer.WriteElementString("sectionid", "0");
-            writer.WriteElementString("name", "hiddensections");
-            writer.WriteElementString("value", "1");
-            writer.WriteEndElement(); // Close <courseformatoption>
-
-            writer.WriteEndElement(); // Close <courseformatoptions>
+            WriteCourseElements(writer, course);
+            WriteCategory(writer, course);
+            WriteTags(writer, course);
+            WriteCustomFields(writer, course);
+            WriteCourseFormatOptions(writer, course);
 
             writer.WriteEndElement(); // Close <course>
-
             writer.WriteEndDocument();
         }
+    }
+
+    private void WriteCourseElements(XmlWriter writer, Course course)
+    {
+        var elements = new Dictionary<string, string>
+        {
+            { "shortname", course.ShortName },
+            { "fullname", course.FullName },
+            { "idnumber", course.CourseIdNumber.ToString() },
+            { "summary", course.Summary ?? string.Empty },
+            { "summaryformat", ((int)course.SummaryFormat).ToString() },
+            { "format", course.Format.ToString().ToLower() },
+            { "showgrades", course.ShowGrades ? "1" : "0" },
+            { "newsitems", course.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
+            { "startdate", ((DateTimeOffset)course.StartDate).ToUnixTimeSeconds().ToString() },
+            { "enddate", ((DateTimeOffset)course.EndDate).ToUnixTimeSeconds().ToString() },
+            { "marker", "0" },
+            { "maxbytes", course.MaximumUploadSize.ToString() },
+            { "legacyfiles", course.UsesLegacyFiles ? "1" : "0" },
+            { "showreports", "0" },
+            { "visible", course.VisibleToStudents ? "1" : "0" },
+            { "groupmode", ((int)course.GroupMode).ToString() },
+            { "groupmodeforce", course.ForceGroupMode ? "1" : "0" },
+            { "defaultgroupingid", "0" },
+            { "lang", course.CourseLanguage?.ToString() ?? string.Empty },
+            { "theme", course.Theme ?? string.Empty },
+            { "timecreated", ((DateTimeOffset)course.TimeCreated).ToUnixTimeSeconds().ToString() },
+            { "timemodified", ((DateTimeOffset)course.TimeModified).ToUnixTimeSeconds().ToString() },
+            { "requested", "0" },
+            { "showactivitydates", course.ShowActivityDates ? "1" : "0" },
+            { "showcompletionconditions", course.ShowActivityCompletionConditions ? "1" : "0" },
+            { "pdfexportfont", course.PdfExportFont ?? "$@NULL@$" },
+            { "enablecompletion", course.EnableCompletionTracking ? "1" : "0" },
+            { "completionnotify", "0" }
+        };
+
+        WriteElements(writer, elements);
+    }
+
+    private void WriteCategory(XmlWriter writer, Course course)
+    {
+        WriteStartElementWithAttributes(writer, "category", new Dictionary<string, string>
+        {
+            { "id", "1" }
+        });
+        writer.WriteElementString("name", course.CategoryName);
+        writer.WriteElementString("description", course.CategoryDescription ?? "$@NULL@$");
+        writer.WriteEndElement(); // Close <category>
+    }
+
+    private void WriteTags(XmlWriter writer, Course course)
+    {
+        writer.WriteStartElement("tags");
+        if (course.Tags != null)
+        {
+            foreach (var tag in course.Tags)
+            {
+                WriteStartElementWithAttributes(writer, "tag", new Dictionary<string, string>
+                {
+                    { "id", "1" }
+                });
+                writer.WriteElementString("name", tag);
+                writer.WriteElementString("rawname", tag);
+                writer.WriteEndElement(); // Close <tag>
+            }
+        }
+        writer.WriteEndElement(); // Close <tags>
+    }
+
+    private void WriteCustomFields(XmlWriter writer, Course course)
+    {
+        writer.WriteStartElement("customfields");
+        writer.WriteString(course.CustomFields ?? " ");
+        writer.WriteEndElement(); // Close <customfields>
+    }
+
+    private void WriteCourseFormatOptions(XmlWriter writer, Course course)
+    {
+        writer.WriteStartElement("courseformatoptions");
+
+        var formatOptions = new List<(string name, string value)>
+        {
+            ("coursedisplay", "0"),
+            ("hiddensections", "1")
+        };
+
+        foreach (var option in formatOptions)
+        {
+            writer.WriteStartElement("courseformatoption");
+            writer.WriteElementString("format", course.Format.ToString().ToLower());
+            writer.WriteElementString("sectionid", "0");
+            writer.WriteElementString("name", option.name);
+            writer.WriteElementString("value", option.value);
+            writer.WriteEndElement(); // Close <courseformatoption>
+        }
+
+        writer.WriteEndElement(); // Close <courseformatoptions>
     }
 }
