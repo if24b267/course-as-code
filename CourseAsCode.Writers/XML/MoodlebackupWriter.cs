@@ -8,8 +8,9 @@ public class MoodleBackupWriter
     {
         Indent = true,
         NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
+        OmitXmlDeclaration = false // Show the version and encoding on tp of the xml, usually set to true, but have to set it to false for this, otherwise uploading doesnt work
     };
+
     public void WriteMoodleBackup(string filePath = "moodle_backup.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
@@ -20,30 +21,30 @@ public class MoodleBackupWriter
             writer.WriteStartElement("moodle_backup");
 
             writer.WriteStartElement("information");
-            writer.WriteElementString("name", "backup_test.mbz");
-            writer.WriteElementString("moodle_version", "2021051700");
+            writer.WriteElementString("name", "backup-moodle2-course-2-empco-20241127-0959.mbz");
+            writer.WriteElementString("moodle_version", "2024100700");
             writer.WriteElementString("moodle_release", "4.5 (Build: 20241007)");
             writer.WriteElementString("backup_version", "2024100700");
             writer.WriteElementString("backup_release", "4.5");
-            writer.WriteElementString("backup_date", "1731353758");
+            writer.WriteElementString("backup_date", "1732701571");
             writer.WriteElementString("mnet_remoteusers", "0");
             writer.WriteElementString("include_files", "1");
             writer.WriteElementString("include_file_references_to_external_content", "0");
             writer.WriteElementString("original_wwwroot", "https://moodle.sanctus.cx");
             writer.WriteElementString("original_site_identifier_hash", "dccbb261ec5a2af4a6706a77387883ee");
-            writer.WriteElementString("original_course_id", "4");
-            writer.WriteElementString("original_course_format", "EmptyCourse");
+            writer.WriteElementString("original_course_id", "2");
+            writer.WriteElementString("original_course_format", "topics");
             writer.WriteElementString("original_course_fullname", "EmptyCourse");
             writer.WriteElementString("original_course_shortname", "EmpCo");
-            writer.WriteElementString("original_course_startdate", "1731369600");
-            writer.WriteElementString("original_course_enddate", "1734998400");
-            writer.WriteElementString("original_course_contextid", "18");
+            writer.WriteElementString("original_course_startdate", "1731024000");
+            writer.WriteElementString("original_course_enddate", "1762560000");
+            writer.WriteElementString("original_course_contextid", "14");
             writer.WriteElementString("original_system_contextid", "1");
 
             writer.WriteStartElement("details");
             writer.WriteStartElement("detail");
-            writer.WriteAttributeString("backup_id", "6078ead34c57f691993f01c2e97accdd");
-            writer.WriteAttributeString("type", "course");
+            writer.WriteAttributeString("backup_id", "a7547bcdd945f1b085c05bdeed305078");
+            writer.WriteElementString("type", "course");
             writer.WriteElementString("format", "moodle2");
             writer.WriteElementString("interactive", "1");
             writer.WriteElementString("mode", "70");
@@ -53,7 +54,7 @@ public class MoodleBackupWriter
             writer.WriteEndElement(); // Close details
 
             writer.WriteStartElement("contents");
-            writer.WriteStartElement("activities");
+            /*writer.WriteStartElement("activities");
 
             writer.WriteStartElement("activity");
             writer.WriteAttributeString("moduleid", "2");
@@ -64,15 +65,15 @@ public class MoodleBackupWriter
             writer.WriteElementString("insubsection", "");
             writer.WriteEndElement(); // Close activity
 
-            writer.WriteEndElement(); // Close activities
+            writer.WriteEndElement(); // Close activities*/
 
             writer.WriteStartElement("sections");
 
-            for (int i = 13; i <= 19; i++)
+            for (int i = 1; i <= 5; i++)
             {
                 writer.WriteStartElement("section");
                 writer.WriteElementString("sectionid", i.ToString());
-                writer.WriteElementString("title", (i - 13).ToString());
+                writer.WriteElementString("title", (i - 1).ToString());
                 writer.WriteElementString("directory", $"sections/section_{i}");
                 writer.WriteElementString("parentcmid", "");
                 writer.WriteElementString("modname", "");
@@ -82,8 +83,8 @@ public class MoodleBackupWriter
             writer.WriteEndElement(); // Close sections
 
             writer.WriteStartElement("course");
-            writer.WriteElementString("courseid", "4");
-            writer.WriteElementString("title", "EWC");
+            writer.WriteElementString("courseid", "2");
+            writer.WriteElementString("title", "EmpCo");
             writer.WriteElementString("directory", "course");
             writer.WriteEndElement(); // Close course
 
@@ -93,7 +94,7 @@ public class MoodleBackupWriter
 
             string[][] settings = new string[][]
             {
-                    new string[] { "root", "filename", "backup_test_weekly.mbz" },
+                    new string[] { "root", "filename", "backup-moodle2-course-2-empco-20241127-0959.mbz" },
                     new string[] { "root", "users", "1" },
                     new string[] { "root", "anonymize", "0" },
                     new string[] { "root", "role_assignments", "1" },
@@ -114,22 +115,22 @@ public class MoodleBackupWriter
                     new string[] { "root", "contentbankcontent", "1" },
                     new string[] { "root", "xapistate", "1" },
                     new string[] { "root", "legacyfiles", "1" },
-                    new string[] { "section", "section_13", "section_13_included", "1" },
-                    new string[] { "section", "section_13", "section_13_userinfo", "1" },
-                    new string[] { "activity", "forum_2", "forum_2_included", "1" },
-                    new string[] { "activity", "forum_2", "forum_2_userinfo", "1" },
-                    new string[] { "section", "section_14", "section_14_included", "1" },
-                    new string[] { "section", "section_14", "section_14_userinfo", "1" },
-                    new string[] { "section", "section_15", "section_15_included", "1" },
-                    new string[] { "section", "section_15", "section_15_userinfo", "1" },
-                    new string[] { "section", "section_16", "section_16_included", "1" },
-                    new string[] { "section", "section_16", "section_16_userinfo", "1" },
-                    new string[] { "section", "section_17", "section_17_included", "1" },
-                    new string[] { "section", "section_17", "section_17_userinfo", "1" },
-                    new string[] { "section", "section_18", "section_18_included", "1" },
-                    new string[] { "section", "section_18", "section_18_userinfo", "1" },
-                    new string[] { "section", "section_19", "section_19_included", "1" },
-                    new string[] { "section", "section_19", "section_19_userinfo", "1" }
+                    new string[] { "section", "section_1", "section_1_included", "1" },
+                    new string[] { "section", "section_1", "section_1_userinfo", "1" },
+                    //new string[] { "activity", "forum_2", "forum_2_included", "1" },
+                    //new string[] { "activity", "forum_2", "forum_2_userinfo", "1" },
+                    new string[] { "section", "section_2", "section_2_included", "1" },
+                    new string[] { "section", "section_2", "section_2_userinfo", "1" },
+                    new string[] { "section", "section_3", "section_3_included", "1" },
+                    new string[] { "section", "section_3", "section_3_userinfo", "1" },
+                    new string[] { "section", "section_4", "section_4_included", "1" },
+                    new string[] { "section", "section_4", "section_4_userinfo", "1" },
+                    new string[] { "section", "section_5", "section_5_included", "1" },
+                    new string[] { "section", "section_5", "section_5_userinfo", "1" },
+                    //new string[] { "section", "section_18", "section_18_included", "1" },
+                    //new string[] { "section", "section_18", "section_18_userinfo", "1" },
+                    //new string[] { "section", "section_19", "section_19_included", "1" },
+                    //new string[] { "section", "section_19", "section_19_userinfo", "1" }
             };
 
             foreach (var setting in settings)

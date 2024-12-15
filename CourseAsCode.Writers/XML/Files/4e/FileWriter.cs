@@ -1,8 +1,8 @@
 using System.Xml;
 
-namespace CourseAsCode.Writers.XML.Course;
+namespace CourseAsCode.Writers.XML.Files.E4;
 
-public class BadgesWriter
+public class FileWriter
 {
     /*private readonly XmlWriterSettings _settings = new()
     {
@@ -383,9 +383,9 @@ public class BadgesWriter
         ‘J¥ªsµäşP8""hw™¢(å¢†H¥RÕ¹Zr?´»LQ”JPC¤R©ê\-¹‚v—)ŠR	jˆT*UëÜêÔ{í.S¥Ô©Tª:VKî;B]¯N­(JM †H¥RÕ±Zr	º:µ¢(•¢†H¥RÕ©´»LQ”ôPC¤R©êTÚ]¦(Jz¨!R©Tu*í.S%=Ô©Tª:”v—)Š’.jˆT*UŠ WKîÃÂGŠğÇÁ9³àCğÁŒø@¼?#Ş—ïÍˆ÷dÄ»3à]ñÎø#O^'˜ ŒJ¥RÕ‹xp)Š¢¤‰J¥R©T*•J¥R©ÊÑÿù?ÿBó’Ÿ˜)‡    IEND®B`‚";
 
         // Convert file text into byte[] Array
-        byte[] data = Encoding.UTF8.GetBytes(text);
+        //byte[] data = Encoding.Default.GetBytes(text);
 
         // Write data into file
-        File.WriteAllBytes(filePath, data);
+        File.WriteAllText(filePath, text);
     }
 }
