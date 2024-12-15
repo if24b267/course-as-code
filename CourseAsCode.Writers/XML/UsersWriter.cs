@@ -3,83 +3,111 @@ using CourseAsCode.Model;
 
 namespace CourseAsCode.Writers.XML;
 
-public class UsersWriter
+public class UsersWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true,
-        NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
-    };
-
     public void WriteUsers(List<User> users, string filePath = "users.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
-
-            // root element <users>
             writer.WriteStartElement("users");
 
             foreach (var user in users)
             {
-                // child elements of <users>
-                writer.WriteStartElement("user");
-                writer.WriteAttributeString("id", user.SystemDefaults.Id.ToString());
-                writer.WriteAttributeString("contextid", user.SystemDefaults.ExternalId.ToString());
-
-                writer.WriteElementString("username", user.Username);
-                writer.WriteElementString("email", user.EMail.ToString());
-                writer.WriteElementString("firstname", user.FirstName);
-                writer.WriteElementString("lastname", user.LastName);
-                writer.WriteElementString("city", user.City);
-                writer.WriteElementString("country", user.Country.ToString());
-                writer.WriteElementString("description", user.Description);
-                writer.WriteElementString("haspicture", user.HasPicture ? "1" : "0");
-                writer.WriteElementString("picturedescription", user.PictureDescription ?? string.Empty);
-                writer.WriteElementString("authmethod", user.AuthMethod.ToString());
-                writer.WriteElementString("role", user.Role.ShortName);
-
-                writer.WriteStartElement("preferences");
-                writer.WriteElementString("preferredlanguage", user.UserPreferences.PreferredLanguage.ToString());
-                writer.WriteElementString("emaildigesttype", user.UserPreferences.EMailDigestType.ToString());
-                writer.WriteElementString("autosubscribetoforums", user.UserPreferences.AutoSubscribeToForums ? "1" : "0");
-                writer.WriteElementString("usenesteddiscussionview", user.UserPreferences.UseNestedDiscussionView ? "1" : "0");
-                writer.WriteElementString("trackreadposts", user.UserPreferences.TrackReadPosts ? "1" : "0");
-                writer.WriteElementString("notificationmarkspostasread", user.UserPreferences.NotificationMarksPostAsRead ? "1" : "0");
-                writer.WriteElementString("editortype", user.UserPreferences.EditorType.ToString());
-                writer.WriteElementString("use24hourtime", user.UserPreferences.Use24HourTime.HasValue ? (user.UserPreferences.Use24HourTime.Value ? "1" : "0") : string.Empty);
-                writer.WriteElementString("firstdayofweek", user.UserPreferences.FirstDayOfWeek?.ToString() ?? string.Empty);
-                writer.WriteElementString("maxevents", user.UserPreferences.MaxEvents.ToString());
-                writer.WriteElementString("lookaheadperiod", user.UserPreferences.LookAheadPeriod.ToString());
-                writer.WriteElementString("persistfiltersettings", user.UserPreferences.PersistFilerSettings ? "1" : "0");
-                writer.WriteElementString("contentbankvisible", user.UserPreferences.ContentBankVisible ? "1" : "0");
-                writer.WriteElementString("acceptmessagesfromcontactsonly", user.UserPreferences.AcceptMessagesFromContactsOnly ? "1" : "0");
-                writer.WriteEndElement(); // Close <preferences>
-
-                writer.WriteStartElement("system");
-                writer.WriteElementString("externalid", user.SystemDefaults.ExternalId.ToString());
-                writer.WriteElementString("lastip", user.SystemDefaults.LastIP.ToString());
-                writer.WriteElementString("descriptionformat", ((int)user.SystemDefaults.DescriptionFormat).ToString());
-                writer.WriteElementString("isconfirmed", user.SystemDefaults.IsConfirmed ? "1" : "0");
-                writer.WriteElementString("acceptedpolicy", user.SystemDefaults.AcceptedPolicy ? "1" : "0");
-                writer.WriteElementString("isdeleted", user.SystemDefaults.IsDeleted ? "1" : "0");
-                writer.WriteElementString("timecreated", ((DateTimeOffset)user.SystemDefaults.TimeCreated).ToUnixTimeSeconds().ToString());
-                writer.WriteElementString("timemodified", ((DateTimeOffset)user.SystemDefaults.TimeModified).ToUnixTimeSeconds().ToString());
-                writer.WriteElementString("firstaccess", ((DateTimeOffset)user.SystemDefaults.FirstAccess).ToUnixTimeSeconds().ToString());
-                writer.WriteElementString("lastaccess", ((DateTimeOffset)user.SystemDefaults.LastAccess).ToUnixTimeSeconds().ToString());
-                writer.WriteElementString("lastlogin", ((DateTimeOffset)user.SystemDefaults.LastLogin).ToUnixTimeSeconds().ToString());
-                writer.WriteElementString("rolechange", ((DateTimeOffset)user.SystemDefaults.RoleChange).ToUnixTimeSeconds().ToString());
-                writer.WriteElementString("theme", user.SystemDefaults.Theme ?? string.Empty);
-                writer.WriteElementString("enrolmentsuspended", user.SystemDefaults.EnrolmentSuspended ? "1" : "0");
-                writer.WriteEndElement(); // Close <system>
-
-                writer.WriteEndElement(); // Close <user>
+                WriteUser(writer, user);
             }
 
             writer.WriteEndElement(); // Close <users>
             writer.WriteEndDocument();
         }
     }
-}
 
+    private void WriteUser(XmlWriter writer, User user)
+    {
+        WriteStartElementWithAttributes(writer, "user", new Dictionary<string, string>
+        {
+            { "id", user.SystemDefaults.Id.ToString() },
+            { "contextid", user.SystemDefaults.ExternalId.ToString() }
+        });
+
+        WriteUserElements(writer, user);
+        WritePreferences(writer, user);
+        WriteSystem(writer, user);
+
+        writer.WriteEndElement(); // Close <user>
+    }
+
+    private void WriteUserElements(XmlWriter writer, User user)
+    {
+        var elements = new Dictionary<string, string>
+        {
+            { "username", user.Username },
+            { "email", user.EMail.ToString() },
+            { "firstname", user.FirstName },
+            { "lastname", user.LastName },
+            { "city", user.City },
+            { "country", user.Country.ToString() },
+            { "description", user.Description },
+            { "haspicture", user.HasPicture ? "1" : "0" },
+            { "picturedescription", user.PictureDescription ?? string.Empty },
+            { "authmethod", user.AuthMethod.ToString() },
+            { "role", user.Role.ShortName }
+        };
+
+        WriteElements(writer, elements);
+    }
+
+    private void WritePreferences(XmlWriter writer, User user)
+    {
+        writer.WriteStartElement("preferences");
+
+        var preferences = new Dictionary<string, string>
+        {
+            { "preferredlanguage", user.UserPreferences.PreferredLanguage.ToString() },
+            { "emaildigesttype", user.UserPreferences.EMailDigestType.ToString() },
+            { "autosubscribetoforums", user.UserPreferences.AutoSubscribeToForums ? "1" : "0" },
+            { "usenesteddiscussionview", user.UserPreferences.UseNestedDiscussionView ? "1" : "0" },
+            { "trackreadposts", user.UserPreferences.TrackReadPosts ? "1" : "0" },
+            { "notificationmarkspostasread", user.UserPreferences.NotificationMarksPostAsRead ? "1" : "0" },
+            { "editortype", user.UserPreferences.EditorType.ToString() },
+            { "use24hourtime", user.UserPreferences.Use24HourTime.HasValue ? (user.UserPreferences.Use24HourTime.Value ? "1" : "0") : string.Empty },
+            { "firstdayofweek", user.UserPreferences.FirstDayOfWeek?.ToString() ?? string.Empty },
+            { "maxevents", user.UserPreferences.MaxEvents.ToString() },
+            { "lookaheadperiod", user.UserPreferences.LookAheadPeriod.ToString() },
+            { "persistfiltersettings", user.UserPreferences.PersistFilerSettings ? "1" : "0" },
+            { "contentbankvisible", user.UserPreferences.ContentBankVisible ? "1" : "0" },
+            { "acceptmessagesfromcontactsonly", user.UserPreferences.AcceptMessagesFromContactsOnly ? "1" : "0" }
+        };
+
+        WriteElements(writer, preferences);
+
+        writer.WriteEndElement(); // Close <preferences>
+    }
+
+    private void WriteSystem(XmlWriter writer, User user)
+    {
+        writer.WriteStartElement("system");
+
+        var systemElements = new Dictionary<string, string>
+        {
+            { "externalid", user.SystemDefaults.ExternalId.ToString() },
+            { "lastip", user.SystemDefaults.LastIP.ToString() },
+            { "descriptionformat", ((int)user.SystemDefaults.DescriptionFormat).ToString() },
+            { "isconfirmed", user.SystemDefaults.IsConfirmed ? "1" : "0" },
+            { "acceptedpolicy", user.SystemDefaults.AcceptedPolicy ? "1" : "0" },
+            { "isdeleted", user.SystemDefaults.IsDeleted ? "1" : "0" },
+            { "timecreated", ((DateTimeOffset)user.SystemDefaults.TimeCreated).ToUnixTimeSeconds().ToString() },
+            { "timemodified", ((DateTimeOffset)user.SystemDefaults.TimeModified).ToUnixTimeSeconds().ToString() },
+            { "firstaccess", ((DateTimeOffset)user.SystemDefaults.FirstAccess).ToUnixTimeSeconds().ToString() },
+            { "lastaccess", ((DateTimeOffset)user.SystemDefaults.LastAccess).ToUnixTimeSeconds().ToString() },
+            { "lastlogin", ((DateTimeOffset)user.SystemDefaults.LastLogin).ToUnixTimeSeconds().ToString() },
+            { "rolechange", ((DateTimeOffset)user.SystemDefaults.RoleChange).ToUnixTimeSeconds().ToString() },
+            { "theme", user.SystemDefaults.Theme ?? string.Empty },
+            { "enrolmentsuspended", user.SystemDefaults.EnrolmentSuspended ? "1" : "0" }
+        };
+
+        WriteElements(writer, systemElements);
+
+        writer.WriteEndElement(); // Close <system>
+    }
+}
