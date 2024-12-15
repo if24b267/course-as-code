@@ -2,25 +2,16 @@ using System.Xml;
 
 namespace CourseAsCode.Writers.XML;
 
-public class ScalesWriter
+public class ScalesWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true,
-        NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
-    };
-
     public void WriteScales(string filePath = "scales.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
-
-            writer.WriteStartElement("scales_definition"); // Root element
+            writer.WriteStartElement("scales_definition");
             writer.WriteString(" ");
-            writer.WriteEndElement(); // Close </scales_definition>
-
+            writer.WriteEndElement(); // Close <scales_definition>
             writer.WriteEndDocument();
         }
     }
