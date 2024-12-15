@@ -6,5 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\CourseAsCode.Model\CourseAsCode.Model.csproj" />
+	</ItemGroup>
 </Project>
