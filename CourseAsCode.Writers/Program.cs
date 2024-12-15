@@ -71,8 +71,8 @@ class Program
         InforefWriter inforefWriter = new InforefWriter();
         inforefWriter.WriteInforef();
 
-        RolesCoursWriter rolesCoursWriter = new RolesCoursWriter();
-        rolesCoursWriter.WriteRolesCours();
+        RolesCourseWriter rolesCourseWriter = new RolesCourseWriter();
+        rolesCourseWriter.WriteRolesCourse();
 
         BadgesWriter badgesWriter = new BadgesWriter();
         badgesWriter.WriteBadges();

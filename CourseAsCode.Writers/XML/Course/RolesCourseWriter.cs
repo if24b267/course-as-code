@@ -2,7 +2,7 @@ using System.Xml;
 
 namespace CourseAsCode.Writers.XML.Course;
 
-public class RolesCoursWriter
+public class RolesCourseWriter
 {
     private readonly XmlWriterSettings _settings = new()
     {
@@ -11,7 +11,7 @@ public class RolesCoursWriter
         OmitXmlDeclaration = true // Removes the XML declaration
     };
     
-    public void WriteRolesCours(string filePath = "course/roles.xml")
+    public void WriteRolesCourse(string filePath = "course/roles.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
