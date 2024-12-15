@@ -2,22 +2,14 @@ using System.Xml;
 
 namespace CourseAsCode.Writers.XML.Course;
 
-public class CompetenciesWriter
+public class CompetenciesWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true,
-        NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
-    };
-    
     public void WriteCompetencies(string filePath = "course/competencies.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
-
-            writer.WriteStartElement("course_competencies"); // Root element
+            writer.WriteStartElement("course_competencies");
 
             writer.WriteStartElement("competencies");
             writer.WriteString(" ");
@@ -32,3 +24,4 @@ public class CompetenciesWriter
         }
     }
 }
+
