@@ -3,15 +3,8 @@ using CourseAsCode.Model;
 
 namespace CourseAsCode.Writers.XML;
 
-public class RolesWriter
+public class RolesWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true,
-        NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
-    };
-
     public void WriteRoles(List<Role> roles, string filePath = "roles.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
@@ -21,22 +14,33 @@ public class RolesWriter
 
             foreach (var role in roles)
             {
-                writer.WriteStartElement("role");
-                writer.WriteAttributeString("id", role.SystemDefaults.Id.ToString());
-
-                writer.WriteElementString("name", role.Name ?? string.Empty);
-                writer.WriteElementString("shortname", role.ShortName);
-                writer.WriteElementString("nameincourse", role.LocalName ?? "$@NULL@$");
-                writer.WriteElementString("description", role.Description ?? string.Empty);
-                writer.WriteElementString("sortorder", role.SystemDefaults.Id.ToString());
-                writer.WriteElementString("archetype", role.Archetype.ToString().ToLower());
-                writer.WriteEndElement(); // Close <role>
+                WriteRole(writer, role);
             }
 
             writer.WriteEndElement(); // Close <roles_definition>
             writer.WriteEndDocument();
         }
     }
+
+    private void WriteRole(XmlWriter writer, Role role)
+    {
+        WriteStartElementWithAttributes(writer, "role", new Dictionary<string, string>
+        {
+            { "id", role.SystemDefaults.Id.ToString() }
+        });
+
+        var elements = new Dictionary<string, string>
+        {
+            { "name", role.Name ?? string.Empty },
+            { "shortname", role.ShortName },
+            { "nameincourse", role.LocalName ?? "$@NULL@$" },
+            { "description", role.Description ?? string.Empty },
+            { "sortorder", role.SystemDefaults.Id.ToString() },
+            { "archetype", role.Archetype.ToString().ToLower() }
+        };
+
+        WriteElements(writer, elements);
+
+        writer.WriteEndElement(); // Close <role>
+    }
 }
-
-
