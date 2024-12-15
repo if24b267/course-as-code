@@ -5,7 +5,7 @@ using CourseAsCode.Writers.XML.Sections.section_2;
 using CourseAsCode.Writers.XML.Sections.section_3;
 using CourseAsCode.Writers.XML.Sections.section_4;
 using CourseAsCode.Writers.XML.Sections.section_5;
-using CourseAsCode.Writers.XML.Files.4e;
+using CourseAsCode.Writers.XML.Files.E4;
 
 namespace CourseAsCode.Writers;
 
@@ -91,8 +91,7 @@ class Program
         // Create subfolders in "sections"
         foreach (string subfolder in subfolders)
         {
-            string newFolderPath = Path.Combine("sections", subfolder);
-            System.IO.Directory.CreateDirectory(newFolderPath);
+            System.IO.Directory.CreateDirectory(Path.Combine("sections", subfolder));
         }
 
         // Section 1
@@ -135,11 +134,8 @@ class Program
         // Create files directory if it does not exist
         System.IO.Directory.CreateDirectory("files");
 
-        // Declare the hardcoded files subfolder in files
-        string newFolderPath = Path.Combine("files", "4e");
-
         // Create subfolder in files
-        System.IO.Directory.CreateDirectory(newFolderPath);
+        System.IO.Directory.CreateDirectory(Path.Combine("files", "4e"));
 
         FileWriter fileWriter = new FileWriter();
         fileWriter.WriteFile();
