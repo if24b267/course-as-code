@@ -5,8 +5,8 @@ namespace CourseAsCode.Model
 {
 	public class Course
 	{
-		public required string FullName { get; set; }
-		public required string ShortName { get; set; }
+		public required string? FullName { get; set; }
+		public required string? ShortName { get; set; }
 		public string? Summary { get; set; }
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
@@ -14,7 +14,6 @@ namespace CourseAsCode.Model
 		public GroupMode GroupMode { get; set; }
 		[Description("list of tags that are used to describe the course")]
 		public List<string>? Tags { get; set; }
-
 		[Description("ordered list of sections in the course")]
 		public List<Section> Sections { get; set; } = new List<Section>();
 		[Description("list of roles that are available in the course")]
@@ -23,10 +22,12 @@ namespace CourseAsCode.Model
 		public List<EnrolmentMethod> EnrolmentMethods { get; set; } = new List<EnrolmentMethod>();
 		[Description("list of users that are enrolled in the course")]
 		public List<User> EnrolledUsers { get; set; } = new List<User>();
-		public required BackupMetadata BackupMetadata { get; set; }
-		
+		public BackupMetadata BackupMetadata { get; set; }
+		public SensibleDefaultsCourse SensibleDefaults { get; set; }
+		public SystemDefaultsCourse SystemDefaults { get; set; }
+
 		// Defaults
-		public class SensibleDefaults
+		public class SensibleDefaultsCourse
 		{
 			[Description("how many recent announcements are displayed in the \"latest announcements\" block, blank to disable announcements")]
 			public int? NumberOfAnnouncementsToDisplay { get; set; }
@@ -50,13 +51,13 @@ namespace CourseAsCode.Model
 			public bool ShowActivityCompletionConditions { get; set; }
 			[Description("if enabled, students can track their progress through the course")]
 			public bool EnableCompletionTracking { get; set; }
-			[Description("moodle courses can be organized in categories, blank for default category")]
-			public required string CategoryName { get; set; }
+			[Description("MANDATORY! moodle courses can be organized in categories, blank for default category")]
+			public string CategoryName { get; set; }
 			[Description("description of the course category, blank for default category")]
 			public string? CategoryDescription { get; set; }
 		}
 		
-		public class SystemDefaults
+		public class SystemDefaultsCourse
 		{
 			public int Id { get; set; }
 			[Description("the format in which the CourseSummary is stored")]
@@ -73,8 +74,8 @@ namespace CourseAsCode.Model
 			public string? PdfExportFont { get; set; }
 			[Description("necessary if the course uses custom fields, blank for no custom fields")]
 			public string? CustomFields { get; set; }
-			[Description("path to the course folder in the backup directory")]
-			public required string FilePath { get; set; }
+			[Description("MANDATORY! path to the course folder in the backup directory")]
+			public string FilePath { get; set; }
 		}
 	}
 }

@@ -1,0 +1,21 @@
+﻿using System.ComponentModel.DataAnnotations;
+using YamlDotNet.Core;
+using YamlDotNet.Serialization;
+
+namespace CourseAsCode.Readers.YAML;
+
+public class DeserializerValidation(INodeDeserializer nodeDeserializer) : INodeDeserializer
+{
+	public bool Deserialize(IParser reader, Type expectedType, Func<IParser, Type, object?> nestedObjectDeserializer, out object? value,
+		ObjectDeserializer rootDeserializer)
+	{
+		if (!nodeDeserializer.Deserialize(reader, expectedType, nestedObjectDeserializer, out value, rootDeserializer))
+			return false;
+		var context = new ValidationContext(value);
+		var results = new List<ValidationResult>();
+		if (Validator.TryValidateObject(value, context, results, true))
+			return true;
+		var message = string.Join(Environment.NewLine, results.Select(r => r.ErrorMessage));
+		throw new YamlException(message);
+	}
+}
