@@ -1,21 +1,14 @@
-﻿using CourseAsCode.Readers;
+﻿using System.IO.Compression;
+using CourseAsCode.Readers;
 using CourseAsCode.Readers.Enums;
-using CourseAsCode.Readers.YAML.Readers;
 using CourseAsCode.Writers;
-using NLog;
-using System.IO.Compression;
-using CourseAsCode.Writers.XML.Helper;
 
 namespace CourseAsCode
 {
 	internal class CourseAsCode
 	{
-		private static readonly GeneralHelper WriterGeneralHelper = GeneralHelper.Instance;
-		private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
-
 		static void Main(string?[] args)
 		{
-			_logger.Debug("Starting CourseAsCode...");
 			string? inputPath = null;
 			string? outputPath = null;
 			var courseFormat = CourseFormat.YAML; // default
@@ -23,18 +16,15 @@ namespace CourseAsCode
 
 			for (var i = 0; i < args.Length; i++)
 			{
-				_logger.Debug($"Parsing argument number {i} - {args[i]}");
 				switch (args[i])
 				{
 					case "-i":
 						if (i + 1 < args.Length)
 						{
-							_logger.Debug($"Parsing value for -i: {args[i + 1]}");
 							inputPath = args[++i];
 						}
 						else
 						{
-							_logger.Debug("Error: Missing value for -i (input folder)!");
 							Console.WriteLine("Error: Missing value for -i (input folder)!");
 							return;
 						}
@@ -42,12 +32,10 @@ namespace CourseAsCode
 					case "-o":
 						if (i + 1 < args.Length)
 						{
-							_logger.Debug($"Parsing value for -o: {args[i + 1]}");
 							outputPath = args[++i];
 						}
 						else
 						{
-							_logger.Debug("Error: Missing value for -o (output folder)!");
 							Console.WriteLine("Error: Missing value for -o (output folder)!");
 							return;
 						}
@@ -55,15 +43,13 @@ namespace CourseAsCode
 					case "-f":
 						if (i + 1 < args.Length)
 						{
-							var formatArg = args[++i]?.ToUpper();
+							var formatArg = args[++i].ToUpper();
 							if (Enum.TryParse(formatArg, out CourseFormat parsedCourseFormat))
 							{
-								_logger.Debug($"Parsed the format {parsedCourseFormat}");
 								courseFormat = parsedCourseFormat;
 							}
 							else
 							{
-								_logger.Debug($"Error: Invalid value for -f (Format). Supported formats: YAML.");
 								Console.WriteLine("Error: Invalid value for -f (Format). Supported formats: YAML.");
 								return;
 							}
@@ -71,11 +57,9 @@ namespace CourseAsCode
 						break;
 					case "-h":
 					case "--help":
-						_logger.Debug("Help was requested");
 						showHelp = true;
 						break;
 					default:
-						_logger.Debug($"Error: Unknown argument: {args[i]}. Use -h for usage information.");
 						Console.WriteLine($"Error: Unknown argument: {args[i]}. Use -h for usage information.");
 						return;
 				}
@@ -95,15 +79,15 @@ namespace CourseAsCode
 				return;
 			}
 
-			_logger.Debug($"Resolved input path: {inputPath}");
-			_logger.Debug($"Resolved output path: {outputPath}");
-			_logger.Debug($"Resolved format: {courseFormat}");
+			Console.WriteLine($"Input Path: {inputPath}");
+			Console.WriteLine($"Output Path: {outputPath}");
+			Console.WriteLine($"Format: {courseFormat}");
 
-			var courseReader = new CourseReader(new YAMLSectionReader());
+			var courseReader = new CourseReader();
 			var course = courseReader.Read(inputPath, courseFormat);
 			var writer = new Writer();
 			var courseOutputPath = Path.GetFullPath(Path.Combine(outputPath, "moodleCourse"));
-			var success = writer.WriteCourse(course, courseOutputPath);
+			var success = writer.WriteXML(course, courseOutputPath);
 
 			if (!success)
 			{
@@ -111,17 +95,15 @@ namespace CourseAsCode
 				return;
 			}
 
-			var mbzFilePath = Path.GetFullPath(Path.Combine(outputPath, WriterGeneralHelper.GenerateBackupName(course)));
+			var mbzFilePath = Path.GetFullPath(Path.Combine(outputPath, "backup.mbz"));
 
 			if (File.Exists(mbzFilePath))
 			{
-				_logger.Debug($"Deleting existing MBZ file: {mbzFilePath}");
 				File.Delete(mbzFilePath);
 			}
 
-			_logger.Debug($"Creating MBZ file: {mbzFilePath}");
 			ZipFile.CreateFromDirectory(courseOutputPath, mbzFilePath);
-			Console.WriteLine("DONE!");
+			//Console.WriteLine("done");
 		}
 
 		private static string? ResolvePath(string path, string argName)
