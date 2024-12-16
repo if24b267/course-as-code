@@ -1,12 +1,12 @@
-CourseName: My test course
+CourseName: PokemonCourse Cool Beans
 # ShortName has to be unique
 # ShortName: PC
-Summary: Changed a few things
+Summary: We will learn Pokemon
 # WHAT IS DESCRIPTION?
 # Description: Pokemon and more Pokemon. This is a description!
 Visible: true
-CategoryId: 2
-Category: TestCategory
+Category: miscellaneous
+CategoryDescription: This is a category description
 StartDate: 31-01-2023 23:59
 EndDate: 31-08-2025 23:59
 IdNumber: 123456
@@ -16,7 +16,7 @@ ShowGrades: true
 NumberOfAnnouncements: 5
 ShowActivityDates: true
 
-ShowCompletionConditions: true
+
 EnableCompletionTracking: true
 
 GroupMode: 1

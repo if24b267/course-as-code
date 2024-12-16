@@ -2,5 +2,5 @@
 
 public interface IModelObjectReader<T>
 {
-	public T? Read(string modelObjectPath);
+	public T Read(string coursePath);
 }
