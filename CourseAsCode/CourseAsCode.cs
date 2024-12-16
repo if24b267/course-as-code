@@ -14,8 +14,6 @@ namespace CourseAsCode
 			var courseFormat = CourseFormat.YAML; // default
 			var showHelp = false;
 
-			
-
 			for (var i = 0; i < args.Length; i++)
 			{
 				switch (args[i])
@@ -90,8 +88,21 @@ namespace CourseAsCode
 			var writer = new Writer();
 			var courseOutputPath = Path.GetFullPath(Path.Combine(outputPath, "moodleCourse"));
 			var success = writer.WriteXML(course, courseOutputPath);
+
+			if (!success)
+			{
+				Console.WriteLine("Error: Writing course failed.");
+				return;
+			}
+
 			var mbzFilePath = Path.GetFullPath(Path.Combine(outputPath, "backup.mbz"));
-			ZipFile.CreateFromDirectory(outputPath, Path.Combine(mbzFilePath, "backup.mbz"));
+
+			if (File.Exists(mbzFilePath))
+			{
+				File.Delete(mbzFilePath);
+			}
+
+			ZipFile.CreateFromDirectory(courseOutputPath, mbzFilePath);
 			//Console.WriteLine("done");
 		}
 
