@@ -8,7 +8,7 @@ public class FileWriter
     {
         Indent = true, // Makes the XML output more readable
         NewLineOnAttributes = false, // Keeps attributes in the same line
-        OmitXmlDeclaration = true // Removes the XML declaration
+        OmitXmlDeclaration = false // Removes the XML declaration
     };*/
     
     public void WriteFile(string filePath = "files/4e/4e3d7ade69bbaeaacd2e664327cc7e9952b0fbf0.file")

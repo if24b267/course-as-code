@@ -8,7 +8,7 @@ public abstract class XmlWriterBase
     {
         Indent = true,
         NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
+        OmitXmlDeclaration = false
     };
 
     protected void WriteElements(XmlWriter writer, Dictionary<string, string> elements)

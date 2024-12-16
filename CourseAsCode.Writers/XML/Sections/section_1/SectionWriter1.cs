@@ -8,7 +8,7 @@ public class SectionWriter1
 	{
 		Indent = true, // Makes the XML output more readable
 		NewLineOnAttributes = false, // Keeps attributes in the same line
-		OmitXmlDeclaration = true // Removes the XML declaration
+		OmitXmlDeclaration = false // Removes the XML declaration
 	};
 
 	public void WriteSection1(string outputPath)
