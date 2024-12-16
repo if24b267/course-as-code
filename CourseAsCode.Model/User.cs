@@ -33,9 +33,9 @@ public class User
     public Role Role { get; set; }
 
     // Check if David is ok with this
-    public SensibleDefaults SensibleDefaultsInstance { get; set; }
-    public SystemDefaults SystemDefaultsInstance { get; set; }
-    public UserPreferences UserPreferencesInstance { get; set; }
+    public SensibleDefaultsUser SensibleDefaults { get; set; }
+    public SystemDefaultsUser SystemDefaults { get; set; }
+    public UserPreferencesClass UserPreferences { get; set; }
 
     /*public Role(string categoryName, string filePath)
     {
@@ -45,7 +45,7 @@ public class User
     // Till here
 
     // Defaults
-    public class SensibleDefaults
+    public class SensibleDefaultsUser
     {
         public string? FirstNamePhonetic { get; set; }
         public string? LastNamePhonetic { get; set; }
@@ -67,7 +67,7 @@ public class User
         public DateTime EnrolmentEndDate { get; set; }
     }
 
-    public class UserPreferences
+    public class UserPreferencesClass
     {
         // Language preferences
         public Language PreferredLanguage { get; set; }
@@ -109,7 +109,7 @@ public class User
         public bool AcceptMessagesFromContactsOnly { get; set; }
     }
 	
-    public class SystemDefaults
+    public class SystemDefaultsUser
     {
         public int Id { get; set; }
         [Description("can be used to map the user to an external system, e.g. LDAP")]

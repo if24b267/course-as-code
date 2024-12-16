@@ -1,5 +1,6 @@
 ﻿using CourseAsCode.Readers;
 using CourseAsCode.Readers.Enums;
+using CourseAsCode.Writers;
 
 namespace CourseAsCode
 {
@@ -9,6 +10,8 @@ namespace CourseAsCode
 		{
 			var courseReader = new CourseReader();
 			var course = courseReader.Read(Path.Combine(Environment.CurrentDirectory, "../../../../Documentation/exampleCourse"), CourseFormat.YAML);
+			var writer = new Writer();
+			var success = writer.WriteXML(course, Path.Combine(Environment.CurrentDirectory, "../../../../Documentation/out"));
 			Console.WriteLine("done");
 		}
 	}

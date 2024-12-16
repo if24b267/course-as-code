@@ -13,14 +13,16 @@ public class Section
     
     [Description("ordered list of the activities and resources in the section")]
     List<Activity>? Activities { get; set; }
-    
-    // Defaults
-    public class SensibleDefaults
+	 public SensibleDefaultsSection SensibleDefaults { get; set; }
+	 public SystemDefaultsSection SystemDefaults { get; set; }
+
+	// Defaults
+	public class SensibleDefaultsSection
     {
         
     }
     
-    public class SystemDefaults
+    public class SystemDefaultsSection
     {
         [Description("path to the corresponding section folder in the backup directory")]
         public required string PathToSection { get; set; }

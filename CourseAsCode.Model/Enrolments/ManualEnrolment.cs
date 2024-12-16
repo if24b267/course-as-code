@@ -17,15 +17,18 @@ public class ManualEnrolment : EnrolmentMethod
     public bool SendWelcomeMessage { get; set; }
     [Description("the message that is sent to the student when they are enrolled in the course")]
     public string? WelcomeMessage { get; set; }
-    
-    public class SensibleDefaults
+	 public SensibleDefaultsManualEnrolment SensibleDefaults { get; set; }
+	 public SystemDefaultsManualEnrolment SystemDefaults { get; set; }
+
+
+	public class SensibleDefaultsManualEnrolment
     {
         [Description("the threshold in days before the enrolment expires when the notifications are sent")]
         public int NotifyThreshold { get; set; }
     }
 
-    public class SystemDefaults
-    {
+    public class SystemDefaultsManualEnrolment
+	{
         
     }
 }
