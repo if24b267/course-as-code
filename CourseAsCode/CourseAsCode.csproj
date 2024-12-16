@@ -17,4 +17,10 @@
     <ProjectReference Include="..\CourseAsCode.Writers\CourseAsCode.Writers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

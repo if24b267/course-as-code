@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using System.Xml;
+using System.Text.Json;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Readers.Helper;
@@ -15,11 +15,13 @@ namespace CourseAsCode.Readers;
 
 public class CourseReader : ICourseReader
 {
+	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private static readonly string[] DATE_FORMATS = ["dd-MM-yyyy HH:mm"];
 	private Course? _course;
 
-	public Course Read(string path, CourseFormat format)
+	public Course? Read(string path, CourseFormat format)
 	{
+		_logger.Debug($"Starting Reading - Path: {path}, Format: {format}");
 		var coursePath = Path.GetFullPath(path);
 		if (Directory.Exists(coursePath))
 		{
@@ -28,19 +30,21 @@ public class CourseReader : ICourseReader
 				case CourseFormat.YAML:
 					return ReadYaml(coursePath);
 				default:
-					throw new NotSupportedException($"The format {format} is not supported.");
+					_logger.Error($"The format {format} is not supported.");
+					return null;
 			}
 		}
-		else
-		{
-			throw new DirectoryNotFoundException($"The directory {coursePath} does not exist.");
-		}
+
+		_logger.Error($"The directory {coursePath} does not exist.");
 
 		return null;
 	}
 
-	public Course ReadYaml(string coursePath)
+	public Course? ReadYaml(string coursePath)
 	{
+		_logger.Debug($"Reading YAML course from {coursePath}");
+
+		// TODO: make directory reading better - maybe modify file node
 		var rootNode = DirectoryReader.ReadDirectory(coursePath);
 		var yamlFile = rootNode.Children.FirstOrDefault(c => !c.IsDirectory && c.Name.EndsWith(".yaml"));
 		var fileContent = File.ReadAllText(Path.Combine(coursePath, yamlFile.Name));
@@ -55,17 +59,19 @@ public class CourseReader : ICourseReader
 		YAML.Model.Course yamlCourse = null;
 		try
 		{
+			_logger.Debug($"Deserializing {yamlFile}");
 			yamlCourse = deserializer.Deserialize<YAML.Model.Course>(fileContent);
 		}
 		catch (YamlException e)
 		{
-			Console.WriteLine(e);
+			_logger.Error($"Error deserializing {yamlFile}: {e.Message}");
 			return null;
 		}
 		
 
 		yamlCourse.ShortName ??= GenerateShortName(yamlCourse.CourseName);
 
+		// TODO: is this really needed - should be optional?
 		yamlCourse.ForcedLanguage = yamlCourse.ForcedLanguage switch
 		{
 			"en" => "English",
@@ -103,16 +109,18 @@ public class CourseReader : ICourseReader
 			}
 		};
 
-
+		_logger.Debug($"Final course object: {JsonSerializer.Serialize(_course)}");
 		return _course;
 	}
 
 	private static string GenerateShortName(string fullName)
 	{
+		_logger.Debug($"Shortname not set - generating one...");
 		var objRandom = new Random();
 		var intValue = objRandom.Next(10000, 99999);
 		var uppercaseLetters = new string(fullName.Where(char.IsUpper).ToArray());
 		var shortName = $"{uppercaseLetters}{intValue}";
+		_logger.Debug($"Generated Shortname: {shortName}");
 		return shortName;
 	}
 }

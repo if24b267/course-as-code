@@ -13,9 +13,10 @@ namespace CourseAsCode.Writers;
 
 public class Writer
 {
-
+	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	public bool WriteXML(Course course, string outputPath)
 	{
+		_logger.Debug($"Writing XML files to {outputPath}");
 		course.BackupMetadata ??= new BackupMetadataDefaults().GetDefaultBackupMetadata();
 
 		// Course
