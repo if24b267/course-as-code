@@ -2,13 +2,16 @@
 using CourseAsCode.Readers;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Writers;
+using NLog;
 
 namespace CourseAsCode
 {
 	internal class CourseAsCode
 	{
+		private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 		static void Main(string?[] args)
 		{
+			_logger.Debug("Starting CourseAsCode...");
 			string? inputPath = null;
 			string? outputPath = null;
 			var courseFormat = CourseFormat.YAML; // default
@@ -16,15 +19,18 @@ namespace CourseAsCode
 
 			for (var i = 0; i < args.Length; i++)
 			{
+				_logger.Debug($"Parsing argument number {i} - {args[i]}");
 				switch (args[i])
 				{
 					case "-i":
 						if (i + 1 < args.Length)
 						{
+							_logger.Debug($"Parsing value for -i: {args[++i]}");
 							inputPath = args[++i];
 						}
 						else
 						{
+							_logger.Debug("Error: Missing value for -i (input folder)!");
 							Console.WriteLine("Error: Missing value for -i (input folder)!");
 							return;
 						}
@@ -32,10 +38,12 @@ namespace CourseAsCode
 					case "-o":
 						if (i + 1 < args.Length)
 						{
+							_logger.Debug($"Parsing value for -o: {args[++i]}");
 							outputPath = args[++i];
 						}
 						else
 						{
+							_logger.Debug("Error: Missing value for -o (output folder)!");
 							Console.WriteLine("Error: Missing value for -o (output folder)!");
 							return;
 						}
@@ -46,10 +54,12 @@ namespace CourseAsCode
 							var formatArg = args[++i].ToUpper();
 							if (Enum.TryParse(formatArg, out CourseFormat parsedCourseFormat))
 							{
+								_logger.Debug($"Parsed the format {parsedCourseFormat}");
 								courseFormat = parsedCourseFormat;
 							}
 							else
 							{
+								_logger.Debug($"Error: Invalid value for -f (Format). Supported formats: YAML.");
 								Console.WriteLine("Error: Invalid value for -f (Format). Supported formats: YAML.");
 								return;
 							}
@@ -57,9 +67,11 @@ namespace CourseAsCode
 						break;
 					case "-h":
 					case "--help":
+						_logger.Debug("Help was requested");
 						showHelp = true;
 						break;
 					default:
+						_logger.Debug($"Error: Unknown argument: {args[i]}. Use -h for usage information.");
 						Console.WriteLine($"Error: Unknown argument: {args[i]}. Use -h for usage information.");
 						return;
 				}
@@ -78,6 +90,10 @@ namespace CourseAsCode
 			{
 				return;
 			}
+
+			_logger.Debug($"Resolved input path: {inputPath}");
+			_logger.Debug($"Resolved output path: {outputPath}");
+			_logger.Debug($"Resolved format: {courseFormat}");
 
 			Console.WriteLine($"Input Path: {inputPath}");
 			Console.WriteLine($"Output Path: {outputPath}");
@@ -99,11 +115,13 @@ namespace CourseAsCode
 
 			if (File.Exists(mbzFilePath))
 			{
+				_logger.Debug($"Deleting existing MBZ file: {mbzFilePath}");
 				File.Delete(mbzFilePath);
 			}
 
+			_logger.Debug($"Creating MBZ file: {mbzFilePath}");
 			ZipFile.CreateFromDirectory(courseOutputPath, mbzFilePath);
-			//Console.WriteLine("done");
+			Console.WriteLine("DONE!");
 		}
 
 		private static string? ResolvePath(string path, string argName)
