@@ -23,5 +23,6 @@ public class Course
 	public int NumberOfAnnouncements { get; set; }
 	public string ForcedLanguage { get; set; }
 	public bool ShowActivityDates { get; set; }
+	public bool ShowCompletionConditions { get; set; }
 
 }

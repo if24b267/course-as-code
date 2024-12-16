@@ -16,7 +16,7 @@ ShowGrades: true
 NumberOfAnnouncements: 5
 ShowActivityDates: true
 
-
+ShowCompletionConditions: true
 EnableCompletionTracking: true
 
 GroupMode: 1

@@ -44,7 +44,7 @@ public class CourseWriter : XmlWriterBase
 					: "<p></p>"
 			},
 			{ "summaryformat", ((int)course.SystemDefaults.SummaryFormat).ToString() },
-			{ "format", course.SensibleDefaults.Format.ToString().ToLower() },
+			{ "format", Helper.Helper.GetCourseFormatString(course.SensibleDefaults.Format)},
 			{ "showgrades", course.SensibleDefaults.ShowGrades ? "1" : "0" },
 			{ "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
 			{ "startdate", ((int)(course.StartDate - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
@@ -54,17 +54,17 @@ public class CourseWriter : XmlWriterBase
 			{ "legacyfiles", course.SystemDefaults.UsesLegacyFiles ? "1" : "0" },
 			{ "showreports", "0" },
 			{ "visible", course.SensibleDefaults.VisibleToStudents ? "1" : "0" },
-			{ "groupmode", course.GroupMode.ToString().ToLower() },
+			{ "groupmode", Helper.Helper.EnumIntegerToString(course.GroupMode) },
 			{ "groupmodeforce", course.SensibleDefaults.ForceGroupMode ? "1" : "0" },
 			{ "defaultgroupingid", "0" },
 			{ "lang", course.SystemDefaults.CourseLanguage?.ToString() ?? "en" },
 			{ "theme", course.SensibleDefaults.Theme ?? "" },
 			{
-				"timecreated", ((int)(course.SystemDefaults.TimeCreated - new DateTime(1970, 1, 1)).TotalSeconds).ToString()
+				"timecreated", Helper.Helper.ConvertToUnixTimestamp(course.SystemDefaults.TimeCreated).ToString()
 			},
 			{
 				"timemodified",
-				((int)(course.SystemDefaults.TimeModified - new DateTime(1970, 1, 1)).TotalSeconds).ToString()
+				Helper.Helper.ConvertToUnixTimestamp(course.SystemDefaults.TimeModified).ToString()
 			},
 			{ "requested", "0" },
 			{ "showactivitydates", course.SensibleDefaults.ShowActivityDates ? "1" : "0" },
@@ -125,7 +125,7 @@ public class CourseWriter : XmlWriterBase
 		foreach (var section in course.Sections)
 		{
 			writer.WriteStartElement("courseformatoption");
-			writer.WriteElementString("format", course.SensibleDefaults.Format.ToString().ToLower());
+			writer.WriteElementString("format", Helper.Helper.GetCourseFormatString(course.SensibleDefaults.Format));
 			writer.WriteElementString("sectionid", i.ToString());
 			writer.WriteElementString("name", "coursedisplay");
 			writer.WriteElementString("value", "0");

@@ -95,6 +95,7 @@ public class CourseReader : ICourseReader
 				EnableCompletionTracking = yamlCourse.EnableCompletionTracking,
 				NumberOfAnnouncementsToDisplay = yamlCourse.NumberOfAnnouncements,
 				ShowActivityDates = yamlCourse.ShowActivityDates,
+				ShowActivityCompletionConditions = yamlCourse.ShowCompletionConditions
 			},
 			SystemDefaults = new Course.SystemDefaultsCourse
 			{
