@@ -101,49 +101,49 @@ public class Writer
 		// TODO: Refactor this to not be a hardcoded mess
 		// Section 1
 		SectionWriter1 sectionWriter1 = new SectionWriter1();
-		sectionWriter1.WriteSection1();
+		sectionWriter1.WriteSection1(outputPath);
 
 		InforefSectionsWriter1 inforefSectionsWriter1 = new InforefSectionsWriter1();
-		inforefSectionsWriter1.WriteInforefSections1();
+		inforefSectionsWriter1.WriteInforefSections1(outputPath);
 
 		// Section 2
 		SectionWriter2 sectionWriter2 = new SectionWriter2();
-		sectionWriter2.WriteSection2();
+		sectionWriter2.WriteSection2(outputPath);
 
 		InforefSectionsWriter2 inforefSectionsWriter2 = new InforefSectionsWriter2();
-		inforefSectionsWriter2.WriteInforefSections2();
+		inforefSectionsWriter2.WriteInforefSections2(outputPath);
 
 		// Section 3
 		SectionWriter3 sectionWriter3 = new SectionWriter3();
-		sectionWriter3.WriteSection3();
+		sectionWriter3.WriteSection3(outputPath);
 
 		InforefSectionsWriter3 inforefSectionsWriter3 = new InforefSectionsWriter3();
-		inforefSectionsWriter3.WriteInforefSections3();
+		inforefSectionsWriter3.WriteInforefSections3(outputPath);
 
 		// Section 4
 		SectionWriter4 sectionWriter4 = new SectionWriter4();
-		sectionWriter4.WriteSection4();
+		sectionWriter4.WriteSection4(outputPath);
 
 		InforefSectionsWriter4 inforefSectionsWriter4 = new InforefSectionsWriter4();
-		inforefSectionsWriter4.WriteInforefSections4();
+		inforefSectionsWriter4.WriteInforefSections4(outputPath);
 
 		// Section 5
 		SectionWriter5 sectionWriter5 = new SectionWriter5();
-		sectionWriter5.WriteSection5();
+		sectionWriter5.WriteSection5(outputPath);
 
 		InforefSectionsWriter5 inforefSectionsWriter5 = new InforefSectionsWriter5();
-		inforefSectionsWriter5.WriteInforefSections5();
+		inforefSectionsWriter5.WriteInforefSections5(outputPath);
 
 
 		// Files
 		// Create files directory if it does not exist
-		System.IO.Directory.CreateDirectory(Path.Combine(outputPath,"files"));
+		Directory.CreateDirectory(Path.Combine(outputPath,"files"));
 
 		// Create subfolder in files
-		System.IO.Directory.CreateDirectory(Path.Combine(outputPath, Path.Combine("files", "4e")));
+		Directory.CreateDirectory(Path.Combine(outputPath, Path.Combine("files", "4e")));
 
 		FileWriter fileWriter = new FileWriter();
-		fileWriter.WriteFile();
+		fileWriter.WriteFile(outputPath);
 
 		return true;
 	}

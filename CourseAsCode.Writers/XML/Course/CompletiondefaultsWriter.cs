@@ -6,7 +6,7 @@ public class CompletiondefaultsWriter : XmlWriterBase
 {
 	public void WriteCompletionDefaults(string outputPath)
 	{
-		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/completion_defaults.xml"));
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/completiondefaults.xml"));
 		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
 		{
 			writer.WriteStartDocument();
