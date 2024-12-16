@@ -26,7 +26,7 @@ public class RolesWriter : XmlWriterBase
     {
         WriteStartElementWithAttributes(writer, "role", new Dictionary<string, string>
         {
-            { "id", Role.SystemDefaults.Id.ToString() }
+            { "id", role.SystemDefaults.Id.ToString() }
         });
 
         var elements = new Dictionary<string, string>
@@ -35,7 +35,7 @@ public class RolesWriter : XmlWriterBase
             { "shortname", role.ShortName },
             { "nameincourse", role.LocalName ?? "$@NULL@$" },
             { "description", role.Description ?? string.Empty },
-            { "sortorder", Role.SystemDefaults.Id.ToString() },
+            { "sortorder", role.SystemDefaults.Id.ToString() },
             { "archetype", role.Archetype.ToString().ToLower() }
         };
 

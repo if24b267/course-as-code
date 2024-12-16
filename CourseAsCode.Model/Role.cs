@@ -16,14 +16,19 @@ public class Role
 	[Description("Blueprint for the role, defines a standard set of permissions")]
 	public Archetype Archetype { get; set; }
 
-	// Defaults
-	public class SensibleDefaults
-	{
+	// Delete if David doesnt approve
+    public SystemDefaults SystemDefaults { get; set; } = new SystemDefaults();
+    public SensibleDefaults SensibleDefaults { get; set; } = new SensibleDefaults(); 
+}
 
-	}
-	
-	public class SystemDefaults
-	{
-		public int Id { get; set; }
-	}
+// Defaults
+// Move these two into the Role class, if not approved
+public class SensibleDefaults
+{
+
+}
+
+public class SystemDefaults
+{
+	public int Id { get; set; }
 }
