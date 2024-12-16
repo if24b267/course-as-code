@@ -1,4 +1,5 @@
 ﻿using CourseAsCode.Model;
+using CourseAsCode.Writers.Static;
 using CourseAsCode.Writers.XML;
 using CourseAsCode.Writers.XML.Course;
 using CourseAsCode.Writers.XML.Sections.section_1;
@@ -15,6 +16,8 @@ public class Writer
 
 	public bool WriteXML(Course course, string outputPath)
 	{
+		course.BackupMetadata ??= new BackupMetadataDefaults().GetDefaultBackupMetadata();
+
 		// Course
 		// Create course directory if it does not exist
 		System.IO.Directory.CreateDirectory("course");

@@ -3,6 +3,7 @@ using BackupModel =  CourseAsCode.Model.BackupMetadata;
 
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.Static;
 
 namespace CourseAsCode.Writers.XML;
 
