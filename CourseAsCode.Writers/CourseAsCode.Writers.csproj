@@ -6,20 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="MimeTypes" Version="2.5.2">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="NLog" Version="5.3.4" />
-    </ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\CourseAsCode.Model\CourseAsCode.Model.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Helper\" />
-	  <Folder Include="Static\" />
-	  <Folder Include="XML\Writer\Activities\Url\" />
 	</ItemGroup>
 </Project>

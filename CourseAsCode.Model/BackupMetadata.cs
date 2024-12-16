@@ -11,16 +11,20 @@ public class BackupMetadata
     public MoodleVersion MoodleVersion { get; set; }
     [Description("the URL of the Moodle site that the backup was created from")]
     public required Uri MoodleUrl { get; set; }
-    
-		// Defaults
-		public class SensibleDefaults
+
+    public SensibleDefaultsBackupMetadata SensibleDefaults { get; set; }
+    public SystemDefaultsBackupMetadata SystemDefaults { get; set; }
+    public BackupSettingsClass BackupSettings { get; set; }
+
+    // Defaults
+    public class SensibleDefaultsBackupMetadata
 		{
 			[Description("whether files are included in the backup")]
 			public bool FilesIncluded { get; set; }
 		}
 		
-		public class SystemDefaults
-		{
+		public class SystemDefaultsBackupMetadata
+	{
 			[Description("the date and time that the backup was created")]
 			public DateTime CreationDate { get; set; }
 			[Description("Moodle Network is used to establish a link with another Moodle site and share resources with the users of that Moodle, DEPRECATED")]
@@ -36,7 +40,7 @@ public class BackupMetadata
 		}
 
 		// Backup settings (as defined in the backup creation process)
-		public class BackupSettings
+		public class BackupSettingsClass
 		{
 			public bool IncludeEnrolledUsers { get; set; }
 			public bool AnonymizeUserInformation { get; set; }

@@ -1,92 +1,69 @@
 using System.Xml;
+using UsersModel = CourseAsCode.Model.User;
+using RolesModel = CourseAsCode.Model.Role;
+//using FileModel = CourseAsCode.Model.File; doesnt exist yet
 
 namespace CourseAsCode.Writers.XML.Course;
 
-public class InforefWriter
+public class InforefWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true, // Makes the XML output more readable
-        NewLineOnAttributes = false, // Keeps attributes in the same line
-        OmitXmlDeclaration = true // Removes the XML declaration
-    };
-    
-    public void WriteInforef(string filePath = "course/inforef.xml")
-    {
-        using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-        {
-            writer.WriteStartDocument();
+	private readonly XmlWriterSettings _settings = new()
+	{
+		Indent = true, // Makes the XML output more readable
+		NewLineOnAttributes = false, // Keeps attributes in the same line
+		OmitXmlDeclaration = false // Removes the XML declaration
+	};
 
-            // <inforef> starts here
-            writer.WriteStartElement("inforef");
+	public void WriteInforef(List<UsersModel> users, List<RolesModel> roles, string outputPath)
+	{
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/inforef.xml"));
+		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		{
+			writer.WriteStartDocument();
+			writer.WriteStartElement("inforef"); // <inforef> starts here
+			writer.WriteStartElement("userref"); // <userref> starts here
 
-                // <userref> starts here
-                writer.WriteStartElement("userref");
+			foreach (var user in users)
+			{
+				WriteInforef(writer, user, "user");
+			}
 
-                    // <user> starts here
-                    writer.WriteStartElement("user");
+			writer.WriteEndElement(); // </userref> ends here
+			writer.WriteStartElement("roleref"); // <roleref> starts here
 
-                        // child elements of <user>
-                        writer.WriteElementString("id", "3");
+			foreach (var role in roles)
+			{
+				WriteInforef(writer, role, "role");
+			}
 
-                    // </user> ends here
-                    writer.WriteEndElement();
+			writer.WriteEndElement(); // </roleref> ends here
+			writer.WriteStartElement("fileref"); // <fileref> starts here
 
-                // </userref> ends here
-                writer.WriteEndElement();
+			/*foreach (var file in files)
+			{
+			    WriteInforef(writer, file, "file");
+			}*/
 
-                // <roleref> starts here
-                writer.WriteStartElement("roleref");
+			writer.WriteEndElement(); // </fileref> ends here
+			writer.WriteEndElement(); // </inforef> ends here
+			writer.WriteEndDocument();
+		}
+	}
 
-                    // First <role> starts here
-                    writer.WriteStartElement("role");
+	private void WriteInforef(XmlWriter writer, object model, string type)
+	{
+		var modelName = model as dynamic;
 
-                        // child elements of first <role>
-                        writer.WriteElementString("id", "3");
+		writer.WriteStartElement(type); // Element starts here
 
-                    // </role> ends here
-                    writer.WriteEndElement();
+		// Später auf Fehler Überprüfungen ----------------------
+		var elements = new Dictionary<string, string>
+		{
+			{ "id", modelName.SystemDefaults.Id.ToString() }
+		};
 
-                    // Second <role> starts here
-                    writer.WriteStartElement("role");
+		WriteElements(writer, elements);
 
-                        // child elements of second <role>
-                        writer.WriteElementString("id", "5");
-
-                    // </role> ends here
-                    writer.WriteEndElement();
-
-                // </roleref> ends here
-                writer.WriteEndElement();
-
-                // <fileref> starts here
-                writer.WriteStartElement("fileref");
-
-                    // First <file> starts here
-                    writer.WriteStartElement("file");
-
-                        // child elements of first <file>
-                        writer.WriteElementString("id", "10");
-
-                    // </file> ends here
-                    writer.WriteEndElement();
-
-                    // Second <file> starts here
-                    writer.WriteStartElement("file");
-
-                        // child elements of second <file>
-                        writer.WriteElementString("id", "11");
-
-                    // </file> ends here
-                    writer.WriteEndElement();
-
-                // </fileref> ends here
-                writer.WriteEndElement();
-
-            // </inforef> ends here
-            writer.WriteEndElement();
-
-            writer.WriteEndDocument();
-        }
-    }
+		writer.WriteEndElement(); // Element ends here
+	}
 }

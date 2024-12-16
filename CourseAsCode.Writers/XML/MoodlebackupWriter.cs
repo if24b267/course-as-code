@@ -1,162 +1,200 @@
 using System.Xml;
+using BackupModel =  CourseAsCode.Model.BackupMetadata;
+
+using CourseAsCode.Model;
+using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.Static;
 
 namespace CourseAsCode.Writers.XML;
 
-public class MoodleBackupWriter
+public class MoodleBackupWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true,
-        NewLineOnAttributes = false,
-        OmitXmlDeclaration = false // Show the version and encoding on tp of the xml, usually set to true, but have to set it to false for this, otherwise uploading doesnt work
-    };
+	public void WriteMoodleBackup(BackupModel backupMetadata, Model.Course course, string outputPath)
+	{
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "moodle_backup.xml"));
+		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		{
+			writer.WriteStartDocument();
 
-    public void WriteMoodleBackup(string filePath = "moodle_backup.xml")
-    {
-        using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-        {
-            writer.WriteStartDocument();
+			writer.WriteStartElement("moodle_backup");
 
-            // root element <moodle_backup> with attributes
-            writer.WriteStartElement("moodle_backup");
+			WriteInformation(writer, backupMetadata, course);
+			WriteDetails(writer, backupMetadata);
+			WriteContents(writer, backupMetadata);
+			WriteSettings(writer, backupMetadata);
+			writer.WriteEndElement(); // information schlieﬂen
+			writer.WriteEndElement(); // moodle_backup schlieﬂen
+			writer.WriteEndDocument();
+		}
+	}
 
-            writer.WriteStartElement("information");
-            writer.WriteElementString("name", "backup-moodle2-course-2-empco-20241127-0959.mbz");
-            writer.WriteElementString("moodle_version", "2024100700");
-            writer.WriteElementString("moodle_release", "4.5 (Build: 20241007)");
-            writer.WriteElementString("backup_version", "2024100700");
-            writer.WriteElementString("backup_release", "4.5");
-            writer.WriteElementString("backup_date", "1732701571");
-            writer.WriteElementString("mnet_remoteusers", "0");
-            writer.WriteElementString("include_files", "1");
-            writer.WriteElementString("include_file_references_to_external_content", "0");
-            writer.WriteElementString("original_wwwroot", "https://moodle.sanctus.cx");
-            writer.WriteElementString("original_site_identifier_hash", "dccbb261ec5a2af4a6706a77387883ee");
-            writer.WriteElementString("original_course_id", "2");
-            writer.WriteElementString("original_course_format", "topics");
-            writer.WriteElementString("original_course_fullname", "EmptyCourse");
-            writer.WriteElementString("original_course_shortname", "EmpCo");
-            writer.WriteElementString("original_course_startdate", "1731024000");
-            writer.WriteElementString("original_course_enddate", "1762560000");
-            writer.WriteElementString("original_course_contextid", "14");
-            writer.WriteElementString("original_system_contextid", "1");
+	private void WriteInformation(XmlWriter writer, BackupModel backupMetadata, Model.Course course)
+	{
+		writer.WriteStartElement("information");
+		var objRandom = new Random();
+		var intValue = objRandom.Next(10000, 99999);
 
-            writer.WriteStartElement("details");
-            writer.WriteStartElement("detail");
-            writer.WriteAttributeString("backup_id", "a7547bcdd945f1b085c05bdeed305078");
-            writer.WriteElementString("type", "course");
-            writer.WriteElementString("format", "moodle2");
-            writer.WriteElementString("interactive", "1");
-            writer.WriteElementString("mode", "70");
-            writer.WriteElementString("execution", "2");
-            writer.WriteElementString("executiontime", "0");
-            writer.WriteEndElement(); // Close detail
-            writer.WriteEndElement(); // Close details
+		var elements = new Dictionary<string, string>
+		{
+			// TODO: some kind of communication for file name
+			{ "name", "backup.mbz" },
+			{ "moodle_version", Helper.Helper.GetMoodleVersionFromEnum(backupMetadata.MoodleVersion) },
+			{ "moodle_release", GetMoodleRelease(backupMetadata.MoodleVersion) },
+			{ "backup_version", GetBackupVersion(backupMetadata.MoodleVersion) },
+			{ "backup_release", GetBackupRelease(backupMetadata.MoodleVersion) },
+			{ "backup_date", ((DateTimeOffset)backupMetadata.SystemDefaults.CreationDate).ToUnixTimeSeconds().ToString() },
+			{ "mnet_remoteusers", backupMetadata.SystemDefaults.MNetRemoteUsers.ToString() },
+			{ "include_files", backupMetadata.SensibleDefaults.FilesIncluded ? "1" : "0" },
+			{
+				"include_file_references_to_external_content",
+				backupMetadata.SystemDefaults.IncludeFileReferencesToExternalContent ? "1" : "0"
+			},
+			{ "original_wwwroot", backupMetadata.MoodleUrl.ToString() },
+			{ "original_site_identifier_hash", "0" }, //TODO: what the fuck is this?
+			{ "original_course_id", course.SystemDefaults.Id.ToString() }, // Anpassen entsprechend den Angaben
+			{ "original_course_format", Helper.Helper.GetCourseFormatString(course.SensibleDefaults.Format) },
+			{ "original_course_fullname", course.FullName },
+			{ "original_course_shortname", course.ShortName },
+			// TODO: add course start/end date here
+			{ "original_course_startdate", "1731369600" }, // Anpassen entsprechend den Angaben
+			{ "original_course_enddate", "1734998400" }, // Anpassen entsprechend den Angaben
+			{ "original_course_contextid", "18" }, // Anpassen entsprechend den Angaben
+			{ "original_system_contextid", "1" }
+		};
 
-            writer.WriteStartElement("contents");
-            /*writer.WriteStartElement("activities");
 
-            writer.WriteStartElement("activity");
-            writer.WriteAttributeString("moduleid", "2");
-            writer.WriteElementString("sectionid", "13");
-            writer.WriteAttributeString("modulename", "forum");
-            writer.WriteElementString("title", "Announcements");
-            writer.WriteElementString("directory", "ctivities/forum_2");
-            writer.WriteElementString("insubsection", "");
-            writer.WriteEndElement(); // Close activity
+		WriteElements(writer, elements);
 
-            writer.WriteEndElement(); // Close activities*/
 
-            writer.WriteStartElement("sections");
+	}
 
-            for (int i = 1; i <= 5; i++)
-            {
-                writer.WriteStartElement("section");
-                writer.WriteElementString("sectionid", i.ToString());
-                writer.WriteElementString("title", (i - 1).ToString());
-                writer.WriteElementString("directory", $"sections/section_{i}");
-                writer.WriteElementString("parentcmid", "");
-                writer.WriteElementString("modname", "");
-                writer.WriteEndElement(); // Close section
-            }
+	private void WriteDetails(XmlWriter writer, BackupModel backupMetadata)
+	{
+		writer.WriteStartElement("details");
 
-            writer.WriteEndElement(); // Close sections
+		WriteStartElementWithAttributes(writer, "detail", new Dictionary<string, string>
+		{
+			{ "backup_id", backupMetadata.SystemDefaults.BackupId }
+		});
 
-            writer.WriteStartElement("course");
-            writer.WriteElementString("courseid", "2");
-            writer.WriteElementString("title", "EmpCo");
-            writer.WriteElementString("directory", "course");
-            writer.WriteEndElement(); // Close course
+		var elements = new Dictionary<string, string>
+		{
+			{ "type", backupMetadata.SystemDefaults.WholeSiteBackup ? "site" : "course" },
+			{ "format", backupMetadata.SystemDefaults.UsesNewBackupFormat ? "moodle2" : "moodle1" },
+			{ "interactive", "1" },
+			{ "mode", "70" },
+			{ "execution", "2" },
+			{ "executiontime", "0" }
+		};
 
-            writer.WriteEndElement(); // Close contents
+		WriteElements(writer, elements);
 
-            writer.WriteStartElement("settings");
+		writer.WriteEndElement(); // detail schlieﬂen
+		writer.WriteEndElement(); // details schlieﬂen
+	}
 
-            string[][] settings = new string[][]
-            {
-                    new string[] { "root", "filename", "backup-moodle2-course-2-empco-20241127-0959.mbz" },
-                    new string[] { "root", "users", "1" },
-                    new string[] { "root", "anonymize", "0" },
-                    new string[] { "root", "role_assignments", "1" },
-                    new string[] { "root", "activities", "1" },
-                    new string[] { "root", "blocks", "1" },
-                    new string[] { "root", "files", "1" },
-                    new string[] { "root", "filters", "1" },
-                    new string[] { "root", "comments", "1" },
-                    new string[] { "root", "badges", "1" },
-                    new string[] { "root", "calendarevents", "1" },
-                    new string[] { "root", "userscompletion", "1" },
-                    new string[] { "root", "logs", "0" },
-                    new string[] { "root", "grade_histories", "0" },
-                    new string[] { "root", "questionbank", "1" },
-                    new string[] { "root", "groups", "1" },
-                    new string[] { "root", "competencies", "1" },
-                    new string[] { "root", "customfield", "1" },
-                    new string[] { "root", "contentbankcontent", "1" },
-                    new string[] { "root", "xapistate", "1" },
-                    new string[] { "root", "legacyfiles", "1" },
-                    new string[] { "section", "section_1", "section_1_included", "1" },
-                    new string[] { "section", "section_1", "section_1_userinfo", "1" },
-                    //new string[] { "activity", "forum_2", "forum_2_included", "1" },
-                    //new string[] { "activity", "forum_2", "forum_2_userinfo", "1" },
-                    new string[] { "section", "section_2", "section_2_included", "1" },
-                    new string[] { "section", "section_2", "section_2_userinfo", "1" },
-                    new string[] { "section", "section_3", "section_3_included", "1" },
-                    new string[] { "section", "section_3", "section_3_userinfo", "1" },
-                    new string[] { "section", "section_4", "section_4_included", "1" },
-                    new string[] { "section", "section_4", "section_4_userinfo", "1" },
-                    new string[] { "section", "section_5", "section_5_included", "1" },
-                    new string[] { "section", "section_5", "section_5_userinfo", "1" },
-                    //new string[] { "section", "section_18", "section_18_included", "1" },
-                    //new string[] { "section", "section_18", "section_18_userinfo", "1" },
-                    //new string[] { "section", "section_19", "section_19_included", "1" },
-                    //new string[] { "section", "section_19", "section_19_userinfo", "1" }
-            };
+	private void WriteContents(XmlWriter writer, BackupModel backupMetadata)
+	{
+		writer.WriteStartElement("contents");
+		//Bei bedarf etwas einf¸gen
+		writer.WriteEndElement(); // contents schlieﬂen
+	}
 
-            foreach (var setting in settings)
-            {
-                writer.WriteStartElement("setting");
-                writer.WriteElementString("level", setting[0]);
-                if (setting[0] == "section" || setting[0] == "activity")
-                {
-                    writer.WriteElementString(setting[0], setting[1]);
-                    writer.WriteElementString("name", setting[2]);
-                    writer.WriteElementString("value", setting[3]);
-                }
-                else
-                {
-                    writer.WriteElementString("name", setting[1]);
-                    writer.WriteElementString("value", setting[2]);
-                }
-                writer.WriteEndElement(); // Close setting
-            }
+	private void WriteSettings(XmlWriter writer, BackupModel backupMetadata)
+	{
+		writer.WriteStartElement("settings");
 
-            writer.WriteEndElement(); // Close settings
+		// Root-Einstellungen
+		WriteBackupSetting(writer, "root", "filename", "backup.mbz");
+		WriteBackupSetting(writer, "root", "users", backupMetadata.BackupSettings.IncludeEnrolledUsers ? "1" : "0");
+		WriteBackupSetting(writer, "root", "anonymize",
+			backupMetadata.BackupSettings.AnonymizeUserInformation ? "1" : "0");
+		WriteBackupSetting(writer, "root", "role_assignments",
+			backupMetadata.BackupSettings.IncludeUserRoleAssignments ? "1" : "0");
+		WriteBackupSetting(writer, "root", "activities",
+			backupMetadata.BackupSettings.IncludeActivitiesAndResources ? "1" : "0");
+		WriteBackupSetting(writer, "root", "blocks", backupMetadata.BackupSettings.IncludeBlocks ? "1" : "0");
+		WriteBackupSetting(writer, "root", "files", backupMetadata.BackupSettings.IncludeFiles ? "1" : "0");
+		WriteBackupSetting(writer, "root", "filters", backupMetadata.BackupSettings.IncludeFilters ? "1" : "0");
+		WriteBackupSetting(writer, "root", "comments", backupMetadata.BackupSettings.IncludeComments ? "1" : "0");
+		WriteBackupSetting(writer, "root", "badges", backupMetadata.BackupSettings.IncludeBadges ? "1" : "0");
+		WriteBackupSetting(writer, "root", "calendarevents",
+			backupMetadata.BackupSettings.IncludeCalendarEvents ? "1" : "0");
+		WriteBackupSetting(writer, "root", "userscompletion",
+			backupMetadata.BackupSettings.IncludeUserCompletionDetails ? "1" : "0");
+		WriteBackupSetting(writer, "root", "logs", backupMetadata.BackupSettings.IncludeCourseLogs ? "1" : "0");
+		WriteBackupSetting(writer, "root", "grade_histories",
+			backupMetadata.BackupSettings.IncludeGradeHistory ? "1" : "0");
+		WriteBackupSetting(writer, "root", "questionbank", backupMetadata.BackupSettings.IncludeQuestionBank ? "1" : "0");
+		WriteBackupSetting(writer, "root", "groups", backupMetadata.BackupSettings.IncludeGroupsAndGroupings ? "1" : "0");
+		WriteBackupSetting(writer, "root", "competencies", backupMetadata.BackupSettings.IncludeCompetencies ? "1" : "0");
+		WriteBackupSetting(writer, "root", "customfield", backupMetadata.BackupSettings.IncludeCustomFields ? "1" : "0");
+		WriteBackupSetting(writer, "root", "contentbankcontent",
+			backupMetadata.BackupSettings.IncludeContentBankContent ? "1" : "0");
+		WriteBackupSetting(writer, "root", "xapistate",
+			backupMetadata.BackupSettings.IncludeUserStateInContent ? "1" : "0");
+		WriteBackupSetting(writer, "root", "legacyfiles",
+			backupMetadata.BackupSettings.IncludeLegacyCourseFiles ? "1" : "0");
 
-            writer.WriteEndElement(); // Close information
-            writer.WriteEndElement(); // Close moodle_backup
+		writer.WriteEndElement(); // settings schlieﬂen
+	}
 
-            writer.WriteEndDocument();
-        }
-    }
+	private void WriteBackupSetting(XmlWriter writer, string level, string name, string value)
+	{
+		writer.WriteStartElement("setting");
+		writer.WriteElementString("level", level);
+		writer.WriteElementString("name", name);
+		writer.WriteElementString("value", value);
+		writer.WriteEndElement();
+	}
+
+	private string GetMoodleRelease(MoodleVersion version)
+	{
+		// Mappt MoodleVersion auf Moodle Release String
+		return version switch
+		{
+			MoodleVersion.Moodle451 => "4.5.1 (Build: 20241007)",
+			MoodleVersion.Moodle450 => "4.5.0 (Build: 20240601)",
+			MoodleVersion.Moodle445 => "4.4.5 (Build: 20230427)",
+			MoodleVersion.Moodle444 => "4.4.4 (Build: 20230309)",
+			MoodleVersion.Moodle443 => "4.4.3 (Build: 20230228)",
+			MoodleVersion.Moodle442 => "4.4.2 (Build: 20230209)",
+			MoodleVersion.Moodle441 => "4.4.1 (Build: 20230112)",
+			MoodleVersion.Moodle440 => "4.4.0 (Build: 20230101)",
+			_ => "Unbekannt",
+		};
+	}
+
+
+	private string GetBackupVersion(MoodleVersion version)
+	{
+		// Mappt MoodleVersion auf Backup Version
+		return version switch
+		{
+			MoodleVersion.Moodle451 => "2024100700",
+			MoodleVersion.Moodle450 => "2024060100",
+			MoodleVersion.Moodle445 => "2023042700",
+			MoodleVersion.Moodle444 => "2023030900",
+			MoodleVersion.Moodle443 => "2023022800",
+			MoodleVersion.Moodle442 => "2023020900",
+			MoodleVersion.Moodle441 => "2023011200",
+			MoodleVersion.Moodle440 => "2023010100",
+			_ => "Unbekannt",
+		};
+	}
+
+
+	private string GetBackupRelease(MoodleVersion version)
+	{
+		// Mappt MoodleVersion auf Backup Release
+		return version switch
+		{
+			MoodleVersion.Moodle451 or MoodleVersion.Moodle450 => "4.5",
+			MoodleVersion.Moodle445 or MoodleVersion.Moodle444 or MoodleVersion.Moodle443 or MoodleVersion.Moodle442
+				or MoodleVersion.Moodle441 or MoodleVersion.Moodle440 => "4.4",
+
+			_ => "Unbekannt",
+		};
+	}
+
 }
