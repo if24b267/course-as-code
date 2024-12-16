@@ -11,9 +11,13 @@ public class BackupMetadata
     public MoodleVersion MoodleVersion { get; set; }
     [Description("the URL of the Moodle site that the backup was created from")]
     public required Uri MoodleUrl { get; set; }
-    
-		// Defaults
-		public class SensibleDefaults
+
+    public SensibleDefaults SensibleDefaultsInstance { get; set; }
+    public SystemDefaults SystemDefaultsInstance { get; set; }
+    public BackupSettings BackupSettingsInstance { get; set; }
+
+    // Defaults
+    public class SensibleDefaults
 		{
 			[Description("whether files are included in the backup")]
 			public bool FilesIncluded { get; set; }

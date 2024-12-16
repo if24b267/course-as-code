@@ -24,8 +24,8 @@ public class UsersWriter : XmlWriterBase
 
     private void WriteUser(XmlWriter writer, UserModel user)
     {
-        var systemDefaults = user.SystemDefaults;
-        var userPreferences = user.UserPreferences;
+        var systemDefaults = user.SystemDefaultsInstance;
+        var userPreferences = user.UserPreferencesInstance;
 
         WriteStartElementWithAttributes(writer, "user", new Dictionary<string, string>
         {
