@@ -16,7 +16,7 @@ namespace CourseAsCode
 				Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\Documentation\out\moodleCourseOut"));
 			var success = writer.WriteXML(course, outputPath);
 			var zipPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\Documentation\out"));
-			ZipFile.CreateFromDirectory(outputPath, Path.Combine(zipPath, "course.mbz"));
+			ZipFile.CreateFromDirectory(outputPath, Path.Combine(zipPath, "backup.mbz"));
 			Console.WriteLine("done");
 		}
 	}

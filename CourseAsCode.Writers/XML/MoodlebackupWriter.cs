@@ -9,7 +9,7 @@ namespace CourseAsCode.Writers.XML;
 
 public class MoodleBackupWriter : XmlWriterBase
 {
-	public void WriteMoodleBackup(BackupModel backupMetadata, string outputPath)
+	public void WriteMoodleBackup(BackupModel backupMetadata, Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "moodle_backup.xml"));
 		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
@@ -18,24 +18,27 @@ public class MoodleBackupWriter : XmlWriterBase
 
 			writer.WriteStartElement("moodle_backup");
 
-			WriteInformation(writer, backupMetadata);
+			WriteInformation(writer, backupMetadata, course);
 			WriteDetails(writer, backupMetadata);
 			WriteContents(writer, backupMetadata);
 			WriteSettings(writer, backupMetadata);
-
+			writer.WriteEndElement(); // information schlieﬂen
 			writer.WriteEndElement(); // moodle_backup schlieﬂen
 			writer.WriteEndDocument();
 		}
 	}
 
-	private void WriteInformation(XmlWriter writer, BackupModel backupMetadata)
+	private void WriteInformation(XmlWriter writer, BackupModel backupMetadata, Model.Course course)
 	{
 		writer.WriteStartElement("information");
+		var objRandom = new Random();
+		var intValue = objRandom.Next(10000, 99999);
 
 		var elements = new Dictionary<string, string>
 		{
-			{ "name", backupMetadata.Name },
-			{ "moodle_version", backupMetadata.MoodleVersion.ToString() },
+			// TODO: some kind of communication for file name
+			{ "name", "backup.mbz" },
+			{ "moodle_version", Helper.Helper.GetMoodleVersionFromEnum(backupMetadata.MoodleVersion) },
 			{ "moodle_release", GetMoodleRelease(backupMetadata.MoodleVersion) },
 			{ "backup_version", GetBackupVersion(backupMetadata.MoodleVersion) },
 			{ "backup_release", GetBackupRelease(backupMetadata.MoodleVersion) },
@@ -47,20 +50,22 @@ public class MoodleBackupWriter : XmlWriterBase
 				backupMetadata.SystemDefaults.IncludeFileReferencesToExternalContent ? "1" : "0"
 			},
 			{ "original_wwwroot", backupMetadata.MoodleUrl.ToString() },
-			{ "original_site_identifier_hash", backupMetadata.SystemDefaults.BackupId },
-			{ "original_course_id", "4" }, // Anpassen entsprechend den Angaben
-			{ "original_course_format", "EmptyCourse" },
-			{ "original_course_fullname", backupMetadata.Name },
-			{ "original_course_shortname", backupMetadata.Name },
+			{ "original_site_identifier_hash", "0" }, //TODO: what the fuck is this?
+			{ "original_course_id", course.SystemDefaults.Id.ToString() }, // Anpassen entsprechend den Angaben
+			{ "original_course_format", Helper.Helper.GetCourseFormatString(course.SensibleDefaults.Format) },
+			{ "original_course_fullname", course.FullName },
+			{ "original_course_shortname", course.ShortName },
+			// TODO: add course start/end date here
 			{ "original_course_startdate", "1731369600" }, // Anpassen entsprechend den Angaben
 			{ "original_course_enddate", "1734998400" }, // Anpassen entsprechend den Angaben
 			{ "original_course_contextid", "18" }, // Anpassen entsprechend den Angaben
 			{ "original_system_contextid", "1" }
 		};
 
+
 		WriteElements(writer, elements);
 
-		writer.WriteEndElement(); // information schlieﬂen
+
 	}
 
 	private void WriteDetails(XmlWriter writer, BackupModel backupMetadata)
@@ -100,7 +105,7 @@ public class MoodleBackupWriter : XmlWriterBase
 		writer.WriteStartElement("settings");
 
 		// Root-Einstellungen
-		WriteBackupSetting(writer, "root", "filename", backupMetadata.Name);
+		WriteBackupSetting(writer, "root", "filename", "backup.mbz");
 		WriteBackupSetting(writer, "root", "users", backupMetadata.BackupSettings.IncludeEnrolledUsers ? "1" : "0");
 		WriteBackupSetting(writer, "root", "anonymize",
 			backupMetadata.BackupSettings.AnonymizeUserInformation ? "1" : "0");

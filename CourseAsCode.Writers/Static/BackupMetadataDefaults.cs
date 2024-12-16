@@ -7,7 +7,7 @@ namespace CourseAsCode.Writers.Static;
 public class BackupMetadataDefaults
 {
 	public const string DEFAULT_NAME = "Backup";
-	public const MoodleVersion DEFAULT_MOODLE_VERSION = MoodleVersion.Moodle451;
+	public const MoodleVersion DEFAULT_MOODLE_VERSION = MoodleVersion.Moodle450;
 	public readonly Uri DEFAULT_MOODLE_URL = new("https://moodle.sanctus.cx");
 	public const bool DEFAULT_FILES_INCLUDED = true;
 	public const int DEFAULT_MNET_REMOTE_USERS = 0;

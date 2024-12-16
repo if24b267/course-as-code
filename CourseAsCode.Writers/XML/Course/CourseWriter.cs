@@ -43,7 +43,7 @@ public class CourseWriter : XmlWriterBase
 					? $"<p>{course.Summary ?? "Default Summary"}</p>"
 					: "<p></p>"
 			},
-			{ "summaryformat", ((int)course.SystemDefaults.SummaryFormat).ToString() },
+			{ "summaryformat", Helper.Helper.EnumIntegerToString(course.SystemDefaults.SummaryFormat) },
 			{ "format", Helper.Helper.GetCourseFormatString(course.SensibleDefaults.Format)},
 			{ "showgrades", course.SensibleDefaults.ShowGrades ? "1" : "0" },
 			{ "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
@@ -86,7 +86,7 @@ public class CourseWriter : XmlWriterBase
 		//foreach (var category in course.Categories)
 		//{ Laut datenmodell nur eine Kategorie erlaubt
 		writer.WriteStartElement("category");
-		writer.WriteAttributeString("id", "1");
+		writer.WriteAttributeString("id", "2");
 		writer.WriteElementString("name", course.SensibleDefaults.CategoryName);
 		writer.WriteElementString("description", course.SensibleDefaults.CategoryDescription ?? "$@NULL@$");
 		writer.WriteEndElement(); // Schlieﬂt <category>

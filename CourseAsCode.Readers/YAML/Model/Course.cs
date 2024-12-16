@@ -12,6 +12,7 @@ public class Course
 	public string Description { get; set; }
 	public bool Visible { get; set; }
 	public string Category { get; set; }
+	public int CategoryId { get; set; }
 	public string CategoryDescription { get; set; }
 	public DateTime StartDate { get; set; }
 	public DateTime EndDate { get; set; }
