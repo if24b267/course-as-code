@@ -57,10 +57,10 @@ public class RolesCourseWriter : XmlWriterBase
             { "roleid", user.Role.ToString() },
             { "userid", user.SystemDefaultsInstance.Id.ToString() },
             { "timemodified", user.SystemDefaultsInstance.TimeModified.ToString() },
-            //ned gefunden { "modifierid", role.Description ?? string.Empty },
-            //ned gefunden{ "component", role.SystemDefaultsInstance.Id.ToString() },
-            //ned gefunden{ "itemid", role.Archetype.ToString().ToLower() },
-            //ned gefunden{ "sortorder", role.Archetype.ToString().ToLower() }
+            { "modifierid", "2" },
+            { "component", "" },
+            { "itemid", "0" },
+            { "sortorder", "0"}
 
             // child elements of <assignment>
             /*writer.WriteElementString("roleid", "3");

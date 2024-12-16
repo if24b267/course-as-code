@@ -16,15 +16,11 @@ public class EnrolmentsWriter
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
+            writer.WriteStartElement("enrolments"); // <enrolments> starts here
+            writer.WriteStartElement("enrols"); // <enrols> starts here
 
-            // <enrolments> starts here
-            writer.WriteStartElement("enrolments");
-
-                // <enrols> starts here
-                writer.WriteStartElement("enrols");
-
-                    // <enrol> starts here with with attributes
-                    writer.WriteStartElement("enrol");
+            // <enrol> starts here with with attributes
+            writer.WriteStartElement("enrol");
                     writer.WriteAttributeString("id", "1");
 
                         // child elements of <enrol>
@@ -179,13 +175,107 @@ public class EnrolmentsWriter
                     // </enrol> ends here 
                     writer.WriteEndElement();
 
-                // </enrols> ends here 
-                writer.WriteEndElement();
-
-            // </enrolments> ends here 
-            writer.WriteEndElement();
-
+                
+            writer.WriteEndElement(); // </enrols> ends here 
+            writer.WriteEndElement(); // </enrolments> ends here 
             writer.WriteEndDocument();
         }
     }
+
+    /*private void WriteEnrolments(XmlWriter writer, User user, int i)
+    {
+        WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
+        {
+            { "id", i.ToString() }
+        });
+
+        var elements = new Dictionary<string, string>
+        {
+            { "enrol", user.Role.ToString() },
+            { "status", user.SystemDefaultsInstance.Id.ToString() },
+            { "name", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "enrolperiod", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "enrolstartdate", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "enrolenddate", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "expirynotify", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "expirythreshold", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "notifyall", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "password", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "cost", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "currency", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "roleid", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customint1", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customint2", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customint3", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customint4", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customint5", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customint6", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customint7", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customint8", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customchar1", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customchar2", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customchar3", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customdec1", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customdec2", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customtext1", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customtext2", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customtext3", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "customtext4", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "timecreated", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "timemodified", user.SystemDefaultsInstance.TimeModified.ToString() },
+            
+              writer.WriteEndElement(); // </enrol> ends here 
+
+                    // <enrol> starts here with with attributes
+                    writer.WriteStartElement("enrol");
+                    writer.WriteAttributeString("id", "3");
+
+                        // child elements of <enrol>
+                        writer.WriteElementString("enrol", "self");
+                        writer.WriteElementString("status", "1");
+                        writer.WriteElementString("name", "$@NULL@$");
+                        writer.WriteElementString("enrolperiod", "0");
+                        writer.WriteElementString("enrolstartdate", "0");
+                        writer.WriteElementString("enrolenddate", "0");
+                        writer.WriteElementString("expirynotify", "0");
+                        writer.WriteElementString("expirythreshold", "86400");
+                        writer.WriteElementString("notifyall", "0");
+                        writer.WriteElementString("password", "$@NULL@$");
+                        writer.WriteElementString("cost", "$@NULL@$");
+                        writer.WriteElementString("currency", "$@NULL@$");
+                        writer.WriteElementString("roleid", "5");
+                        writer.WriteElementString("customint1", "0");
+                        writer.WriteElementString("customint2", "0");
+                        writer.WriteElementString("customint3", "0");
+                        writer.WriteElementString("customint4", "1");
+                        writer.WriteElementString("customint5", "0");
+                        writer.WriteElementString("customint6", "1");
+                        writer.WriteElementString("customint7", "$@NULL@$");
+                        writer.WriteElementString("customint8", "$@NULL@$");
+                        writer.WriteElementString("customchar1", "$@NULL@$");
+                        writer.WriteElementString("customchar2", "$@NULL@$");
+                        writer.WriteElementString("customchar3", "$@NULL@$");
+                        writer.WriteElementString("customdec1", "$@NULL@$");
+                        writer.WriteElementString("customdec2", "$@NULL@$");
+                        writer.WriteElementString("customtext1", "$@NULL@$");
+                        writer.WriteElementString("customtext2", "$@NULL@$");
+                        writer.WriteElementString("customtext3", "$@NULL@$");
+                        writer.WriteElementString("customtext4", "$@NULL@$");
+                        writer.WriteElementString("timecreated", "1731001588");
+                        writer.WriteElementString("timemodified", "1731001588");
+
+                        // <user_enrolments> starts here 
+                        writer.WriteStartElement("user_enrolments");
+
+                        // </user_enrolments> ends here 
+                        writer.WriteEndElement();
+
+                    // </enrol> ends here 
+                    writer.WriteEndElement();
+        };
+
+        WriteElements(writer, elements);
+
+        writer.WriteEndElement(); // </assignment> ends here
+    }*/
 }
