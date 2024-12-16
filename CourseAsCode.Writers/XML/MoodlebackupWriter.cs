@@ -2,6 +2,7 @@ using System.Xml;
 using BackupModel =  CourseAsCode.Model.BackupMetadata;
 
 using CourseAsCode.Model;
+using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Writers.XML;
 
@@ -36,12 +37,12 @@ public class MoodleBackupWriter : XmlWriterBase
             { "moodle_release", GetMoodleRelease(backupMetadata.MoodleVersion) },
             { "backup_version", GetBackupVersion(backupMetadata.MoodleVersion) },
             { "backup_release", GetBackupRelease(backupMetadata.MoodleVersion) },
-            { "backup_date", ((DateTimeOffset)backupMetadata.SystemDefaultsInstance.CreationDate).ToUnixTimeSeconds().ToString() },
-            { "mnet_remoteusers", backupMetadata.SystemDefaultsInstance.MNetRemoteUsers.ToString() },
-            { "include_files", backupMetadata.SensibleDefaultsInstance.FilesIncluded ? "1" : "0" },
-            { "include_file_references_to_external_content", backupMetadata.SystemDefaultsInstance.IncludeFileReferencesToExternalContent ? "1" : "0" },
+            { "backup_date", ((DateTimeOffset)backupMetadata.SystemDefaults.CreationDate).ToUnixTimeSeconds().ToString() },
+            { "mnet_remoteusers", backupMetadata.SystemDefaults.MNetRemoteUsers.ToString() },
+            { "include_files", backupMetadata.SensibleDefaults.FilesIncluded ? "1" : "0" },
+            { "include_file_references_to_external_content", backupMetadata.SystemDefaults.IncludeFileReferencesToExternalContent ? "1" : "0" },
             { "original_wwwroot", backupMetadata.MoodleUrl.ToString() },
-            { "original_site_identifier_hash", backupMetadata.SystemDefaultsInstance.BackupId },
+            { "original_site_identifier_hash", backupMetadata.SystemDefaults.BackupId },
             { "original_course_id", "4" }, // Anpassen entsprechend den Angaben
             { "original_course_format", "EmptyCourse" },
             { "original_course_fullname", backupMetadata.Name },
@@ -63,13 +64,13 @@ public class MoodleBackupWriter : XmlWriterBase
 
         WriteStartElementWithAttributes(writer, "detail", new Dictionary<string, string>
         {
-            { "backup_id", backupMetadata.SystemDefaultsInstance.BackupId },
-            { "type", backupMetadata.SystemDefaultsInstance.WholeSiteBackup ? "site" : "course" }
+            { "backup_id", backupMetadata.SystemDefaults.BackupId },
+            { "type", backupMetadata.SystemDefaults.WholeSiteBackup ? "site" : "course" }
         });
 
         var elements = new Dictionary<string, string>
         {
-            { "format", backupMetadata.SystemDefaultsInstance.UsesNewBackupFormat ? "moodle2" : "moodle1" },
+            { "format", backupMetadata.SystemDefaults.UsesNewBackupFormat ? "moodle2" : "moodle1" },
             { "interactive", "1" },
             { "mode", "70" },
             { "execution", "2" },
@@ -95,26 +96,26 @@ public class MoodleBackupWriter : XmlWriterBase
 
         // Root-Einstellungen
         WriteBackupSetting(writer, "root", "filename", backupMetadata.Name);
-        WriteBackupSetting(writer, "root", "users", backupMetadata.BackupSettingsInstance.IncludeEnrolledUsers ? "1" : "0");
-        WriteBackupSetting(writer, "root", "anonymize", backupMetadata.BackupSettingsInstance.AnonymizeUserInformation ? "1" : "0");
-        WriteBackupSetting(writer, "root", "role_assignments", backupMetadata.BackupSettingsInstance.IncludeUserRoleAssignments ? "1" : "0");
-        WriteBackupSetting(writer, "root", "activities", backupMetadata.BackupSettingsInstance.IncludeActivitiesAndResources ? "1" : "0");
-        WriteBackupSetting(writer, "root", "blocks", backupMetadata.BackupSettingsInstance.IncludeBlocks ? "1" : "0");
-        WriteBackupSetting(writer, "root", "files", backupMetadata.BackupSettingsInstance.IncludeFiles ? "1" : "0");
-        WriteBackupSetting(writer, "root", "filters", backupMetadata.BackupSettingsInstance.IncludeFilters ? "1" : "0");
-        WriteBackupSetting(writer, "root", "comments", backupMetadata.BackupSettingsInstance.IncludeComments ? "1" : "0");
-        WriteBackupSetting(writer, "root", "badges", backupMetadata.BackupSettingsInstance.IncludeBadges ? "1" : "0");
-        WriteBackupSetting(writer, "root", "calendarevents", backupMetadata.BackupSettingsInstance.IncludeCalendarEvents ? "1" : "0");
-        WriteBackupSetting(writer, "root", "userscompletion", backupMetadata.BackupSettingsInstance.IncludeUserCompletionDetails ? "1" : "0");
-        WriteBackupSetting(writer, "root", "logs", backupMetadata.BackupSettingsInstance.IncludeCourseLogs ? "1" : "0");
-        WriteBackupSetting(writer, "root", "grade_histories", backupMetadata.BackupSettingsInstance.IncludeGradeHistory ? "1" : "0");
-        WriteBackupSetting(writer, "root", "questionbank", backupMetadata.BackupSettingsInstance.IncludeQuestionBank ? "1" : "0");
-        WriteBackupSetting(writer, "root", "groups", backupMetadata.BackupSettingsInstance.IncludeGroupsAndGroupings ? "1" : "0");
-        WriteBackupSetting(writer, "root", "competencies", backupMetadata.BackupSettingsInstance.IncludeCompetencies ? "1" : "0");
-        WriteBackupSetting(writer, "root", "customfield", backupMetadata.BackupSettingsInstance.IncludeCustomFields ? "1" : "0");
-        WriteBackupSetting(writer, "root", "contentbankcontent", backupMetadata.BackupSettingsInstance.IncludeContentBankContent ? "1" : "0");
-        WriteBackupSetting(writer, "root", "xapistate", backupMetadata.BackupSettingsInstance.IncludeUserStateInContent ? "1" : "0");
-        WriteBackupSetting(writer, "root", "legacyfiles", backupMetadata.BackupSettingsInstance.IncludeLegacyCourseFiles ? "1" : "0");
+        WriteBackupSetting(writer, "root", "users", backupMetadata.BackupSettings.IncludeEnrolledUsers ? "1" : "0");
+        WriteBackupSetting(writer, "root", "anonymize", backupMetadata.BackupSettings.AnonymizeUserInformation ? "1" : "0");
+        WriteBackupSetting(writer, "root", "role_assignments", backupMetadata.BackupSettings.IncludeUserRoleAssignments ? "1" : "0");
+        WriteBackupSetting(writer, "root", "activities", backupMetadata.BackupSettings.IncludeActivitiesAndResources ? "1" : "0");
+        WriteBackupSetting(writer, "root", "blocks", backupMetadata.BackupSettings.IncludeBlocks ? "1" : "0");
+        WriteBackupSetting(writer, "root", "files", backupMetadata.BackupSettings.IncludeFiles ? "1" : "0");
+        WriteBackupSetting(writer, "root", "filters", backupMetadata.BackupSettings.IncludeFilters ? "1" : "0");
+        WriteBackupSetting(writer, "root", "comments", backupMetadata.BackupSettings.IncludeComments ? "1" : "0");
+        WriteBackupSetting(writer, "root", "badges", backupMetadata.BackupSettings.IncludeBadges ? "1" : "0");
+        WriteBackupSetting(writer, "root", "calendarevents", backupMetadata.BackupSettings.IncludeCalendarEvents ? "1" : "0");
+        WriteBackupSetting(writer, "root", "userscompletion", backupMetadata.BackupSettings.IncludeUserCompletionDetails ? "1" : "0");
+        WriteBackupSetting(writer, "root", "logs", backupMetadata.BackupSettings.IncludeCourseLogs ? "1" : "0");
+        WriteBackupSetting(writer, "root", "grade_histories", backupMetadata.BackupSettings.IncludeGradeHistory ? "1" : "0");
+        WriteBackupSetting(writer, "root", "questionbank", backupMetadata.BackupSettings.IncludeQuestionBank ? "1" : "0");
+        WriteBackupSetting(writer, "root", "groups", backupMetadata.BackupSettings.IncludeGroupsAndGroupings ? "1" : "0");
+        WriteBackupSetting(writer, "root", "competencies", backupMetadata.BackupSettings.IncludeCompetencies ? "1" : "0");
+        WriteBackupSetting(writer, "root", "customfield", backupMetadata.BackupSettings.IncludeCustomFields ? "1" : "0");
+        WriteBackupSetting(writer, "root", "contentbankcontent", backupMetadata.BackupSettings.IncludeContentBankContent ? "1" : "0");
+        WriteBackupSetting(writer, "root", "xapistate", backupMetadata.BackupSettings.IncludeUserStateInContent ? "1" : "0");
+        WriteBackupSetting(writer, "root", "legacyfiles", backupMetadata.BackupSettings.IncludeLegacyCourseFiles ? "1" : "0");
 
         writer.WriteEndElement(); // settings schlieﬂen
     }

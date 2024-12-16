@@ -55,8 +55,8 @@ public class RolesCourseWriter : XmlWriterBase
         var elements = new Dictionary<string, string>
         {
             { "roleid", user.Role.ToString() },
-            { "userid", user.SystemDefaultsInstance.Id.ToString() },
-            { "timemodified", user.SystemDefaultsInstance.TimeModified.ToString() },
+            { "userid", user.SystemDefaults.Id.ToString() },
+            { "timemodified", user.SystemDefaults.TimeModified.ToString() },
             { "modifierid", "2" },
             { "component", "" },
             { "itemid", "0" },

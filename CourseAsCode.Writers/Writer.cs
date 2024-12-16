@@ -13,7 +13,7 @@ namespace CourseAsCode.Writers;
 public class Writer
 {
 
-	public static bool WriteXML(Course course, string outputPath)
+	public bool WriteXML(Course course, string outputPath)
 	{
 		// Course
 		// Create course directory if it does not exist

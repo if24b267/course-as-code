@@ -39,8 +39,8 @@ public class User
 
     /*public Role(string categoryName, string filePath)
     {
-        SensibleDefaultsInstance = new SensibleDefaults { CategoryName = categoryName };
-        SystemDefaultsInstance = new SystemDefaults { FilePath = filePath };
+        SensibleDefaults = new SensibleDefaults { CategoryName = categoryName };
+        SystemDefaults = new SystemDefaults { FilePath = filePath };
     }*/
     // Till here
 

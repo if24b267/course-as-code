@@ -58,7 +58,7 @@ public class InforefWriter : XmlWriterBase
         // Später auf Fehler Überprüfungen ----------------------
         var elements = new Dictionary<string, string>
         {
-            { "id", modelName.SystemDefaultsInstance.Id.ToString() }
+            { "id", modelName.SystemDefaults.Id.ToString() }
         };     
 
         WriteElements(writer, elements);

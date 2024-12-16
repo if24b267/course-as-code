@@ -24,8 +24,8 @@ public class UsersWriter : XmlWriterBase
 
     private void WriteUser(XmlWriter writer, UserModel user)
     {
-        var systemDefaults = user.SystemDefaultsInstance;
-        var userPreferences = user.UserPreferencesInstance;
+        var systemDefaults = user.SystemDefaults;
+        var userPreferences = user.UserPreferences;
 
         WriteStartElementWithAttributes(writer, "user", new Dictionary<string, string>
         {
@@ -60,7 +60,7 @@ public class UsersWriter : XmlWriterBase
         WriteElements(writer, elements);
     }
 
-    private void WritePreferences(XmlWriter writer, UserModel.UserPreferences? preferences)
+    private void WritePreferences(XmlWriter writer, UserModel.UserPreferencesClass? preferences)
     {
         if (preferences == null) return;
 
@@ -89,7 +89,7 @@ public class UsersWriter : XmlWriterBase
         writer.WriteEndElement(); // Close <preferences>
     }
 
-    private void WriteSystem(XmlWriter writer, UserModel.SystemDefaults? systemDefaults)
+    private void WriteSystem(XmlWriter writer, UserModel.SystemDefaultsUser? systemDefaults)
     {
         if (systemDefaults == null) return;
 
