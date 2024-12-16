@@ -1,11 +1,11 @@
 using System.Xml;
-using CourseAsCode.Model;
+using UserModel = CourseAsCode.Model.User;
 
 namespace CourseAsCode.Writers.XML;
 
 public class UsersWriter : XmlWriterBase
 {
-    public void WriteUsers(List<User> users, string filePath = "users.xml")
+    public void WriteUsers(List<UserModel> users, string filePath = "users.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
@@ -14,10 +14,6 @@ public class UsersWriter : XmlWriterBase
 
             foreach (var user in users)
             {
-                // Sicherstellen, dass SystemDefaults und UserPreferences nicht null sind
-                User.SystemDefaults ??= new User.SystemDefaults();
-                User.UserPreferences ??= new User.UserPreferences();
-
                 WriteUser(writer, user);
             }
 
@@ -26,22 +22,25 @@ public class UsersWriter : XmlWriterBase
         }
     }
 
-    private void WriteUser(XmlWriter writer, User user)
+    private void WriteUser(XmlWriter writer, UserModel user)
     {
+        var systemDefaults = user.SystemDefaults;
+        var userPreferences = user.UserPreferences;
+
         WriteStartElementWithAttributes(writer, "user", new Dictionary<string, string>
         {
-            { "id", User.SystemDefaults.Id.ToString() },
-            { "contextid", User.SystemDefaults.ExternalId.ToString() }
+            { "id", systemDefaults?.Id.ToString() ?? string.Empty },
+            { "contextid", systemDefaults?.ExternalId.ToString() ?? string.Empty }
         });
 
         WriteUserElements(writer, user);
-        WritePreferences(writer, user);
-        WriteSystem(writer, user);
+        WritePreferences(writer, userPreferences);
+        WriteSystem(writer, systemDefaults);
 
         writer.WriteEndElement(); // Close <user>
     }
 
-    private void WriteUserElements(XmlWriter writer, User user)
+    private void WriteUserElements(XmlWriter writer, UserModel user)
     {
         var elements = new Dictionary<string, string>
         {
@@ -61,53 +60,57 @@ public class UsersWriter : XmlWriterBase
         WriteElements(writer, elements);
     }
 
-    private void WritePreferences(XmlWriter writer, User user)
+    private void WritePreferences(XmlWriter writer, UserModel.UserPreferences? preferences)
     {
+        if (preferences == null) return;
+
         writer.WriteStartElement("preferences");
 
-        var preferences = new Dictionary<string, string>
+        var preferenceElements = new Dictionary<string, string>
         {
-            { "preferredlanguage", User.UserPreferences.PreferredLanguage.ToString() },
-            { "emaildigesttype", User.UserPreferences.EMailDigestType.ToString() },
-            { "autosubscribetoforums", User.UserPreferences.AutoSubscribeToForums ? "1" : "0" },
-            { "usenesteddiscussionview", User.UserPreferences.UseNestedDiscussionView ? "1" : "0" },
-            { "trackreadposts", User.UserPreferences.TrackReadPosts ? "1" : "0" },
-            { "notificationmarkspostasread", User.UserPreferences.NotificationMarksPostAsRead ? "1" : "0" },
-            { "editortype", User.UserPreferences.EditorType.ToString() },
-            { "use24hourtime", User.UserPreferences.Use24HourTime.HasValue ? (User.UserPreferences.Use24HourTime.Value ? "1" : "0") : string.Empty },
-            { "firstdayofweek", User.UserPreferences.FirstDayOfWeek?.ToString() ?? string.Empty },
-            { "maxevents", User.UserPreferences.MaxEvents.ToString() },
-            { "lookaheadperiod", User.UserPreferences.LookAheadPeriod.ToString() },
-            { "persistfiltersettings", User.UserPreferences.PersistFilerSettings ? "1" : "0" },
-            { "contentbankvisible", User.UserPreferences.ContentBankVisible ? "1" : "0" },
-            { "acceptmessagesfromcontactsonly", User.UserPreferences.AcceptMessagesFromContactsOnly ? "1" : "0" }
+            { "preferredlanguage", preferences.PreferredLanguage.ToString() },
+            { "emaildigesttype", preferences.EMailDigestType.ToString() },
+            { "autosubscribetoforums", preferences.AutoSubscribeToForums ? "1" : "0" },
+            { "usenesteddiscussionview", preferences.UseNestedDiscussionView ? "1" : "0" },
+            { "trackreadposts", preferences.TrackReadPosts ? "1" : "0" },
+            { "notificationmarkspostasread", preferences.NotificationMarksPostAsRead ? "1" : "0" },
+            { "editortype", preferences.EditorType.ToString() },
+            { "use24hourtime", preferences.Use24HourTime.HasValue ? (preferences.Use24HourTime.Value ? "1" : "0") : string.Empty },
+            { "firstdayofweek", preferences.FirstDayOfWeek?.ToString() ?? string.Empty },
+            { "maxevents", preferences.MaxEvents.ToString() },
+            { "lookaheadperiod", preferences.LookAheadPeriod.ToString() },
+            { "persistfiltersettings", preferences.PersistFilerSettings ? "1" : "0" },
+            { "contentbankvisible", preferences.ContentBankVisible ? "1" : "0" },
+            { "acceptmessagesfromcontactsonly", preferences.AcceptMessagesFromContactsOnly ? "1" : "0" }
         };
 
-        WriteElements(writer, preferences);
+        WriteElements(writer, preferenceElements);
 
         writer.WriteEndElement(); // Close <preferences>
     }
 
-    private void WriteSystem(XmlWriter writer, User user)
+    private void WriteSystem(XmlWriter writer, UserModel.SystemDefaults? systemDefaults)
     {
+        if (systemDefaults == null) return;
+
         writer.WriteStartElement("system");
 
         var systemElements = new Dictionary<string, string>
         {
-            { "externalid", User.SystemDefaults.ExternalId.ToString() },
-            { "lastip", User.SystemDefaults.LastIP.ToString() },
-            { "descriptionformat", ((int)User.SystemDefaults.DescriptionFormat).ToString() },
-            { "isconfirmed", User.SystemDefaults.IsConfirmed ? "1" : "0" },
-            { "acceptedpolicy", User.SystemDefaults.AcceptedPolicy ? "1" : "0" },
-            { "isdeleted", User.SystemDefaults.IsDeleted ? "1" : "0" },
-            { "timecreated", ((DateTimeOffset)User.SystemDefaults.TimeCreated).ToUnixTimeSeconds().ToString() },
-            { "timemodified", ((DateTimeOffset)User.SystemDefaults.TimeModified).ToUnixTimeSeconds().ToString() },
-            { "firstaccess", ((DateTimeOffset)User.SystemDefaults.FirstAccess).ToUnixTimeSeconds().ToString() },
-            { "lastaccess", ((DateTimeOffset)User.SystemDefaults.LastAccess).ToUnixTimeSeconds().ToString() },
-            { "lastlogin", ((DateTimeOffset)User.SystemDefaults.LastLogin).ToUnixTimeSeconds().ToString() },
-            { "rolechange", ((DateTimeOffset)User.SystemDefaults.RoleChange).ToUnixTimeSeconds().ToString() },
-            { "theme", User.SystemDefaults.Theme ?? string.Empty },
-            { "enrolmentsuspended", User.SystemDefaults.EnrolmentSuspended ? "1" : "0" }
+            { "externalid", systemDefaults.ExternalId.ToString() },
+            { "lastip", systemDefaults.LastIP?.ToString() ?? string.Empty },
+            { "descriptionformat", ((int)systemDefaults.DescriptionFormat).ToString() },
+            { "isconfirmed", systemDefaults.IsConfirmed ? "1" : "0" },
+            { "acceptedpolicy", systemDefaults.AcceptedPolicy ? "1" : "0" },
+            { "isdeleted", systemDefaults.IsDeleted ? "1" : "0" },
+            { "timecreated", systemDefaults.TimeCreated != default ? ((DateTimeOffset)systemDefaults.TimeCreated).ToUnixTimeSeconds().ToString() : string.Empty },
+            { "timemodified", systemDefaults.TimeModified != default ? ((DateTimeOffset)systemDefaults.TimeModified).ToUnixTimeSeconds().ToString() : string.Empty },
+            { "firstaccess", systemDefaults.FirstAccess != default ? ((DateTimeOffset)systemDefaults.FirstAccess).ToUnixTimeSeconds().ToString() : string.Empty },
+            { "lastaccess", systemDefaults.LastAccess != default ? ((DateTimeOffset)systemDefaults.LastAccess).ToUnixTimeSeconds().ToString() : string.Empty },
+            { "lastlogin", systemDefaults.LastLogin != default ? ((DateTimeOffset)systemDefaults.LastLogin).ToUnixTimeSeconds().ToString() : string.Empty },
+            { "rolechange", systemDefaults.RoleChange != default ? ((DateTimeOffset)systemDefaults.RoleChange).ToUnixTimeSeconds().ToString() : string.Empty },
+            { "theme", systemDefaults.Theme ?? string.Empty },
+            { "enrolmentsuspended", systemDefaults.EnrolmentSuspended ? "1" : "0" }
         };
 
         WriteElements(writer, systemElements);

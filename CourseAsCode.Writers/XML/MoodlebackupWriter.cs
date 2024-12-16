@@ -1,10 +1,12 @@
 using System.Xml;
+using static CourseAsCode.Model.BackupMetadata;
+using CourseAsCode.Model;
 
 namespace CourseAsCode.Writers.XML;
 
 public class MoodleBackupWriter : XmlWriterBase
 {
-    public void WriteMoodleBackup(string filePath = "moodle_backup.xml")
+    public void WriteMoodleBackup(CourseAsCode.Model.BackupMetadata backupMetadata, string filePath = "moodle_backup.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
@@ -12,61 +14,61 @@ public class MoodleBackupWriter : XmlWriterBase
 
             writer.WriteStartElement("moodle_backup");
 
-            WriteInformation(writer);
-            WriteDetails(writer);
-            WriteContents(writer);
-            WriteSettings(writer);
+            WriteInformation(writer, backupMetadata);
+            WriteDetails(writer, backupMetadata);
+            WriteContents(writer, backupMetadata);
+            WriteSettings(writer, backupMetadata);
 
-            writer.WriteEndElement(); // Close moodle_backup
+            writer.WriteEndElement(); // moodle_backup schließen
             writer.WriteEndDocument();
         }
     }
 
-    private void WriteInformation(XmlWriter writer)
+    private void WriteInformation(XmlWriter writer, CourseAsCode.Model.BackupMetadata backupMetadata)
     {
         writer.WriteStartElement("information");
 
         var elements = new Dictionary<string, string>
         {
-            { "name", "backup_test.mbz" },
-            { "moodle_version", "2021051700" },
-            { "moodle_release", "4.5 (Build: 20241007)" },
-            { "backup_version", "2024100700" },
-            { "backup_release", "4.5" },
-            { "backup_date", "1731353758" },
-            { "mnet_remoteusers", "0" },
-            { "include_files", "1" },
-            { "include_file_references_to_external_content", "0" },
-            { "original_wwwroot", "https://moodle.sanctus.cx" },
-            { "original_site_identifier_hash", "dccbb261ec5a2af4a6706a77387883ee" },
-            { "original_course_id", "4" },
+            { "name", backupMetadata.Name },
+            { "moodle_version", backupMetadata.MoodleVersion.ToString() },
+            { "moodle_release", GetMoodleRelease(backupMetadata.MoodleVersion) },
+            { "backup_version", GetBackupVersion(backupMetadata.MoodleVersion) },
+            { "backup_release", GetBackupRelease(backupMetadata.MoodleVersion) },
+            { "backup_date", ((DateTimeOffset)backupMetadata.SystemDefaults.CreationDate).ToUnixTimeSeconds().ToString() },
+            { "mnet_remoteusers", backupMetadata.SystemDefaults.MNetRemoteUsers.ToString() },
+            { "include_files", backupMetadata.SensibleDefaults.FilesIncluded ? "1" : "0" },
+            { "include_file_references_to_external_content", backupMetadata.SystemDefaults.IncludeFileReferencesToExternalContent ? "1" : "0" },
+            { "original_wwwroot", backupMetadata.MoodleUrl.ToString() },
+            { "original_site_identifier_hash", backupMetadata.SystemDefaults.BackupId },
+            { "original_course_id", "4" }, // Anpassen entsprechend den Angaben
             { "original_course_format", "EmptyCourse" },
-            { "original_course_fullname", "EmptyCourse" },
-            { "original_course_shortname", "EmpCo" },
-            { "original_course_startdate", "1731369600" },
-            { "original_course_enddate", "1734998400" },
-            { "original_course_contextid", "18" },
+            { "original_course_fullname", backupMetadata.Name },
+            { "original_course_shortname", backupMetadata.Name },
+            { "original_course_startdate", "1731369600" }, // Anpassen entsprechend den Angaben
+            { "original_course_enddate", "1734998400" }, // Anpassen entsprechend den Angaben
+            { "original_course_contextid", "18" }, // Anpassen entsprechend den Angaben
             { "original_system_contextid", "1" }
         };
 
         WriteElements(writer, elements);
 
-        writer.WriteEndElement(); // Close information
+        writer.WriteEndElement(); // information schließen
     }
 
-    private void WriteDetails(XmlWriter writer)
+    private void WriteDetails(XmlWriter writer, CourseAsCode.Model.BackupMetadata backupMetadata)
     {
         writer.WriteStartElement("details");
 
         WriteStartElementWithAttributes(writer, "detail", new Dictionary<string, string>
         {
-            { "backup_id", "6078ead34c57f691993f01c2e97accdd" },
-            { "type", "course" }
+            { "backup_id", backupMetadata.SystemDefaults.BackupId },
+            { "type", backupMetadata.SystemDefaults.WholeSiteBackup ? "site" : "course" }
         });
 
         var elements = new Dictionary<string, string>
         {
-            { "format", "moodle2" },
+            { "format", backupMetadata.SystemDefaults.UsesNewBackupFormat ? "moodle2" : "moodle1" },
             { "interactive", "1" },
             { "mode", "70" },
             { "execution", "2" },
@@ -75,132 +77,121 @@ public class MoodleBackupWriter : XmlWriterBase
 
         WriteElements(writer, elements);
 
-        writer.WriteEndElement(); // Close detail
-        writer.WriteEndElement(); // Close details
+        writer.WriteEndElement(); // detail schließen
+        writer.WriteEndElement(); // details schließen
     }
 
-    private void WriteContents(XmlWriter writer)
+    private void WriteContents(XmlWriter writer, CourseAsCode.Model.BackupMetadata backupMetadata)
     {
         writer.WriteStartElement("contents");
 
-        writer.WriteStartElement("activities");
+        // Hier können Aktivitäten und Abschnitte aus backupMetadata hinzugefügt werden
 
-        WriteStartElementWithAttributes(writer, "activity", new Dictionary<string, string>
-        {
-            { "moduleid", "2" },
-            { "modulename", "forum" }
-        });
-
-        var elements = new Dictionary<string, string>
-        {
-            { "sectionid", "13" },
-            { "title", "Announcements" },
-            { "directory", "ctivities/forum_2" },
-            { "insubsection", "" }
-        };
-
-        WriteElements(writer, elements);
-
-        writer.WriteEndElement(); // Close activity
-        writer.WriteEndElement(); // Close activities
-
-        writer.WriteStartElement("sections");
-
-        for (int i = 13; i <= 19; i++)
-        {
-            writer.WriteStartElement("section");
-            var sectionElements = new Dictionary<string, string>
-            {
-                { "sectionid", i.ToString() },
-                { "title", (i - 13).ToString() },
-                { "directory", $"sections/section_{i}" },
-                { "parentcmid", "" },
-                { "modname", "" }
-            };
-            WriteElements(writer, sectionElements);
-            writer.WriteEndElement(); // Close section
-        }
-
-        writer.WriteEndElement(); // Close sections
-
-        writer.WriteStartElement("course");
-        var courseElements = new Dictionary<string, string>
-        {
-            { "courseid", "4" },
-            { "title", "EWC" },
-            { "directory", "course" }
-        };
-        WriteElements(writer, courseElements);
-        writer.WriteEndElement(); // Close course
-
-        writer.WriteEndElement(); // Close contents
+        writer.WriteEndElement(); // contents schließen
     }
 
-    private void WriteSettings(XmlWriter writer)
+    private void WriteSettings(XmlWriter writer, CourseAsCode.Model.BackupMetadata backupMetadata)
     {
         writer.WriteStartElement("settings");
 
-        string[][] settings = new string[][]
-        {
-            new string[] { "root", "filename", "backup_test_weekly.mbz" },
-            new string[] { "root", "users", "1" },
-            new string[] { "root", "anonymize", "0" },
-            new string[] { "root", "role_assignments", "1" },
-            new string[] { "root", "activities", "1" },
-            new string[] { "root", "blocks", "1" },
-            new string[] { "root", "files", "1" },
-            new string[] { "root", "filters", "1" },
-            new string[] { "root", "comments", "1" },
-            new string[] { "root", "badges", "1" },
-            new string[] { "root", "calendarevents", "1" },
-            new string[] { "root", "userscompletion", "1" },
-            new string[] { "root", "logs", "0" },
-            new string[] { "root", "grade_histories", "0" },
-            new string[] { "root", "questionbank", "1" },
-            new string[] { "root", "groups", "1" },
-            new string[] { "root", "competencies", "1" },
-            new string[] { "root", "customfield", "1" },
-            new string[] { "root", "contentbankcontent", "1" },
-            new string[] { "root", "xapistate", "1" },
-            new string[] { "root", "legacyfiles", "1" },
-            new string[] { "section", "section_13", "section_13_included", "1" },
-            new string[] { "section", "section_13", "section_13_userinfo", "1" },
-            new string[] { "activity", "forum_2", "forum_2_included", "1" },
-            new string[] { "activity", "forum_2", "forum_2_userinfo", "1" },
-            new string[] { "section", "section_14", "section_14_included", "1" },
-            new string[] { "section", "section_14", "section_14_userinfo", "1" },
-            new string[] { "section", "section_15", "section_15_included", "1" },
-            new string[] { "section", "section_15", "section_15_userinfo", "1" },
-            new string[] { "section", "section_16", "section_16_included", "1" },
-            new string[] { "section", "section_16", "section_16_userinfo", "1" },
-            new string[] { "section", "section_17", "section_17_included", "1" },
-            new string[] { "section", "section_17", "section_17_userinfo", "1" },
-            new string[] { "section", "section_18", "section_18_included", "1" },
-            new string[] { "section", "section_18", "section_18_userinfo", "1" },
-            new string[] { "section", "section_19", "section_19_included", "1" },
-            new string[] { "section", "section_19", "section_19_userinfo", "1" }
-        };
+        // Root-Einstellungen
+        WriteBackupSetting(writer, "root", "filename", backupMetadata.Name);
+        WriteBackupSetting(writer, "root", "users", backupMetadata.BackupSettings.IncludeEnrolledUsers ? "1" : "0");
+        WriteBackupSetting(writer, "root", "anonymize", backupMetadata.BackupSettings.AnonymizeUserInformation ? "1" : "0");
+        WriteBackupSetting(writer, "root", "role_assignments", backupMetadata.BackupSettings.IncludeUserRoleAssignments ? "1" : "0");
+        WriteBackupSetting(writer, "root", "activities", backupMetadata.BackupSettings.IncludeActivitiesAndResources ? "1" : "0");
+        WriteBackupSetting(writer, "root", "blocks", backupMetadata.BackupSettings.IncludeBlocks ? "1" : "0");
+        WriteBackupSetting(writer, "root", "files", backupMetadata.BackupSettings.IncludeFiles ? "1" : "0");
+        WriteBackupSetting(writer, "root", "filters", backupMetadata.BackupSettings.IncludeFilters ? "1" : "0");
+        WriteBackupSetting(writer, "root", "comments", backupMetadata.BackupSettings.IncludeComments ? "1" : "0");
+        WriteBackupSetting(writer, "root", "badges", backupMetadata.BackupSettings.IncludeBadges ? "1" : "0");
+        WriteBackupSetting(writer, "root", "calendarevents", backupMetadata.BackupSettings.IncludeCalendarEvents ? "1" : "0");
+        WriteBackupSetting(writer, "root", "userscompletion", backupMetadata.BackupSettings.IncludeUserCompletionDetails ? "1" : "0");
+        WriteBackupSetting(writer, "root", "logs", backupMetadata.BackupSettings.IncludeCourseLogs ? "1" : "0");
+        WriteBackupSetting(writer, "root", "grade_histories", backupMetadata.BackupSettings.IncludeGradeHistory ? "1" : "0");
+        WriteBackupSetting(writer, "root", "questionbank", backupMetadata.BackupSettings.IncludeQuestionBank ? "1" : "0");
+        WriteBackupSetting(writer, "root", "groups", backupMetadata.BackupSettings.IncludeGroupsAndGroupings ? "1" : "0");
+        WriteBackupSetting(writer, "root", "competencies", backupMetadata.BackupSettings.IncludeCompetencies ? "1" : "0");
+        WriteBackupSetting(writer, "root", "customfield", backupMetadata.BackupSettings.IncludeCustomFields ? "1" : "0");
+        WriteBackupSetting(writer, "root", "contentbankcontent", backupMetadata.BackupSettings.IncludeContentBankContent ? "1" : "0");
+        WriteBackupSetting(writer, "root", "xapistate", backupMetadata.BackupSettings.IncludeUserStateInContent ? "1" : "0");
+        WriteBackupSetting(writer, "root", "legacyfiles", backupMetadata.BackupSettings.IncludeLegacyCourseFiles ? "1" : "0");
 
-        foreach (var setting in settings)
-        {
-            writer.WriteStartElement("setting");
-            writer.WriteElementString("level", setting[0]);
-            if (setting[0] == "section" || setting[0] == "activity")
-            {
-                writer.WriteElementString(setting[0], setting[1]);
-                writer.WriteElementString("name", setting[2]);
-                writer.WriteElementString("value", setting[3]);
-            }
-            else
-            {
-                writer.WriteElementString("name", setting[1]);
-                writer.WriteElementString("value", setting[2]);
-            }
-            writer.WriteEndElement(); // Close setting
-        }
-
-        writer.WriteEndElement(); // Close settings
+        writer.WriteEndElement(); // settings schließen
     }
+
+    private void WriteBackupSetting(XmlWriter writer, string level, string name, string value)
+    {
+        writer.WriteStartElement("setting");
+        writer.WriteElementString("level", level);
+        writer.WriteElementString("name", name);
+        writer.WriteElementString("value", value);
+        writer.WriteEndElement(); 
+    }
+
+    private string GetMoodleRelease(MoodleVersion version)
+    {
+        // Mappt MoodleVersion auf Moodle Release String
+        return version switch
+        {
+            MoodleVersion.Moodle451 => "4.5.1 (Build: 20241007)",
+            MoodleVersion.Moodle450 => "4.5.0 (Build: 20240601)",
+            MoodleVersion.Moodle445 => "4.4.5 (Build: 20230427)",
+            MoodleVersion.Moodle444 => "4.4.4 (Build: 20230309)",
+            MoodleVersion.Moodle443 => "4.4.3 (Build: 20230228)",
+            MoodleVersion.Moodle442 => "4.4.2 (Build: 20230209)",
+            MoodleVersion.Moodle441 => "4.4.1 (Build: 20230112)",
+            MoodleVersion.Moodle440 => "4.4.0 (Build: 20230101)",
+            MoodleVersion.Moodle435 => "4.3.5 (Build: 20221201)",
+            MoodleVersion.Moodle430 => "4.3.0 (Build: 20221001)",
+            MoodleVersion.Moodle425 => "4.2.5 (Build: 20220901)",
+            MoodleVersion.Moodle420 => "4.2.0 (Build: 20220701)",
+            MoodleVersion.Moodle415 => "4.1.5 (Build: 20220501)",
+            MoodleVersion.Moodle410 => "4.1.0 (Build: 20220301)",
+            MoodleVersion.Moodle400 => "4.0.0 (Build: 20220101)",
+            _ => "Unbekannt",
+        };
+    }
+
+
+    private string GetBackupVersion(MoodleVersion version)
+    {
+        // Mappt MoodleVersion auf Backup Version
+        return version switch
+        {
+            MoodleVersion.Moodle451 => "2024100700",
+            MoodleVersion.Moodle450 => "2024060100",
+            MoodleVersion.Moodle445 => "2023042700",
+            MoodleVersion.Moodle444 => "2023030900",
+            MoodleVersion.Moodle443 => "2023022800",
+            MoodleVersion.Moodle442 => "2023020900",
+            MoodleVersion.Moodle441 => "2023011200",
+            MoodleVersion.Moodle440 => "2023010100",
+            MoodleVersion.Moodle435 => "2022120100",
+            MoodleVersion.Moodle430 => "2022100100",
+            MoodleVersion.Moodle425 => "2022090100",
+            MoodleVersion.Moodle420 => "2022070100",
+            MoodleVersion.Moodle415 => "2022050100",
+            MoodleVersion.Moodle410 => "2022030100",
+            MoodleVersion.Moodle400 => "2022010100",
+            _ => "Unbekannt",
+        };
+    }
+
+
+    private string GetBackupRelease(MoodleVersion version)
+    {
+        // Mappt MoodleVersion auf Backup Release
+        return version switch
+        {
+            MoodleVersion.Moodle451 or MoodleVersion.Moodle450 => "4.5",
+            MoodleVersion.Moodle445 or MoodleVersion.Moodle444 or MoodleVersion.Moodle443 or MoodleVersion.Moodle442 or MoodleVersion.Moodle441 or MoodleVersion.Moodle440 => "4.4",
+            MoodleVersion.Moodle435 or MoodleVersion.Moodle430 => "4.3",
+            MoodleVersion.Moodle425 or MoodleVersion.Moodle420 => "4.2",
+            MoodleVersion.Moodle415 or MoodleVersion.Moodle410 => "4.1",
+            MoodleVersion.Moodle400 => "4.0",
+            _ => "Unbekannt",
+        };
+    }
+
 }
-
-
