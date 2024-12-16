@@ -23,11 +23,20 @@ jobs:
       id: git_artifact_version
       run: echo "GIT_ARTIFACT_VERSION=$(date +'%Y%m%d%H%M%S')-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-    - name: Publish project
-      run: dotnet publish -c Release -r linux-x64 --self-contained false -nowarn -o course_as_code_linux_x64
+    - name: Publish linux-x64 not self-contained project
+      run: dotnet publish -c Release -r linux-x64 --self-contained false -o course_as_code_linux_x64
+
+    - name: Publish linux-x64 self-contained project
+      run: dotnet publish -c Release -r linux-x64 --self-contained true -o course_as_code_linux_x64_self_contained
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: course_as_code_linux-x64-${{ env.GIT_ARTIFACT_VERSION }}
         path: course_as_code_linux_x64
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+          name: course_as_code_linux-x64-self-contained-${{ env.GIT_ARTIFACT_VERSION }}
+          path: course_as_code_linux_x64_self_contained
