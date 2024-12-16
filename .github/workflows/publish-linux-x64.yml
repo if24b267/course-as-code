@@ -1,10 +1,10 @@
-name: Publish .NET Project for Linux-x64
+name: Publish CourseAsCode for Linux-x64
 
 on:
   push:
 
 jobs:
-  build-and-publish:
+  build-and-publish-linux-x64:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,14 +19,15 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Publish project
-      run: dotnet publish -c Release -r linux-x64 --self-contained false -o publish-output
+    - name: Generate version identifier
+      id: version
+      run: echo "VERSION=$(date +'%Y%m%d%H%M%S')-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-    - name: Zip published artifacts
-      run: zip -r publish-output.zip publish-output
+    - name: Publish project
+      run: dotnet publish -c Release -r linux-x64 --self-contained false -o course_as_code_linux_x64
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: linux-x64-artifacts
-        path: publish-output.zip
+        name: course_as_code_linux-x64-${{ env.VERSION }}
+        path: course_as_code_linux_x64
