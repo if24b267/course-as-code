@@ -30,10 +30,10 @@ jobs:
       run: dotnet publish -c Release -r linux-x64 --self-contained true -o course_as_code_linux_x64_self_contained
 
     - name: Publish win-x64 not self-contained project
-      run: dotnet publish -c Release -r linux-x64 --self-contained false -o course_as_code_win_x64
+      run: dotnet publish -c Release -r win-x64 --self-contained false -o course_as_code_win_x64
 
     - name: Publish win-x64 self-contained project
-      run: dotnet publish -c Release -r linux-x64 --self-contained true -o course_as_code_win_x64_self_contained   
+      run: dotnet publish -c Release -r win-x64 --self-contained true -o course_as_code_win_x64_self_contained   
 
     - name: Upload linux-x64 not self contained artifact
       uses: actions/upload-artifact@v4
@@ -47,13 +47,13 @@ jobs:
         name: course_as_code_linux-x64-self-contained-${{ env.GIT_ARTIFACT_VERSION }}
         path: course_as_code_linux_x64_self_contained
 
-    - name: Upload linux-x64 not self contained artifact
+    - name: Upload win-x64 not self contained artifact
       uses: actions/upload-artifact@v4
       with:
         name: course_as_code_win-x64-${{ env.GIT_ARTIFACT_VERSION }}
         path: course_as_code_win_x64
     
-    - name: Upload linux-x64 self-contained artifact
+    - name: Upload win-x64 self-contained artifact
       uses: actions/upload-artifact@v4
       with:
         name: course_as_code_win-x64-self-contained-${{ env.GIT_ARTIFACT_VERSION }}
