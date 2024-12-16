@@ -9,10 +9,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.x'
 
@@ -20,14 +20,14 @@ jobs:
       run: dotnet restore
 
     - name: Generate version identifier
-      id: version
-      run: echo "VERSION=$(date +'%Y%m%d%H%M%S')-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      id: git_artifact_version
+      run: echo "GIT_ARTIFACT_VERSION=$(date +'%Y%m%d%H%M%S')-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
     - name: Publish project
       run: dotnet publish -c Release -r linux-x64 --self-contained false -o course_as_code_linux_x64
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: course_as_code_linux-x64-${{ env.VERSION }}
+        name: course_as_code_linux-x64-${{ env.GIT_ARTIFACT_VERSION }}
         path: course_as_code_linux_x64
