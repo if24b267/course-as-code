@@ -72,14 +72,14 @@ public class CourseWriter : XmlWriterBase
     private void WriteCategory(XmlWriter writer, CourseModel course)
     {
         // Angenommen, dass mehrere Kategorien erlaubt sind
-        foreach (var category in course.Categories)
-        {
-            writer.WriteStartElement("category");
+        //foreach (var category in course.Categories)
+        //{ Laut datenmodell nur eine Kategorie erlaubt
+        writer.WriteStartElement("category");
             writer.WriteAttributeString("id", "1");
-            writer.WriteElementString("name", category.Name);
-            writer.WriteElementString("description", category.Description ?? "$@NULL@$");
+            writer.WriteElementString("name", course.SensibleDefaultsInstance.CategoryName);
+            writer.WriteElementString("description", course.SensibleDefaultsInstance.CategoryDescription ?? "$@NULL@$");
             writer.WriteEndElement(); // Schlieﬂt <category>
-        }
+        //}
     }
 
     private void WriteTags(XmlWriter writer, CourseModel course)
@@ -109,14 +109,16 @@ public class CourseWriter : XmlWriterBase
     private void WriteCourseFormatOptions(XmlWriter writer, CourseModel course)
     {
         writer.WriteStartElement("courseformatoptions");
+        int i = 1;
         foreach (var section in course.Sections)
         {
             writer.WriteStartElement("courseformatoption");
             writer.WriteElementString("format", course.SensibleDefaultsInstance.Format.ToString().ToLower());
-            writer.WriteElementString("sectionid", section.Id.ToString());
+            writer.WriteElementString("sectionid", i.ToString());
             writer.WriteElementString("name", "coursedisplay");
             writer.WriteElementString("value", "0");
             writer.WriteEndElement(); // Schlieﬂt <courseformatoption>
+            i++;
         }
         writer.WriteEndElement(); // Schlieﬂt <courseformatoptions>
     }
