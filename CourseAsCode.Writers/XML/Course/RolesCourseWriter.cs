@@ -1,8 +1,10 @@
 using System.Xml;
+using CourseAsCode.Model;
+using UsersCourseModel = CourseAsCode.Model.User;
 
 namespace CourseAsCode.Writers.XML.Course;
 
-public class RolesCourseWriter
+public class RolesCourseWriter : XmlWriterBase
 {
     private readonly XmlWriterSettings _settings = new()
     {
@@ -11,45 +13,67 @@ public class RolesCourseWriter
         OmitXmlDeclaration = true // Removes the XML declaration
     };
     
-    public void WriteRolesCourse(string filePath = "course/roles.xml")
+    public void WriteRolesCourse(List<UsersCourseModel>  users, string filePath = "course/roles.xml")
     {
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
+            writer.WriteStartElement("roles"); // <roles> starts here
+            
+            writer.WriteStartElement("role_overrides"); // <role_overrides> starts here
+            writer.WriteEndElement(); // </role_overrides> starts here
+            
+            writer.WriteStartElement("role_assignments"); // <role_assignments> starts here
 
-            // <roles> starts here
-            writer.WriteStartElement("roles");
+            int i = 0;
+            foreach (var user in users)
+            {
+                i++;
+                WriteRolesCourse(writer, user, i);
+            }
 
-                // <role_overrides> starts here and ends immediately since it's empty
-                writer.WriteStartElement("role_overrides");
-                writer.WriteEndElement();
+            
+            // Attributes here if it doesnt work
 
-                // <role_assignments> starts here
-                writer.WriteStartElement("role_assignments");
-
-                    // <assignment> starts here with attributes
-                    writer.WriteStartElement("assignment");
-                    writer.WriteAttributeString("id", "1");
-
-                        // child elements of <assignment>
-                        writer.WriteElementString("roleid", "3");
-                        writer.WriteElementString("userid", "3");
-                        writer.WriteElementString("timemodified", "1731136235");
-                        writer.WriteElementString("modifierid", "2");
-                        writer.WriteElementString("component", "");
-                        writer.WriteElementString("itemid", "0");
-                        writer.WriteElementString("sortorder", "0");
-
-                    // </assignment> ends here
-                    writer.WriteEndElement();
-
-                // </role_assignments> ends here
-                writer.WriteEndElement();
-
-            // </roles> ends here
-            writer.WriteEndElement();
-
+                
+            writer.WriteEndElement(); // </role_assignments> ends here
+            writer.WriteEndElement(); // </roles> ends here
             writer.WriteEndDocument();
         }
+    }
+
+    private void WriteRolesCourse(XmlWriter writer, User user, int i)
+    {
+        WriteStartElementWithAttributes(writer, "assignment", new Dictionary<string, string>
+        {
+            { "id", i.ToString() }
+            // <assignment> starts here with attributes
+                    //writer.WriteStartElement("assignment");
+                    //writer.WriteAttributeString("id", "1");
+        });
+
+        var elements = new Dictionary<string, string>
+        {
+            { "roleid", user.Role.ToString() },
+            { "userid", user.SystemDefaultsInstance.Id.ToString() },
+            { "timemodified", user.SystemDefaultsInstance.TimeModified.ToString() },
+            //ned gefunden { "modifierid", role.Description ?? string.Empty },
+            //ned gefunden{ "component", role.SystemDefaultsInstance.Id.ToString() },
+            //ned gefunden{ "itemid", role.Archetype.ToString().ToLower() },
+            //ned gefunden{ "sortorder", role.Archetype.ToString().ToLower() }
+
+            // child elements of <assignment>
+            /*writer.WriteElementString("roleid", "3");
+            writer.WriteElementString("userid", "3");
+            writer.WriteElementString("timemodified", "1731136235");
+            writer.WriteElementString("modifierid", "2");
+            writer.WriteElementString("component", "");
+            writer.WriteElementString("itemid", "0");
+            writer.WriteElementString("sortorder", "0");*/
+        };
+
+        WriteElements(writer, elements);
+        
+        writer.WriteEndElement(); // </assignment> ends here
     }
 }

@@ -14,7 +14,7 @@ public class CourseWriter : XmlWriterBase
 
             // Wurzelelement <course> mit Attributen
             writer.WriteStartElement("course");
-            writer.WriteAttributeString("id", course.SystemDefaults.Id.ToString());
+            writer.WriteAttributeString("id", course.SystemDefaultsInstance.Id.ToString());
             writer.WriteAttributeString("contextid", "14"); // muss noch besprochen werden
 
             WriteCourseElements(writer, course);
@@ -35,31 +35,31 @@ public class CourseWriter : XmlWriterBase
         {
             { "shortname", course.ShortName },
             { "fullname", course.FullName },
-            { "idnumber", course.SensibleDefaults.CourseIdNumber.ToString() },
-            { "summary", course.SensibleDefaults.NumberOfAnnouncementsToDisplay.HasValue ? $"<p>{course.Summary ?? "Default Summary"}</p>" : "<p></p>" },
-            { "summaryformat", ((int)course.SystemDefaults.SummaryFormat).ToString() },
-            { "format", course.SensibleDefaults.Format.ToString().ToLower() },
-            { "showgrades", course.SensibleDefaults.ShowGrades ? "1" : "0" },
-            { "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
+            { "idnumber", course.SensibleDefaultsInstance.CourseIdNumber.ToString() },
+            { "summary", course.SensibleDefaultsInstance.NumberOfAnnouncementsToDisplay.HasValue ? $"<p>{course.Summary ?? "Default Summary"}</p>" : "<p></p>" },
+            { "summaryformat", ((int)course.SystemDefaultsInstance.SummaryFormat).ToString() },
+            { "format", course.SensibleDefaultsInstance.Format.ToString().ToLower() },
+            { "showgrades", course.SensibleDefaultsInstance.ShowGrades ? "1" : "0" },
+            { "newsitems", course.SensibleDefaultsInstance.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
             { "startdate", ((int)(course.StartDate - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
             { "enddate", ((int)(course.EndDate - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
             { "marker", "0" },
-            { "maxbytes", course.SensibleDefaults.MaximumUploadSize.ToString() },
-            { "legacyfiles", course.SystemDefaults.UsesLegacyFiles ? "1" : "0" },
+            { "maxbytes", course.SensibleDefaultsInstance.MaximumUploadSize.ToString() },
+            { "legacyfiles", course.SystemDefaultsInstance.UsesLegacyFiles ? "1" : "0" },
             { "showreports", "0" },
-            { "visible", course.SensibleDefaults.VisibleToStudents ? "1" : "0" },
+            { "visible", course.SensibleDefaultsInstance.VisibleToStudents ? "1" : "0" },
             { "groupmode", course.GroupMode.ToString().ToLower() },
-            { "groupmodeforce", course.SensibleDefaults.ForceGroupMode ? "1" : "0" },
+            { "groupmodeforce", course.SensibleDefaultsInstance.ForceGroupMode ? "1" : "0" },
             { "defaultgroupingid", "0" },
-            { "lang", course.SystemDefaults.CourseLanguage?.ToString() ?? "en" },
-            { "theme", course.SensibleDefaults.Theme ?? "" },
-            { "timecreated", ((int)(course.SystemDefaults.TimeCreated - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
-            { "timemodified", ((int)(course.SystemDefaults.TimeModified - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
+            { "lang", course.SystemDefaultsInstance.CourseLanguage?.ToString() ?? "en" },
+            { "theme", course.SensibleDefaultsInstance.Theme ?? "" },
+            { "timecreated", ((int)(course.SystemDefaultsInstance.TimeCreated - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
+            { "timemodified", ((int)(course.SystemDefaultsInstance.TimeModified - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
             { "requested", "0" },
-            { "showactivitydates", course.SensibleDefaults.ShowActivityDates ? "1" : "0" },
-            { "showcompletionconditions", course.SensibleDefaults.ShowActivityCompletionConditions ? "1" : "0" },
-            { "pdfexportfont", course.SystemDefaults.PdfExportFont ?? "$@NULL@$" },
-            { "enablecompletion", course.SensibleDefaults.EnableCompletionTracking ? "1" : "0" },
+            { "showactivitydates", course.SensibleDefaultsInstance.ShowActivityDates ? "1" : "0" },
+            { "showcompletionconditions", course.SensibleDefaultsInstance.ShowActivityCompletionConditions ? "1" : "0" },
+            { "pdfexportfont", course.SystemDefaultsInstance.PdfExportFont ?? "$@NULL@$" },
+            { "enablecompletion", course.SensibleDefaultsInstance.EnableCompletionTracking ? "1" : "0" },
             { "completionnotify", "0" }
         };
 
@@ -102,7 +102,7 @@ public class CourseWriter : XmlWriterBase
     private void WriteCustomFields(XmlWriter writer, CourseModel course)
     {
         writer.WriteStartElement("customfields");
-        writer.WriteString(course.SystemDefaults.CustomFields ?? " ");
+        writer.WriteString(course.SystemDefaultsInstance.CustomFields ?? " ");
         writer.WriteEndElement(); // Schlieﬂt <customfields>
     }
 
@@ -112,7 +112,7 @@ public class CourseWriter : XmlWriterBase
         foreach (var section in course.Sections)
         {
             writer.WriteStartElement("courseformatoption");
-            writer.WriteElementString("format", course.SensibleDefaults.Format.ToString().ToLower());
+            writer.WriteElementString("format", course.SensibleDefaultsInstance.Format.ToString().ToLower());
             writer.WriteElementString("sectionid", section.Id.ToString());
             writer.WriteElementString("name", "coursedisplay");
             writer.WriteElementString("value", "0");

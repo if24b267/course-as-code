@@ -16,25 +16,15 @@ public class FiltersWriter
         using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
         {
             writer.WriteStartDocument();
+            writer.WriteStartElement("filters"); // <filters> starts here
 
-            // <filters> starts here
-            writer.WriteStartElement("filters");
+            writer.WriteStartElement("filter_actives"); // <filter_actives> starts here 
+            writer.WriteEndElement(); // </filter_actives> ends here 
 
-                // <filter_actives> starts here 
-                writer.WriteStartElement("filter_actives");
+            writer.WriteStartElement("filter_configs"); // <filter_configs> starts here
+            writer.WriteEndElement(); // </filter_configs> ends here 
 
-                // </filter_actives> ends here 
-                writer.WriteEndElement();
-
-                // <filter_configs> starts here 
-                writer.WriteStartElement("filter_configs");
-
-                // </filter_configs> ends here 
-                writer.WriteEndElement();
-
-            // </filters> ends here 
-            writer.WriteEndElement();
-
+            writer.WriteEndElement(); // </filters> ends here 
             writer.WriteEndDocument();
         }
     }

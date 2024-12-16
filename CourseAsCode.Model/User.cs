@@ -31,7 +31,19 @@ public class User
     
     [Description("the user's role in the system")]
     public Role Role { get; set; }
-    
+
+    // Check if David is ok with this
+    public SensibleDefaults SensibleDefaultsInstance { get; set; }
+    public SystemDefaults SystemDefaultsInstance { get; set; }
+    public UserPreferences UserPreferencesInstance { get; set; }
+
+    /*public Role(string categoryName, string filePath)
+    {
+        SensibleDefaultsInstance = new SensibleDefaults { CategoryName = categoryName };
+        SystemDefaultsInstance = new SystemDefaults { FilePath = filePath };
+    }*/
+    // Till here
+
     // Defaults
     public class SensibleDefaults
     {
