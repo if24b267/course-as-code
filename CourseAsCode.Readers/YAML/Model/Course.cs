@@ -21,7 +21,7 @@ public class Course
 	public bool ForceGroupMode { get; set; }
 	public bool EnableCompletionTracking { get; set; }
 	public int NumberOfAnnouncements { get; set; }
-	public string Language { get; set; }
+	public string ForcedLanguage { get; set; }
 	public bool ShowActivityDates { get; set; }
 
 }

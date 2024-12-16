@@ -66,14 +66,14 @@ public class CourseReader : ICourseReader
 
 		yamlCourse.ShortName ??= GenerateShortName(yamlCourse.CourseName);
 
-		yamlCourse.Language = yamlCourse.Language switch
+		yamlCourse.ForcedLanguage = yamlCourse.ForcedLanguage switch
 		{
 			"en" => "English",
 			"de" => "German",
 			_ => "English"
 		};
 
-		Enum.TryParse(yamlCourse.Language, true, out Language courseLanguage);
+		Enum.TryParse(yamlCourse.ForcedLanguage, true, out Language courseLanguage);
 
 		_course = new Course
 		{

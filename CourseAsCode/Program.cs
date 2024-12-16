@@ -8,7 +8,7 @@ namespace CourseAsCode
 		static void Main(string[] args)
 		{
 			var courseReader = new CourseReader();
-			var course = courseReader.Read("C:\\Users\\Thinker\\Documents\\FH_Technikum\\Own\\CourseAsCode\\Code\\Documentation\\exampleCourse", CourseFormat.YAML);
+			var course = courseReader.Read(Path.Combine(Environment.CurrentDirectory, "../../../../Documentation/exampleCourse"), CourseFormat.YAML);
 			Console.WriteLine("done");
 		}
 	}
