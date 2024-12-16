@@ -15,9 +15,11 @@ public abstract class Activity
 	
 	[Description("list of tags that are used to describe the activity")]
 	public List<string>? Tags { get; set; }
-	
+	public SensibleDefaultsActivity SensibleDefaults { get; set; }
+	public SystemDefaultsActivity SystemDefaults { get; set; }
+
 	// Defaults
-	public class SensibleDefaults
+	public class SensibleDefaultsActivity
 	{
 		[Description("whether the activity is visible to students or teachers only")]
 		public bool VisibleToStudents { get; set; }
@@ -25,7 +27,7 @@ public abstract class Activity
 		public bool DisplayDescription { get; set; }
 	}
 	
-	public class SystemDefaults
+	public class SystemDefaultsActivity
 	{
 		[Description("optional identifier for the activity in the course, used for grade calculation and custom reports")]
 		public int? CustomId { get; set; }

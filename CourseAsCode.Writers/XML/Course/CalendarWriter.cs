@@ -2,26 +2,18 @@ using System.Xml;
 
 namespace CourseAsCode.Writers.XML.Course;
 
-public class CalendarWriter
+public class CalendarWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true, // Makes the XML output more readable
-        NewLineOnAttributes = false, // Keeps attributes in the same line
-        OmitXmlDeclaration = true // Removes the XML declaration
-    };
-    
-    public void WriteCalendar(string filePath = "course/calendar.xml")
-    {
-        using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-        {
-            writer.WriteStartDocument();
-            
-            writer.WriteStartElement("events");
-            writer.WriteString(" ");
-            writer.WriteEndElement(); // Close the <events> tag
-            
-            writer.WriteEndDocument();
-        }
-    }
+	public void WriteCalendar(string outputPath)
+	{
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/calendar.xml"));
+		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		{
+			writer.WriteStartDocument();
+			writer.WriteStartElement("events");
+			writer.WriteString(" ");
+			writer.WriteEndElement(); // Close <events>
+			writer.WriteEndDocument();
+		}
+	}
 }

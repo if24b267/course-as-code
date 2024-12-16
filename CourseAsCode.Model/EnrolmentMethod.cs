@@ -9,17 +9,20 @@ namespace CourseAsCode.Model;
 /// </summary>
 public abstract class EnrolmentMethod
 {
-    [Description("whether the enrolment method is enabled")]
-    public bool Enabled { get; set; }
-    [Description("the default role that is assigned to students when they are enrolled via this method")]
-    public required Role DefaultRole { get; set; }
+	[Description("whether the enrolment method is enabled")]
+	public bool Enabled { get; set; }
 
-    public class SystemDef
-    {
-        [Description("unique identifier for the enrolment method, used for referencing")]
-        public int EnrolmentId { get; set; }
-        
-        public DateTime TimeCreated { get; set; }
-        public DateTime TimeModified { get; set; }
-    }
+	[Description("the default role that is assigned to students when they are enrolled via this method")]
+	public required Role DefaultRole { get; set; }
+
+	public SystemDefaultsEnrolmentMethod SystemDefaults { get; set; }
+
+	public class SystemDefaultsEnrolmentMethod
+	{
+		[Description("unique identifier for the enrolment method, used for referencing")]
+		public int EnrolmentId { get; set; }
+
+		public DateTime TimeCreated { get; set; }
+		public DateTime TimeModified { get; set; }
+	}
 }

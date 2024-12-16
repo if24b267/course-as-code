@@ -2,33 +2,39 @@ using System.Xml;
 
 namespace CourseAsCode.Writers.XML;
 
-public class GroupsWriter
+public class GroupsWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true,
-        NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
-    };
+	public void WriteGroups(string outputPath)
+	{
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "groups.xml"));
+		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		{
+			writer.WriteStartDocument();
+			writer.WriteStartElement("groups");
 
-    public void WriteGroups(string filePath = "groups.xml")
-    {
-        using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-        {
-            writer.WriteStartDocument();
+			WriteGroupCustomFields(writer);
+			WriteGroupings(writer);
 
-            writer.WriteStartElement("groups"); // Root element
-            writer.WriteStartElement("groupcustomfields");
-            writer.WriteString(" ");
-            writer.WriteEndElement(); // Close </groupcustomfields>
-            writer.WriteStartElement("groupings");
-            writer.WriteStartElement("groupingcustomfields");
-            writer.WriteString(" ");
-            writer.WriteEndElement(); // Close </groupingcustomfields>
-            writer.WriteEndElement(); // Close </groupings>
-            writer.WriteEndElement(); // Close </groups>
+			writer.WriteEndElement(); // Close <groups>
+			writer.WriteEndDocument();
+		}
+	}
 
-            writer.WriteEndDocument();
-        }
-    }
+	private void WriteGroupCustomFields(XmlWriter writer)
+	{
+		writer.WriteStartElement("groupcustomfields");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close <groupcustomfields>
+	}
+
+	private void WriteGroupings(XmlWriter writer)
+	{
+		writer.WriteStartElement("groupings");
+
+		writer.WriteStartElement("groupingcustomfields");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close <groupingcustomfields>
+
+		writer.WriteEndElement(); // Close <groupings>
+	}
 }

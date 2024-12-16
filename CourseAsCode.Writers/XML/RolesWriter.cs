@@ -1,46 +1,47 @@
 using System.Xml;
+using CourseAsCode.Model;
 
 namespace CourseAsCode.Writers.XML;
 
-public class RolesWriter
+public class RolesWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true,
-        NewLineOnAttributes = false,
-        OmitXmlDeclaration = true
-    };
-    public void WriteRoles(string filePath = "roles.xml")
-    {
-        using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-        {
-            writer.WriteStartDocument();
-            writer.WriteStartElement("roles_definition"); 
+	public void WriteRoles(List<Role> roles, string outputPath)
+	{
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "roles.xml"));
+		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		{
+			writer.WriteStartDocument();
+			writer.WriteStartElement("roles_definition");
 
-            writer.WriteStartElement("role");
-            writer.WriteAttributeString("id", "3");
+			foreach (var role in roles)
+			{
+				WriteRole(writer, role);
+			}
 
-            writer.WriteElementString("name", "");
-            writer.WriteElementString("shortname", "editingteacher");
-            writer.WriteElementString("nameincourse", "$@NULL@$");
-            writer.WriteElementString("description", "");
-            writer.WriteElementString("sortorder", "3");
-            writer.WriteElementString("archetype", "editingteacher");
-            writer.WriteEndElement();
+			writer.WriteEndElement(); // Close <roles_definition>
+			writer.WriteEndDocument();
+		}
+	}
 
-            writer.WriteStartElement("role");
-            writer.WriteAttributeString("id", "5");
+	private void WriteRole(XmlWriter writer, Role role)
+	{
+		WriteStartElementWithAttributes(writer, "role", new Dictionary<string, string>
+		{
+			{ "id", role.SystemDefaults.Id.ToString() }
+		});
 
-            writer.WriteElementString("name", "");
-            writer.WriteElementString("shortname", "student");
-            writer.WriteElementString("nameincourse", "$@NULL@$");
-            writer.WriteElementString("description", "");
-            writer.WriteElementString("sortorder", "5");
-            writer.WriteElementString("archetype", "student");
-            writer.WriteEndElement();
+		var elements = new Dictionary<string, string>
+		{
+			{ "name", role.Name ?? string.Empty },
+			{ "shortname", role.ShortName },
+			{ "nameincourse", role.LocalName ?? "$@NULL@$" },
+			{ "description", role.Description ?? string.Empty },
+			{ "sortorder", role.SystemDefaults.Id.ToString() },
+			{ "archetype", role.Archetype.ToString().ToLower() }
+		};
 
-            writer.WriteEndElement(); 
-            writer.WriteEndDocument();
-        }
-    }
+		WriteElements(writer, elements);
+
+		writer.WriteEndElement(); // Close <role>
+	}
 }
