@@ -40,6 +40,9 @@ public class Writer
 		CourseWriter courseWriter = new CourseWriter();
 		courseWriter.WriteCourse(course, outputPath);
 
+		FilesWriter fileWriter = new FilesWriter();
+		fileWriter.WriteFiles(outputPath);
+
 		GradehistoryWriter gradehistoryWriter = new GradehistoryWriter();
 		gradehistoryWriter.WriteGradehistory(outputPath);
 
@@ -140,10 +143,7 @@ public class Writer
 		Directory.CreateDirectory(Path.Combine(outputPath,"files"));
 
 		// Create subfolder in files
-		Directory.CreateDirectory(Path.Combine(outputPath, Path.Combine("files", "4e")));
-
-		FileWriter fileWriter = new FileWriter();
-		fileWriter.WriteFile(outputPath);
+		//Directory.CreateDirectory(Path.Combine(outputPath, Path.Combine("files", "4e")));
 
 		return true;
 	}

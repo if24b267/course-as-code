@@ -1,13 +1,12 @@
-CourseName: PokemonCourse Cool Beans
+CourseName: This is a test course
 # ShortName has to be unique
 # ShortName: PC
-Summary: We will learn Pokemon
+Summary: This is the course summary
 # WHAT IS DESCRIPTION?
 # Description: Pokemon and more Pokemon. This is a description!
 Visible: true
 CategoryId: 2
 Category: TestCategory
-CategoryDescription: &lt;p&gt;Test&lt;/p&gt;
 StartDate: 31-01-2023 23:59
 EndDate: 31-08-2025 23:59
 IdNumber: 123456
