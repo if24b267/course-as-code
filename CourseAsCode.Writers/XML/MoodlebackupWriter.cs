@@ -74,12 +74,12 @@ public class MoodleBackupWriter : XmlWriterBase
 
 		WriteStartElementWithAttributes(writer, "detail", new Dictionary<string, string>
 		{
-			{ "backup_id", backupMetadata.SystemDefaults.BackupId },
-			{ "type", backupMetadata.SystemDefaults.WholeSiteBackup ? "site" : "course" }
+			{ "backup_id", backupMetadata.SystemDefaults.BackupId }
 		});
 
 		var elements = new Dictionary<string, string>
 		{
+			{ "type", backupMetadata.SystemDefaults.WholeSiteBackup ? "site" : "course" },
 			{ "format", backupMetadata.SystemDefaults.UsesNewBackupFormat ? "moodle2" : "moodle1" },
 			{ "interactive", "1" },
 			{ "mode", "70" },
