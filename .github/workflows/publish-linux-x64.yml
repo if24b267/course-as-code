@@ -1,0 +1,32 @@
+name: Publish .NET Project for Linux-x64
+
+on:
+  push:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Publish project
+      run: dotnet publish -c Release -r linux-x64 --self-contained false -o publish-output
+
+    - name: Zip published artifacts
+      run: zip -r publish-output.zip publish-output
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: linux-x64-artifacts
+        path: publish-output.zip
