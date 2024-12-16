@@ -4,36 +4,37 @@ namespace CourseAsCode.Writers.XML;
 
 public class GroupsWriter : XmlWriterBase
 {
-    public void WriteGroups(string filePath = "groups.xml")
-    {
-        using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-        {
-            writer.WriteStartDocument();
-            writer.WriteStartElement("groups");
+	public void WriteGroups(string outputPath)
+	{
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "groups.xml"));
+		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		{
+			writer.WriteStartDocument();
+			writer.WriteStartElement("groups");
 
-            WriteGroupCustomFields(writer);
-            WriteGroupings(writer);
+			WriteGroupCustomFields(writer);
+			WriteGroupings(writer);
 
-            writer.WriteEndElement(); // Close <groups>
-            writer.WriteEndDocument();
-        }
-    }
+			writer.WriteEndElement(); // Close <groups>
+			writer.WriteEndDocument();
+		}
+	}
 
-    private void WriteGroupCustomFields(XmlWriter writer)
-    {
-        writer.WriteStartElement("groupcustomfields");
-        writer.WriteString(" ");
-        writer.WriteEndElement(); // Close <groupcustomfields>
-    }
+	private void WriteGroupCustomFields(XmlWriter writer)
+	{
+		writer.WriteStartElement("groupcustomfields");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close <groupcustomfields>
+	}
 
-    private void WriteGroupings(XmlWriter writer)
-    {
-        writer.WriteStartElement("groupings");
+	private void WriteGroupings(XmlWriter writer)
+	{
+		writer.WriteStartElement("groupings");
 
-        writer.WriteStartElement("groupingcustomfields");
-        writer.WriteString(" ");
-        writer.WriteEndElement(); // Close <groupingcustomfields>
+		writer.WriteStartElement("groupingcustomfields");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close <groupingcustomfields>
 
-        writer.WriteEndElement(); // Close <groupings>
-    }
+		writer.WriteEndElement(); // Close <groupings>
+	}
 }

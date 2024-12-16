@@ -4,15 +4,16 @@ namespace CourseAsCode.Writers.XML.Course;
 
 public class CalendarWriter : XmlWriterBase
 {
-    public void WriteCalendar(string filePath = "course/calendar.xml")
-    {
-        using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-        {
-            writer.WriteStartDocument();
-            writer.WriteStartElement("events");
-            writer.WriteString(" ");
-            writer.WriteEndElement(); // Close <events>
-            writer.WriteEndDocument();
-        }
-    }
+	public void WriteCalendar(string outputPath)
+	{
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/calendar.xml"));
+		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		{
+			writer.WriteStartDocument();
+			writer.WriteStartElement("events");
+			writer.WriteString(" ");
+			writer.WriteEndElement(); // Close <events>
+			writer.WriteEndDocument();
+		}
+	}
 }

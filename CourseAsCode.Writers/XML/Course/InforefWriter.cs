@@ -7,62 +7,63 @@ namespace CourseAsCode.Writers.XML.Course;
 
 public class InforefWriter : XmlWriterBase
 {
-    private readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true, // Makes the XML output more readable
-        NewLineOnAttributes = false, // Keeps attributes in the same line
-        OmitXmlDeclaration = true // Removes the XML declaration
-    };
-    
-    public void WriteInforef(List<UsersModel> users, List<RolesModel> roles, string filePath = "course/inforef.xml")
-    {
-        using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-        {
-            writer.WriteStartDocument();
-            writer.WriteStartElement("inforef"); // <inforef> starts here
-            writer.WriteStartElement("userref"); // <userref> starts here
+	private readonly XmlWriterSettings _settings = new()
+	{
+		Indent = true, // Makes the XML output more readable
+		NewLineOnAttributes = false, // Keeps attributes in the same line
+		OmitXmlDeclaration = true // Removes the XML declaration
+	};
 
-            foreach (var user in users)
-            {
-                WriteInforef(writer, user, "user");
-            }
+	public void WriteInforef(List<UsersModel> users, List<RolesModel> roles, string outputPath)
+	{
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/inforef.xml"));
+		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		{
+			writer.WriteStartDocument();
+			writer.WriteStartElement("inforef"); // <inforef> starts here
+			writer.WriteStartElement("userref"); // <userref> starts here
 
-            writer.WriteEndElement(); // </userref> ends here
-            writer.WriteStartElement("roleref"); // <roleref> starts here
+			foreach (var user in users)
+			{
+				WriteInforef(writer, user, "user");
+			}
 
-            foreach (var role in roles)
-            {
-                WriteInforef(writer, role, "role");
-            }
+			writer.WriteEndElement(); // </userref> ends here
+			writer.WriteStartElement("roleref"); // <roleref> starts here
 
-            writer.WriteEndElement(); // </roleref> ends here
-            writer.WriteStartElement("fileref"); // <fileref> starts here
+			foreach (var role in roles)
+			{
+				WriteInforef(writer, role, "role");
+			}
 
-            /*foreach (var file in files)
-            {
-                WriteInforef(writer, file, "file");
-            }*/
+			writer.WriteEndElement(); // </roleref> ends here
+			writer.WriteStartElement("fileref"); // <fileref> starts here
 
-            writer.WriteEndElement(); // </fileref> ends here
-            writer.WriteEndElement(); // </inforef> ends here
-            writer.WriteEndDocument();
-        }
-    }
+			/*foreach (var file in files)
+			{
+			    WriteInforef(writer, file, "file");
+			}*/
 
-    private void WriteInforef(XmlWriter writer, object model, string type)
-    {
-        var modelName = model as dynamic;
+			writer.WriteEndElement(); // </fileref> ends here
+			writer.WriteEndElement(); // </inforef> ends here
+			writer.WriteEndDocument();
+		}
+	}
 
-        writer.WriteStartElement(type); // Element starts here
+	private void WriteInforef(XmlWriter writer, object model, string type)
+	{
+		var modelName = model as dynamic;
 
-        // Später auf Fehler Überprüfungen ----------------------
-        var elements = new Dictionary<string, string>
-        {
-            { "id", modelName.SystemDefaults.Id.ToString() }
-        };     
+		writer.WriteStartElement(type); // Element starts here
 
-        WriteElements(writer, elements);
+		// Später auf Fehler Überprüfungen ----------------------
+		var elements = new Dictionary<string, string>
+		{
+			{ "id", modelName.SystemDefaults.Id.ToString() }
+		};
 
-        writer.WriteEndElement(); // Element ends here
-    }
+		WriteElements(writer, elements);
+
+		writer.WriteEndElement(); // Element ends here
+	}
 }

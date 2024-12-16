@@ -20,70 +20,70 @@ public class Writer
 
 		// Course
 		// Create course directory if it does not exist
-		System.IO.Directory.CreateDirectory("course");
+		Directory.CreateDirectory(Path.Combine(outputPath,"course"));
 
 		CalendarWriter calendarWriter = new CalendarWriter();
-		calendarWriter.WriteCalendar();
+		calendarWriter.WriteCalendar(outputPath);
 
 		CommentsWriter commentsWriter = new CommentsWriter();
-		commentsWriter.WriteComments();
+		commentsWriter.WriteComments(outputPath);
 
 		CompetenciesWriter competenciesWriter = new CompetenciesWriter();
-		competenciesWriter.WriteCompetencies();
+		competenciesWriter.WriteCompetencies(outputPath);
 
 		CompletiondefaultsWriter completiondefaultsWriter = new CompletiondefaultsWriter();
-		completiondefaultsWriter.WriteCompletionDefaults();
+		completiondefaultsWriter.WriteCompletionDefaults(outputPath);
 
 		ContentbankWriter contentbankWriter = new ContentbankWriter();
-		contentbankWriter.WriteContentbank();
+		contentbankWriter.WriteContentbank(outputPath);
 
 		CourseWriter courseWriter = new CourseWriter();
-		courseWriter.WriteCourse(course);
+		courseWriter.WriteCourse(course, outputPath);
 
 		GradehistoryWriter gradehistoryWriter = new GradehistoryWriter();
-		gradehistoryWriter.WriteGradehistory();
+		gradehistoryWriter.WriteGradehistory(outputPath);
 
 		GradebookWriter gradebookWriter = new GradebookWriter();
-		gradebookWriter.WriteGradebook();
+		gradebookWriter.WriteGradebook(outputPath);
 
 		GroupsWriter groupsWriter = new GroupsWriter();
-		groupsWriter.WriteGroups();
+		groupsWriter.WriteGroups(outputPath);
 
 		MoodleBackupWriter moodleBackupWriter = new MoodleBackupWriter();
-		moodleBackupWriter.WriteMoodleBackup(course.BackupMetadata);
+		moodleBackupWriter.WriteMoodleBackup(course.BackupMetadata, outputPath);
 
 		OutcomesWriter outcomesWriter = new OutcomesWriter();
-		outcomesWriter.WriteOutcomes();
+		outcomesWriter.WriteOutcomes(outputPath);
 
 		QuestionsWriter questionsWriter = new QuestionsWriter();
-		questionsWriter.WriteQuestions();
+		questionsWriter.WriteQuestions(outputPath);
 
 		RolesWriter rolesWriter = new RolesWriter();
-		rolesWriter.WriteRoles(course.Roles);
+		rolesWriter.WriteRoles(course.Roles, outputPath);
 
 		ScalesWriter scalesWriter = new ScalesWriter();
-		scalesWriter.WriteScales();
+		scalesWriter.WriteScales(outputPath);
 
 		UsersWriter usersWriter = new UsersWriter();
-		usersWriter.WriteUsers(course.EnrolledUsers);
+		usersWriter.WriteUsers(course.EnrolledUsers, outputPath);
 
 		EnrolmentsWriter enrolmentsWriter = new EnrolmentsWriter();
-		enrolmentsWriter.WriteEnrolment();
+		enrolmentsWriter.WriteEnrolment(outputPath);
 
 		FiltersWriter filtersWriter = new FiltersWriter();
-		filtersWriter.WriteFilters();
+		filtersWriter.WriteFilters(outputPath);
 
 		InforefWriter inforefWriter = new InforefWriter();
-		inforefWriter.WriteInforef(course.EnrolledUsers, course.Roles);
+		inforefWriter.WriteInforef(course.EnrolledUsers, course.Roles, outputPath);
 
 		RolesCourseWriter rolesCourseWriter = new RolesCourseWriter();
-		rolesCourseWriter.WriteRolesCourse(course.EnrolledUsers);
+		rolesCourseWriter.WriteRolesCourse(course.EnrolledUsers, outputPath);
 
 		BadgesWriter badgesWriter = new BadgesWriter();
-		badgesWriter.WriteBadges();
+		badgesWriter.WriteBadges(outputPath);
 
 		CompletionWriter completionWriter = new CompletionWriter();
-		completionWriter.WriteCompletion();
+		completionWriter.WriteCompletion(outputPath);
 
 
 		// Sections
@@ -96,9 +96,9 @@ public class Writer
 		// Create subfolders in "sections"
 		foreach (string subfolder in subfolders)
 		{
-			System.IO.Directory.CreateDirectory(Path.Combine("sections", subfolder));
+			Directory.CreateDirectory(Path.GetFullPath(Path.Combine(outputPath, Path.Combine("sections", subfolder))));
 		}
-
+		// TODO: Refactor this to not be a hardcoded mess
 		// Section 1
 		SectionWriter1 sectionWriter1 = new SectionWriter1();
 		sectionWriter1.WriteSection1();
@@ -137,10 +137,10 @@ public class Writer
 
 		// Files
 		// Create files directory if it does not exist
-		System.IO.Directory.CreateDirectory("files");
+		System.IO.Directory.CreateDirectory(Path.Combine(outputPath,"files"));
 
 		// Create subfolder in files
-		System.IO.Directory.CreateDirectory(Path.Combine("files", "4e"));
+		System.IO.Directory.CreateDirectory(Path.Combine(outputPath, Path.Combine("files", "4e")));
 
 		FileWriter fileWriter = new FileWriter();
 		fileWriter.WriteFile();
