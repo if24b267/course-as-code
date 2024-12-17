@@ -25,7 +25,7 @@ namespace CourseAsCode
 					case "-i":
 						if (i + 1 < args.Length)
 						{
-							_logger.Debug($"Parsing value for -i: {args[++i]}");
+							_logger.Debug($"Parsing value for -i: {args[i + 1]}");
 							inputPath = args[++i];
 						}
 						else
@@ -38,7 +38,7 @@ namespace CourseAsCode
 					case "-o":
 						if (i + 1 < args.Length)
 						{
-							_logger.Debug($"Parsing value for -o: {args[++i]}");
+							_logger.Debug($"Parsing value for -o: {args[i + 1]}");
 							outputPath = args[++i];
 						}
 						else
@@ -51,7 +51,7 @@ namespace CourseAsCode
 					case "-f":
 						if (i + 1 < args.Length)
 						{
-							var formatArg = args[++i].ToUpper();
+							var formatArg = args[++i]?.ToUpper();
 							if (Enum.TryParse(formatArg, out CourseFormat parsedCourseFormat))
 							{
 								_logger.Debug($"Parsed the format {parsedCourseFormat}");
