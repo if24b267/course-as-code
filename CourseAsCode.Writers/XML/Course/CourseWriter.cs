@@ -1,11 +1,14 @@
 using System.Xml;
 using CourseModel = CourseAsCode.Model.Course;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.Helper;
 
 namespace CourseAsCode.Writers.XML.Course;
 
 public class CourseWriter : XmlWriterBase
 {
+	private readonly CourseHelper _courseHelper = CourseHelper.Instance;
+	
 	public void WriteCourse(CourseModel course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/course.xml"));
@@ -44,7 +47,7 @@ public class CourseWriter : XmlWriterBase
 					: "<p></p>"
 			},
 			{ "summaryformat", Helper.Helper.EnumIntegerToString(course.SystemDefaults.SummaryFormat) },
-			{ "format", Helper.Helper.GetCourseFormatString(course.SensibleDefaults.Format)},
+			{ "format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format)},
 			{ "showgrades", course.SensibleDefaults.ShowGrades ? "1" : "0" },
 			{ "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
 			{ "startdate", ((int)(course.StartDate - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
@@ -125,7 +128,7 @@ public class CourseWriter : XmlWriterBase
 		foreach (var section in course.Sections)
 		{
 			writer.WriteStartElement("courseformatoption");
-			writer.WriteElementString("format", Helper.Helper.GetCourseFormatString(course.SensibleDefaults.Format));
+			writer.WriteElementString("format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format));
 			writer.WriteElementString("sectionid", i.ToString());
 			writer.WriteElementString("name", "coursedisplay");
 			writer.WriteElementString("value", "0");

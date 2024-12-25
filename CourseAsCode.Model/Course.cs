@@ -22,6 +22,7 @@ namespace CourseAsCode.Model
 		public List<EnrolmentMethod> EnrolmentMethods { get; set; } = new List<EnrolmentMethod>();
 		[Description("list of users that are enrolled in the course")]
 		public List<User> EnrolledUsers { get; set; } = new List<User>();
+		
 		public BackupMetadata? BackupMetadata { get; set; }
 		public SensibleDefaultsCourse SensibleDefaults { get; set; }
 		public SystemDefaultsCourse SystemDefaults { get; set; }
