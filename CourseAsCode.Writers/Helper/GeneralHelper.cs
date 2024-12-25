@@ -1,3 +1,5 @@
+using CourseAsCode.Model.Enums;
+
 namespace CourseAsCode.Writers.Helper;
 
 public class GeneralHelper
@@ -56,5 +58,33 @@ public class GeneralHelper
         long unixTimestamp = (long)(utcDateTime - unixEpoch).TotalSeconds;
 
         return unixTimestamp.ToString();
+    }
+    
+    
+    /// <summary>
+    /// converts the integer values of an enum to a string, e.g. 1 -> "1"
+    /// </summary>
+    /// <param name="enumValue"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public string EnumIntegerToString<T>(T enumValue) where T : Enum
+    {
+        return ((int)(object)enumValue).ToString();
+    }
+
+
+    /// <summary>
+    /// maps the Language enum to their corresponding shorts that are accepted by Moodle
+    /// </summary>
+    /// <param name="language"></param>
+    /// <returns></returns>
+    public string GetLanguageFromEnum(Language language)
+    {
+        return language switch
+        {
+            Language.English => "en",
+            Language.German => "de",
+            _ => "en"
+        };
     }
 }

@@ -1,17 +1,21 @@
 ﻿using System.ComponentModel;
+using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model
 {
 	public class Course
 	{
-		public required string? FullName { get; set; }
-		public required string? ShortName { get; set; }
+		public required string FullName { get; set; } = CourseDefaults.DEFAULT_FULL_NAME;
+		public required string ShortName { get; set; } = CourseDefaults.DEFAULT_SHORT_NAME;
 		public string? Summary { get; set; }
-		public DateTime StartDate { get; set; }
-		public DateTime EndDate { get; set; }
+		public DateTime StartDate { get; set; } = CourseDefaults.DEFAULT_START_DATE;
+		public DateTime? EndDate { get; set; }
+
 		[Description("which group mode to use as default in the course")]
-		public GroupMode GroupMode { get; set; }
+		public GroupMode GroupMode { get; set; } = CourseDefaults.DEFAULT_GROUP_MODE;
+		[Description("if set, the course will be displayed in this language despite the user's preferences")]
+		public Language? CourseLanguage { get; set; }
 		[Description("list of tags that are used to describe the course")]
 		public List<string>? Tags { get; set; }
 		[Description("ordered list of sections in the course")]
@@ -53,7 +57,7 @@ namespace CourseAsCode.Model
 			[Description("if enabled, students can track their progress through the course")]
 			public bool EnableCompletionTracking { get; set; }
 			[Description("MANDATORY! moodle courses can be organized in categories, blank for default category")]
-			public string CategoryName { get; set; }
+			public required string CategoryName { get; set; } = CourseDefaults.DEFAULT_CATEGORY_NAME;
 			[Description("description of the course category, blank for default category")]
 			public string? CategoryDescription { get; set; }
 		}
@@ -65,12 +69,12 @@ namespace CourseAsCode.Model
 			public FormattingFormat SummaryFormat { get; set; }
 			[Description("whether this backup uses the legacy file system")]
 			public bool UsesLegacyFiles { get; set; }
-			[Description("if set, the course will be displayed in this language despite the user's preferences")]
-			public Language? CourseLanguage { get; set; }
+
 			[Description("the time the course was created")]
-			public DateTime TimeCreated { get; set; }
+			public DateTime TimeCreated { get; set; } = CourseDefaults.DEFAULT_TIME_CREATED;
+
 			[Description("the time the course was last modified")]
-			public DateTime TimeModified { get; set; }
+			public DateTime TimeModified { get; set; } = CourseDefaults.DEFAULT_TIME_MODIFIED;
 			[Description("the font used for PDF exports, blank for default - relevant for languages with non-latin scripts")]
 			public string? PdfExportFont { get; set; }
 			[Description("necessary if the course uses custom fields, blank for no custom fields")]

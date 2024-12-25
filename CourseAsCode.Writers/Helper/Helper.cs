@@ -4,11 +4,6 @@ namespace CourseAsCode.Writers.Helper;
 
 public class Helper
 {
-	public static string EnumIntegerToString<T>(T enumValue) where T : Enum
-	{
-		return ((int)(object)enumValue).ToString();
-	}
-
 	public static long ConvertToUnixTimestamp(DateTime dateTime)
 	{
 		// Ensure the DateTime is in UTC

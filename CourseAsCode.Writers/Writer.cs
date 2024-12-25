@@ -8,8 +8,8 @@ using CourseAsCode.Writers.XML.Sections.section_3;
 using CourseAsCode.Writers.XML.Sections.section_4;
 using CourseAsCode.Writers.XML.Sections.section_5;
 using CourseAsCode.Writers.XML.Files.E4;
+using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Course;
-using CourseAsCode.Writers.XML.Writer.MoodleBackupWriter;
 
 namespace CourseAsCode.Writers;
 

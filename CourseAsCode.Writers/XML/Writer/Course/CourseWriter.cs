@@ -1,74 +1,69 @@
 using System.Xml;
-using CourseModel = CourseAsCode.Model.Course;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Helper;
 
-namespace CourseAsCode.Writers.XML.Course;
+namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class CourseWriter : XmlWriterBase
 {
 	private readonly CourseHelper _courseHelper = CourseHelper.Instance;
+	private readonly GeneralHelper _helper = GeneralHelper.Instance;
 	
-	public void WriteCourse(CourseModel course, string outputPath)
+	
+	public void WriteCourse(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/course.xml"));
-		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-		{
-			writer.WriteStartDocument();
 
-			// Wurzelelement <course> mit Attributen
-			writer.WriteStartElement("course");
-			writer.WriteAttributeString("id", course.SystemDefaults.Id.ToString());
-			writer.WriteAttributeString("contextid", "14"); // muss noch besprochen werden
+		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		writer.WriteStartDocument();
+			
+		writer.WriteStartElement("course"); // Root <course> tag with attributes
+		writer.WriteAttributeString("id", course.SystemDefaults.Id.ToString());
+		writer.WriteAttributeString("contextid", Defaults.COURSECONTEXTID.ToString());
 
-			WriteCourseElements(writer, course);
-			WriteCategory(writer, course);
-			WriteTags(writer, course);
-			WriteCustomFields(writer, course);
-			WriteCourseFormatOptions(writer, course);
+		WriteGeneralInformationToCourseSection(writer, course);
+		WriteCategorySection(writer, course);
+		WriteTagsSection(writer, course);
+		WriteCustomFieldsSection(writer, course);
+		WriteCourseFormatOptionsSection(writer, course);
 
-			writer.WriteEndElement(); // Schlieﬂt <course>
+		writer.WriteEndElement(); // Close <course>
 
-			writer.WriteEndDocument();
-		}
+		writer.WriteEndDocument();
 	}
 
-	private void WriteCourseElements(XmlWriter writer, CourseModel course)
+	
+	/// <summary>
+	/// writes general information about the course; to be used within the course section of course/course.xml
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteGeneralInformationToCourseSection(XmlWriter writer, Model.Course course)
 	{
 		var elements = new Dictionary<string, string>
 		{
 			{ "shortname", course.ShortName },
 			{ "fullname", course.FullName },
 			{ "idnumber", course.SensibleDefaults.CourseIdNumber.ToString() },
-			{
-				"summary",
-				course.SensibleDefaults.NumberOfAnnouncementsToDisplay.HasValue
-					? $"<p>{course.Summary ?? "Default Summary"}</p>"
-					: "<p></p>"
-			},
-			{ "summaryformat", Helper.Helper.EnumIntegerToString(course.SystemDefaults.SummaryFormat) },
+			{ "summary", course.Summary ?? " " },
+			{ "summaryformat", _helper.EnumIntegerToString(course.SystemDefaults.SummaryFormat) },
 			{ "format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format)},
 			{ "showgrades", course.SensibleDefaults.ShowGrades ? "1" : "0" },
-			{ "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
-			{ "startdate", ((int)(course.StartDate - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
-			{ "enddate", ((int)(course.EndDate - new DateTime(1970, 1, 1)).TotalSeconds).ToString() },
+			{ "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay.ToString() ?? "0" },
+			{ "startdate", _helper.DateTimeToUnixTimestamp(course.StartDate) },
+			{ "enddate", course.EndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)course.EndDate) : "0" },
 			{ "marker", "0" },
 			{ "maxbytes", course.SensibleDefaults.MaximumUploadSize.ToString() },
 			{ "legacyfiles", course.SystemDefaults.UsesLegacyFiles ? "1" : "0" },
 			{ "showreports", "0" },
 			{ "visible", course.SensibleDefaults.VisibleToStudents ? "1" : "0" },
-			{ "groupmode", Helper.Helper.EnumIntegerToString(course.GroupMode) },
+			{ "groupmode", _helper.EnumIntegerToString(course.GroupMode) },
 			{ "groupmodeforce", course.SensibleDefaults.ForceGroupMode ? "1" : "0" },
 			{ "defaultgroupingid", "0" },
-			{ "lang", course.SystemDefaults.CourseLanguage?.ToString() ?? "en" },
-			{ "theme", course.SensibleDefaults.Theme ?? "" },
-			{
-				"timecreated", Helper.Helper.ConvertToUnixTimestamp(course.SystemDefaults.TimeCreated).ToString()
-			},
-			{
-				"timemodified",
-				Helper.Helper.ConvertToUnixTimestamp(course.SystemDefaults.TimeModified).ToString()
-			},
+			{ "lang", course.CourseLanguage != null ? _helper.GetLanguageFromEnum((Language)course.CourseLanguage) : " " },
+			{ "theme", course.SensibleDefaults.Theme ?? " " },
+			{ "timecreated", _helper.DateTimeToUnixTimestamp(course.SystemDefaults.TimeCreated) },
+			{ "timemodified", _helper.DateTimeToUnixTimestamp(course.SystemDefaults.TimeModified) },
 			{ "requested", "0" },
 			{ "showactivitydates", course.SensibleDefaults.ShowActivityDates ? "1" : "0" },
 			{ "showcompletionconditions", course.SensibleDefaults.ShowActivityCompletionConditions ? "1" : "0" },
@@ -77,65 +72,95 @@ public class CourseWriter : XmlWriterBase
 			{ "completionnotify", "0" }
 		};
 
-		foreach (var element in elements)
-		{
-			writer.WriteElementString(element.Key, element.Value);
-		}
+		WriteElements(writer, elements);
 	}
 
-	private void WriteCategory(XmlWriter writer, CourseModel course)
+	
+	/// <summary>
+	/// writes the category section in course/course.xml
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteCategorySection(XmlWriter writer, Model.Course course)
 	{
-		// Angenommen, dass mehrere Kategorien erlaubt sind
-		//foreach (var category in course.Categories)
-		//{ Laut datenmodell nur eine Kategorie erlaubt
+		// A moodle course can only have a single category assigned to it
+
 		writer.WriteStartElement("category");
-		writer.WriteAttributeString("id", "2");
+		
+		writer.WriteAttributeString("id", "0");
 		writer.WriteElementString("name", course.SensibleDefaults.CategoryName);
 		writer.WriteElementString("description", course.SensibleDefaults.CategoryDescription ?? "$@NULL@$");
-		writer.WriteEndElement(); // Schlieﬂt <category>
-		//}
+		
+		writer.WriteEndElement(); // Closes <category>
 	}
 
-	private void WriteTags(XmlWriter writer, CourseModel course)
+	
+	/// <summary>
+	/// writes the tags section in course/course.xml
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteTagsSection(XmlWriter writer, Model.Course course)
 	{
 		if (course.Tags == null || course.Tags.Count == 0)
+		{
 			return;
+		}
 
 		writer.WriteStartElement("tags");
-		foreach (var tag in course.Tags)
+		
+		for (int i = 0; i < course.Tags.Count; i++)
 		{
 			writer.WriteStartElement("tag");
-			writer.WriteAttributeString("id", "1"); // Angenommene Tag-ID
-			writer.WriteElementString("name", tag);
-			writer.WriteElementString("rawname", tag);
-			writer.WriteEndElement(); // Schlieﬂt <tag>
+			
+			writer.WriteAttributeString("id", (i + 1).ToString());
+			writer.WriteElementString("name", course.Tags[i]);
+			writer.WriteElementString("rawname", course.Tags[i]);
+			
+			writer.WriteEndElement(); // Close <tag>
 		}
 
-		writer.WriteEndElement(); // Schlieﬂt <tags>
+		writer.WriteEndElement(); // Close <tags>
 	}
 
-	private void WriteCustomFields(XmlWriter writer, CourseModel course)
+	
+	/// <summary>
+	/// writes the custom fields section in course/course.xml
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteCustomFieldsSection(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("customfields");
-		writer.WriteString(course.SystemDefaults.CustomFields ?? " ");
-		writer.WriteEndElement(); // Schlieﬂt <customfields>
+		
+		writer.WriteString(course.SystemDefaults.CustomFields ?? "\n  ");
+		
+		writer.WriteEndElement(); // Close <customfields>
 	}
 
-	private void WriteCourseFormatOptions(XmlWriter writer, CourseModel course)
+	
+	/// <summary>
+	/// writes the course format options section in course/course.xml
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteCourseFormatOptionsSection(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("courseformatoptions");
-		int i = 1;
-		foreach (var section in course.Sections)
+		
+		for (int i = 0; i < 2; i++)
 		{
 			writer.WriteStartElement("courseformatoption");
+			
+			// TODO: Determine what these settings do, see https://moodledev.io/docs/4.5/apis/plugintypes/format#course-format-options
 			writer.WriteElementString("format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format));
-			writer.WriteElementString("sectionid", i.ToString());
-			writer.WriteElementString("name", "coursedisplay");
-			writer.WriteElementString("value", "0");
-			writer.WriteEndElement(); // Schlieﬂt <courseformatoption>
-			i++;
+			writer.WriteElementString("sectionid", "0");
+			writer.WriteElementString("name", i == 0 ? "coursedisplay" : "hiddensections");
+			writer.WriteElementString("value", i == 0 ? "0" : "1");
+			
+			writer.WriteEndElement(); // Close <courseformatoption>
 		}
 
-		writer.WriteEndElement(); // Schlieﬂt <courseformatoptions>
+		writer.WriteEndElement(); // Close <courseformatoptions>
 	}
 }
