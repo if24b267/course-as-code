@@ -1,7 +1,7 @@
-CourseName: This is a test course
+CourseName: My test course
 # ShortName has to be unique
 # ShortName: PC
-Summary: This is the course summary
+Summary: Changed a few things
 # WHAT IS DESCRIPTION?
 # Description: Pokemon and more Pokemon. This is a description!
 Visible: true
