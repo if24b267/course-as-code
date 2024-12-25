@@ -53,7 +53,7 @@ public class MoodleVersionHelper
     {
         return version switch
         {
-            MoodleVersion.Moodle451 => $"4.5.1 (Build: {GetMoodleVersionStringFromEnum(version)}",
+            MoodleVersion.Moodle451 => $"4.5.1 (Build: {GetMoodleVersionStringFromEnum(version)})",
             MoodleVersion.Moodle450 => $"4.5 (Build: {GetMoodleVersionStringFromEnum(version)})",
             MoodleVersion.Moodle445 => $"4.4.5 (Build: {GetMoodleVersionStringFromEnum(version)})",
             MoodleVersion.Moodle444 => $"4.4.4 (Build: {GetMoodleVersionStringFromEnum(version)})",
