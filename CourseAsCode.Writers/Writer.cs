@@ -43,7 +43,7 @@ public class Writer
 		courseWriter.WriteCourse(course, outputPath);
 
 		FilesWriter fileWriter = new FilesWriter();
-		fileWriter.WriteFiles(outputPath);
+		fileWriter.WriteFiles(course, outputPath);
 
 		GradehistoryWriter gradehistoryWriter = new GradehistoryWriter();
 		gradehistoryWriter.WriteGradehistory(outputPath);

@@ -15,23 +15,21 @@ public class FiltersWriter
 	public void WriteFilters(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/filters.xml"));
-		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-		{
-			writer.WriteStartDocument();
+		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		writer.WriteStartDocument();
 			
-			writer.WriteStartElement("filters");
+		writer.WriteStartElement("filters");
 
-			writer.WriteStartElement("filter_actives");
-			writer.WriteString(" ");
-			writer.WriteEndElement(); // Close </filter_actives>
+		writer.WriteStartElement("filter_actives");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close </filter_actives>
 
-			writer.WriteStartElement("filter_configs");
-			writer.WriteString(" ");
-			writer.WriteEndElement(); // Close </filter_configs>
+		writer.WriteStartElement("filter_configs");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close </filter_configs>
 
-			writer.WriteEndElement(); // Close </filters>
+		writer.WriteEndElement(); // Close </filters>
 			
-			writer.WriteEndDocument();
-		}
+		writer.WriteEndDocument();
 	}
 }
