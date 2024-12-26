@@ -2,12 +2,12 @@
 using CourseAsCode.Writers.Static;
 using CourseAsCode.Writers.XML;
 using CourseAsCode.Writers.XML.Course;
+using CourseAsCode.Writers.XML.Files.E4;
 using CourseAsCode.Writers.XML.Sections.section_1;
 using CourseAsCode.Writers.XML.Sections.section_2;
 using CourseAsCode.Writers.XML.Sections.section_3;
 using CourseAsCode.Writers.XML.Sections.section_4;
 using CourseAsCode.Writers.XML.Sections.section_5;
-using CourseAsCode.Writers.XML.Files.E4;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Course;
 
@@ -80,7 +80,7 @@ public class Writer
 		filtersWriter.WriteFilters(course, outputPath);
 
 		InforefWriter inforefWriter = new InforefWriter();
-		inforefWriter.WriteInforef(course.EnrolledUsers, course.Roles, outputPath);
+		inforefWriter.WriteInforef(course, outputPath);
 
 		RolesCourseWriter rolesCourseWriter = new RolesCourseWriter();
 		rolesCourseWriter.WriteRolesCourse(course.EnrolledUsers, outputPath);
