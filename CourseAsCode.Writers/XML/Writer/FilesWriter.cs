@@ -1,7 +1,11 @@
-﻿using System.Xml;
+﻿using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.Helper;
 using CourseAsCode.Writers.Static;
 
 namespace CourseAsCode.Writers.XML.Writer;
@@ -9,6 +13,15 @@ namespace CourseAsCode.Writers.XML.Writer;
 public class FilesWriter : XmlWriterBase
 {
 	private int _fileIdCounter = 1;
+	private readonly FileHelper _fileHelper = FileHelper.Instance;
+	
+	private new readonly XmlWriterSettings _settings = new()
+	{
+		Indent = true,
+		NewLineOnAttributes = false,
+		OmitXmlDeclaration = false
+	};
+	
 	
 	public void WriteFiles(Model.Course course, string outputPath)
 	{
@@ -47,9 +60,9 @@ public class FilesWriter : XmlWriterBase
 		var elements = new Dictionary<string, string>
 		{
 			{ "contenthash", file.SystemDefaults.ContentHash },
-			{ "contextid", "14" }, // TODO: It probably makes sense to make this value dependent on the value of `Component`
-			{ "component", file.SystemDefaults.Component.ToString() }, // TODO: Add function that maps enum value to correct moodle values
-			{ "filearea", file.SystemDefaults.FileArea.ToString() }, // TODO: Add function that maps enum value to correct moodle values
+			{ "contextid", file.SystemDefaults.Component == Component.Course ? "14" : "35" }, // TODO: It probably makes sense to make this value dependent on the value of `Component`
+			{ "component", file.SystemDefaults.Component != null ? _fileHelper.GetComponentFromEnum((Component)file.SystemDefaults.Component) : "course" },
+			{ "filearea", file.SystemDefaults.FileArea != null ? _fileHelper.GetFileAreaFromEnum((FileArea)file.SystemDefaults.FileArea) : "content" },
 			{ "itemid", "0" }, // TODO: Determine function of this field
 			{ "filepath", file.FilePath  ?? "/"},
 			{ "filename", file.FileName },

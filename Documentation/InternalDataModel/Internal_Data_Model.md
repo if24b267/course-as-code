@@ -84,6 +84,50 @@ For many of these texts, the format in which they are stored must be specified i
 
 See [moodle docs](https://docs.moodle.org/405/en/Formatting_text) for more information
 
+### Component
+The component refers to the subsystem or plugin responsible for the file, typically following Moodle's "Frankenstyle" naming convention. For example, `mod_forum` represents the forum module, and `block_html` represents the HTML block. Each subsystem is permitted to access only its own file areas, ensuring proper encapsulation and security.
+
+| Value in Data Model | Value in Moodle XML | Description                                                                                                         |
+|-------------|---------------------|---------------------------------------------------------------------------------------------------------------------|
+| Course      | course              | files managed by the course itself, e.g. the course logo                                                            |
+| Resource    | mod_resource        | files managed by a file resource within the course, see [moodle docs](https://docs.moodle.org/405/en/File_resource) |
+| Forum       | mod_forum           | files managed by a forum within the course                                                                          |
+| Glossary    | mod_glossary        | files managed by a glossary within the course                                                                       |
+| HtmlBlock   | block_html          | files managed by a HTML Block within the course                                                                     |
+
+See [moodle docs](https://moodledev.io/docs/5.0/apis/subsystems/files#file-areas) for more information
+
+### FileArea
+Within a component, files are further categorized into file areas, which are uniquely identified by a
+- a `contextid` (see [Context](#Context))
+- a full `component` name, see [above](#Component)
+- a file area type, e.g. `intro` or 'post'
+- a unique `itemid`
+
+| Value in Data Model | Value in Moodle XML | Description                                                                                                   |
+|---------------------|---------------------|---------------------------------------------------------------------------------------------------------------|
+| Overview            | overviewfiles       | files managed by the course overview block, see [moodle docs](https://docs.moodle.org/405/en/Course_overview) |
+| CourseContent       | content             | Main content of the course                                                                                    |
+
+See [moodle docs](https://moodledev.io/docs/5.0/apis/subsystems/files#file-areas) for more information
+
+### License
+The licence given to a file when uploaded to Moodle does not in any way affect its visibility on a course.
+
+| Value in Data Model                       | Value in Moodle XML | Description                                                                                                                                                 |
+|-------------------------------------------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| None                                      | unknown             | no license specified                                                                                                                                        |
+| AllRightsReserved                         | allrightsreserved   | indicates that the copyright holder reserves all the rights  provided by copyright law, such as distribution, performance, and creation of derivative works |
+| PublicDomain                              | public              | creative work to which no exclusive intellectual property rights apply                                                                                      |
+| CreativeCommons                           | cc-4.0              | [Creative Commons - 4.0 International](https://creativecommons.org/licenses/by/4.0/)                                                                        |
+| CreativeCommonsNonCommercial              | cc-nc-4.0           | [Creative Commons - NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/)                                                       |
+| CreativeCommonsNoDerivatives              | cc-nd-4.0           | [Creative Commons - NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nd/4.0/)                                                       |
+| CreativeCommonsNonCommercialNoDerivatives | cc-nc-nd-4.0        | [Creative Commons - NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/)                                      |
+| CreativeCommonsNonCommercialShareAlike    | cc-nc-sa-4.0        | [Creative Commons - NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)                                         |
+| CreativeCommonsShareAlike                 | cc-sa-4.0           | [Creative Commons - ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/)                                                          |
+
+See [moodle docs](https://docs.moodle.org/405/en/Licences) for more information
+
 ## Course.cs
 
 ### CourseFormat

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using CourseAsCode.Model.Enums;
+using Component = CourseAsCode.Model.Enums.Component;
 
 namespace CourseAsCode.Model.Activities.Resources;
 
@@ -7,16 +9,6 @@ public enum License
 	// TODO: Determine possible values
 }
 
-public enum FileArea
-{
-	OverviewFiles
-	// TODO: Determine possible values
-}
-
-public enum Component
-{
-	// TODO: Determine possible values
-}
 
 public class MoodleFile : Activity
 {
@@ -40,15 +32,15 @@ public class MoodleFile : Activity
 	public class SystemDefaultsFile
 	{
 		[Description("SHA1 Hash of the file content")]
-		public string ContentHash { get; set; }
+		public string? ContentHash { get; set; }
 		[Description("the date and time that the file was created")]
 		public DateTime TimeCreated { get; set; }
 		[Description("the date and time that the file was last modified")]
 		public DateTime TimeModified { get; set; }
+		[Description("refers to the subsystem or plugin responsible for the file")]
+		public Component? Component { get; set; }
 		[Description("Unknown Purpose (possibly WHERE the file is created: user's private files, course files, etc.)")]
-		public FileArea FileArea { get; set; }
-		[Description("indicates the area of Moodle to which the file belongs")]
-		public Component Component { get; set; }
+		public FileArea? FileArea { get; set; }
 		[Description("the itemid is needed if the file area in question is not already uniquely identified by the contextid + component + filearea")]
 		public int ItemId { get; set; }
 	}
