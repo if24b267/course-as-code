@@ -38,8 +38,10 @@ public class RoleAssignmentsWriter : XmlWriterBase
         // Role assignments
         writer.WriteStartElement("role_assignments");
 
-        for (var i = 0; i < course.EnrolledUsers.Count; i++)
+        for (int i = 0; i < course.EnrolledUsers.Count; i++)
+        {
             WriteSingleRoleAssignment(writer, course.EnrolledUsers[i], i);
+        }
 
         writer.WriteEndElement(); // Close </role_assignments>
 

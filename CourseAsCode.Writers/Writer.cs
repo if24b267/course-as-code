@@ -1,7 +1,6 @@
 ﻿using CourseAsCode.Model;
 using CourseAsCode.Writers.Static;
 using CourseAsCode.Writers.XML;
-using CourseAsCode.Writers.XML.Course;
 using CourseAsCode.Writers.XML.Files.E4;
 using CourseAsCode.Writers.XML.Sections.section_1;
 using CourseAsCode.Writers.XML.Sections.section_2;
@@ -89,7 +88,7 @@ public class Writer
 		badgesWriter.WriteBadges(outputPath);
 
 		CompletionWriter completionWriter = new CompletionWriter();
-		completionWriter.WriteCompletion(outputPath);
+		completionWriter.WriteCompletion(course, outputPath);
 
 
 		// Sections

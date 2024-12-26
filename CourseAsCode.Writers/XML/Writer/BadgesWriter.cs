@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace CourseAsCode.Writers.XML;
+namespace CourseAsCode.Writers.XML.Writer;
 
 public class BadgesWriter
 {
