@@ -82,8 +82,8 @@ public class Writer
 		InforefWriter inforefWriter = new InforefWriter();
 		inforefWriter.WriteInforef(course, outputPath);
 
-		RolesCourseWriter rolesCourseWriter = new RolesCourseWriter();
-		rolesCourseWriter.WriteRolesCourse(course.EnrolledUsers, outputPath);
+		RoleAssignmentsWriter roleAssignmentsWriter = new RoleAssignmentsWriter();
+		roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
 
 		BadgesWriter badgesWriter = new BadgesWriter();
 		badgesWriter.WriteBadges(outputPath);
