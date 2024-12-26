@@ -74,7 +74,7 @@ public class Writer
 		usersWriter.WriteUsers(course.EnrolledUsers, outputPath);
 
 		EnrolmentsWriter enrolmentsWriter = new EnrolmentsWriter();
-		enrolmentsWriter.WriteEnrolment(outputPath);
+		enrolmentsWriter.WriteEnrolment(course, outputPath);
 
 		FiltersWriter filtersWriter = new FiltersWriter();
 		filtersWriter.WriteFilters(outputPath);

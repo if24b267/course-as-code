@@ -1,14 +1,15 @@
 using System.ComponentModel;
+using CourseAsCode.Model.Defaults.Enrolments;
 
 namespace CourseAsCode.Model.Enrolments;
 
 /// <summary>
 /// the administrator or course teacher adds users manually
 /// </summary>
-public class ManualEnrolment : EnrolmentMethod
+public class ManualEnrolment() : EnrolmentMethod(defaultRole: ManualEnrolmentDefaults.DEFAULT_DEFAULT_ROLE)
 {
-    [Description("default length of the time that the enrolment is valid starting from the users' enrolment date, blank for unlimited")]
-    public int EnrolmentDuration { get; set; }
+    [Description("default length of the time (in seconds) that the enrolment is valid starting from the users' enrolment date, blank for unlimited")]
+    public long? EnrolmentDuration { get; set; }
     [Description("if enabled, the person who enrolled the user is notified when the user's enrollment in the course is about to expire")]
     public bool NotifyEnroller { get; set; }
     [Description("if enabled, the user is notified when their enrollment in the course is about to expire")]
@@ -17,17 +18,19 @@ public class ManualEnrolment : EnrolmentMethod
     public bool SendWelcomeMessage { get; set; }
     [Description("the message that is sent to the student when they are enrolled in the course")]
     public string? WelcomeMessage { get; set; }
-	 public SensibleDefaultsManualEnrolment SensibleDefaults { get; set; }
-	 public SystemDefaultsManualEnrolment SystemDefaults { get; set; }
+
+    public SensibleDefaultsManualEnrolments SensibleDefaultsManualEnrolment { get; set; } = new SensibleDefaultsManualEnrolments();
+    public SystemDefaultsManualEnrolments SystemDefaultsManualEnrolment { get; set; } = new SystemDefaultsManualEnrolments();
 
 
-	public class SensibleDefaultsManualEnrolment
+	public class SensibleDefaultsManualEnrolments
     {
-        [Description("the threshold in days before the enrolment expires when the notifications are sent")]
-        public int NotifyThreshold { get; set; }
+        [Description("the threshold (in seconds) before the enrolment expires when the notifications are sent, blank if not applicable")]
+        public long? NotifyThreshold { get; set; } = ManualEnrolmentDefaults.DEFAULT_NOTIFY_THRESHOLD;
     }
 
-    public class SystemDefaultsManualEnrolment
+    
+    public class SystemDefaultsManualEnrolments
 	{
         
     }

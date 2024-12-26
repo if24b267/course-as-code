@@ -1,11 +1,12 @@
 using System.ComponentModel;
+using CourseAsCode.Model.Defaults.Enrolments;
 
 namespace CourseAsCode.Model.Enrolments;
 
 /// <summary>
 /// a user can choose to enrol him/herself into a course
 /// </summary>
-public class SelfEnrolment : EnrolmentMethod
+public class SelfEnrolment() : EnrolmentMethod(defaultRole: SelfEnrolmentDefaults.DEFAULT_DEFAULT_ROLE)
 {
     [Description("optional custom name for the enrolment method")]
     public string? CustomName { get; set; }

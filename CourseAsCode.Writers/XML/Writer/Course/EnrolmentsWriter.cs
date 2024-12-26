@@ -1,86 +1,31 @@
 using System.Xml;
+using CourseAsCode.Model;
+using CourseAsCode.Model.Enrolments;
+using CourseAsCode.Writers.Helper;
 
-namespace CourseAsCode.Writers.XML.Course;
+namespace CourseAsCode.Writers.XML.Writer.Course;
 
-public class EnrolmentsWriter
+public class EnrolmentsWriter : XmlWriterBase
 {
-	private readonly XmlWriterSettings _settings = new()
+	private new readonly XmlWriterSettings _settings = new()
 	{
 		Indent = true, // Makes the XML output more readable
 		NewLineOnAttributes = false, // Keeps attributes in the same line
-		OmitXmlDeclaration = false // Removes the XML declaration
+		OmitXmlDeclaration = false
 	};
+	
+	private readonly GeneralHelper _helper = GeneralHelper.Instance;
 
-	public void WriteEnrolment(string outputPath)
+
+	public void WriteEnrolment(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/enrolments.xml"));
 		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
 		{
-			writer.WriteStartDocument();
-			writer.WriteStartElement("enrolments"); // <enrolments> starts here
-			writer.WriteStartElement("enrols"); // <enrols> starts here
-
-			// <enrol> starts here with with attributes
-			writer.WriteStartElement("enrol");
-			writer.WriteAttributeString("id", "1");
-
-			// child elements of <enrol>
-			writer.WriteElementString("enrol", "manual");
-			writer.WriteElementString("status", "0");
-			writer.WriteElementString("name", "$@NULL@$");
-			writer.WriteElementString("enrolperiod", "0");
-			writer.WriteElementString("enrolstartdate", "0");
-			writer.WriteElementString("enrolenddate", "0");
-			writer.WriteElementString("expirynotify", "0");
-			writer.WriteElementString("expirythreshold", "86400");
-			writer.WriteElementString("notifyall", "0");
-			writer.WriteElementString("password", "$@NULL@$");
-			writer.WriteElementString("cost", "$@NULL@$");
-			writer.WriteElementString("currency", "$@NULL@$");
-			writer.WriteElementString("roleid", "5");
-			writer.WriteElementString("customint1", "1");
-			writer.WriteElementString("customint2", "$@NULL@$");
-			writer.WriteElementString("customint3", "$@NULL@$");
-			writer.WriteElementString("customint4", "$@NULL@$");
-			writer.WriteElementString("customint5", "$@NULL@$");
-			writer.WriteElementString("customint6", "$@NULL@$");
-			writer.WriteElementString("customint7", "$@NULL@$");
-			writer.WriteElementString("customint8", "$@NULL@$");
-			writer.WriteElementString("customchar1", "$@NULL@$");
-			writer.WriteElementString("customchar2", "$@NULL@$");
-			writer.WriteElementString("customchar3", "$@NULL@$");
-			writer.WriteElementString("customdec1", "$@NULL@$");
-			writer.WriteElementString("customdec2", "$@NULL@$");
-			writer.WriteElementString("customtext1", "$@NULL@$");
-			writer.WriteElementString("customtext2", "$@NULL@$");
-			writer.WriteElementString("customtext3", "$@NULL@$");
-			writer.WriteElementString("customtext4", "$@NULL@$");
-			writer.WriteElementString("timecreated", "1731001588");
-			writer.WriteElementString("timemodified", "1731001588");
-
-			// <user_enrolments> starts here 
-			writer.WriteStartElement("user_enrolments");
-
-			// <enrolment> starts here with with attributes 
-			writer.WriteStartElement("enrolment");
-			writer.WriteAttributeString("id", "1");
-
-			// child elements of <enrolment>
-			writer.WriteElementString("status", "0");
-			writer.WriteElementString("userid", "3");
-			writer.WriteElementString("timestart", "0");
-			writer.WriteElementString("timeend", "0");
-			writer.WriteElementString("modifierid", "2");
-			writer.WriteElementString("timemodified", "1731136235");
-
-			// </enrolment> ends here
-			writer.WriteEndElement();
-
-			// </user_enrolments> ends here 
-			writer.WriteEndElement();
-
-			// </enrol> ends here 
-			writer.WriteEndElement();
+			writer.WriteStartElement("enrolments");
+			writer.WriteStartElement("enrols");
+			
+			WriteManualEnrolmentSection(writer, course);
 
 			// <enrol> starts here with with attributes
 			writer.WriteStartElement("enrol");
@@ -182,101 +127,60 @@ public class EnrolmentsWriter
 			writer.WriteEndDocument();
 		}
 	}
-
-	/*private void WriteEnrolments(XmlWriter writer, User user, int i)
+	
+	
+	private void WriteManualEnrolmentSection(XmlWriter writer, Model.Course course)
 	{
-	    WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
-	    {
-	        { "id", i.ToString() }
-	    });
-
-	    var elements = new Dictionary<string, string>
-	    {
-	        { "enrol", user.Role.ToString() },
-	        { "status", user.SystemDefaults.Id.ToString() },
-	        { "name", user.SystemDefaults.TimeModified.ToString() },
-	        { "enrolperiod", user.SystemDefaults.TimeModified.ToString() },
-	        { "enrolstartdate", user.SystemDefaults.TimeModified.ToString() },
-	        { "enrolenddate", user.SystemDefaults.TimeModified.ToString() },
-	        { "expirynotify", user.SystemDefaults.TimeModified.ToString() },
-	        { "expirythreshold", user.SystemDefaults.TimeModified.ToString() },
-	        { "notifyall", user.SystemDefaults.TimeModified.ToString() },
-	        { "password", user.SystemDefaults.TimeModified.ToString() },
-	        { "cost", user.SystemDefaults.TimeModified.ToString() },
-	        { "currency", user.SystemDefaults.TimeModified.ToString() },
-	        { "roleid", user.SystemDefaults.TimeModified.ToString() },
-	        { "customint1", user.SystemDefaults.TimeModified.ToString() },
-	        { "customint2", user.SystemDefaults.TimeModified.ToString() },
-	        { "customint3", user.SystemDefaults.TimeModified.ToString() },
-	        { "customint4", user.SystemDefaults.TimeModified.ToString() },
-	        { "customint5", user.SystemDefaults.TimeModified.ToString() },
-	        { "customint6", user.SystemDefaults.TimeModified.ToString() },
-	        { "customint7", user.SystemDefaults.TimeModified.ToString() },
-	        { "customint8", user.SystemDefaults.TimeModified.ToString() },
-	        { "customchar1", user.SystemDefaults.TimeModified.ToString() },
-	        { "customchar2", user.SystemDefaults.TimeModified.ToString() },
-	        { "customchar3", user.SystemDefaults.TimeModified.ToString() },
-	        { "customdec1", user.SystemDefaults.TimeModified.ToString() },
-	        { "customdec2", user.SystemDefaults.TimeModified.ToString() },
-	        { "customtext1", user.SystemDefaults.TimeModified.ToString() },
-	        { "customtext2", user.SystemDefaults.TimeModified.ToString() },
-	        { "customtext3", user.SystemDefaults.TimeModified.ToString() },
-	        { "customtext4", user.SystemDefaults.TimeModified.ToString() },
-	        { "timecreated", user.SystemDefaults.TimeModified.ToString() },
-	        { "timemodified", user.SystemDefaults.TimeModified.ToString() },
-
-	          writer.WriteEndElement(); // </enrol> ends here
-
-	                // <enrol> starts here with with attributes
-	                writer.WriteStartElement("enrol");
-	                writer.WriteAttributeString("id", "3");
-
-	                    // child elements of <enrol>
-	                    writer.WriteElementString("enrol", "self");
-	                    writer.WriteElementString("status", "1");
-	                    writer.WriteElementString("name", "$@NULL@$");
-	                    writer.WriteElementString("enrolperiod", "0");
-	                    writer.WriteElementString("enrolstartdate", "0");
-	                    writer.WriteElementString("enrolenddate", "0");
-	                    writer.WriteElementString("expirynotify", "0");
-	                    writer.WriteElementString("expirythreshold", "86400");
-	                    writer.WriteElementString("notifyall", "0");
-	                    writer.WriteElementString("password", "$@NULL@$");
-	                    writer.WriteElementString("cost", "$@NULL@$");
-	                    writer.WriteElementString("currency", "$@NULL@$");
-	                    writer.WriteElementString("roleid", "5");
-	                    writer.WriteElementString("customint1", "0");
-	                    writer.WriteElementString("customint2", "0");
-	                    writer.WriteElementString("customint3", "0");
-	                    writer.WriteElementString("customint4", "1");
-	                    writer.WriteElementString("customint5", "0");
-	                    writer.WriteElementString("customint6", "1");
-	                    writer.WriteElementString("customint7", "$@NULL@$");
-	                    writer.WriteElementString("customint8", "$@NULL@$");
-	                    writer.WriteElementString("customchar1", "$@NULL@$");
-	                    writer.WriteElementString("customchar2", "$@NULL@$");
-	                    writer.WriteElementString("customchar3", "$@NULL@$");
-	                    writer.WriteElementString("customdec1", "$@NULL@$");
-	                    writer.WriteElementString("customdec2", "$@NULL@$");
-	                    writer.WriteElementString("customtext1", "$@NULL@$");
-	                    writer.WriteElementString("customtext2", "$@NULL@$");
-	                    writer.WriteElementString("customtext3", "$@NULL@$");
-	                    writer.WriteElementString("customtext4", "$@NULL@$");
-	                    writer.WriteElementString("timecreated", "1731001588");
-	                    writer.WriteElementString("timemodified", "1731001588");
-
-	                    // <user_enrolments> starts here
-	                    writer.WriteStartElement("user_enrolments");
-
-	                    // </user_enrolments> ends here
-	                    writer.WriteEndElement();
-
-	                // </enrol> ends here
-	                writer.WriteEndElement();
-	    };
-
-	    WriteElements(writer, elements);
-
-	    writer.WriteEndElement(); // </assignment> ends here
-	}*/
+		ManualEnrolment? manualEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is ManualEnrolment) as ManualEnrolment);
+		if (manualEnrolment == null)
+		{
+			return;
+		}
+		
+		WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
+		{
+			{ "id", "1" }
+		});
+		
+		var elements = new Dictionary<string, string>
+		{
+			{ "enrol", "manual" },
+			{ "status", manualEnrolment is { Enabled: true } ? "0" : "1" }, // 0 -> active; 1 -> inactive | Whyyy? (:
+			{ "name", "$@NULL@$" },
+			{ "enrol_period", manualEnrolment.EnrolmentDuration?.ToString() ?? "0" },
+			{ "enrolstartdate", "0" }, // Always 0, setting doesn't apply to this enrolment method
+			{ "enrolenddate", "0" }, // Always 0, setting doesn't apply to this enrolment method
+			{ "expiry_notify", manualEnrolment.NotifyEnroller ? manualEnrolment.NotifyStudent ? "2" : "1" : "0" },
+			{ "expiry_threshhold", manualEnrolment.SensibleDefaultsManualEnrolment.NotifyThreshold?.ToString() ?? "0" },
+			{ "notifyall", manualEnrolment.NotifyStudent ? "1" : "0" }, 
+			{ "password", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
+			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
+			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
+			{ "roleid", manualEnrolment.DefaultRole.SystemDefaults.Id.ToString() },
+			// TODO: Find out what all these <customXXX> values mean
+			{ "customint1", "1" }, 
+			{ "customint2", "$@NULL@$" },
+			{ "customint3", "$@NULL@$" },
+			{ "customint4", "$@NULL@$" },
+			{ "customint5", "$@NULL@$" },
+			{ "customint6", "$@NULL@$" },
+			{ "customint7", "$@NULL@$" },
+			{ "customint8", "$@NULL@$" },
+			{ "customchar1", "$@NULL@$" },
+			{ "customchar2", "$@NULL@$" },
+			{ "customchar3", "$@NULL@$" },
+			{ "customdec1", "$@NULL@$" },
+			{ "customdec2", "$@NULL@$" },
+			{ "customtext1", manualEnrolment.WelcomeMessage ?? "$@NULL@$" },
+			{ "customtext2", "$@NULL@$" },
+			{ "customtext3", "$@NULL@$" },
+			{ "customtext4", "$@NULL@$" },
+			{ "timecreated", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeCreated) },
+			{ "timemodified", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeModified) }
+		};
+		
+		WriteElements(writer, elements);
+		
+		writer.WriteEndElement(); // Close <enrol>
+	}
 }

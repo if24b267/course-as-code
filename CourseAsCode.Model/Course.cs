@@ -23,7 +23,7 @@ namespace CourseAsCode.Model
 		[Description("list of roles that are available in the course")]
 		public List<Role> Roles { get; set; } = new List<Role>();
 		[Description("list of enrolment methods that are activated for this course")]
-		public List<EnrolmentMethod> EnrolmentMethods { get; set; } = new List<EnrolmentMethod>();
+		public List<EnrolmentMethod> EnrolmentMethods { get; set; } = CourseDefaults.DEFAULT_ENROLMENT_METHODS;
 		[Description("list of users that are enrolled in the course")]
 		public List<User> EnrolledUsers { get; set; } = new List<User>();
 		
