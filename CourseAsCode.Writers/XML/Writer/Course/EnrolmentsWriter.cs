@@ -194,7 +194,7 @@ public class EnrolmentsWriter : XmlWriterBase
 		
 		var elements = new Dictionary<string, string>
 		{
-			{ "enrol", "manual" },
+			{ "enrol", "self" },
 			{ "status", selfEnrolment is { Enabled: true } ? "0" : "1" }, // 0 -> active; 1 -> inactive | Whyyy? (:
 			{ "name", "$@NULL@$" },
 			{ "enrol_period", selfEnrolment.EnrolmentDuration?.ToString() ?? "0" },
