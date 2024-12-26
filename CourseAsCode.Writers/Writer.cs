@@ -77,7 +77,7 @@ public class Writer
 		enrolmentsWriter.WriteEnrolment(course, outputPath);
 
 		FiltersWriter filtersWriter = new FiltersWriter();
-		filtersWriter.WriteFilters(outputPath);
+		filtersWriter.WriteFilters(course, outputPath);
 
 		InforefWriter inforefWriter = new InforefWriter();
 		inforefWriter.WriteInforef(course.EnrolledUsers, course.Roles, outputPath);

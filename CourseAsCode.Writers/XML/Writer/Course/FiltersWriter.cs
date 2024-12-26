@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace CourseAsCode.Writers.XML.Course;
+namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class FiltersWriter
 {
@@ -8,24 +8,29 @@ public class FiltersWriter
 	{
 		Indent = true, // Makes the XML output more readable
 		NewLineOnAttributes = false, // Keeps attributes in the same line
-		OmitXmlDeclaration = false // Removes the XML declaration
+		OmitXmlDeclaration = false
 	};
 
-	public void WriteFilters(string outputPath)
+	
+	public void WriteFilters(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/filters.xml"));
 		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
 		{
 			writer.WriteStartDocument();
-			writer.WriteStartElement("filters"); // <filters> starts here
+			
+			writer.WriteStartElement("filters");
 
-			writer.WriteStartElement("filter_actives"); // <filter_actives> starts here 
-			writer.WriteEndElement(); // </filter_actives> ends here 
+			writer.WriteStartElement("filter_actives");
+			writer.WriteString(" ");
+			writer.WriteEndElement(); // Close </filter_actives>
 
-			writer.WriteStartElement("filter_configs"); // <filter_configs> starts here
-			writer.WriteEndElement(); // </filter_configs> ends here 
+			writer.WriteStartElement("filter_configs");
+			writer.WriteString(" ");
+			writer.WriteEndElement(); // Close </filter_configs>
 
-			writer.WriteEndElement(); // </filters> ends here 
+			writer.WriteEndElement(); // Close </filters>
+			
 			writer.WriteEndDocument();
 		}
 	}
