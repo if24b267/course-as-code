@@ -2,11 +2,14 @@ using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enrolments;
 using CourseAsCode.Writers.Helper;
+using CourseAsCode.Writers.Static;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class EnrolmentsWriter : XmlWriterBase
 {
+	private int _enrolmentIdCounter = 1;
+	
 	private new readonly XmlWriterSettings _settings = new()
 	{
 		Indent = true, // Makes the XML output more readable
@@ -26,7 +29,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			writer.WriteStartElement("enrols");
 			
 			WriteManualEnrolmentSection(writer, course);
-
+			
 			// <enrol> starts here with with attributes
 			writer.WriteStartElement("enrol");
 			writer.WriteAttributeString("id", "2");
@@ -132,10 +135,6 @@ public class EnrolmentsWriter : XmlWriterBase
 	private void WriteManualEnrolmentSection(XmlWriter writer, Model.Course course)
 	{
 		ManualEnrolment? manualEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is ManualEnrolment) as ManualEnrolment);
-		if (manualEnrolment == null)
-		{
-			return;
-		}
 		
 		WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
 		{
@@ -181,6 +180,47 @@ public class EnrolmentsWriter : XmlWriterBase
 		
 		WriteElements(writer, elements);
 		
+		// All users enrolled with this method
+		writer.WriteStartElement("user_enrolments");
+
+		foreach (User user in course.EnrolledUsers)
+		{
+			if (user.EnrolmentMethod is ManualEnrolment)
+			{
+				WriterUserEnrolmentSection(writer, course, user);
+			}
+		}
+		
+		writer.WriteEndElement(); // Close <user_enrolments>
 		writer.WriteEndElement(); // Close <enrol>
+	}
+
+
+	/// <summary>
+	/// Writes a single `enrolment` section for one specific user; to be used within the `user_enrolments` section for each user enrolled using that method
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	/// <param name="user">the user enrolled using the enrolment method as specified in the parent tag</param>
+	private void WriterUserEnrolmentSection(XmlWriter writer, Model.Course course, User user)
+	{
+		WriteStartElementWithAttributes(writer, "enrolment", new Dictionary<string, string>
+		{
+			{ "id", _enrolmentIdCounter.ToString() }
+		});
+				
+		var elements = new Dictionary<string, string>
+		{
+			{ "status", user.SystemDefaults.EnrolmentSuspended ? "1" : "0" }, // 1 -> Suspended; 0 -> Active
+			{ "userid", user.SystemDefaults.Id.ToString() },
+			{ "timestart", _helper.DateTimeToUnixTimestamp(user.SensibleDefaults.EnrolmentStartDate) ?? "0" },
+			{ "timeend", user.SensibleDefaults.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SensibleDefaults.EnrolmentEndDate) : "0" },
+			{ "modifierid", GeneralDefaults.DEFAULT_ADMIN_USER_ID.ToString() },
+			{ "timemodified", _helper.DateTimeToUnixTimestamp(DateTime.Now) }
+		};
+				
+		WriteElements(writer, elements);
+				
+		writer.WriteEndElement(); // Close <enrolment>
 	}
 }

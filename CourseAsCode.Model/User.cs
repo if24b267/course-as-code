@@ -3,6 +3,7 @@ using System.Net.Mail;
 using System.Net;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Defaults;
 
 namespace CourseAsCode.Model;
 
@@ -60,11 +61,11 @@ public class User
         public string? Address { get; set; }
         
         public Enums.TimeZone TimeZone { get; set; }
-        
+
         [Description("the date and time the user was enrolled in the course")]
-        public DateTime EnrolmentStartDate { get; set; }
-        [Description("the date and time the enrolment ends -> the user loses access to the course")]
-        public DateTime EnrolmentEndDate { get; set; }
+        public DateTime EnrolmentStartDate { get; set; } = UserDefaults.DEFAULT_ENROLMENT_START_DATE;
+        [Description("the date and time the enrolment ends -> the user loses access to the course, blank for unlimited")]
+        public DateTime? EnrolmentEndDate { get; set; }
     }
 
     public class UserPreferencesClass
@@ -137,7 +138,7 @@ public class User
         
         [Description("if allowed by the site policy, the user can choose a custom theme")]
         public string? Theme { get; set; }
-        [Description("if enabled, the enrolment of the in the course is suspended")]
+        [Description("if enabled, the enrolment of the user in the course is suspended")]
         public bool EnrolmentSuspended { get; set; }
     }
 }
