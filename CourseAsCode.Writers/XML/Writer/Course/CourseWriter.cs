@@ -14,7 +14,7 @@ public class CourseWriter : XmlWriterBase
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/course.xml"));
 
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		writer.WriteStartDocument();
 			
 		writer.WriteStartElement("course"); // Root <course> tag with attributes

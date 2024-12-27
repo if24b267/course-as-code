@@ -2,21 +2,13 @@ using System.Xml;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
-public class BadgesWriter
+public class BadgesWriter : XmlWriterBase
 {
-	private readonly XmlWriterSettings _settings = new()
-	{
-		Indent = true, // Makes the XML output more readable
-		NewLineOnAttributes = false, // Keeps attributes in the same line
-		OmitXmlDeclaration = false
-	};
-
-	
 	public void WriteBadges(string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "badges.xml"));
 		
-		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 		{
 			writer.WriteStartDocument();
 			

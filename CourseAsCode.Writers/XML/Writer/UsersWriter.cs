@@ -2,7 +2,7 @@ using System.Xml;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Helper;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
-using UserModel = CourseAsCode.Model.User;
+using User = CourseAsCode.Model.User;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
@@ -15,11 +15,11 @@ public class UsersWriter : XmlWriterBase
 	public void WriteUsers(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "users.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		
 		writer.WriteStartDocument();
 		writer.WriteStartElement("users");
-
+		
 		foreach (var user in course.EnrolledUsers)
 		{
 			WriteSingleUser(writer, user);
@@ -35,7 +35,7 @@ public class UsersWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WriteSingleUser(XmlWriter writer, UserModel user)
+	private void WriteSingleUser(XmlWriter writer, User user)
 	{
 		WriteStartElementWithAttributes(writer, "user", new Dictionary<string, string>
 		{
@@ -44,8 +44,10 @@ public class UsersWriter : XmlWriterBase
 		});
 
 		WriteUserElements(writer, user);
-		WritePreferences(writer, user.UserPreferences);
-		WriteSystem(writer, user.SystemDefaults);
+		WriteCustomFieldsSection(writer, user);
+		WriteTagsSection(writer, user);
+		WritePreferencesSection(writer, user);
+		WriteRolesSection(writer, user);
 
 		writer.WriteEndElement(); // Close <user>
 	}
@@ -56,7 +58,7 @@ public class UsersWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WriteUserElements(XmlWriter writer, UserModel user)
+	private void WriteUserElements(XmlWriter writer, User user)
 	{
 		var elements = new Dictionary<string, string>
 		{
@@ -65,8 +67,8 @@ public class UsersWriter : XmlWriterBase
 			{ "email", user.EMail?.ToString() ?? "" },
 			{ "phone1", user.SensibleDefaults.PhoneNumber ?? ""},
 			{ "phone2", user.SensibleDefaults.MobilePhoneNumber ?? ""},
-			{ "institution", user.SensibleDefaults.Institution ?? ""},
 			{ "deparment", user.SensibleDefaults.Department ?? ""},
+			{ "institution", user.SensibleDefaults.Institution ?? ""},
 			{ "address", user.SensibleDefaults.Address ?? ""},
 			{ "city", user.City ?? ""},
 			{ "country", _userHelper.GetCountryFromEnum(user.Country ?? Country.Austria) },
@@ -105,96 +107,63 @@ public class UsersWriter : XmlWriterBase
 		WriteElements(writer, elements);
 	}
 
-	
-	private void WritePreferences(XmlWriter writer, UserModel.UserPreferencesClass? preferences)
+
+	/// <summary>
+	/// writes the `customfields` section for a specific user in the users.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="user">initialized Moodle User</param>
+	private void WriteCustomFieldsSection(XmlWriter writer, Model.User user)
 	{
-		if (preferences == null) return;
-
+		writer.WriteStartElement("custom_fields");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close <custom_fields>
+	}
+	
+	
+	/// <summary>
+	/// writes the `preferences` section for a specific user in the users.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="user">initialized Moodle User</param>
+	private void WriteTagsSection(XmlWriter writer, Model.User user)
+	{
+		writer.WriteStartElement("tags");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close <tags>
+	}
+	
+	
+	/// <summary>
+	/// writes the `preferences` section for a specific user in the users.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="user">initialized Moodle User</param>
+	private void WritePreferencesSection(XmlWriter writer, Model.User user)
+	{
 		writer.WriteStartElement("preferences");
-
-		var preferenceElements = new Dictionary<string, string>
-		{
-			{ "preferredlanguage", preferences.PreferredLanguage.ToString() },
-			{ "emaildigesttype", preferences.EMailDigestType.ToString() },
-			{ "autosubscribetoforums", preferences.AutoSubscribeToForums ? "1" : "0" },
-			{ "usenesteddiscussionview", preferences.UseNestedDiscussionView ? "1" : "0" },
-			{ "trackreadposts", preferences.TrackReadPosts ? "1" : "0" },
-			{ "notificationmarkspostasread", preferences.NotificationMarksPostAsRead ? "1" : "0" },
-			{ "editortype", preferences.EditorType.ToString() },
-			{
-				"use24hourtime",
-				preferences.Use24HourTime.HasValue ? (preferences.Use24HourTime.Value ? "1" : "0") : string.Empty
-			},
-			{ "firstdayofweek", preferences.FirstDayOfWeek?.ToString() ?? string.Empty },
-			{ "maxevents", preferences.MaxEvents.ToString() },
-			{ "lookaheadperiod", preferences.LookAheadPeriod.ToString() },
-			{ "persistfiltersettings", preferences.PersistFilerSettings ? "1" : "0" },
-			{ "contentbankvisible", preferences.ContentBankVisible ? "1" : "0" },
-			{ "acceptmessagesfromcontactsonly", preferences.AcceptMessagesFromContactsOnly ? "1" : "0" }
-		};
-
-		WriteElements(writer, preferenceElements);
-
+		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <preferences>
 	}
-
 	
-	private void WriteSystem(XmlWriter writer, UserModel.SystemDefaultsUser? systemDefaults)
+	
+	/// <summary>
+	/// writes the `roles` section for a specific user in the users.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="user">initialized Moodle User</param>
+	private void WriteRolesSection(XmlWriter writer, Model.User user)
 	{
-		if (systemDefaults == null) return;
-
-		writer.WriteStartElement("system");
-
-		var systemElements = new Dictionary<string, string>
-		{
-			{ "externalid", systemDefaults.ExternalId.ToString() },
-			{ "lastip", systemDefaults.LastIP?.ToString() ?? string.Empty },
-			{ "descriptionformat", ((int)systemDefaults.DescriptionFormat).ToString() },
-			{ "isconfirmed", systemDefaults.IsConfirmed ? "1" : "0" },
-			{ "acceptedpolicy", systemDefaults.AcceptedPolicy ? "1" : "0" },
-			{ "isdeleted", systemDefaults.IsDeleted ? "1" : "0" },
-			{
-				"timecreated",
-				systemDefaults.TimeCreated != default
-					? ((DateTimeOffset)systemDefaults.TimeCreated).ToUnixTimeSeconds().ToString()
-					: string.Empty
-			},
-			{
-				"timemodified",
-				systemDefaults.TimeModified != default
-					? ((DateTimeOffset)systemDefaults.TimeModified).ToUnixTimeSeconds().ToString()
-					: string.Empty
-			},
-			{
-				"firstaccess",
-				systemDefaults.FirstAccess != default
-					? ((DateTimeOffset)systemDefaults.FirstAccess).ToUnixTimeSeconds().ToString()
-					: string.Empty
-			},
-			{
-				"lastaccess",
-				systemDefaults.LastAccess != default
-					? ((DateTimeOffset)systemDefaults.LastAccess).ToUnixTimeSeconds().ToString()
-					: string.Empty
-			},
-			{
-				"lastlogin",
-				systemDefaults.LastLogin != default
-					? ((DateTimeOffset)systemDefaults.LastLogin).ToUnixTimeSeconds().ToString()
-					: string.Empty
-			},
-			{
-				"rolechange",
-				systemDefaults.RoleChange != default
-					? ((DateTimeOffset)systemDefaults.RoleChange).ToUnixTimeSeconds().ToString()
-					: string.Empty
-			},
-			{ "theme", systemDefaults.Theme ?? string.Empty },
-			{ "enrolmentsuspended", systemDefaults.EnrolmentSuspended ? "1" : "0" }
-		};
-
-		WriteElements(writer, systemElements);
-
-		writer.WriteEndElement(); // Close <system>
+		writer.WriteStartElement("roles");
+		
+		writer.WriteStartElement("role_overrides");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close <role_overrides>
+		
+		writer.WriteStartElement("role_assignments");
+		writer.WriteString(" ");
+		writer.WriteEndElement(); // Close <role_assignments>
+		
+		writer.WriteEndElement(); // Close <roles>
 	}
 }

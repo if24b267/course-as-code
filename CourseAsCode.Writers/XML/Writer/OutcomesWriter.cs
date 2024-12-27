@@ -7,7 +7,7 @@ public class OutcomesWriter : XmlWriterBase
 	public void WriteOutcomes(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "outcomes.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		
 		writer.WriteStartDocument();
 		

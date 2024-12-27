@@ -16,18 +16,10 @@ public class FilesWriter : XmlWriterBase
 	private readonly FileHelper _fileHelper = FileHelper.Instance;
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	
-	private new readonly XmlWriterSettings _settings = new()
-	{
-		Indent = true,
-		NewLineOnAttributes = false,
-		OmitXmlDeclaration = false
-	};
-	
-	
 	public void WriteFiles(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "files.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		
 		writer.WriteStartDocument();
 		

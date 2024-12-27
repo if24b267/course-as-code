@@ -7,7 +7,7 @@ public class GroupsWriter : XmlWriterBase
 	public void WriteGroups(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "groups.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		writer.WriteStartDocument();
 		writer.WriteStartElement("groups");
 

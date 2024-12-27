@@ -8,7 +8,7 @@ public class CalendarWriter : XmlWriterBase
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/calendar.xml"));
 		
-		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 		{
 			writer.WriteStartDocument();
 			

@@ -12,7 +12,7 @@ public class RolesWriter : XmlWriterBase
 	public void WriteRoles(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "roles.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		writer.WriteStartDocument();
 		writer.WriteStartElement("roles_definition");
 

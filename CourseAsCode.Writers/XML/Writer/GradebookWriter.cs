@@ -12,7 +12,7 @@ public class GradebookWriter : XmlWriterBase
 	public void WriteGradebook(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "gradebook.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		
 		writer.WriteStartDocument();
 		writer.WriteStartElement("gradebook");

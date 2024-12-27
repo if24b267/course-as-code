@@ -7,7 +7,7 @@ public class GradehistoryWriter : XmlWriterBase
 	public void WriteGradehistory(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "gradehistory.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		writer.WriteStartDocument();
 		writer.WriteStartElement("grade_history");
 

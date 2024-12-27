@@ -4,13 +4,14 @@ namespace CourseAsCode.Writers.XML;
 
 public abstract class XmlWriterBase
 {
-    protected readonly XmlWriterSettings _settings = new()
+    protected readonly XmlWriterSettings Settings = new()
     {
         Indent = true,
         NewLineOnAttributes = false,
         OmitXmlDeclaration = false
     };
 
+    
     protected void WriteElements(XmlWriter writer, Dictionary<string, string> elements)
     {
         foreach (var element in elements)
@@ -19,6 +20,7 @@ public abstract class XmlWriterBase
         }
     }
 
+    
     protected void WriteStartElementWithAttributes(XmlWriter writer, string elementName, Dictionary<string, string> attributes)
     {
         writer.WriteStartElement(elementName);

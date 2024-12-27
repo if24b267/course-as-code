@@ -7,7 +7,7 @@ public class ScalesWriter : XmlWriterBase
 	public void WriteScales(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "scales.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		
 		writer.WriteStartDocument();
 		

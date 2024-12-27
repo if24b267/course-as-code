@@ -14,7 +14,7 @@ public class MoodleBackupWriter : XmlWriterBase
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "moodle_backup.xml"));
 		
-		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 		{
 			writer.WriteStartDocument();
 			

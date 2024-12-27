@@ -8,7 +8,7 @@ public class CommentsWriter : XmlWriterBase
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/comments.xml"));
 		
-		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 		{
 			writer.WriteStartDocument();
 			
