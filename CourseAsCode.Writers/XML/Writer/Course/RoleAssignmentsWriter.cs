@@ -58,7 +58,7 @@ public class RoleAssignmentsWriter : XmlWriterBase
 
         var elements = new Dictionary<string, string>
         {
-            { "roleid", user.Role.SystemDefaults.Id.ToString() },
+            { "roleid", user.Role.SystemDefaults.RoleId.ToString() },
             { "userid", user.SystemDefaults.Id.ToString() },
             { "timemodified", _helper.DateTimeToUnixTimestamp(user.SystemDefaults.RoleChange) },
             { "modifierid", GeneralDefaults.DEFAULT_ADMIN_USER_ID.ToString() },

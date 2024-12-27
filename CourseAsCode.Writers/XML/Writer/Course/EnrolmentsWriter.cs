@@ -21,10 +21,23 @@ public class EnrolmentsWriter : XmlWriterBase
 		
 		writer.WriteStartElement("enrolments");
 		writer.WriteStartElement("enrols");
-			
-		WriteManualEnrolSection(writer, course);
-		WriteGuestEnrolSection(writer, course);
-		WriteSelfEnrolSection(writer, course);
+
+		// Only write the enrolment methods that are actually used in the course
+		foreach (EnrolmentMethod enrolmentMethod in course.EnrolmentMethods)
+		{
+			if (enrolmentMethod is ManualEnrolment)
+			{
+				WriteManualEnrolSection(writer, course);
+			}
+			if (enrolmentMethod is GuestEnrolment)
+			{
+				WriteGuestEnrolSection(writer, course);
+			}
+			if (enrolmentMethod is SelfEnrolment)
+			{
+				WriteSelfEnrolSection(writer, course);
+			}
+		}
 			
 		writer.WriteEndElement(); // Close <enrols>
 		writer.WriteEndElement(); // Close <enrolments>
@@ -56,12 +69,12 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "enrolstartdate", "0" }, // Always 0, setting doesn't apply to this enrolment method
 			{ "enrolenddate", "0" }, // Always 0, setting doesn't apply to this enrolment method
 			{ "expiry_notify", manualEnrolment.NotifyEnroller ? manualEnrolment.NotifyStudent ? "2" : "1" : "0" },
-			{ "expiry_threshhold", manualEnrolment.SensibleDefaultsManualEnrolment.NotifyThreshold?.ToString() ?? "0" },
+			{ "expiry_threshhold", manualEnrolment.NotifyThreshold?.ToString() ?? "0" },
 			{ "notifyall", manualEnrolment.NotifyStudent ? "1" : "0" }, 
 			{ "password", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-			{ "roleid", manualEnrolment.DefaultRole.SystemDefaults.Id.ToString() },
+			{ "roleid", manualEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
 			// TODO: Find out what all these <customXXX> values mean
 			{ "customint1", "1" }, 
 			{ "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
@@ -130,7 +143,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "password", guestEnrolment?.Password ?? " " }, 
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-			{ "roleid", guestEnrolment.DefaultRole.SystemDefaults.Id.ToString() },
+			{ "roleid", guestEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
 			{ "customint1", "$@NULL@$" }, 
 			{ "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
 			{ "customint3", "$@NULL@$" }, // Not applicable to this enrolment method
@@ -190,18 +203,18 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "status", selfEnrolment is { Enabled: true } ? "0" : "1" }, // 0 -> active; 1 -> inactive | Whyyy? (:
 			{ "name", "$@NULL@$" },
 			{ "enrol_period", selfEnrolment.EnrolmentDuration?.ToString() ?? "0" },
-			{ "enrolstartdate", selfEnrolment.SensibleDefaultsSelfEnrolment.EnrolmentStartDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.SensibleDefaultsSelfEnrolment.EnrolmentStartDate) : "0" },
-			{ "enrolenddate", selfEnrolment.SensibleDefaultsSelfEnrolment.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.SensibleDefaultsSelfEnrolment.EnrolmentEndDate) : "0" },
+			{ "enrolstartdate", selfEnrolment.EnrolmentStartDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.EnrolmentStartDate) : "0" },
+			{ "enrolenddate", selfEnrolment.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.EnrolmentEndDate) : "0" },
 			{ "expiry_notify", selfEnrolment.NotifyEnroller ? selfEnrolment.NotifyStudent ? "2" : "1" : "0" },
-			{ "expiry_threshhold", selfEnrolment.SensibleDefaultsSelfEnrolment.NotifyThreshold?.ToString() ?? "0" },
+			{ "expiry_threshhold", selfEnrolment.NotifyThreshold?.ToString() ?? "0" },
 			{ "notifyall", selfEnrolment.NotifyStudent ? "1" : "0" }, 
 			{ "password", selfEnrolment.Password ?? " " },
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-			{ "roleid", selfEnrolment.DefaultRole.SystemDefaults.Id.ToString() },
+			{ "roleid", selfEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
 			{ "customint1", "0" }, 
-			{ "customint2", selfEnrolment.SensibleDefaultsSelfEnrolment.UnenrolInactiveAfter?.ToString() ?? "$@NULL@$"}, // Unenrol Inactive Users
-			{ "customint3", selfEnrolment.SensibleDefaultsSelfEnrolment.MaximumNumberOfEnrolments?.ToString() ?? "$@NULL@$" }, // Max. Enrolled users
+			{ "customint2", selfEnrolment.UnenrolInactiveAfter?.ToString() ?? "$@NULL@$"}, // Unenrol Inactive Users
+			{ "customint3", selfEnrolment.MaximumNumberOfEnrolments?.ToString() ?? "$@NULL@$" }, // Max. Enrolled users
 			{ "customint4", "$@NULL@$" },
 			{ "customint5", "$@NULL@$" },
 			{ "customint6", "$@NULL@$" },
