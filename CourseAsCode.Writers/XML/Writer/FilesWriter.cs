@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
@@ -69,7 +68,7 @@ public class FilesWriter : XmlWriterBase
 			}
 
 			fileStream = File.OpenRead(file.FilePath);
-			_logger.Info($"Opened file {file.FilePath} successfully.");
+			_logger.Debug($"Opened file {file.FilePath} successfully.");
 		}
 		catch (Exception ex)
 		{
@@ -81,9 +80,8 @@ public class FilesWriter : XmlWriterBase
 		// Write XML
 		WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string>
 		{
-			{ "id", _fileIdCounter.ToString() }
+			{ "id", _fileIdCounter++.ToString() }
 		});
-		_fileIdCounter++;
 		
 		var elements = new Dictionary<string, string>
 		{

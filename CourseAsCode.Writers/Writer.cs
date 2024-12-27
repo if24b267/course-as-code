@@ -49,7 +49,7 @@ public class Writer
 		gradehistoryWriter.WriteGradehistory(outputPath);
 
 		GradebookWriter gradebookWriter = new GradebookWriter();
-		gradebookWriter.WriteGradebook(outputPath);
+		gradebookWriter.WriteGradebook(course, outputPath);
 
 		GroupsWriter groupsWriter = new GroupsWriter();
 		groupsWriter.WriteGroups(outputPath);

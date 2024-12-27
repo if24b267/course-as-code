@@ -1,49 +1,66 @@
 using System.Xml;
 
-namespace CourseAsCode.Writers.XML;
+namespace CourseAsCode.Writers.XML.Writer;
 
 public class GradebookWriter : XmlWriterBase
 {
-	public void WriteGradebook(string outputPath)
+	private int _gradeCategoryIdCounter = 1;
+	private int _gradeItemIdCounter = 1;
+	private int _gradeSettingIdCounter = 1;
+	
+	
+	public void WriteGradebook(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "gradebook.xml"));
-		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
-		{
-			writer.WriteStartDocument();
-			writer.WriteStartElement("gradebook");
+		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		
+		writer.WriteStartDocument();
+		writer.WriteStartElement("gradebook");
 
-			WriteAttributes(writer);
-			WriteGradeCategories(writer);
-			WriteGradeItems(writer);
-			WriteGradeLetters(writer);
-			WriteGradeSettings(writer);
+		WriteAttributes(writer, course);
+		WriteGradeCategories(writer, course);
+		WriteGradeItems(writer, course);
+		WriteGradeLetters(writer, course);
+		WriteGradeSettings(writer, course);
 
-			writer.WriteEndElement(); // Close gradebook
-			writer.WriteEndDocument();
-		}
+		writer.WriteEndElement(); // Close <gradebook>
+		writer.WriteEndDocument();
 	}
 
-	private void WriteAttributes(XmlWriter writer)
+	
+	/// <summary>
+	/// writes the `attributes` section of the gradebook.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteAttributes(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("attributes");
 		writer.WriteString("");
-		writer.WriteEndElement(); // Close attributes
+		writer.WriteEndElement(); // Close <attributes>
 	}
 
-	private void WriteGradeCategories(XmlWriter writer)
+	
+	/// <summary>
+	/// writes the `grade_categories` section of the gradebook.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteGradeCategories(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("grade_categories");
 
 		WriteStartElementWithAttributes(writer, "grade_category", new Dictionary<string, string>
 		{
-			{ "id", "3" }
+			{ "id", _gradeCategoryIdCounter++.ToString() }
 		});
 
+		// TODO: Determine what these values mean once we start implementing the gradebook
 		var elements = new Dictionary<string, string>
 		{
 			{ "parent", "$@NULL@$" },
 			{ "depth", "1" },
-			{ "path", "/3/" },
+			{ "path", $"/{_gradeCategoryIdCounter - 1}/" },
 			{ "fullname", "?" },
 			{ "aggregation", "13" },
 			{ "keephigh", "0" },
@@ -57,19 +74,26 @@ public class GradebookWriter : XmlWriterBase
 
 		WriteElements(writer, elements);
 
-		writer.WriteEndElement(); // Close grade_category
-		writer.WriteEndElement(); // Close grade_categories
+		writer.WriteEndElement(); // Close <grade_category>
+		writer.WriteEndElement(); // Close <grade_categories>
 	}
 
-	private void WriteGradeItems(XmlWriter writer)
+	
+	/// <summary>
+	/// writes the `grade_items` section of the gradebook.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteGradeItems(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("grade_items");
 
 		WriteStartElementWithAttributes(writer, "grade_item", new Dictionary<string, string>
 		{
-			{ "id", "3" }
+			{ "id", _gradeItemIdCounter++.ToString() }
 		});
 
+		// TODO: Determine what these values mean once we start implementing the gradebook
 		var elements = new Dictionary<string, string>
 		{
 			{ "categoryid", "$@NULL@$" },
@@ -106,29 +130,42 @@ public class GradebookWriter : XmlWriterBase
 		WriteElements(writer, elements);
 
 		writer.WriteStartElement("grade_grades");
-		writer.WriteString(" ");
-		writer.WriteEndElement(); // Close grade_grades
+		writer.WriteString("");
+		writer.WriteEndElement(); // Close <grade_grades>
 
-		writer.WriteEndElement(); // Close grade_item
-		writer.WriteEndElement(); // Close grade_items
+		writer.WriteEndElement(); // Close <grade_item>
+		writer.WriteEndElement(); // Close <grade_items>
 	}
 
-	private void WriteGradeLetters(XmlWriter writer)
+	
+	/// <summary>
+	/// writes the `grade_letters` section of the gradebook.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteGradeLetters(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("grade_letters");
-		writer.WriteString(" ");
+		writer.WriteString("");
 		writer.WriteEndElement(); // Close grade_letters
 	}
 
-	private void WriteGradeSettings(XmlWriter writer)
+	
+	/// <summary>
+	/// writes the `grade_settings` section of the gradebook.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="course">initialized Moodle Course</param>
+	private void WriteGradeSettings(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("grade_settings");
 
 		WriteStartElementWithAttributes(writer, "grade_setting", new Dictionary<string, string>
 		{
-			{ "id", "" }
+			{ "id", _gradeSettingIdCounter++.ToString() }
 		});
 
+		// TODO: Determine what these values mean once we start implementing the gradebook
 		var elements = new Dictionary<string, string>
 		{
 			{ "name", "minmaxtouse" },
@@ -137,7 +174,7 @@ public class GradebookWriter : XmlWriterBase
 
 		WriteElements(writer, elements);
 
-		writer.WriteEndElement(); // Close grade_setting
-		writer.WriteEndElement(); // Close grade_settings
+		writer.WriteEndElement(); // Close <grade_setting>
+		writer.WriteEndElement(); // Close <grade_settings>
 	}
 }
