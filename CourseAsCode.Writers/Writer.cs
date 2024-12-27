@@ -55,7 +55,7 @@ public class Writer
 		groupsWriter.WriteGroups(course, outputPath);
 
 		MoodleBackupWriter moodleBackupWriter = new MoodleBackupWriter();
-		moodleBackupWriter.WriteMoodleBackup(course.BackupMetadata, course, outputPath);
+		moodleBackupWriter.WriteMoodleBackup(course, outputPath);
 
 		OutcomesWriter outcomesWriter = new OutcomesWriter();
 		outcomesWriter.WriteOutcomes(outputPath);

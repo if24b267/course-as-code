@@ -10,7 +10,7 @@ public class MoodleBackupWriter : XmlWriterBase
 	private readonly MoodleVersionHelper _moodleVersionHelper = MoodleVersionHelper.Instance;
 	private readonly CourseHelper _courseHelper = CourseHelper.Instance;
 	
-	public void WriteMoodleBackup(BackupModel backupMetadata, Model.Course course, string outputPath)
+	public void WriteMoodleBackup(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "moodle_backup.xml"));
 		
