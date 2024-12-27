@@ -7,7 +7,7 @@ using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
 namespace CourseAsCode.Model.Defaults;
 
-public class UserDefaults
+public static class UserDefaults
 {
     // General Defaults
     public const string DEFAULT_USERNAME = "CaC_User";
@@ -40,16 +40,7 @@ public class UserDefaults
     public static readonly DateTime? DEFAULT_ENROLMENT_END_DATE = null;
     
     // System Defaults
-    private static int _userId = 0;
-    public static int DEFAULT_USER_ID
-    {
-        get
-        {
-            _userId++;
-            return _userId;
-        }
-    }
-    
+    public const int DEFAULT_USER_ID = 0;
     public static readonly int? DEFAULT_EXTERNAL_ID = null;
     public static readonly IPAddress? DEFAULT_LAST_IP = null;
     public static readonly FormattingFormat DEFAULT_DESCRIPTION_FORMAT = FormattingFormat.HTML;
@@ -84,9 +75,9 @@ public class UserDefaults
 
 
     /// <summary>
-    /// Returns a user object with all properties set to the default values.
+    /// Returns a user object with all properties set to the default values
     /// </summary>
-    public User GetDefaultUser()
+    public static User GetDefaultUser()
     {
         return new User
         {
