@@ -61,7 +61,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "password", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-			{ "roleid", manualEnrolment.DefaultRole.SystemDefaults.Id.ToString() },
+			{ "roleid", manualEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
 			// TODO: Find out what all these <customXXX> values mean
 			{ "customint1", "1" }, 
 			{ "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
@@ -130,7 +130,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "password", guestEnrolment?.Password ?? " " }, 
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-			{ "roleid", guestEnrolment.DefaultRole.SystemDefaults.Id.ToString() },
+			{ "roleid", guestEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
 			{ "customint1", "$@NULL@$" }, 
 			{ "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
 			{ "customint3", "$@NULL@$" }, // Not applicable to this enrolment method
@@ -198,7 +198,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "password", selfEnrolment.Password ?? " " },
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-			{ "roleid", selfEnrolment.DefaultRole.SystemDefaults.Id.ToString() },
+			{ "roleid", selfEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
 			{ "customint1", "0" }, 
 			{ "customint2", selfEnrolment.SensibleDefaultsSelfEnrolment.UnenrolInactiveAfter?.ToString() ?? "$@NULL@$"}, // Unenrol Inactive Users
 			{ "customint3", selfEnrolment.SensibleDefaultsSelfEnrolment.MaximumNumberOfEnrolments?.ToString() ?? "$@NULL@$" }, // Max. Enrolled users

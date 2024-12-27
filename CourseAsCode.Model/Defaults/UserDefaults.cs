@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Defaults.Roles;
 using CourseAsCode.Model.Enrolments;
 using CourseAsCode.Model.Enums;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
@@ -22,7 +23,7 @@ public static class UserDefaults
     public const MoodleFile? DEFAULT_PICTURE = null;
     public const AuthenticationMethod DEFAULT_AUTH_METHOD = AuthenticationMethod.ManualCreation;
     public static readonly EnrolmentMethod DEFAULT_ENROLMENT_METHOD = new ManualEnrolment(); // TODO: Set default enrolment method
-    public const Role DEFAULT_ROLE = null; // TODO: Set default role
+    public static readonly Role DEFAULT_ROLE = DefaultStudent.GetDefaultStudent();
     
     // Sensible Defaults
     public const string? DEFAULT_FIRST_NAME_PHONETIC = null;

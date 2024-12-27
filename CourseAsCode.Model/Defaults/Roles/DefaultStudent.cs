@@ -3,7 +3,7 @@ using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Defaults.Roles;
 
-public class DefaultStudent
+public static class DefaultStudent
 {
     public const string DEFAULT_NAME = "Student";
     public const string DEFAULT_SHORT_NAME = "student";
@@ -25,7 +25,7 @@ public class DefaultStudent
             SensibleDefaults = new Role.SensibleDefaultsRole(),
             SystemDefaults = new Role.SystemDefaultsRole()
             {
-                Id = DEFAULT_ID
+                RoleId = DEFAULT_ID
             }
         };
     }
