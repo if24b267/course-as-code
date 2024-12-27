@@ -106,7 +106,7 @@ public class EnrolmentsWriter : XmlWriterBase
 		{
 			if (user.EnrolmentMethod is ManualEnrolment)
 			{
-				WriterUserEnrolmentSection(writer, course, user);
+				WriterUserEnrolmentSection(writer, user);
 			}
 		}
 		
@@ -140,7 +140,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "expiry_notify", "0" }, // Always 0, setting doesn't apply to this enrolment method
 			{ "expiry_threshhold", "0" }, // Always 0, setting doesn't apply to this enrolment method
 			{ "notifyall", "0" }, // Always 0, setting doesn't apply to this enrolment method
-			{ "password", guestEnrolment?.Password ?? " " }, 
+			{ "password", guestEnrolment.Password ?? " " }, 
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "roleid", guestEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
@@ -174,7 +174,7 @@ public class EnrolmentsWriter : XmlWriterBase
 		{
 			if (user.EnrolmentMethod is GuestEnrolment)
 			{
-				WriterUserEnrolmentSection(writer, course, user);
+				WriterUserEnrolmentSection(writer, user);
 			}
 		}
 		
@@ -242,7 +242,7 @@ public class EnrolmentsWriter : XmlWriterBase
 		{
 			if (user.EnrolmentMethod is SelfEnrolment)
 			{
-				WriterUserEnrolmentSection(writer, course, user);
+				WriterUserEnrolmentSection(writer, user);
 			}
 		}
 		
@@ -255,9 +255,8 @@ public class EnrolmentsWriter : XmlWriterBase
 	/// Writes a single `enrolment` section for one specific user; to be used within the `user_enrolments` section for each user enrolled using that method
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
-	/// <param name="course">initialized Moodle Course</param>
 	/// <param name="user">the user enrolled using the enrolment method as specified in the parent tag</param>
-	private void WriterUserEnrolmentSection(XmlWriter writer, Model.Course course, User user)
+	private void WriterUserEnrolmentSection(XmlWriter writer, User user)
 	{
 		WriteStartElementWithAttributes(writer, "enrolment", new Dictionary<string, string>
 		{
@@ -269,7 +268,7 @@ public class EnrolmentsWriter : XmlWriterBase
 		{
 			{ "status", user.SystemDefaults.EnrolmentSuspended ? "1" : "0" }, // 1 -> Suspended; 0 -> Active
 			{ "userid", user.SystemDefaults.Id.ToString() },
-			{ "timestart", _helper.DateTimeToUnixTimestamp(user.SensibleDefaults.EnrolmentStartDate) ?? "0" },
+			{ "timestart", _helper.DateTimeToUnixTimestamp(user.SensibleDefaults.EnrolmentStartDate) },
 			{ "timeend", user.SensibleDefaults.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SensibleDefaults.EnrolmentEndDate) : "0" },
 			{ "modifierid", GeneralDefaults.DEFAULT_ADMIN_USER_ID.ToString() },
 			{ "timemodified", _helper.DateTimeToUnixTimestamp(DateTime.Now) }
