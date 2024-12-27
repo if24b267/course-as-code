@@ -14,8 +14,8 @@ public class MoodleFile : Activity
 	[Description("path to the file that is to be included in the backup")]
 	public string FilePath { get; set; } = MoodleFileDefaults.DEFAULT_FILE_PATH;
 
-	public new SensibleDefaultsFile SensibleDefaults { get; set; } = new SensibleDefaultsFile();
-	public new SystemDefaultsFile SystemDefaults { get; set; } = new SystemDefaultsFile();
+	public SensibleDefaultsFile SensibleDefaults { get; set; } = new SensibleDefaultsFile();
+	public SystemDefaultsFile SystemDefaults { get; set; } = new SystemDefaultsFile();
 
 	
 	// Defaults

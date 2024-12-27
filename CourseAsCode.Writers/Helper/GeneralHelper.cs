@@ -79,13 +79,13 @@ public class GeneralHelper
     /// </summary>
     /// <param name="language"></param>
     /// <returns></returns>
-    public string GetLanguageFromEnum(Language language)
+    public string GetLanguageFromEnum(Language? language)
     {
         return language switch
         {
             Language.English => "en",
             Language.German => "de",
-            _ => "en"
+            _ => ""
         };
     }
     

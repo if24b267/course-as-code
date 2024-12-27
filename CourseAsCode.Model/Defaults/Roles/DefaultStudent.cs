@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Defaults.Roles;
@@ -9,7 +8,7 @@ public static class DefaultStudent
     public const string DEFAULT_SHORT_NAME = "student";
     public const string? DEFAULT_LOCAL_NAME = null;
     public const string DEFAULT_DESCRIPTION = "Students generally have fewer privileges within a course.";
-    public const Archetype DEFAULT_ARCHETYPE = Enums.Archetype.Student;
+    public const Archetype DEFAULT_ARCHETYPE = Archetype.Student;
     public const int DEFAULT_ID = 5;
     
     
