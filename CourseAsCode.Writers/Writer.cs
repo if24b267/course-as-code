@@ -61,7 +61,7 @@ public class Writer
 		outcomesWriter.WriteOutcomes(course, outputPath);
 
 		QuestionsWriter questionsWriter = new QuestionsWriter();
-		questionsWriter.WriteQuestions(outputPath);
+		questionsWriter.WriteQuestions(course, outputPath);
 
 		RolesWriter rolesWriter = new RolesWriter();
 		rolesWriter.WriteRoles(course.Roles, outputPath);
