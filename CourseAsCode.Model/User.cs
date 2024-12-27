@@ -123,7 +123,6 @@ public class User
         [Description("whether the user has agreed to the site policy")]
         public bool AcceptedPolicy { get; set; } = UserDefaults.DEFAULT_ACCEPTED_POLICY;
         public bool IsDeleted { get; set; } = UserDefaults.DEFAULT_IS_DELETED;
-
         public DateTime TimeCreated { get; set; } = UserDefaults.DEFAULT_TIME_CREATED;
         public DateTime TimeModified { get; set; } = UserDefaults.DEFAULT_TIME_MODIFIED;
         [Description("timestamp of the user's first action in Moodle")]
@@ -132,10 +131,8 @@ public class User
         public DateTime? LastAccess { get; set; } = UserDefaults.DEFAULT_LAST_ACCESS;
         [Description("timestamp of the user's last successful login attempt")]
         public DateTime? LastLogin { get; set; } = UserDefaults.DEFAULT_LAST_LOGIN;
-
         [Description("time the user's role was last changed")]
         public DateTime RoleChange { get; set; } = UserDefaults.DEFAULT_ROLE_CHANGE_DATE;
-        
         [Description("if allowed by the site policy, the user can choose a custom theme")]
         public string? Theme { get; set; } = UserDefaults.DEFAULT_THEME;
         [Description("if enabled, the enrolment of the user in the course is suspended")]
