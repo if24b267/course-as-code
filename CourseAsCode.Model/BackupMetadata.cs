@@ -11,7 +11,7 @@ public class BackupMetadata
     [Description("the version of Moodle that the backup was created in")]
     public MoodleVersion MoodleVersion { get; set; } = BackupMetadataDefaults.DEFAULT_MOODLE_VERSION;
     [Description("the URL of the Moodle site that the backup was created from")]
-    public required Uri MoodleUrl { get; set; } = BackupMetadataDefaults.DEFAULT_MOODLE_URL;
+    public Uri MoodleUrl { get; set; } = BackupMetadataDefaults.DEFAULT_MOODLE_URL;
 
     public SensibleDefaultsBackupMetadata SensibleDefaults { get; set; } = new SensibleDefaultsBackupMetadata();
     public SystemDefaultsBackupMetadata SystemDefaults { get; set; } = new SystemDefaultsBackupMetadata();

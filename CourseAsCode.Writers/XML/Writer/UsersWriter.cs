@@ -39,7 +39,7 @@ public class UsersWriter : XmlWriterBase
 	{
 		WriteStartElementWithAttributes(writer, "user", new Dictionary<string, string>
 		{
-			{ "id", user.SystemDefaults?.Id.ToString() ?? string.Empty },
+			{ "id", user.SystemDefaults.Id.ToString() },
 			{ "contextid", "15" } // TODO: Dynamically determine this value
 		});
 
@@ -64,7 +64,7 @@ public class UsersWriter : XmlWriterBase
 		{
 			{ "username", user.Username },
 			{ "idnumber", user.SystemDefaults.ExternalId.ToString() ?? "" },
-			{ "email", user.EMail?.ToString() ?? "" },
+			{ "email", user.EMail.ToString() },
 			{ "phone1", user.SensibleDefaults.PhoneNumber ?? ""},
 			{ "phone2", user.SensibleDefaults.MobilePhoneNumber ?? ""},
 			{ "deparment", user.SensibleDefaults.Department ?? ""},
@@ -93,7 +93,7 @@ public class UsersWriter : XmlWriterBase
 			{ "firstaccess" , user.SystemDefaults.FirstAccess != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.FirstAccess) : "0" }, // TODO: Determine if default value is really 0
 			{ "lastaccess", user.SystemDefaults.LastAccess != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.LastAccess) : "0" }, // TODO: Determine if default value is really 0
 			{ "lastlogin", user.SystemDefaults.LastLogin != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.LastLogin) : "0" }, // TODO: Determine if default value is really 0
-			{ "currentlogin", _helper.DateTimeToUnixTimestamp(DateTime.Now) ?? "0" }, // TODO: Determine function of this field
+			{ "currentlogin", _helper.DateTimeToUnixTimestamp(DateTime.Now) }, // TODO: Determine function of this field
 			{ "mailformat", "1" }, // TODO: Determine function of this field
 			{ "maildigest", _helper.EnumIntegerToString(user.UserPreferences.EMailDigestType ?? EMailDigestType.NoDigest) },
 			{ "maildisplay", _helper.EnumIntegerToString(user.UserPreferences.EMailVisibility ?? EMailVisibility.VisibleToEveryone) }, 

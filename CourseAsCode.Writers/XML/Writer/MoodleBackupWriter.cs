@@ -1,7 +1,6 @@
 using System.Xml;
 using CourseAsCode.Writers.Helper;
 using CourseAsCode.Writers.Static;
-using BackupModel =  CourseAsCode.Model.BackupMetadata;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
@@ -50,7 +49,7 @@ public class MoodleBackupWriter : XmlWriterBase
 			{ "backup_version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion) },
 			{ "backup_release", _moodleVersionHelper.GetMoodleReleaseStringFromEnum(course.BackupMetadata.MoodleVersion) },
 			{ "backup_date", _helper.DateTimeToUnixTimestamp(course.BackupMetadata.SystemDefaults.CreationDate) },
-			{ "mnet_remoteusers", course.BackupMetadata.SystemDefaults.MNetRemoteUsers.ToString() },
+			{ "mnet_remoteusers", course.BackupMetadata.SystemDefaults.MNetRemoteUsers.ToString() ?? "0" },
 			{ "include_files", course.BackupMetadata.SensibleDefaults.FilesIncluded ? "1" : "0" },
 			{ "include_file_references_to_external_content", course.BackupMetadata.SystemDefaults.IncludeFileReferencesToExternalContent ? "1" : "0" },
 			{ "original_wwwroot", course.BackupMetadata.MoodleUrl.ToString() },
