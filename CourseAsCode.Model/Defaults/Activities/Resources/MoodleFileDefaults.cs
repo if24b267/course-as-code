@@ -6,8 +6,8 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources;
 public class MoodleFileDefaults
 {
     // General defaults
-    public const string DEFAULT_FILE_NAME = "CaC Demo File";
-    public const string DEFAULT_FILE_PATH = "files/d7";
+    public const string DEFAULT_FILE_NAME = "$@NULL@$";
+    public const string DEFAULT_FILE_PATH = "/";
     
     // Sensible defaults
     public static User? DEFAULT_AUTHOR = null;

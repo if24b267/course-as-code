@@ -1,5 +1,4 @@
 using System.Xml;
-using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Helper;
 using CourseAsCode.Writers.Static;
 
@@ -45,7 +44,7 @@ public class CourseWriter : XmlWriterBase
 		{
 			{ "shortname", course.ShortName },
 			{ "fullname", course.FullName },
-			{ "idnumber", course.SensibleDefaults.CourseIdNumber.ToString() },
+			{ "idnumber", course.SensibleDefaults.CourseIdNumber.ToString() ?? "" },
 			{ "summary", course.Summary ?? " " },
 			{ "summaryformat", _helper.EnumIntegerToString(course.SystemDefaults.SummaryFormat) },
 			{ "format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format)},
@@ -54,14 +53,14 @@ public class CourseWriter : XmlWriterBase
 			{ "startdate", _helper.DateTimeToUnixTimestamp(course.StartDate) },
 			{ "enddate", course.EndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)course.EndDate) : "0" },
 			{ "marker", "0" },
-			{ "maxbytes", course.SensibleDefaults.MaximumUploadSize.ToString() },
+			{ "maxbytes", course.SensibleDefaults.MaximumUploadSize.ToString() ?? "0" },
 			{ "legacyfiles", course.SystemDefaults.UsesLegacyFiles ? "1" : "0" },
 			{ "showreports", "0" },
 			{ "visible", course.SensibleDefaults.VisibleToStudents ? "1" : "0" },
 			{ "groupmode", _helper.EnumIntegerToString(course.GroupMode) },
 			{ "groupmodeforce", course.SensibleDefaults.ForceGroupMode ? "1" : "0" },
 			{ "defaultgroupingid", "0" },
-			{ "lang", course.CourseLanguage != null ? _helper.GetLanguageFromEnum((Language)course.CourseLanguage) : " " },
+			{ "lang", _helper.GetLanguageFromEnum(course.CourseLanguage) },
 			{ "theme", course.SensibleDefaults.Theme ?? " " },
 			{ "timecreated", _helper.DateTimeToUnixTimestamp(course.SystemDefaults.TimeCreated) },
 			{ "timemodified", _helper.DateTimeToUnixTimestamp(course.SystemDefaults.TimeModified) },
