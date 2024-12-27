@@ -1,5 +1,6 @@
 using System.Xml;
 using CourseAsCode.Writers.Helper;
+using CourseAsCode.Writers.Static;
 using BackupModel =  CourseAsCode.Model.BackupMetadata;
 
 namespace CourseAsCode.Writers.XML.Writer;
@@ -60,8 +61,8 @@ public class MoodleBackupWriter : XmlWriterBase
 			{ "original_course_shortname", course.ShortName },
 			{ "original_course_startdate", _helper.DateTimeToUnixTimestamp(course.StartDate) },
 			{ "original_course_enddate", course.EndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)course.EndDate) : "0" },
-			{ "original_course_contextid", Defaults.COURSECONTEXTID.ToString() },
-			{ "original_system_contextid", Defaults.SYSTEMCONTEXTID.ToString() }
+			{ "original_course_contextid", GeneralDefaults.COURSECONTEXTID.ToString() },
+			{ "original_system_contextid", GeneralDefaults.SYSTEMCONTEXTID.ToString() }
 		};
 		
 		WriteElements(writer, elements);

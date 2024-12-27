@@ -1,6 +1,7 @@
 using System.Xml;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Helper;
+using CourseAsCode.Writers.Static;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 
@@ -19,7 +20,7 @@ public class CourseWriter : XmlWriterBase
 			
 		writer.WriteStartElement("course"); // Root <course> tag with attributes
 		writer.WriteAttributeString("id", course.SystemDefaults.Id.ToString());
-		writer.WriteAttributeString("contextid", Defaults.COURSECONTEXTID.ToString());
+		writer.WriteAttributeString("contextid", GeneralDefaults.COURSECONTEXTID.ToString());
 
 		WriteGeneralInformationToCourseSection(writer, course);
 		WriteCategorySection(writer, course);

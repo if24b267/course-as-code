@@ -4,7 +4,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class CompletiondefaultsWriter : XmlWriterBase
 {
-	public void WriteCompletionDefaults(string outputPath)
+	public void WriteCompletionDefaults(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/completiondefaults.xml"));
 		

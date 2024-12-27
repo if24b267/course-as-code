@@ -4,7 +4,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class ContentbankWriter : XmlWriterBase
 {
-	public void WriteContentbank(string outputPath)
+	public void WriteContentbank(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/contentbank.xml"));
 		

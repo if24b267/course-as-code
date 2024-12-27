@@ -4,7 +4,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class CommentsWriter : XmlWriterBase
 {
-	public void WriteComments(string outputPath)
+	public void WriteComments(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/comments.xml"));
 		

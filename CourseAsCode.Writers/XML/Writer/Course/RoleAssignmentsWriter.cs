@@ -9,13 +9,6 @@ public class RoleAssignmentsWriter : XmlWriterBase
 {
     private readonly GeneralHelper _helper = GeneralHelper.Instance;
     
-    private new readonly XmlWriterSettings _settings = new()
-    {
-        Indent = true, // Makes the XML output more readable
-        NewLineOnAttributes = false, // Keeps attributes in the same line
-        OmitXmlDeclaration = false
-    };
-
 
     /// <summary>
     /// writes the information on which role is assigned to which user | course/roles.xml
@@ -25,7 +18,7 @@ public class RoleAssignmentsWriter : XmlWriterBase
     public void WriteRoleAssignments(Model.Course course, string outputPath)
     {
         var filePath = Path.GetFullPath(Path.Combine(outputPath, "course/roles.xml"));
-        using var writer = XmlWriter.Create(filePath, _settings);
+        using var writer = XmlWriter.Create(filePath, Settings);
 
         writer.WriteStartDocument();
         writer.WriteStartElement("roles");

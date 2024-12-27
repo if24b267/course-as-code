@@ -5,18 +5,10 @@ namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class InforefWriter : XmlWriterBase
 {
-	private new readonly XmlWriterSettings _settings = new()
-	{
-		Indent = true, // Makes the XML output more readable
-		NewLineOnAttributes = false, // Keeps attributes in the same line
-		OmitXmlDeclaration = false
-	};
-
-	
 	public void WriteInforef(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/inforef.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		
 		writer.WriteStartDocument();
 			

@@ -4,7 +4,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class CompetenciesWriter : XmlWriterBase
 {
-	public void WriteCompetencies(string outputPath)
+	public void WriteCompetencies(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/competencies.xml"));
 		

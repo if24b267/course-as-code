@@ -9,14 +9,6 @@ namespace CourseAsCode.Writers.XML.Writer.Course;
 public class EnrolmentsWriter : XmlWriterBase
 {
 	private int _enrolmentIdCounter = 1;
-	
-	private new readonly XmlWriterSettings _settings = new()
-	{
-		Indent = true, // Makes the XML output more readable
-		NewLineOnAttributes = false, // Keeps attributes in the same line
-		OmitXmlDeclaration = false
-	};
-	
 	private readonly GeneralHelper _helper = GeneralHelper.Instance;
 
 	
@@ -24,7 +16,7 @@ public class EnrolmentsWriter : XmlWriterBase
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/enrolments.xml"));
 
-		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		writer.WriteStartDocument();
 		
 		writer.WriteStartElement("enrolments");

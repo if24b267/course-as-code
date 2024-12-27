@@ -4,7 +4,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class CalendarWriter : XmlWriterBase
 {
-	public void WriteCalendar(string outputPath)
+	public void WriteCalendar(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/calendar.xml"));
 		
