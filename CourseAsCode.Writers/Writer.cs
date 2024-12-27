@@ -58,7 +58,7 @@ public class Writer
 		moodleBackupWriter.WriteMoodleBackup(course, outputPath);
 
 		OutcomesWriter outcomesWriter = new OutcomesWriter();
-		outcomesWriter.WriteOutcomes(outputPath);
+		outcomesWriter.WriteOutcomes(course, outputPath);
 
 		QuestionsWriter questionsWriter = new QuestionsWriter();
 		questionsWriter.WriteQuestions(outputPath);
