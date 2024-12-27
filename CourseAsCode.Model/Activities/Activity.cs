@@ -14,27 +14,15 @@ public abstract class Activity
 	[Description("list of tags that are used to describe the activity")]
 	public List<string>? Tags { get; set; } = ActivityDefaults.DEFAULT_TAGS;
 	
-	public SensibleDefaultsActivity SensibleDefaults { get; set; } = new SensibleDefaultsActivity();
-	public SystemDefaultsActivity SystemDefaults { get; set; } = new SystemDefaultsActivity();
-
+	[Description("whether the activity is visible to students or teachers only")]
+	public bool VisibleToStudents { get; set; } = ActivityDefaults.DEFAULT_VISIBLE_TO_STUDENTS;
+	[Description("whether the activity description is displayed on the course page")]
+	public bool DisplayDescription { get; set; } = ActivityDefaults.DEFAULT_DISPLAY_DESCRIPTION;
 	
-	// Defaults
-	public class SensibleDefaultsActivity
-	{
-		[Description("whether the activity is visible to students or teachers only")]
-		public bool VisibleToStudents { get; set; } = ActivityDefaults.DEFAULT_VISIBLE_TO_STUDENTS;
-		[Description("whether the activity description is displayed on the course page")]
-		public bool DisplayDescription { get; set; } = ActivityDefaults.DEFAULT_DISPLAY_DESCRIPTION;
-	}
-	
-	
-	public class SystemDefaultsActivity
-	{
-		[Description("unique identifier for the activity (quiz, file, etc.) - used for referencing")]
-		public int ActivityId { get; set; } = ActivityDefaults.DEFAULT_ACTIVITY_ID;
-		[Description("optional identifier for the activity in the course, used for grade calculation and custom reports")]
-		public int? CustomId { get; set; } = ActivityDefaults.DEFAULT_CUSTOM_ID;
-		[Description("if set, the activity will be displayed in this language despite the user's preferences")]
-		public Language? Language { get; set; } = ActivityDefaults.DEFAULT_LANGUAGE;
-	}
+	[Description("unique identifier for the activity (quiz, file, etc.) - used for referencing")]
+	public int ActivityId { get; set; } = ActivityDefaults.DEFAULT_ACTIVITY_ID;
+	[Description("optional identifier for the activity in the course, used for grade calculation and custom reports")]
+	public int? CustomId { get; set; } = ActivityDefaults.DEFAULT_CUSTOM_ID;
+	[Description("if set, the activity will be displayed in this language despite the user's preferences")]
+	public Language? Language { get; set; } = ActivityDefaults.DEFAULT_LANGUAGE;
 }

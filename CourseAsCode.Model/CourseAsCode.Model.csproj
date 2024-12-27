@@ -10,8 +10,4 @@
     <PackageReference Include="NLog" Version="5.3.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Defaults\Activities\Resources\" />
-  </ItemGroup>
-
 </Project>
