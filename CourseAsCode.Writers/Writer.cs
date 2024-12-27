@@ -52,7 +52,7 @@ public class Writer
 		gradebookWriter.WriteGradebook(course, outputPath);
 
 		GroupsWriter groupsWriter = new GroupsWriter();
-		groupsWriter.WriteGroups(outputPath);
+		groupsWriter.WriteGroups(course, outputPath);
 
 		MoodleBackupWriter moodleBackupWriter = new MoodleBackupWriter();
 		moodleBackupWriter.WriteMoodleBackup(course.BackupMetadata, course, outputPath);
