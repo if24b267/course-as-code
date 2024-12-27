@@ -18,7 +18,7 @@ public class GroupsWriter : XmlWriterBase
 		writer.WriteEndDocument();
 	}
 
-
+	
 	/// <summary>
 	/// writes the `groupcustomfields` section of the groups.xml file
 	/// </summary>
@@ -31,7 +31,7 @@ public class GroupsWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <groupcustomfields>
 	}
 
-
+	
 	/// <summary>
 	/// writes the `groupings` section of the groups.xml file
 	/// </summary>

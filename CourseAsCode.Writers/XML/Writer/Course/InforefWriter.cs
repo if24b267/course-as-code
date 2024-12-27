@@ -1,4 +1,5 @@
 using System.Xml;
+using CourseAsCode.Model;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 
@@ -8,11 +9,11 @@ public class InforefWriter : XmlWriterBase
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/inforef.xml"));
 		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-
+		
 		writer.WriteStartDocument();
-
+			
 		writer.WriteStartElement("inforef");
-
+		
 		// Reference all enrolled users
 		writer.WriteStartElement("userref");
 
@@ -22,17 +23,17 @@ public class InforefWriter : XmlWriterBase
 		}
 
 		writer.WriteEndElement(); // Close </userref>
-
+		
 		// Reference all roles
-		writer.WriteStartElement("roleref");
-
+		writer.WriteStartElement("roleref"); 
+		
 		foreach (var role in course.Roles)
 		{
 			WriteOneInforefSection(writer, role, "role");
 		}
 
 		writer.WriteEndElement(); // Close </roleref>
-
+		
 		// Reference all files
 		writer.WriteStartElement("fileref");
 
@@ -43,7 +44,7 @@ public class InforefWriter : XmlWriterBase
 			}*/
 
 		writer.WriteEndElement(); // Close </fileref>
-
+		
 		writer.WriteEndElement(); // Close </inforef>
 		writer.WriteEndDocument();
 	}
@@ -58,9 +59,9 @@ public class InforefWriter : XmlWriterBase
 	private void WriteOneInforefSection(XmlWriter writer, dynamic instance, string type)
 	{
 		writer.WriteStartElement(type);
-
+		
 		writer.WriteElementString("id", instance.SystemDefaults.Id.ToString());
-
+		
 		writer.WriteEndElement(); // Close </type>
 	}
 }

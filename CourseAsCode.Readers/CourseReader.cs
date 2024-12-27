@@ -89,6 +89,7 @@ public class CourseReader : ICourseReader
 			EndDate = yamlCourse.EndDate,
 			Summary = yamlCourse.Summary,
 			GroupMode = yamlCourse.GroupMode,
+			CourseLanguage = courseLanguage,
 			// TODO: maybe add a helper class where you can get the default SensibleDefaults class
 			SensibleDefaults = new Course.SensibleDefaultsCourse
 			{
@@ -105,7 +106,6 @@ public class CourseReader : ICourseReader
 			},
 			SystemDefaults = new Course.SystemDefaultsCourse
 			{
-				CourseLanguage = courseLanguage
 			}
 		};
 

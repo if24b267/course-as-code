@@ -2,13 +2,16 @@
 using CourseAsCode.Readers;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Writers;
+using CourseAsCode.Writers.Helper;
 using NLog;
 
 namespace CourseAsCode
 {
 	internal class CourseAsCode
 	{
+		private static readonly Writers.Helper.GeneralHelper WriterGeneralHelper = GeneralHelper.Instance;
 		private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+		
 		static void Main(string?[] args)
 		{
 			_logger.Debug("Starting CourseAsCode...");
@@ -111,7 +114,7 @@ namespace CourseAsCode
 				return;
 			}
 
-			var mbzFilePath = Path.GetFullPath(Path.Combine(outputPath, "backup.mbz"));
+			var mbzFilePath = Path.GetFullPath(Path.Combine(outputPath, WriterGeneralHelper.GenerateBackupName(course)));
 
 			if (File.Exists(mbzFilePath))
 			{

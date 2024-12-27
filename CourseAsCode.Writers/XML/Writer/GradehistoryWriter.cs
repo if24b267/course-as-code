@@ -17,7 +17,7 @@ public class GradehistoryWriter : XmlWriterBase
 		writer.WriteEndDocument();
 	}
 
-
+	
 	/// <summary>
 	/// writes the `grade_grades` section of the gradehistory.xml file
 	/// </summary>

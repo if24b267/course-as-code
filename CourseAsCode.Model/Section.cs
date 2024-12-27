@@ -10,11 +10,12 @@ public class Section
     public string? Summary { get; set; }
     [Description("whether the section is visible to students or teachers only")]
     public bool VisibleToStudents { get; set; }
-    
+
     [Description("ordered list of the activities and resources in the section")]
-    List<Activity>? Activities { get; set; }
-	 public SensibleDefaultsSection SensibleDefaults { get; set; }
-	 public SystemDefaultsSection SystemDefaults { get; set; }
+    public List<Activity> Activities { get; set; } = new List<Activity>();
+
+    public SensibleDefaultsSection SensibleDefaults { get; set; } = new SensibleDefaultsSection();
+    public SystemDefaultsSection SystemDefaults { get; set; } = new SystemDefaultsSection();
 
 	// Defaults
 	public class SensibleDefaultsSection
@@ -25,7 +26,7 @@ public class Section
     public class SystemDefaultsSection
     {
         [Description("path to the corresponding section folder in the backup directory")]
-        public required string PathToSection { get; set; }
+        public string PathToSection { get; set; }
         [Description("the format in which the SectionSummary is stored")]
         public FormattingFormat SummaryFormat { get; set; }
         [Description("the date and time that the section was last modified")]

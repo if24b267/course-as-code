@@ -7,18 +7,18 @@ public class CalendarWriter : XmlWriterBase
 	public void WriteCalendar(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/calendar.xml"));
-
+		
 		using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 		{
 			writer.WriteStartDocument();
-
+			
 			writer.WriteStartElement("events");
-
+			
 			// Add whitespace to prevent self-closing tag
 			writer.WriteString("\n");
-
+			
 			writer.WriteEndElement(); // Close <events>
-
+			
 			writer.WriteEndDocument();
 		}
 	}

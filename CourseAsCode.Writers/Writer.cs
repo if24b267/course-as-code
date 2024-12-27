@@ -1,19 +1,43 @@
 ﻿using CourseAsCode.Model;
 using CourseAsCode.Writers.Static;
-using CourseAsCode.Writers.XML;
-using CourseAsCode.Writers.XML.Course;
 using CourseAsCode.Writers.XML.Sections.section_1;
 using CourseAsCode.Writers.XML.Sections.section_2;
 using CourseAsCode.Writers.XML.Sections.section_3;
 using CourseAsCode.Writers.XML.Sections.section_4;
 using CourseAsCode.Writers.XML.Sections.section_5;
-using CourseAsCode.Writers.XML.Files.E4;
+using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Writers.XML.Writer.Course;
 
 namespace CourseAsCode.Writers;
 
 public class Writer
 {
+	// Writer
+	private readonly CalendarWriter _calendarWriter = new CalendarWriter();
+	private readonly CommentsWriter _commentsWriter = new CommentsWriter();
+	private readonly CompetenciesWriter _competenciesWriter = new CompetenciesWriter();
+	private readonly CompletiondefaultsWriter _completiondefaultsWriter = new CompletiondefaultsWriter();
+	private readonly ContentbankWriter _contentbankWriter = new ContentbankWriter();
+	private readonly CourseWriter _courseWriter = new CourseWriter();
+	private readonly FilesWriter _filesWriter = new FilesWriter();
+	private readonly GradehistoryWriter _gradehistoryWriter = new GradehistoryWriter();
+	private readonly GradebookWriter _gradebookWriter = new GradebookWriter();
+	private readonly GroupsWriter _groupsWriter = new GroupsWriter();
+	private readonly MoodleBackupWriter _moodleBackupWriter = new MoodleBackupWriter();
+	private readonly OutcomesWriter _outcomesWriter = new OutcomesWriter();
+	private readonly QuestionsWriter _questionsWriter = new QuestionsWriter();
+	private readonly RolesWriter _rolesWriter = new RolesWriter();
+	private readonly ScalesWriter _scalesWriter = new ScalesWriter();
+	private readonly UsersWriter _usersWriter = new UsersWriter();
+	private readonly EnrolmentsWriter _enrolmentsWriter = new EnrolmentsWriter();
+	private readonly FiltersWriter _filtersWriter = new FiltersWriter();
+	private readonly InforefWriter _inforefWriter = new InforefWriter();
+	private readonly RoleAssignmentsWriter _roleAssignmentsWriter = new RoleAssignmentsWriter();
+	private readonly BadgesWriter _badgesWriter = new BadgesWriter();
+	private readonly CompletionWriter _completionWriter = new CompletionWriter();
+	
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+	
 	public bool WriteXML(Course course, string outputPath)
 	{
 		_logger.Debug($"Writing XML files to {outputPath}");
@@ -23,76 +47,32 @@ public class Writer
 		// Create course directory if it does not exist
 		Directory.CreateDirectory(Path.Combine(outputPath,"course"));
 
-		CalendarWriter calendarWriter = new CalendarWriter();
-		calendarWriter.WriteCalendar(outputPath);
-
-		CommentsWriter commentsWriter = new CommentsWriter();
-		commentsWriter.WriteComments(outputPath);
-
-		CompetenciesWriter competenciesWriter = new CompetenciesWriter();
-		competenciesWriter.WriteCompetencies(outputPath);
-
-		CompletiondefaultsWriter completiondefaultsWriter = new CompletiondefaultsWriter();
-		completiondefaultsWriter.WriteCompletionDefaults(outputPath);
-
-		ContentbankWriter contentbankWriter = new ContentbankWriter();
-		contentbankWriter.WriteContentbank(outputPath);
-
-		CourseWriter courseWriter = new CourseWriter();
-		courseWriter.WriteCourse(course, outputPath);
-
-		FilesWriter fileWriter = new FilesWriter();
-		fileWriter.WriteFiles(outputPath);
-
-		GradehistoryWriter gradehistoryWriter = new GradehistoryWriter();
-		gradehistoryWriter.WriteGradehistory(outputPath);
-
-		GradebookWriter gradebookWriter = new GradebookWriter();
-		gradebookWriter.WriteGradebook(outputPath);
-
-		GroupsWriter groupsWriter = new GroupsWriter();
-		groupsWriter.WriteGroups(outputPath);
-
-		MoodleBackupWriter moodleBackupWriter = new MoodleBackupWriter();
-		moodleBackupWriter.WriteMoodleBackup(course.BackupMetadata, course, outputPath);
-
-		OutcomesWriter outcomesWriter = new OutcomesWriter();
-		outcomesWriter.WriteOutcomes(outputPath);
-
-		QuestionsWriter questionsWriter = new QuestionsWriter();
-		questionsWriter.WriteQuestions(outputPath);
-
-		RolesWriter rolesWriter = new RolesWriter();
-		rolesWriter.WriteRoles(course.Roles, outputPath);
-
-		ScalesWriter scalesWriter = new ScalesWriter();
-		scalesWriter.WriteScales(outputPath);
-
-		UsersWriter usersWriter = new UsersWriter();
-		usersWriter.WriteUsers(course.EnrolledUsers, outputPath);
-
-		EnrolmentsWriter enrolmentsWriter = new EnrolmentsWriter();
-		enrolmentsWriter.WriteEnrolment(outputPath);
-
-		FiltersWriter filtersWriter = new FiltersWriter();
-		filtersWriter.WriteFilters(outputPath);
-
-		InforefWriter inforefWriter = new InforefWriter();
-		inforefWriter.WriteInforef(course.EnrolledUsers, course.Roles, outputPath);
-
-		RolesCourseWriter rolesCourseWriter = new RolesCourseWriter();
-		rolesCourseWriter.WriteRolesCourse(course.EnrolledUsers, outputPath);
-
-		BadgesWriter badgesWriter = new BadgesWriter();
-		badgesWriter.WriteBadges(outputPath);
-
-		CompletionWriter completionWriter = new CompletionWriter();
-		completionWriter.WriteCompletion(outputPath);
-
+		_calendarWriter.WriteCalendar(course, outputPath);
+		_commentsWriter.WriteComments(course, outputPath);
+		_competenciesWriter.WriteCompetencies(course, outputPath);
+		_completiondefaultsWriter.WriteCompletionDefaults(course, outputPath);
+		_contentbankWriter.WriteContentbank(course, outputPath);
+		_courseWriter.WriteCourse(course, outputPath);
+		_filesWriter.WriteFiles(course, outputPath);
+		_gradehistoryWriter.WriteGradehistory(course, outputPath);
+		_gradebookWriter.WriteGradebook(course, outputPath);
+		_groupsWriter.WriteGroups(course, outputPath);
+		_moodleBackupWriter.WriteMoodleBackup(course, outputPath);
+		_outcomesWriter.WriteOutcomes(course, outputPath);
+		_questionsWriter.WriteQuestions(course, outputPath);
+		_rolesWriter.WriteRoles(course, outputPath);
+		_scalesWriter.WriteScales(course, outputPath);
+		_usersWriter.WriteUsers(course, outputPath);
+		_enrolmentsWriter.WriteEnrolment(course, outputPath);
+		_filtersWriter.WriteFilters(course, outputPath);
+		_inforefWriter.WriteInforef(course, outputPath);
+		_roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
+		_badgesWriter.WriteBadges(outputPath);
+		_completionWriter.WriteCompletion(course, outputPath);
 
 		// Sections
 		// Create sections directory if it does not exist
-		System.IO.Directory.CreateDirectory("sections");
+		Directory.CreateDirectory(Path.Combine(outputPath,"sections"));
 
 		// Name of the subfolders, for the hardcoded sections 
 		string[] subfolders = { "section_1", "section_2", "section_3", "section_4", "section_5", };

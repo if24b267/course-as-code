@@ -9,7 +9,7 @@ public class FiltersWriter : XmlWriterBase
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/filters.xml"));
 		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		writer.WriteStartDocument();
-
+			
 		writer.WriteStartElement("filters");
 
 		writer.WriteStartElement("filter_actives");
@@ -21,7 +21,7 @@ public class FiltersWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close </filter_configs>
 
 		writer.WriteEndElement(); // Close </filters>
-
+			
 		writer.WriteEndDocument();
 	}
 }
