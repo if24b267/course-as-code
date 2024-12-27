@@ -4,25 +4,115 @@
 
 package Model <<Frame>> {
     class Course {
-        int id
-        String name
-        String shortName
-        List<Section> sections
+        String FullName
+        String ShortName
+        String Summary
+        
+        DateTime StartDate
+        DateTime EndDate
+        enum GroupMode
+        List<string> Tags
     }
-
+    
+    class SensibleDefaults {
+        int NumberOfAnnouncementsToDisplay
+        enum Format
+        bool ShowGrades
+        int CourseIdNumber
+        int MaximumUploadSize
+        bool VisibleToStudents
+        bool ForceGroupMode
+        string Theme
+        bool ShowActivityDates
+        bool ShowActivityCompletionConditions
+        bool EnableCompletionTracking
+        string CategoryName
+        string CategoryDescription
+    }
+    
+    class SystemDefaults {
+        int Id
+        enum SummaryFormat
+        bool UsesLegacyFiles
+        enum CourseLanguage
+        DateTime TimeCreated
+        DateTime TimeModified
+        string PdfExportFont
+        string CustomFields
+        string FilePath
+    }
+   
     class Section {
-        int id
-        String name
-        String description
-        List<Activity> activities
+        string Name
+        String Summary
+        bool VisibleToStudents
     }
-
+    
+    class BackupMetadata {
+        string Name
+        enum MoodleVersion
+        uri MoodleUrl
+    }
+        
+    class User {
+        string Username
+        MailAdress Email
+        string FirstName
+        string LastName
+        string City
+        enum Country
+        string Description
+        
+        bool HasPicture
+        string PictureDescription
+        MoodleFile Picture
+        
+        enum AuthMethod
+    }
+    
+    abstract class EnrolmentMethod {
+        Role DefaultRole
+        bool Enabled
+    }
+    
+    class GuestEnrolment extends EnrolmentMethod {
+        string Password
+    }
+    
+    class ManualEnrolment extends EnrolmentMethod {
+        int EnrolmentDuration
+        bool NotifyEnroller
+        bool NotifyStudent
+        bool SendWelcomeMessage
+        string WelcomeMessage
+    }
+    
+    class SelfEnrolment extends EnrolmentMethod {
+        string CustomName
+        string Password
+        int EnrolmentDuration
+        bool NotifyEnroller
+        bool NotifyStudent
+        bool SendWelcomeMessage
+        string WelcomeMessage
+    }
+    
+    class Role {
+        string Name
+        string ShortName
+        string LocalName
+        string Description
+        enum Archetype
+    }
+    
     ' https://docs.moodle.org/405/en/Activities
     package Activities <<Folder>> {
         abstract class Activity {
-            int id
-            String name
-            String description
+            int Id
+            string Name
+            string Description
+            enum GroupMode
+            List<string> tags
         }
 
         'Assignments - Enable teachers to grade and give comments on uploaded files and assignments created on and off line
@@ -92,19 +182,12 @@ package Model <<Frame>> {
 
 
     ' https://docs.moodle.org/405/en/Resources
+    ' Resources are types of activities
     package Resources <<Folder>> {
-        abstract class Resource {
-            int id
-            String name
-            String description
-            String type
-        }
-
         ' File - A picture, PDF file, spreadsheet, sound file, video file or any other file type. Where possible, the file will be displayed within the course interface; otherwise students will be prompted to download it.
-        class File {
-            int size
-            String fileType
-            String filePath
+        class MoodleFile {
+            string FileName
+            string FilePath
         }
 
         ' URL - For providing a web link as a course resource.
@@ -204,14 +287,36 @@ package Writer <<Frame>> {
 
 }
 
+' SensibleDefaults and SystemDefaults are subclasses of Course (nested class)
+Course +-- SensibleDefaults
+Course +-- SystemDefaults
+
+' The course is associated with the backup metadata
+Course "1" *-- "1" BackupMetadata : described by
+
+' A user is assigned a Role
+User "0..*" *-- "1" Role : assigned
+
+' A user was enrolled using an enrolment method
+User "0..*" *-- "1" EnrolmentMethod : enrolled
+
+' There are multiple roles available in a course
+Course "1" *-- "0..*" Role : configures
+
+' A course supports multiple enrolment methods
+Course "1" *-- "0..*" EnrolmentMethod : supports
+
+' A course has a number of enrolled users
+Course "0..*" *-- "0..*" User : enrolled
+
+
+
+
 ' A course consists of multiple sections
 Course "1" *-- "0..*" Section : contains
 
 ' A section consists of multiple activities
 Section "1" *-- "0..*" Activity : contains
-
-' A section can contain multiple resources
-Section "1" *-- "0..*" Resource : contains
 
 ' A forum can contain multiple posts
 Forum "1" *-- "0..*" ForumPost : contains
@@ -230,9 +335,8 @@ QuizQuestion <|-- MultipleChoiceQuestion
 QuizQuestion <|-- TrueFalseQuestion
 QuizQuestion <|-- CodeRunnerQuestion
 
-' A resource can be a file or a URL
-Resource <|-- File
-Resource <|-- URL
+' A file is a type of activity
+Activity <|-- MoodleFile : is a
 
 ' An activity can be an assignment, forum or quiz
 Activity <|-- Assignment

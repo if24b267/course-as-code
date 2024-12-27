@@ -1,4 +1,6 @@
 # Analysis of files created by Moodle for an empty course
+## Test
+### Line 3
 
 ## Information provided to Moodle in the course creation process (WEB-UI)
 

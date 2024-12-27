@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CourseAsCode": {
+      "commandName": "Project",
+      "commandLineArgs": "-i \"../../../../Documentation/exampleCourse\" -o \"../../../../Documentation/out\""
+    }
+  }
+}
