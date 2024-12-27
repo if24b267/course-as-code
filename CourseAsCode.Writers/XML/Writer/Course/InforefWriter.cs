@@ -1,5 +1,4 @@
 using System.Xml;
-using CourseAsCode.Model;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 

@@ -53,7 +53,7 @@ public class FilesWriter : XmlWriterBase
 		FileStream? fileStream = null;
 		try
 		{
-			if (!System.IO.File.Exists(file.FilePath))
+			if (!File.Exists(file.FilePath))
 			{
 				_logger.Warn($"File {file.FilePath} does not exist. Skipping file.");
 				return;
@@ -77,18 +77,18 @@ public class FilesWriter : XmlWriterBase
 		
 		var elements = new Dictionary<string, string>
 		{
-			{ "contenthash", file.SystemDefaults.ContentHash ?? GetSHA1Hash(fileStream) },
+			{ "contenthash", file.SystemDefaults.ContentHash ?? GetSha1Hash(fileStream) },
 			{ "contextid", file.SystemDefaults.Component == Component.Course ? "14" : "35" }, // TODO: It probably makes sense to make this value dependent on the value of `Component`
 			{ "component", file.SystemDefaults.Component != null ? _fileHelper.GetComponentFromEnum((Component)file.SystemDefaults.Component) : "course" },
 			{ "filearea", file.SystemDefaults.FileArea != null ? _fileHelper.GetFileAreaFromEnum((FileArea)file.SystemDefaults.FileArea) : "content" },
 			{ "itemid", "0" }, // If there is only one of a file area per context, the itemid is 0, see https://moodledev.io/docs/5.0/apis/subsystems/files#file-areas
-			{ "filepath", file.FilePath  ?? "/"},
+			{ "filepath", file.FilePath },
 			{ "filename", file.FileName },
 			{ "userid", file.SensibleDefaults.Author?.SystemDefaults.Id.ToString() ?? GeneralDefaults.DEFAULT_ADMIN_USER_ID.ToString() },
 			{ "filesize", fileStream.Length.ToString() },
-			{ "mimetype", MimeTypes.GetMimeType(file.FilePath!) },
+			{ "mimetype", MimeTypes.GetMimeType(file.FilePath) },
 			{ "status", "0" }, // TODO: Determine function of this field
-			{ "source", file.FilePath ?? "$@NULL@$" },
+			{ "source", file.FileName },
 			{ "author", file.SensibleDefaults.Author?.Username ?? "$@NULL@$" },
 			{ "license", file.SensibleDefaults.License != null ? _fileHelper.GetLicenseFromEnum((License)file.SensibleDefaults.License) : "unknown" }, // TODO: Add function that maps enum value to correct moodle values
 			{ "sortorder", "0" }, // TODO: Determine function of this field
@@ -98,7 +98,7 @@ public class FilesWriter : XmlWriterBase
 		};
 
 		WriteElements(writer, elements);
-		fileStream?.Dispose();
+		fileStream.Dispose();
 	}
 
 
@@ -107,7 +107,7 @@ public class FilesWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="fileStream">FileStream of the file to be hashed</param>
 	/// <returns>SHA1 hash of the file content</returns>
-	private string GetSHA1Hash(FileStream fileStream)
+	private string GetSha1Hash(FileStream fileStream)
 	{
 		using SHA1 sha1 = SHA1.Create();
 		byte[] hashBytes = sha1.ComputeHash(fileStream);
