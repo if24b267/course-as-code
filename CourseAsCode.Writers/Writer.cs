@@ -67,10 +67,10 @@ public class Writer
 		rolesWriter.WriteRoles(course, outputPath);
 
 		ScalesWriter scalesWriter = new ScalesWriter();
-		scalesWriter.WriteScales(outputPath);
+		scalesWriter.WriteScales(course, outputPath);
 
 		UsersWriter usersWriter = new UsersWriter();
-		usersWriter.WriteUsers(course.EnrolledUsers, outputPath);
+		usersWriter.WriteUsers(course, outputPath);
 
 		EnrolmentsWriter enrolmentsWriter = new EnrolmentsWriter();
 		enrolmentsWriter.WriteEnrolment(course, outputPath);

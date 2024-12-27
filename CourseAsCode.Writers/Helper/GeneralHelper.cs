@@ -1,4 +1,5 @@
 using CourseAsCode.Model.Enums;
+using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
 namespace CourseAsCode.Writers.Helper;
 
@@ -85,6 +86,23 @@ public class GeneralHelper
             Language.English => "en",
             Language.German => "de",
             _ => "en"
+        };
+    }
+    
+    
+    /// <summary>
+    /// maps the TimeZone enum to their corresponding shorts that are accepted by Moodle
+    /// </summary>
+    /// <param name="timeZone"></param>
+    /// <returns></returns>
+    public string GetTimeZoneFromEnum(TimeZone timeZone)
+    {
+        return timeZone switch
+        {
+            TimeZone.EuropeBerlin => "Europe/Berlin",
+            TimeZone.EuropeVienna => "Europe/Vienna",
+            TimeZone.EuropeZurich => "Europe/Zurich",
+            _ => "99"
         };
     }
 }

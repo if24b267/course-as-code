@@ -1,66 +1,111 @@
 using System.Xml;
+using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.Helper;
+using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 using UserModel = CourseAsCode.Model.User;
 
-namespace CourseAsCode.Writers.XML;
+namespace CourseAsCode.Writers.XML.Writer;
 
 public class UsersWriter : XmlWriterBase
 {
-	public void WriteUsers(List<UserModel> users, string outputPath)
+	private readonly GeneralHelper _helper = GeneralHelper.Instance;
+	private readonly UserHelper _userHelper = new UserHelper();
+	
+	
+	public void WriteUsers(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "users.xml"));
-		using (XmlWriter writer = XmlWriter.Create(filePath, _settings))
+		using XmlWriter writer = XmlWriter.Create(filePath, _settings);
+		
+		writer.WriteStartDocument();
+		writer.WriteStartElement("users");
+
+		foreach (var user in course.EnrolledUsers)
 		{
-			writer.WriteStartDocument();
-			writer.WriteStartElement("users");
-
-			foreach (var user in users)
-			{
-				WriteUser(writer, user);
-			}
-
-			writer.WriteEndElement(); // Close <users>
-			writer.WriteEndDocument();
+			WriteSingleUser(writer, user);
 		}
+
+		writer.WriteEndElement(); // Close <users>
+		writer.WriteEndDocument();
 	}
+	
 
-	private void WriteUser(XmlWriter writer, UserModel user)
+	/// <summary>
+	/// writes a single user to the users.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="user">initialized Moodle User</param>
+	private void WriteSingleUser(XmlWriter writer, UserModel user)
 	{
-		var systemDefaults = user.SystemDefaults;
-		var userPreferences = user.UserPreferences;
-
 		WriteStartElementWithAttributes(writer, "user", new Dictionary<string, string>
 		{
-			{ "id", systemDefaults?.Id.ToString() ?? string.Empty },
-			{ "contextid", systemDefaults?.ExternalId.ToString() ?? string.Empty }
+			{ "id", user.SystemDefaults?.Id.ToString() ?? string.Empty },
+			{ "contextid", "15" } // TODO: Dynamically determine this value
 		});
 
 		WriteUserElements(writer, user);
-		WritePreferences(writer, userPreferences);
-		WriteSystem(writer, systemDefaults);
+		WritePreferences(writer, user.UserPreferences);
+		WriteSystem(writer, user.SystemDefaults);
 
 		writer.WriteEndElement(); // Close <user>
 	}
 
+	
+	/// <summary>
+	/// writes the majority of a single user's data in the `users` tag of the users.xml file
+	/// </summary>
+	/// <param name="writer">XmlWriter initialized on the correct document</param>
+	/// <param name="user">initialized Moodle User</param>
 	private void WriteUserElements(XmlWriter writer, UserModel user)
 	{
 		var elements = new Dictionary<string, string>
 		{
 			{ "username", user.Username },
-			{ "email", user.EMail.ToString() },
-			{ "firstname", user.FirstName },
-			{ "lastname", user.LastName },
-			{ "city", user.City },
-			{ "country", user.Country.ToString() },
-			{ "description", user.Description },
-			{ "haspicture", user.HasPicture ? "1" : "0" },
-			{ "picturedescription", user.PictureDescription ?? string.Empty },
-			{ "authmethod", user.AuthMethod.ToString() },
-			{ "role", user.Role.ShortName }
+			{ "idnumber", user.SystemDefaults.ExternalId.ToString() ?? "" },
+			{ "email", user.EMail?.ToString() ?? "" },
+			{ "phone1", user.SensibleDefaults.PhoneNumber ?? ""},
+			{ "phone2", user.SensibleDefaults.MobilePhoneNumber ?? ""},
+			{ "institution", user.SensibleDefaults.Institution ?? ""},
+			{ "deparment", user.SensibleDefaults.Department ?? ""},
+			{ "address", user.SensibleDefaults.Address ?? ""},
+			{ "city", user.City ?? ""},
+			{ "country", _userHelper.GetCountryFromEnum(user.Country ?? Country.Austria) },
+			{ "lastip", user.SystemDefaults.LastIP?.ToString() ?? "" },
+			{ "picture", "0"}, // TODO: Add ability to reference the user's picture here
+			{ "description", user.Description ?? "$@NULL@$" },
+			{ "descriptionformat", _helper.EnumIntegerToString(user.SystemDefaults.DescriptionFormat ?? FormattingFormat.HTML) },
+			{ "imagealt", user.PictureDescription ?? "$@NULL@$"},
+			{ "auth", _userHelper.GetAuthMethodFromEnum(user.AuthMethod ?? AuthenticationMethod.ManualCreation) },
+			{ "firstnamephonetic", user.SensibleDefaults.FirstNamePhonetic ?? "$@NULL@$"},
+			{ "lastnamephonetic", user.SensibleDefaults.LastNamePhonetic ?? "$@NULL@$"},
+			{ "middlename" , user.SensibleDefaults.MiddleName ?? "$@NULL@$"},
+			{ "alternatename", user.SensibleDefaults.AlternateName ?? "$@NULL"},
+			{ "firstname", user.FirstName},
+			{ "lastname", user.LastName},
+			{ "confirmed", user.SystemDefaults.IsConfirmed ? "1" : "0"},
+			{ "policyagreed", user.SystemDefaults.AcceptedPolicy ? "1" : "0"},
+			{ "deleted", user.SystemDefaults.IsDeleted ? "1" : "0"},
+			{ "lang", _helper.GetLanguageFromEnum(user.UserPreferences.PreferredLanguage)},
+			{ "theme", user.SystemDefaults.Theme ?? "" },
+			{ "timezone", _helper.GetTimeZoneFromEnum(user.SensibleDefaults.TimeZone ?? TimeZone.ServerDefault) },
+			{ "firstaccess" , user.SystemDefaults.FirstAccess != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.FirstAccess) : "0" }, // TODO: Determine if default value is really 0
+			{ "lastaccess", user.SystemDefaults.LastAccess != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.LastAccess) : "0" }, // TODO: Determine if default value is really 0
+			{ "lastlogin", user.SystemDefaults.LastLogin != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.LastLogin) : "0" }, // TODO: Determine if default value is really 0
+			{ "currentlogin", _helper.DateTimeToUnixTimestamp(DateTime.Now) ?? "0" }, // TODO: Determine function of this field
+			{ "mailformat", "1" }, // TODO: Determine function of this field
+			{ "maildigest", _helper.EnumIntegerToString(user.UserPreferences.EMailDigestType ?? EMailDigestType.NoDigest) },
+			{ "maildisplay", _helper.EnumIntegerToString(user.UserPreferences.EMailVisibility ?? EMailVisibility.VisibleToEveryone) }, 
+			{ "autosubscribe", user.UserPreferences.AutoSubscribeToForums ? "1" : "0"},
+			{ "trackforums", user.UserPreferences.TrackReadPosts ? "1" : "0"},
+			{ "timecreated", _helper.DateTimeToUnixTimestamp(user.SystemDefaults.TimeCreated) },
+			{ "timemodified", _helper.DateTimeToUnixTimestamp(user.SystemDefaults.TimeModified) },
+			{ "trustbitmask", "0" } // TODO: Determine what this value means
 		};
 
 		WriteElements(writer, elements);
 	}
 
+	
 	private void WritePreferences(XmlWriter writer, UserModel.UserPreferencesClass? preferences)
 	{
 		if (preferences == null) return;
@@ -93,6 +138,7 @@ public class UsersWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <preferences>
 	}
 
+	
 	private void WriteSystem(XmlWriter writer, UserModel.SystemDefaultsUser? systemDefaults)
 	{
 		if (systemDefaults == null) return;
