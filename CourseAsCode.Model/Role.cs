@@ -20,8 +20,8 @@ public class Role
 	[Description("Blueprint for the role, defines a standard set of permissions")]
 	public Archetype Archetype { get; set; }
 
-	public SensibleDefaultsRole SensibleDefaults { get; set; }
-	public SystemDefaultsRole SystemDefaults { get; set; }
+	public SensibleDefaultsRole SensibleDefaults { get; set; } = new SensibleDefaultsRole();
+	public SystemDefaultsRole SystemDefaults { get; set; } = new SystemDefaultsRole();
 
 	// Defaults
 	public class SensibleDefaultsRole
