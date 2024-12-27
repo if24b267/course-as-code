@@ -35,7 +35,7 @@ public class RolesWriter : XmlWriterBase
 	{
 		WriteStartElementWithAttributes(writer, "role", new Dictionary<string, string>
 		{
-			{ "id", role.SystemDefaults.Id.ToString() }
+			{ "id", role.SystemDefaults.RoleId.ToString() }
 		});
 
 		var elements = new Dictionary<string, string>
@@ -44,7 +44,7 @@ public class RolesWriter : XmlWriterBase
 			{ "shortname", role.ShortName },
 			{ "nameincourse", role.LocalName ?? "$@NULL@$" },
 			{ "description", role.Description ?? string.Empty },
-			{ "sortorder", role.SystemDefaults.Id.ToString() }, // TODO: Determine function of this field, seemingly the same as roleid
+			{ "sortorder", role.SystemDefaults.RoleId.ToString() }, // TODO: Determine function of this field, seemingly the same as roleid
 			{ "archetype", _rolesHelper.GetArchetypeFromEnum(role.Archetype) }
 		};
 

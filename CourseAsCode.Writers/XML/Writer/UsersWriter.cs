@@ -75,9 +75,9 @@ public class UsersWriter : XmlWriterBase
 			{ "lastip", user.SystemDefaults.LastIP?.ToString() ?? "" },
 			{ "picture", "0"}, // TODO: Add ability to reference the user's picture here
 			{ "description", user.Description ?? "$@NULL@$" },
-			{ "descriptionformat", _helper.EnumIntegerToString(user.SystemDefaults.DescriptionFormat ?? FormattingFormat.HTML) },
+			{ "descriptionformat", _helper.EnumIntegerToString(user.SystemDefaults.DescriptionFormat) },
 			{ "imagealt", user.PictureDescription ?? "$@NULL@$"},
-			{ "auth", _userHelper.GetAuthMethodFromEnum(user.AuthMethod ?? AuthenticationMethod.ManualCreation) },
+			{ "auth", _userHelper.GetAuthMethodFromEnum(user.AuthMethod) },
 			{ "firstnamephonetic", user.SensibleDefaults.FirstNamePhonetic ?? "$@NULL@$"},
 			{ "lastnamephonetic", user.SensibleDefaults.LastNamePhonetic ?? "$@NULL@$"},
 			{ "middlename" , user.SensibleDefaults.MiddleName ?? "$@NULL@$"},
@@ -113,7 +113,7 @@ public class UsersWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WriteCustomFieldsSection(XmlWriter writer, Model.User user)
+	private void WriteCustomFieldsSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("custom_fields");
 		writer.WriteString(" ");
@@ -126,7 +126,7 @@ public class UsersWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WriteTagsSection(XmlWriter writer, Model.User user)
+	private void WriteTagsSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("tags");
 		writer.WriteString(" ");
@@ -139,7 +139,7 @@ public class UsersWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WritePreferencesSection(XmlWriter writer, Model.User user)
+	private void WritePreferencesSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("preferences");
 		writer.WriteString(" ");
@@ -152,7 +152,7 @@ public class UsersWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WriteRolesSection(XmlWriter writer, Model.User user)
+	private void WriteRolesSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("roles");
 		
