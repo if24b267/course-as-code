@@ -46,7 +46,7 @@ public class Writer
 		fileWriter.WriteFiles(course, outputPath);
 
 		GradehistoryWriter gradehistoryWriter = new GradehistoryWriter();
-		gradehistoryWriter.WriteGradehistory(outputPath);
+		gradehistoryWriter.WriteGradehistory(course, outputPath);
 
 		GradebookWriter gradebookWriter = new GradebookWriter();
 		gradebookWriter.WriteGradebook(course, outputPath);
