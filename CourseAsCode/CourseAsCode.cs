@@ -98,10 +98,6 @@ namespace CourseAsCode
 			_logger.Debug($"Resolved output path: {outputPath}");
 			_logger.Debug($"Resolved format: {courseFormat}");
 
-			Console.WriteLine($"Input Path: {inputPath}");
-			Console.WriteLine($"Output Path: {outputPath}");
-			Console.WriteLine($"Format: {courseFormat}");
-
 			var courseReader = new CourseReader();
 			var course = courseReader.Read(inputPath, courseFormat);
 			var writer = new Writer();

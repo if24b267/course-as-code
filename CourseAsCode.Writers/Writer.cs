@@ -1,4 +1,5 @@
 ﻿using CourseAsCode.Model;
+using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Static;
 using CourseAsCode.Writers.XML.Sections.section_1;
 using CourseAsCode.Writers.XML.Sections.section_2;

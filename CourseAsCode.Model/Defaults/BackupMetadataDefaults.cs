@@ -1,21 +1,26 @@
-﻿using System.Xml;
-using CourseAsCode.Model;
-using CourseAsCode.Model.Enums;
+﻿using CourseAsCode.Model.Enums;
 
-namespace CourseAsCode.Writers.Static;
+namespace CourseAsCode.Model.Defaults;
 
 public class BackupMetadataDefaults
 {
-	public const string DEFAULT_NAME = "Backup";
+	// General defaults
+	public const string DEFAULT_NAME = "backup-moodle2-course-2-unde-19700101-0000";
 	public const MoodleVersion DEFAULT_MOODLE_VERSION = MoodleVersion.Moodle450;
-	public readonly Uri DEFAULT_MOODLE_URL = new("https://moodle.sanctus.cx");
+	public static readonly Uri DEFAULT_MOODLE_URL = new("https://moodle.sanctus.cx");
+	
+	// Sensible defaults
 	public const bool DEFAULT_FILES_INCLUDED = true;
-	public const int DEFAULT_MNET_REMOTE_USERS = 0;
+	
+	// System defaults
+	public static readonly DateTime DEFAULT_CREATION_DATE = DateTime.Now;
+	public static readonly int? DEFAULT_MNET_REMOTE_USERS = null;
 	public const bool DEFAULT_INCLUDE_FILE_REFERENCES_TO_EXTERNAL_CONTENT = false;
-	public readonly string DEFAULT_BACKUP_ID = Guid.NewGuid().ToString();
+	public static readonly string DEFAULT_BACKUP_ID = Guid.NewGuid().ToString().Replace("-", "");
 	public const bool DEFAULT_WHOLE_SITE_BACKUP = false;
 	public const bool DEFAULT_USES_NEW_BACKUP_FORMAT = true;
 	
+	// Backup settings (as defined in the backup creation process)
 	public const bool DEFAULT_INCLUDE_ENROLLED_USERS = true;
 	public const bool DEFAULT_ANONYMIZE_USER_INFORMATION = false;
 	public const bool DEFAULT_INCLUDE_USER_ROLE_ASSIGNMENTS = true;
@@ -37,6 +42,7 @@ public class BackupMetadataDefaults
 	public const bool DEFAULT_INCLUDE_USER_STATE_IN_CONTENT = true;
 	public const bool DEFAULT_INCLUDE_LEGACY_COURSE_FILES = true;
 
+	
 	public BackupMetadata GetDefaultBackupMetadata()
 	{
 		var backupMetadata = new BackupMetadata
@@ -50,7 +56,7 @@ public class BackupMetadataDefaults
 			},
 			SystemDefaults = new BackupMetadata.SystemDefaultsBackupMetadata
 			{
-				CreationDate = DateTime.Now,
+				CreationDate = DEFAULT_CREATION_DATE,
 				MNetRemoteUsers = DEFAULT_MNET_REMOTE_USERS,
 				IncludeFileReferencesToExternalContent = DEFAULT_INCLUDE_FILE_REFERENCES_TO_EXTERNAL_CONTENT,
 				BackupId = DEFAULT_BACKUP_ID,

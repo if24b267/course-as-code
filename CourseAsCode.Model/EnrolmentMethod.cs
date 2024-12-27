@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Defaults.Enrolments;
 
 namespace CourseAsCode.Model;

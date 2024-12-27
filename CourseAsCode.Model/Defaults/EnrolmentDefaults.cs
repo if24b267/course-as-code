@@ -1,4 +1,4 @@
-namespace CourseAsCode.Model.Defaults.Enrolments;
+namespace CourseAsCode.Model.Defaults;
 
 public class EnrolmentDefaults
 {
