@@ -1,13 +1,9 @@
 ﻿using System.ComponentModel;
 using CourseAsCode.Model.Enums;
 using Component = CourseAsCode.Model.Enums.Component;
+using License = CourseAsCode.Model.Enums.License;
 
 namespace CourseAsCode.Model.Activities.Resources;
-
-public enum License
-{
-	// TODO: Determine possible values
-}
 
 
 public class MoodleFile : Activity
