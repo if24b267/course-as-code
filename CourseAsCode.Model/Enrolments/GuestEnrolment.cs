@@ -9,5 +9,5 @@ namespace CourseAsCode.Model.Enrolments;
 public class GuestEnrolment() : EnrolmentMethod(defaultRole: GuestEnrolmentDefaults.DEFAULT_DEFAULT_ROLE)
 {
     [Description("if set, guest access to the course is restricted to only those who know the password")]
-    public string? Password { get; set; }
+    public string? Password { get; set; } = GuestEnrolmentDefaults.DEFAULT_PASSWORD;
 }

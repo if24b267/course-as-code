@@ -1,4 +1,4 @@
-using CourseAsCode.Model.Enrolments;
+using CourseAsCode.Model.Defaults.Enrolments;
 using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Defaults;
@@ -18,9 +18,9 @@ public static class CourseDefaults
     public static readonly List<Role> DEFAULT_ROLES = new List<Role>();
     public static readonly List<EnrolmentMethod> DEFAULT_ENROLMENT_METHODS = new List<EnrolmentMethod>
     {
-        new ManualEnrolment(),
-        new SelfEnrolment(),
-        new GuestEnrolment()
+        GuestEnrolmentDefaults.GetDefaultGuestEnrolment(),
+        SelfEnrolmentDefaults.GetDefaultSelfEnrolment(),
+        ManualEnrolmentDefaults.GetDefaultManualEnrolment()
     };
     public static readonly List<User> DEFAULT_ENROLLED_USERS = new List<User>();
 

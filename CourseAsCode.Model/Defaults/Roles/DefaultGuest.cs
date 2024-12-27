@@ -12,6 +12,9 @@ public static class DefaultGuest
     public const int DEFAULT_ID = 0;
     
     
+    /// <summary>
+    /// Returns a role object with all properties set to the default values for a guest
+    /// </summary>
     public static Role GetDefaultGuest()
     {
         return new Role()

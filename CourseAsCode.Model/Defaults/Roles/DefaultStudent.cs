@@ -13,6 +13,9 @@ public static class DefaultStudent
     public const int DEFAULT_ID = 5;
     
     
+    /// <summary>
+    /// Returns a role object with all properties set to the default values for a student
+    /// </summary>
     public static Role GetDefaultStudent()
     {
         return new Role()
