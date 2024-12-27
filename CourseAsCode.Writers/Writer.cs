@@ -1,8 +1,5 @@
-﻿using System.Globalization;
-using CourseAsCode.Model;
+﻿using CourseAsCode.Model;
 using CourseAsCode.Writers.Static;
-using CourseAsCode.Writers.XML;
-using CourseAsCode.Writers.XML.Files.E4;
 using CourseAsCode.Writers.XML.Sections.section_1;
 using CourseAsCode.Writers.XML.Sections.section_2;
 using CourseAsCode.Writers.XML.Sections.section_3;
@@ -75,7 +72,7 @@ public class Writer
 
 		// Sections
 		// Create sections directory if it does not exist
-		System.IO.Directory.CreateDirectory("sections");
+		Directory.CreateDirectory(Path.Combine(outputPath,"sections"));
 
 		// Name of the subfolders, for the hardcoded sections 
 		string[] subfolders = { "section_1", "section_2", "section_3", "section_4", "section_5", };
