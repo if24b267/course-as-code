@@ -192,7 +192,7 @@ package Model <<Frame>> {
 
         ' URL - For providing a web link as a course resource.
         class URL {
-            String url
+            String ExternalUrl
         }
     }
 }
