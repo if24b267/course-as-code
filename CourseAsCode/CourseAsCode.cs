@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using CourseAsCode.Readers;
 using CourseAsCode.Readers.Enums;
+using CourseAsCode.Readers.YAML;
 using CourseAsCode.Writers;
 using CourseAsCode.Writers.Helper;
 using NLog;
@@ -98,7 +99,7 @@ namespace CourseAsCode
 			_logger.Debug($"Resolved output path: {outputPath}");
 			_logger.Debug($"Resolved format: {courseFormat}");
 
-			var courseReader = new CourseReader();
+			var courseReader = new CourseReader(new YAMLSectionReader());
 			var course = courseReader.Read(inputPath, courseFormat);
 			var writer = new Writer();
 			var courseOutputPath = Path.GetFullPath(Path.Combine(outputPath, "moodleCourse"));

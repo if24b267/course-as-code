@@ -5,7 +5,7 @@ namespace CourseAsCode.Readers.YAML;
 
 public class YAMLAssignmentReader : AssignmentReader<Activity>
 {
-	public override Activity Read(string coursePath)
+	public override Activity Read(string modelObjectPath)
 	{
 		throw new NotImplementedException();
 	}

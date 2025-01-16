@@ -4,5 +4,5 @@ namespace CourseAsCode.Readers.AbstractClasses;
 
 public abstract class AssignmentReader<T> : IModelObjectReader<T>
 {
-	public abstract T Read(string filePath);
+	public abstract T Read(string modelObjectPath);
 }

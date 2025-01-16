@@ -3,7 +3,7 @@ using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Readers.YAML.Model;
 
-public class Course
+public class YamlCourse
 {
 	[Required]
 	public string CourseName { get; set; }
