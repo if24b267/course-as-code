@@ -1,1 +1,3 @@
 SectionName: Cool First Section
+Activities:
+  - ActivityFilePath: Activities/url1.yaml

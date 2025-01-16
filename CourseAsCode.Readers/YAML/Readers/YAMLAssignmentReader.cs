@@ -1,7 +1,7 @@
 ﻿using CourseAsCode.Model.Activities;
 using CourseAsCode.Readers.AbstractClasses;
 
-namespace CourseAsCode.Readers.YAML;
+namespace CourseAsCode.Readers.YAML.Readers;
 
 public class YAMLAssignmentReader : AssignmentReader<Activity>
 {

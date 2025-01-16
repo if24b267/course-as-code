@@ -12,5 +12,5 @@ public class YamlSection
 
 	public string Summary { get; set; }
 
-	List<YamlActivity> Activities { get; set; }
+	public List<YamlActivityFilePath> Activities { get; set; }
 }
