@@ -4,5 +4,6 @@ public enum ActivityType
 {
 	URL,
 	LABEL,
-	QUIZ
+	QUIZ,
+	FILE
 }

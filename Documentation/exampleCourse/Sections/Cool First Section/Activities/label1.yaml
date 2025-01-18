@@ -1,0 +1,5 @@
+Type: label
+Name: cool label
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/label1.md

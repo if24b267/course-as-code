@@ -3,6 +3,7 @@ using CourseAsCode.Readers.Enums;
 
 namespace CourseAsCode.Readers.YAML.Model;
 
+// TODO: add whatever other values should be possible
 public class YamlActivity
 {
 	[Required]

@@ -14,6 +14,7 @@ using CourseFormat = CourseAsCode.Readers.Enums.CourseFormat;
 
 namespace CourseAsCode.Readers;
 
+// TODO: rework the way we read the files - especially with activities where we have things like descriptions which *can* be set but should use the default otherwise
 public class CourseReader : ICourseReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
@@ -50,6 +51,7 @@ public class CourseReader : ICourseReader
 	public Course? ReadYaml(string coursePath)
 	{
 		_logger.Debug($"Reading YAML course from {coursePath}");
+		ValueKeeper.CoursePath = coursePath;
 
 		// TODO: make directory reading better - maybe modify file node
 		var rootNode = DirectoryReader.ReadDirectory(coursePath);
