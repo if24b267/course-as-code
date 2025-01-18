@@ -27,12 +27,12 @@ public class SectionWriter : XmlWriterBase
                     { "name", section.Name ?? "$@NULL@$" },
                     { "summary", section.Summary ?? "" },
                     { "summaryformat", ((int)section.SystemDefaults.SummaryFormat).ToString() },
-                    { "sequence", "" }, 
+                    { "sequence", "" },
                     { "visible", section.VisibleToStudents ? "1" : "0" },
-                    { "availabilityjson", "$@NULL@$" }, 
+                    { "availabilityjson", "$@NULL@$" },
                     { "component", section.SystemDefaults.Component?.ToString() ?? "$@NULL@$" },
-                    { "itemid", "$@NULL@$" }, 
-                    { "timemodified", ((DateTimeOffset)section.SystemDefaults.LastModified).ToUnixTimeSeconds().ToString() }
+                    { "itemid", "$@NULL@$" },
+                    { "timemodified", section.SystemDefaults.LastModified.HasValue ? ((DateTimeOffset)section.SystemDefaults.LastModified.Value).ToUnixTimeSeconds().ToString() : "$@NULL@$" }
                 };
 
                 WriteElements(writer, elements);
@@ -46,4 +46,3 @@ public class SectionWriter : XmlWriterBase
         }
     }
 }
-

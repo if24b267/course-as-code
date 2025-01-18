@@ -14,7 +14,7 @@ public static class SectionDefaults
     // Sensible Defaults
     
     // System Defaults
-    public const int DEFAULT_SECTION_ID = 0;
+    public const int DEFAULT_SECTION_ID = 1;
     public const string DEFAULT_PATH_TO_SECTION = "sections/section_1";
     public const FormattingFormat DEFAULT_SUMMARY_FORMAT = FormattingFormat.HTML;
     public static readonly DateTime DEFAULT_LAST_MODIFIED = DateTime.Now;
