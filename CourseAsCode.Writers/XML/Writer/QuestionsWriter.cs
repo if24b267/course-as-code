@@ -8,13 +8,13 @@ public class QuestionsWriter : XmlWriterBase
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "questions.xml"));
 		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-		
+
 		writer.WriteStartDocument();
-		
+
 		writer.WriteStartElement("question_categories");
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <question_categories>
-		
+
 		writer.WriteEndDocument();
 	}
 }

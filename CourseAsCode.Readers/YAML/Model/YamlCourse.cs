@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using CourseAsCode.Model.Enums;
+﻿using CourseAsCode.Model.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace CourseAsCode.Readers.YAML.Model;
 
-public class Course
+public class YamlCourse
 {
 	[Required]
 	public string CourseName { get; set; }

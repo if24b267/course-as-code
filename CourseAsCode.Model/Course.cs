@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
-using CourseAsCode.Model.Defaults;
+﻿using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
+using System.ComponentModel;
 
 namespace CourseAsCode.Model
 {
@@ -31,7 +31,7 @@ namespace CourseAsCode.Model
 		public SensibleDefaultsCourse SensibleDefaults { get; set; } = new SensibleDefaultsCourse();
 		public SystemDefaultsCourse SystemDefaults { get; set; } = new SystemDefaultsCourse();
 
-		
+
 		// Defaults
 		public class SensibleDefaultsCourse
 		{
@@ -63,7 +63,7 @@ namespace CourseAsCode.Model
 			[Description("description of the course category, blank for default category")]
 			public string? CategoryDescription { get; set; } = CourseDefaults.DEFAULT_CATEGORY_DESCRIPTION;
 		}
-		
+
 		public class SystemDefaultsCourse
 		{
 			public int Id { get; set; } = CourseDefaults.DEFAULT_COURSE_ID;
