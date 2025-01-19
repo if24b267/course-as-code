@@ -1,8 +1,11 @@
 ﻿using CourseAsCode.Model;
+using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Sections;
 using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Writers.XML.Writer.Activities;
+using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Course;
 
 namespace CourseAsCode.Writers;
@@ -33,6 +36,19 @@ public class Writer : IWriter
     private readonly BadgesWriter _badgesWriter = new BadgesWriter();
     private readonly CompletionWriter _completionWriter = new CompletionWriter();
     private readonly SectionWriter _sectionWriter = new SectionWriter();
+
+    private readonly LabelWriter _labelWriter = new LabelWriter();
+    private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
+    private readonly GradesWriterLabel _gradesWriterLabel = new GradesWriterLabel();
+    private readonly GradehistoryWriterLabel _gradehistoryWriterLabel = new GradehistoryWriterLabel();
+    private readonly InforefWriterLabel _inforefWriterLabel = new InforefWriterLabel();
+    private readonly RolesWriterLabel _rolesWriterLabel = new RolesWriterLabel();
+    private readonly XapistateWriterLabel _xapistateWriterLabel = new XapistateWriterLabel();
+    private readonly CalendarWriterLabel _calendarWriterLabel = new CalendarWriterLabel();
+    private readonly CommentsWriterLabel _commentsWriterLabel = new CommentsWriterLabel();
+    private readonly CompetenciesWriterLabel _competenciesWriterLabel = new CompetenciesWriterLabel();
+    private readonly CompletionWriterLabel _completionWriterLabel = new CompletionWriterLabel();
+    private readonly FiltersWriterLabel _filtersWriterLabel = new FiltersWriterLabel();
 
     private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -93,6 +109,33 @@ public class Writer : IWriter
         // Create subfolder in files
         //Directory.CreateDirectory(Path.Combine(outputPath, Path.Combine("files", "4e")));
 
-        return true;
+
+
+        Directory.CreateDirectory(Path.Combine(outputPath, "activities"));
+        foreach (var section in course.Sections)
+        {
+            foreach (var activity in section.Activities)
+            {
+                if (activity is TextAndMediaArea textAndMediaArea)
+                {
+                    string activityPath = Path.Combine(outputPath, "activities", $"label_{activity.ActivityId}");
+                    Directory.CreateDirectory(activityPath);
+                    _labelWriter.WriteLabel(activityPath, textAndMediaArea);
+                    _calendarWriterLabel.WriteCalendar(activityPath);
+                    _commentsWriterLabel.WriteComments(activityPath);
+                    _competenciesWriterLabel.WriteCompetencies(activityPath);
+                    _completionWriterLabel.WriteCompletion(activityPath);
+                    _filtersWriterLabel.WriteFilters(activityPath);
+                    _gradesWriterLabel.WriteGrade(activityPath);
+                    _gradehistoryWriterLabel.WriteGradehistory(course, activityPath);
+                    _inforefWriterLabel.WriteInforefLabel(activityPath);
+                    _rolesWriterLabel.WriteRoles(activityPath);
+                    _xapistateWriterLabel.WriteState(activityPath);
+                    _moduleWriterLabel.WriteModule(activityPath, section);
+                }
+            }
+        }
+
+            return true;
     }
 }

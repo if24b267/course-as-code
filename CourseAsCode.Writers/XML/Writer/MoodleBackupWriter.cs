@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using System.Xml.Linq;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Static;
+using CourseAsCode.Model.Activities.Resources;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
@@ -111,6 +112,29 @@ public class MoodleBackupWriter : XmlWriterBase
 	private void WriteContentsSection(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("contents");
+
+        writer.WriteStartElement("activities");
+        foreach (var section in course.Sections)
+        {
+            foreach (var activity in section.Activities)
+            {
+                if (activity is TextAndMediaArea textAndMediaArea)
+                {
+                    writer.WriteStartElement("activity");
+
+                    writer.WriteElementString("moduleid", textAndMediaArea.SystemDefaults.ModuleId.ToString());
+                    writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                    writer.WriteElementString("modulename", textAndMediaArea.SystemDefaults.ModuleName);
+                    writer.WriteElementString("title", textAndMediaArea.Name);
+                    writer.WriteElementString("directory", $"activities/label_{activity.ActivityId.ToString()}");
+                    writer.WriteElementString("insubsection", string.Empty);
+
+                    writer.WriteEndElement(); // Closes <activity>
+                }
+            }
+        }
+        writer.WriteEndElement(); // Closes <activities>
+
         writer.WriteStartElement("sections");
         foreach (var section in course.Sections)
         {
@@ -183,7 +207,7 @@ public class MoodleBackupWriter : XmlWriterBase
             writer.WriteElementString("section", "section_" + section.SystemDefaults.SectionId);
             writer.WriteElementString("name", "section_" + section.SystemDefaults.SectionId + "_included");
             writer.WriteElementString("value", "1");
-			writer.WriteEndElement();
+            writer.WriteEndElement();
 
             writer.WriteStartElement("setting");
 
@@ -193,6 +217,30 @@ public class MoodleBackupWriter : XmlWriterBase
             writer.WriteElementString("value", "1");
 
             writer.WriteEndElement();
+
+            foreach (var activity in section.Activities)
+            {
+                if (activity is TextAndMediaArea textAndMediaArea)
+                {
+                    writer.WriteStartElement("setting");
+
+                    writer.WriteElementString("level", "activity");
+                    writer.WriteElementString("activity", $"label_{activity.ActivityId.ToString()}");
+                    writer.WriteElementString("name", $"label_{activity.ActivityId.ToString()}_included");
+                    writer.WriteElementString("value", "1");
+
+                    writer.WriteEndElement();
+
+                    writer.WriteStartElement("setting");
+
+                    writer.WriteElementString("level", "activity");
+                    writer.WriteElementString("activity", $"label_{activity.ActivityId.ToString()}");
+                    writer.WriteElementString("name", $"label_{activity.ActivityId.ToString()}_userinfo");
+                    writer.WriteElementString("value", "1");
+
+                    writer.WriteEndElement();
+                }
+            }
         }
         // Level: Section
         // TODO: For each section, we must specify here whether it is included in the backup
