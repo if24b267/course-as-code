@@ -1,6 +1,10 @@
 using CourseAsCode.Writers.Helper;
 using CourseAsCode.Writers.Static;
+using CourseAsCode.Model;
 using System.Xml;
+using static System.Collections.Specialized.BitVector32;
+using System.Reflection.Emit;
+using System.Xml.Linq;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
@@ -107,26 +111,42 @@ public class MoodleBackupWriter : XmlWriterBase
 	private void WriteContentsSection(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("contents");
+        writer.WriteStartElement("sections");
+        foreach (var section in course.Sections)
+        {
+            writer.WriteStartElement("section");
 
-		// Activities Subsection
-		// TODO: All activities must be listed here
+            writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+            writer.WriteElementString("title", section.Name ?? "0");
+            writer.WriteElementString("directory", section.SystemDefaults.PathToSection);
+            writer.WriteElementString("parentcmid", string.Empty);
+            writer.WriteElementString("modname", string.Empty);
 
-		// Sections Subsection
-		// TODO: All sections must be listed here
+            writer.WriteEndElement();
+        }
+        writer.WriteEndElement();
+        // Activities Subsection
+        // TODO: All activities must be listed here
 
-		// Course Subsection
-		WriteContentsCourseSubsection(writer, course);
+        // Sections Subsection
+        // TODO: All sections must be listed here
+
+        // Course Subsection
+
+
+        WriteContentsCourseSubsection(writer, course);
 
 		writer.WriteEndElement(); // Closes <contents>
 	}
 
 
-	/// <summary>
-	/// writes the course subsection of the contents section of moodle_backup.xml
-	/// </summary>
-	/// <param name="writer">XmlWriter initialized on the correct document</param>
-	/// <param name="course">initialized Moodle Course</param>
-	private void WriteContentsCourseSubsection(XmlWriter writer, Model.Course course)
+
+    /// <summary>
+    /// writes the course subsection of the contents section of moodle_backup.xml
+    /// </summary>
+    /// <param name="writer">XmlWriter initialized on the correct document</param>
+    /// <param name="course">initialized Moodle Course</param>
+    private void WriteContentsCourseSubsection(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("course");
 
@@ -152,16 +172,35 @@ public class MoodleBackupWriter : XmlWriterBase
 	{
 		writer.WriteStartElement("settings");
 
-		// Level: Root
+        // Level: Root
 		WriteRootLevelSettings(writer, course);
 
-		// Level: Section
-		// TODO: For each section, we must specify here whether it is included in the backup
+        foreach (var section in course.Sections)
+        {
+            writer.WriteStartElement("setting");
 
-		// Level: Activity
-		// TODO: For each activity, we must specify here whether it is included in the backup
+            writer.WriteElementString("level", "section");
+            writer.WriteElementString("section", "section_" + section.SystemDefaults.SectionId);
+            writer.WriteElementString("name", "section_" + section.SystemDefaults.SectionId + "_included");
+            writer.WriteElementString("value", "1");
+			writer.WriteEndElement();
 
-		writer.WriteEndElement(); // Closes <settings>
+            writer.WriteStartElement("setting");
+
+            writer.WriteElementString("level", "section");
+            writer.WriteElementString("section", "section_" + section.SystemDefaults.SectionId);
+            writer.WriteElementString("name", "section_" + section.SystemDefaults.SectionId + "_userinfo");
+            writer.WriteElementString("value", "1");
+
+            writer.WriteEndElement();
+        }
+        // Level: Section
+        // TODO: For each section, we must specify here whether it is included in the backup
+
+        // Level: Activity
+        // TODO: For each activity, we must specify here whether it is included in the backup
+
+        writer.WriteEndElement(); // Closes <settings>
 	}
 
 
