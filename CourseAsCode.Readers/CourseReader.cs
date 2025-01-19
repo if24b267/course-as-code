@@ -58,6 +58,7 @@ public class CourseReader : ICourseReader
 
 		List<Section> sections = [];
 		ValueKeeper.CurrentActivityId = 1;
+		ValueKeeper.CurrentSectionId = 1;
 
 		foreach (var section in yamlSectionsDefinition.Sections)
 		{
@@ -66,6 +67,7 @@ public class CourseReader : ICourseReader
 			if (sectionRead != null)
 			{
 				sections.Add(sectionRead);
+				ValueKeeper.CurrentSectionId++;
 			}
 		}
 
