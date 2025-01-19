@@ -9,7 +9,7 @@ public class InforefSectionsWriter : XmlWriterBase
     {
         foreach (var section in sections)
         {
-            string filePath = Path.GetFullPath(Path.Combine(outputPath, $"sections/section_{section.SystemDefaults.SectionId}/inforef.xml"));
+            string filePath = Path.GetFullPath(Path.Combine(outputPath, $"{section.SystemDefaults.PathToSection}/inforef.xml"));
             Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
 
             using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
