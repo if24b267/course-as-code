@@ -1,6 +1,6 @@
-using System.Xml;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Helper;
+using System.Xml;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 using User = CourseAsCode.Model.User;
 
@@ -10,16 +10,16 @@ public class UsersWriter : XmlWriterBase
 {
 	private readonly GeneralHelper _helper = GeneralHelper.Instance;
 	private readonly UserHelper _userHelper = new UserHelper();
-	
-	
+
+
 	public void WriteUsers(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "users.xml"));
 		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-		
+
 		writer.WriteStartDocument();
 		writer.WriteStartElement("users");
-		
+
 		foreach (var user in course.EnrolledUsers)
 		{
 			WriteSingleUser(writer, user);
@@ -28,7 +28,7 @@ public class UsersWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <users>
 		writer.WriteEndDocument();
 	}
-	
+
 
 	/// <summary>
 	/// writes a single user to the users.xml file
@@ -52,7 +52,7 @@ public class UsersWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <user>
 	}
 
-	
+
 	/// <summary>
 	/// writes the majority of a single user's data in the `users` tag of the users.xml file
 	/// </summary>
@@ -96,7 +96,7 @@ public class UsersWriter : XmlWriterBase
 			{ "currentlogin", _helper.DateTimeToUnixTimestamp(DateTime.Now) }, // TODO: Determine function of this field
 			{ "mailformat", "1" }, // TODO: Determine function of this field
 			{ "maildigest", _helper.EnumIntegerToString(user.UserPreferences.EMailDigestType ?? EMailDigestType.NoDigest) },
-			{ "maildisplay", _helper.EnumIntegerToString(user.UserPreferences.EMailVisibility ?? EMailVisibility.VisibleToEveryone) }, 
+			{ "maildisplay", _helper.EnumIntegerToString(user.UserPreferences.EMailVisibility ?? EMailVisibility.VisibleToEveryone) },
 			{ "autosubscribe", user.UserPreferences.AutoSubscribeToForums ? "1" : "0"},
 			{ "trackforums", user.UserPreferences.TrackReadPosts ? "1" : "0"},
 			{ "timecreated", _helper.DateTimeToUnixTimestamp(user.SystemDefaults.TimeCreated) },
@@ -119,8 +119,8 @@ public class UsersWriter : XmlWriterBase
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <custom_fields>
 	}
-	
-	
+
+
 	/// <summary>
 	/// writes the `preferences` section for a specific user in the users.xml file
 	/// </summary>
@@ -132,8 +132,8 @@ public class UsersWriter : XmlWriterBase
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <tags>
 	}
-	
-	
+
+
 	/// <summary>
 	/// writes the `preferences` section for a specific user in the users.xml file
 	/// </summary>
@@ -145,8 +145,8 @@ public class UsersWriter : XmlWriterBase
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <preferences>
 	}
-	
-	
+
+
 	/// <summary>
 	/// writes the `roles` section for a specific user in the users.xml file
 	/// </summary>
@@ -155,15 +155,15 @@ public class UsersWriter : XmlWriterBase
 	private void WriteRolesSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("roles");
-		
+
 		writer.WriteStartElement("role_overrides");
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <role_overrides>
-		
+
 		writer.WriteStartElement("role_assignments");
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <role_assignments>
-		
+
 		writer.WriteEndElement(); // Close <roles>
 	}
 }

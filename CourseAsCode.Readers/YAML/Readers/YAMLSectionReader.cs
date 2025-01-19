@@ -48,8 +48,6 @@ public class YAMLSectionReader : SectionReader<Section>
 			VisibleToStudents = yamlSection.VisibleToStudents,
 			Activities = activities
 		};
-		courseSection.SystemDefaults.SectionId = ValueKeeper.CurrentSectionId;
-		courseSection.SystemDefaults.PathToSection = $"sections/section_{ValueKeeper.CurrentSectionId}";
 		return courseSection;
 	}
 }

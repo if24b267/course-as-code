@@ -5,11 +5,11 @@ namespace CourseAsCode.Model.Enums;
 /// </summary>
 public enum Context
 {
-    System = 10,
-    User = 30,
-    CourseCategory = 40,
-    Course = 50,
-    Module = 70,
-    Block = 80
-    // These values are based on the Moodle context levels, see https://docs.moodle.org/405/en/Context#Context_Level_constants
+	System = 10,
+	User = 30,
+	CourseCategory = 40,
+	Course = 50,
+	Module = 70,
+	Block = 80
+	// These values are based on the Moodle context levels, see https://docs.moodle.org/405/en/Context#Context_Level_constants
 }

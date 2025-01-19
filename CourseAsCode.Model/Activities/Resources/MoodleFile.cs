@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
-using CourseAsCode.Model.Defaults.Activities.Resources;
+﻿using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Model.Enums;
+using System.ComponentModel;
 using Component = CourseAsCode.Model.Enums.Component;
 using License = CourseAsCode.Model.Enums.License;
 
@@ -17,7 +17,7 @@ public class MoodleFile : Activity
 	public SensibleDefaultsFile SensibleDefaults { get; set; } = new SensibleDefaultsFile();
 	public SystemDefaultsFile SystemDefaults { get; set; } = new SystemDefaultsFile();
 
-	
+
 	// Defaults
 	public class SensibleDefaultsFile
 	{
@@ -27,7 +27,7 @@ public class MoodleFile : Activity
 		public License? License { get; set; } = MoodleFileDefaults.DEFAULT_LICENSE;
 	}
 
-	
+
 	public class SystemDefaultsFile
 	{
 		[Description("SHA1 Hash of the file content")]

@@ -1,6 +1,6 @@
-using System.ComponentModel;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
+using System.ComponentModel;
 
 namespace CourseAsCode.Model;
 
@@ -8,24 +8,24 @@ public class BackupMetadata
 {
 	[Description("the name of the backup file")]
 	public string Name { get; set; } = BackupMetadataDefaults.DEFAULT_NAME;
-    [Description("the version of Moodle that the backup was created in")]
-    public MoodleVersion MoodleVersion { get; set; } = BackupMetadataDefaults.DEFAULT_MOODLE_VERSION;
-    [Description("the URL of the Moodle site that the backup was created from")]
-    public Uri MoodleUrl { get; set; } = BackupMetadataDefaults.DEFAULT_MOODLE_URL;
+	[Description("the version of Moodle that the backup was created in")]
+	public MoodleVersion MoodleVersion { get; set; } = BackupMetadataDefaults.DEFAULT_MOODLE_VERSION;
+	[Description("the URL of the Moodle site that the backup was created from")]
+	public Uri MoodleUrl { get; set; } = BackupMetadataDefaults.DEFAULT_MOODLE_URL;
 
-    public SensibleDefaultsBackupMetadata SensibleDefaults { get; set; } = new SensibleDefaultsBackupMetadata();
-    public SystemDefaultsBackupMetadata SystemDefaults { get; set; } = new SystemDefaultsBackupMetadata();
-    public BackupSettingsClass BackupSettings { get; set; } = new BackupSettingsClass();
+	public SensibleDefaultsBackupMetadata SensibleDefaults { get; set; } = new SensibleDefaultsBackupMetadata();
+	public SystemDefaultsBackupMetadata SystemDefaults { get; set; } = new SystemDefaultsBackupMetadata();
+	public BackupSettingsClass BackupSettings { get; set; } = new BackupSettingsClass();
 
-    
-    // Defaults
-    public class SensibleDefaultsBackupMetadata
+
+	// Defaults
+	public class SensibleDefaultsBackupMetadata
 	{
 		[Description("whether files are included in the backup")]
 		public bool FilesIncluded { get; set; } = BackupMetadataDefaults.DEFAULT_FILES_INCLUDED;
 	}
-	
-    
+
+
 	public class SystemDefaultsBackupMetadata
 	{
 		[Description("the date and time that the backup was created")]

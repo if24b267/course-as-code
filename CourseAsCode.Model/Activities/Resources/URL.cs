@@ -1,29 +1,23 @@
 ﻿using System.ComponentModel;
-using CourseAsCode.Model.Defaults.Activities.Resources;
 
 namespace CourseAsCode.Model.Activities.Resources;
 
 public class URL : Activity
 {
-	private static Random _rnd = new Random();
-	
-	
 	[Description("the url itself")]
 	public string ExternalUrl { get; set; }
 
-	public SensibleDefaultsUrl SensibleDefaults { get; set; } = new SensibleDefaultsUrl();
-	public SystemDefaultsUrl SystemDefaults { get; set; } = new SystemDefaultsUrl();
+	public SensibleDefaultsURL SensibleDefaults { get; set; } = new SensibleDefaultsURL();
+	public SystemDefaultsURL SystemDefaults { get; set; } = new SystemDefaultsURL();
 
-	
-	public class SensibleDefaultsUrl
+	public class SensibleDefaultsURL
 	{
 		// TODO
 	}
 
 
-	public class SystemDefaultsUrl
+	public class SystemDefaultsURL
 	{
-		public int ModuleId { get; set; } = _rnd.Next(1, 1000);
-		public string ModuleName { get; set; } = "url";
+		// TODO
 	}
 }
