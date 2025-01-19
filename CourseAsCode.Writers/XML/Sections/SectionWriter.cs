@@ -11,7 +11,7 @@ public class SectionWriter : XmlWriterBase
 
         foreach (var section in sections)
         {
-            string filePath = Path.GetFullPath(Path.Combine(outputPath, $"sections/section_{section.SystemDefaults.SectionId}/section.xml"));
+            string filePath = Path.GetFullPath(Path.Combine(outputPath, $"{section.SystemDefaults.PathToSection}/section.xml"));
             Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
 
             using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
