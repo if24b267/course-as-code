@@ -1,7 +1,7 @@
 using CourseAsCode.Model;
-using CourseAsCode.Writers.Helper;
-using CourseAsCode.Writers.Static;
 using System.Xml;
+using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Static;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 

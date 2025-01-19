@@ -1,6 +1,6 @@
 using CourseAsCode.Model.Enums;
 
-namespace CourseAsCode.Writers.Helper;
+namespace CourseAsCode.Writers.XML.Helper;
 
 public class FileHelper
 {

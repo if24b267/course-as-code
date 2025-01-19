@@ -1,10 +1,10 @@
-using CourseAsCode.Writers.Helper;
-using CourseAsCode.Writers.Static;
 using CourseAsCode.Model;
 using System.Xml;
 using static System.Collections.Specialized.BitVector32;
 using System.Reflection.Emit;
 using System.Xml.Linq;
+using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Static;
 
 namespace CourseAsCode.Writers.XML.Writer;
 

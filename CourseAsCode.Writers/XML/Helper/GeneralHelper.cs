@@ -1,7 +1,7 @@
 using CourseAsCode.Model.Enums;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
-namespace CourseAsCode.Writers.Helper;
+namespace CourseAsCode.Writers.XML.Helper;
 
 public class GeneralHelper
 {

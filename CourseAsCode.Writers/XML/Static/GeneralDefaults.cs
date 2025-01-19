@@ -1,4 +1,4 @@
-namespace CourseAsCode.Writers.Static;
+namespace CourseAsCode.Writers.XML.Static;
 
 public static class GeneralDefaults
 {
