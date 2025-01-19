@@ -245,7 +245,7 @@ package Reader <<Frame>> {
 
 package Writer <<Frame>> {
     Interface IWriter {
-        void Write(Course course, enum format, String savePath)
+        + bool WriteCourse(Course course, string outputPath);
     }
 
     class XMLWriter implements IWriter {
@@ -259,32 +259,37 @@ package Writer <<Frame>> {
     class SCORMWriter implements IWriter {
 
     }
-
-
-    Interface IModelObjectWriter<T> {
-        string write(T modelObject)
+    
+    abstract class XmlWriterBase {
+        ~ void WriteElements(XmlWriter writer, Dictionary<string, string> elements)
+        ~ void WriteStartElementWithAttributes(XmlWriter writer, string elementName, Dictionary<string, string> attributes)
     }
 
-    class XMLAssignmentWriter implements IModelObjectWriter {
-
+    class MoodleBackupWriter implements XmlWriterBase {
+        + void WriteMoodleBackup(Course course, string outputPath)
+        - void WriteGeneralSettingsToInformationSection(XmlWriter writer, Course course)
+        - void WriteDetailsSection(XmlWriter writer, Course course)
+        - void WriteContentsSection(XmlWriter writer, Course course)
+        - void WriteContentsCourseSubsection(XmlWriter writer, Course course)
+        - void WriteSettingsSection(XmlWriter writer, Course course)
+        - void WriteRootLevelSettings(XmlWriter writer, Course course)
+        - void WriteSingleBackupSettingTag(XmlWriter writer, string level, string name, string value)
     }
 
-    class XMLForumWriter implements IModelObjectWriter {
-
+    class FilesWriter implements XmlWriterBase {
+        + void WriteFiles(Course course, string outputPath)
+        - void WriteSingleFile(XmlWriter writer, MoodleFile file)
+        - string GetSha1Hash(FileStream fileStream)
     }
 
-    class XMLQuizWriter implements IModelObjectWriter {
-
+    class CourseWriter implements XmlWriterBase {
+        + void WriteCourse(Course course, string outputPath)
+        - void WriteGeneralInformationToCourseSection(XmlWriter writer, Course course)
+        - void WriteCategorySection(XmlWriter writer, Course course)
+        - void WriteTagsSection(XmlWriter writer, Course course)
+        - void WriteCustomFieldsSection(XmlWriter writer, Course course)
+        - void WriteCourseFormatOptionsSection(XmlWriter writer, Course course)
     }
-
-    class XMLFileWriter implements IModelObjectWriter {
-
-    }
-
-    class XMLURLWriter implements IModelObjectWriter {
-
-    }
-
 }
 
 ' SensibleDefaults and SystemDefaults are subclasses of Course (nested class)
@@ -343,12 +348,10 @@ Activity <|-- Assignment
 Activity <|-- Forum
 Activity <|-- Quiz
 
-' The XML Writer uses XMLAssignmentWriter, XMLForumWriter, XMLQuizWriter, XMLFileWriter, XMLURLWriter, etc.
-XMLWriter -up-> XMLAssignmentWriter : calls
-XMLWriter -up-> XMLForumWriter : calls
-XMLWriter -up-> XMLQuizWriter : calls
-XMLWriter -up-> XMLFileWriter : calls
-XMLWriter -up-> XMLURLWriter : calls
+' The XMLWriter calls the methods of MoodleBackupWriter, FilesWriter, CourseWriter, etc.
+XMLWriter o-- MoodleBackupWriter : calls
+XMLWriter o-- FilesWriter : calls
+XMLWriter o-- CourseWriter : calls
 
 ' TODO: Writer implements classes that implement IModelObjectWriter
 
