@@ -1,6 +1,6 @@
-using System.ComponentModel;
 using CourseAsCode.Model.Defaults.Roles;
 using CourseAsCode.Model.Enums;
+using System.ComponentModel;
 
 namespace CourseAsCode.Model;
 
@@ -20,14 +20,14 @@ public class Role
 	public SensibleDefaultsRole SensibleDefaults { get; set; } = new SensibleDefaultsRole();
 	public SystemDefaultsRole SystemDefaults { get; set; } = new SystemDefaultsRole();
 
-	
+
 	// Defaults
 	public class SensibleDefaultsRole
 	{
 
 	}
 
-	
+
 	public class SystemDefaultsRole
 	{
 		public int RoleId { get; set; } = DefaultStudent.DEFAULT_ID;

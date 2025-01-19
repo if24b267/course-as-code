@@ -1,8 +1,8 @@
-using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enrolments;
 using CourseAsCode.Writers.Helper;
 using CourseAsCode.Writers.Static;
+using System.Xml;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 
@@ -11,14 +11,14 @@ public class EnrolmentsWriter : XmlWriterBase
 	private int _enrolmentIdCounter = 1;
 	private readonly GeneralHelper _helper = GeneralHelper.Instance;
 
-	
+
 	public void WriteEnrolment(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/enrolments.xml"));
 
 		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
 		writer.WriteStartDocument();
-		
+
 		writer.WriteStartElement("enrolments");
 		writer.WriteStartElement("enrols");
 
@@ -38,14 +38,14 @@ public class EnrolmentsWriter : XmlWriterBase
 				WriteSelfEnrolSection(writer, course);
 			}
 		}
-			
+
 		writer.WriteEndElement(); // Close <enrols>
 		writer.WriteEndElement(); // Close <enrolments>
-			
+
 		writer.WriteEndDocument();
 	}
-	
-	
+
+
 	/// <summary>
 	/// writes the `enrol` section for the manual enrolment method; to be used within the `enrols` section
 	/// </summary>
@@ -54,12 +54,12 @@ public class EnrolmentsWriter : XmlWriterBase
 	private void WriteManualEnrolSection(XmlWriter writer, Model.Course course)
 	{
 		ManualEnrolment manualEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is ManualEnrolment) as ManualEnrolment)!;
-		
+
 		WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
 		{
 			{ "id", "1" }
 		});
-		
+
 		var elements = new Dictionary<string, string>
 		{
 			{ "enrol", "manual" },
@@ -70,13 +70,13 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "enrolenddate", "0" }, // Always 0, setting doesn't apply to this enrolment method
 			{ "expiry_notify", manualEnrolment.NotifyEnroller ? manualEnrolment.NotifyStudent ? "2" : "1" : "0" },
 			{ "expiry_threshhold", manualEnrolment.NotifyThreshold?.ToString() ?? "0" },
-			{ "notifyall", manualEnrolment.NotifyStudent ? "1" : "0" }, 
+			{ "notifyall", manualEnrolment.NotifyStudent ? "1" : "0" },
 			{ "password", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "roleid", manualEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
 			// TODO: Find out what all these <customXXX> values mean
-			{ "customint1", "1" }, 
+			{ "customint1", "1" },
 			{ "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
 			{ "customint3", "$@NULL@$" }, // Not applicable to this enrolment method
 			{ "customint4", "$@NULL@$" },
@@ -96,9 +96,9 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "timecreated", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeCreated) },
 			{ "timemodified", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeModified) }
 		};
-		
+
 		WriteElements(writer, elements);
-		
+
 		// All users enrolled with this method
 		writer.WriteStartElement("user_enrolments");
 
@@ -109,12 +109,12 @@ public class EnrolmentsWriter : XmlWriterBase
 				WriterUserEnrolmentSection(writer, user);
 			}
 		}
-		
+
 		writer.WriteEndElement(); // Close <user_enrolments>
 		writer.WriteEndElement(); // Close <enrol>
 	}
 
-	
+
 	/// <summary>
 	/// writes the `enrol` section for the guest enrolment method; to be used within the `enrols` section
 	/// </summary>
@@ -123,12 +123,12 @@ public class EnrolmentsWriter : XmlWriterBase
 	private void WriteGuestEnrolSection(XmlWriter writer, Model.Course course)
 	{
 		GuestEnrolment guestEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is GuestEnrolment) as GuestEnrolment)!;
-		
+
 		WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
 		{
 			{ "id", "2" }
 		});
-		
+
 		var elements = new Dictionary<string, string>
 		{
 			{ "enrol", "guest" },
@@ -140,11 +140,11 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "expiry_notify", "0" }, // Always 0, setting doesn't apply to this enrolment method
 			{ "expiry_threshhold", "0" }, // Always 0, setting doesn't apply to this enrolment method
 			{ "notifyall", "0" }, // Always 0, setting doesn't apply to this enrolment method
-			{ "password", guestEnrolment.Password ?? " " }, 
+			{ "password", guestEnrolment.Password ?? " " },
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "roleid", guestEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
-			{ "customint1", "$@NULL@$" }, 
+			{ "customint1", "$@NULL@$" },
 			{ "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
 			{ "customint3", "$@NULL@$" }, // Not applicable to this enrolment method
 			{ "customint4", "$@NULL@$" },
@@ -164,9 +164,9 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "timecreated", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeCreated) },
 			{ "timemodified", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeModified) }
 		};
-		
+
 		WriteElements(writer, elements);
-		
+
 		// All users enrolled with this method
 		writer.WriteStartElement("user_enrolments");
 
@@ -177,11 +177,11 @@ public class EnrolmentsWriter : XmlWriterBase
 				WriterUserEnrolmentSection(writer, user);
 			}
 		}
-		
+
 		writer.WriteEndElement(); // Close <user_enrolments>
 		writer.WriteEndElement(); // Close <enrol>
 	}
-	
+
 
 	/// <summary>
 	/// writes the `enrol` section for the self enrolment method; to be used within the `enrols` section
@@ -191,12 +191,12 @@ public class EnrolmentsWriter : XmlWriterBase
 	private void WriteSelfEnrolSection(XmlWriter writer, Model.Course course)
 	{
 		SelfEnrolment selfEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is SelfEnrolment) as SelfEnrolment)!;
-		
+
 		WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
 		{
 			{ "id", "3" }
 		});
-		
+
 		var elements = new Dictionary<string, string>
 		{
 			{ "enrol", "self" },
@@ -207,12 +207,12 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "enrolenddate", selfEnrolment.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.EnrolmentEndDate) : "0" },
 			{ "expiry_notify", selfEnrolment.NotifyEnroller ? selfEnrolment.NotifyStudent ? "2" : "1" : "0" },
 			{ "expiry_threshhold", selfEnrolment.NotifyThreshold?.ToString() ?? "0" },
-			{ "notifyall", selfEnrolment.NotifyStudent ? "1" : "0" }, 
+			{ "notifyall", selfEnrolment.NotifyStudent ? "1" : "0" },
 			{ "password", selfEnrolment.Password ?? " " },
 			{ "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
 			{ "roleid", selfEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
-			{ "customint1", "0" }, 
+			{ "customint1", "0" },
 			{ "customint2", selfEnrolment.UnenrolInactiveAfter?.ToString() ?? "$@NULL@$"}, // Unenrol Inactive Users
 			{ "customint3", selfEnrolment.MaximumNumberOfEnrolments?.ToString() ?? "$@NULL@$" }, // Max. Enrolled users
 			{ "customint4", "$@NULL@$" },
@@ -232,9 +232,9 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "timecreated", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeCreated) },
 			{ "timemodified", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeModified) }
 		};
-		
+
 		WriteElements(writer, elements);
-		
+
 		// All users enrolled with this method
 		writer.WriteStartElement("user_enrolments");
 
@@ -245,12 +245,12 @@ public class EnrolmentsWriter : XmlWriterBase
 				WriterUserEnrolmentSection(writer, user);
 			}
 		}
-		
+
 		writer.WriteEndElement(); // Close <user_enrolments>
 		writer.WriteEndElement(); // Close <enrol>
 	}
-	
-	
+
+
 	/// <summary>
 	/// Writes a single `enrolment` section for one specific user; to be used within the `user_enrolments` section for each user enrolled using that method
 	/// </summary>
@@ -263,7 +263,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "id", _enrolmentIdCounter.ToString() }
 		});
 		_enrolmentIdCounter++;
-		
+
 		var elements = new Dictionary<string, string>
 		{
 			{ "status", user.SystemDefaults.EnrolmentSuspended ? "1" : "0" }, // 1 -> Suspended; 0 -> Active
@@ -273,9 +273,9 @@ public class EnrolmentsWriter : XmlWriterBase
 			{ "modifierid", GeneralDefaults.DEFAULT_ADMIN_USER_ID.ToString() },
 			{ "timemodified", _helper.DateTimeToUnixTimestamp(DateTime.Now) }
 		};
-				
+
 		WriteElements(writer, elements);
-				
+
 		writer.WriteEndElement(); // Close <enrolment>
 	}
 }

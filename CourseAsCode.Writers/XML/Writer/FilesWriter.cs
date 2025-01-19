@@ -1,12 +1,12 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using System.Xml;
-using CourseAsCode.Model;
+﻿using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Helper;
 using CourseAsCode.Writers.Static;
+using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
@@ -15,16 +15,16 @@ public class FilesWriter : XmlWriterBase
 	private int _fileIdCounter = 1;
 	private readonly FileHelper _fileHelper = FileHelper.Instance;
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-	
+
 	public void WriteFiles(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "files.xml"));
 		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-		
+
 		writer.WriteStartDocument();
-		
+
 		writer.WriteStartElement("files");
-		
+
 		foreach (Section section in course.Sections)
 		{
 			foreach (Activity activity in section.Activities)
@@ -35,9 +35,9 @@ public class FilesWriter : XmlWriterBase
 				}
 			}
 		}
-		
+
 		writer.WriteEndElement(); // Close <files>
-		
+
 		writer.WriteEndDocument();
 	}
 
@@ -67,14 +67,14 @@ public class FilesWriter : XmlWriterBase
 			_logger.Error(ex, $"Error while trying to open file {file.FilePath}. Skipping file.");
 			return;
 		}
-		
-		
+
+
 		// Write XML
 		WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string>
 		{
 			{ "id", _fileIdCounter++.ToString() }
 		});
-		
+
 		var elements = new Dictionary<string, string>
 		{
 			{ "contenthash", file.SystemDefaults.ContentHash ?? GetSha1Hash(fileStream) },
@@ -111,7 +111,7 @@ public class FilesWriter : XmlWriterBase
 	{
 		using SHA1 sha1 = SHA1.Create();
 		byte[] hashBytes = sha1.ComputeHash(fileStream);
-		
+
 		StringBuilder sb = new();
 		foreach (byte b in hashBytes)
 		{

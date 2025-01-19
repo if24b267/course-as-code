@@ -7,13 +7,13 @@ public class GradebookWriter : XmlWriterBase
 	private int _gradeCategoryIdCounter = 1;
 	private int _gradeItemIdCounter = 1;
 	private int _gradeSettingIdCounter = 1;
-	
-	
+
+
 	public void WriteGradebook(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "gradebook.xml"));
 		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-		
+
 		writer.WriteStartDocument();
 		writer.WriteStartElement("gradebook");
 
@@ -27,7 +27,7 @@ public class GradebookWriter : XmlWriterBase
 		writer.WriteEndDocument();
 	}
 
-	
+
 	/// <summary>
 	/// writes the `attributes` section of the gradebook.xml file
 	/// </summary>
@@ -40,7 +40,7 @@ public class GradebookWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <attributes>
 	}
 
-	
+
 	/// <summary>
 	/// writes the `grade_categories` section of the gradebook.xml file
 	/// </summary>
@@ -78,7 +78,7 @@ public class GradebookWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <grade_categories>
 	}
 
-	
+
 	/// <summary>
 	/// writes the `grade_items` section of the gradebook.xml file
 	/// </summary>
@@ -137,7 +137,7 @@ public class GradebookWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <grade_items>
 	}
 
-	
+
 	/// <summary>
 	/// writes the `grade_letters` section of the gradebook.xml file
 	/// </summary>
@@ -150,7 +150,7 @@ public class GradebookWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close grade_letters
 	}
 
-	
+
 	/// <summary>
 	/// writes the `grade_settings` section of the gradebook.xml file
 	/// </summary>

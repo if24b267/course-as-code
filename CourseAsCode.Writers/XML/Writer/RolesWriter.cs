@@ -1,14 +1,14 @@
-using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Writers.Helper;
+using System.Xml;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
 public class RolesWriter : XmlWriterBase
 {
 	private readonly RolesHelper _rolesHelper = new RolesHelper();
-	
-	
+
+
 	public void WriteRoles(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "roles.xml"));
@@ -25,7 +25,7 @@ public class RolesWriter : XmlWriterBase
 		writer.WriteEndDocument();
 	}
 
-	
+
 	/// <summary>
 	/// writes a single role to the roles.xml file
 	/// </summary>
