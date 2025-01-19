@@ -31,6 +31,7 @@ public class YAMLSectionReader : SectionReader<Section>
 				var tempPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), yamlSectionActivity.ActivityFilePath));
 				var activity = _activityReader.Read(tempPath);
 				activities.Add(activity);
+				ValueKeeper.CurrentActivityId++;
 			}
 		}
 

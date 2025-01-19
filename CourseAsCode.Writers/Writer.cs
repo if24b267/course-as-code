@@ -1,6 +1,5 @@
 ﻿using CourseAsCode.Model;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Writers.Static;
 using CourseAsCode.Writers.XML.Sections.section_1;
 using CourseAsCode.Writers.XML.Sections.section_2;
 using CourseAsCode.Writers.XML.Sections.section_3;
@@ -36,9 +35,9 @@ public class Writer
 	private readonly RoleAssignmentsWriter _roleAssignmentsWriter = new RoleAssignmentsWriter();
 	private readonly BadgesWriter _badgesWriter = new BadgesWriter();
 	private readonly CompletionWriter _completionWriter = new CompletionWriter();
-	
+
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-	
+
 	public bool WriteXML(Course course, string outputPath)
 	{
 		_logger.Debug($"Writing XML files to {outputPath}");
@@ -46,7 +45,7 @@ public class Writer
 
 		// Course
 		// Create course directory if it does not exist
-		Directory.CreateDirectory(Path.Combine(outputPath,"course"));
+		Directory.CreateDirectory(Path.Combine(outputPath, "course"));
 
 		_calendarWriter.WriteCalendar(course, outputPath);
 		_commentsWriter.WriteComments(course, outputPath);
@@ -73,7 +72,7 @@ public class Writer
 
 		// Sections
 		// Create sections directory if it does not exist
-		Directory.CreateDirectory(Path.Combine(outputPath,"sections"));
+		Directory.CreateDirectory(Path.Combine(outputPath, "sections"));
 
 		// Name of the subfolders, for the hardcoded sections 
 		string[] subfolders = { "section_1", "section_2", "section_3", "section_4", "section_5", };
@@ -122,7 +121,7 @@ public class Writer
 
 		// Files
 		// Create files directory if it does not exist
-		Directory.CreateDirectory(Path.Combine(outputPath,"files"));
+		Directory.CreateDirectory(Path.Combine(outputPath, "files"));
 
 		// Create subfolder in files
 		//Directory.CreateDirectory(Path.Combine(outputPath, Path.Combine("files", "4e")));

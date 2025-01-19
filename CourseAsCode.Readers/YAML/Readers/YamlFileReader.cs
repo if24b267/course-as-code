@@ -20,7 +20,7 @@ public class YamlFileReader : FileReader<MoodleFile>
 
 		var yamlFile = YamlFileReaderHelper.DeserializeFromFile<YamlFile>(modelObjectPath);
 
-		
+
 
 		var fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), yamlFile.FilePath));
 		yamlFile.FilePath = fullPath;
@@ -39,6 +39,7 @@ public class YamlFileReader : FileReader<MoodleFile>
 	{
 		return new MoodleFile()
 		{
+			ActivityId = ValueKeeper.CurrentActivityId,
 			Name = yamlFile.Name,
 			Description = yamlFile.Description,
 			FilePath = yamlFile.FilePath,

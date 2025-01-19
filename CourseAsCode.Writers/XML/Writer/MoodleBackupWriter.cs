@@ -1,6 +1,6 @@
-using System.Xml;
 using CourseAsCode.Writers.Helper;
 using CourseAsCode.Writers.Static;
+using System.Xml;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
@@ -9,15 +9,15 @@ public class MoodleBackupWriter : XmlWriterBase
 	private readonly GeneralHelper _helper = GeneralHelper.Instance;
 	private readonly MoodleVersionHelper _moodleVersionHelper = MoodleVersionHelper.Instance;
 	private readonly CourseHelper _courseHelper = CourseHelper.Instance;
-	
+
 	public void WriteMoodleBackup(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "moodle_backup.xml"));
-		
+
 		using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 		{
 			writer.WriteStartDocument();
-			
+
 			writer.WriteStartElement("moodle_backup");
 			writer.WriteStartElement("information");
 
@@ -25,15 +25,15 @@ public class MoodleBackupWriter : XmlWriterBase
 			WriteDetailsSection(writer, course);
 			WriteContentsSection(writer, course);
 			WriteSettingsSection(writer, course);
-			
+
 			writer.WriteEndElement(); // Closes <information>
 			writer.WriteEndElement(); // Closes <moodle_backup>
-			
+
 			writer.WriteEndDocument();
 		}
 	}
 
-	
+
 	/// <summary>
 	/// writes the general settings within the information section of moodle_backup.xml
 	/// </summary>
@@ -63,11 +63,11 @@ public class MoodleBackupWriter : XmlWriterBase
 			{ "original_course_contextid", GeneralDefaults.COURSECONTEXTID.ToString() },
 			{ "original_system_contextid", GeneralDefaults.SYSTEMCONTEXTID.ToString() }
 		};
-		
+
 		WriteElements(writer, elements);
 	}
 
-	
+
 	/// <summary>
 	/// writes the information section of moodle_backup.xml
 	/// </summary>
@@ -98,7 +98,7 @@ public class MoodleBackupWriter : XmlWriterBase
 		writer.WriteEndElement(); // Closes <details>
 	}
 
-	
+
 	/// <summary>
 	/// writes the contents section of moodle_backup.xml
 	/// </summary>
@@ -107,16 +107,16 @@ public class MoodleBackupWriter : XmlWriterBase
 	private void WriteContentsSection(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("contents");
-		
+
 		// Activities Subsection
 		// TODO: All activities must be listed here
-		
+
 		// Sections Subsection
 		// TODO: All sections must be listed here
-		
+
 		// Course Subsection
 		WriteContentsCourseSubsection(writer, course);
-		
+
 		writer.WriteEndElement(); // Closes <contents>
 	}
 
@@ -129,7 +129,7 @@ public class MoodleBackupWriter : XmlWriterBase
 	private void WriteContentsCourseSubsection(XmlWriter writer, Model.Course course)
 	{
 		writer.WriteStartElement("course");
-		
+
 		var elements = new Dictionary<string, string>
 		{
 			{ "courseid", course.SystemDefaults.Id.ToString() },
@@ -138,11 +138,11 @@ public class MoodleBackupWriter : XmlWriterBase
 		};
 
 		WriteElements(writer, elements);
-		
+
 		writer.WriteEndElement(); // Closes <course>
 	}
 
-	
+
 	/// <summary>
 	/// writes the settings section of moodle_backup.xml
 	/// </summary>
@@ -154,13 +154,13 @@ public class MoodleBackupWriter : XmlWriterBase
 
 		// Level: Root
 		WriteRootLevelSettings(writer, course);
-		
+
 		// Level: Section
 		// TODO: For each section, we must specify here whether it is included in the backup
-		
+
 		// Level: Activity
 		// TODO: For each activity, we must specify here whether it is included in the backup
-		
+
 		writer.WriteEndElement(); // Closes <settings>
 	}
 
@@ -171,7 +171,7 @@ public class MoodleBackupWriter : XmlWriterBase
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="course">initialized Moodle Course</param>
 	private void WriteRootLevelSettings(XmlWriter writer, Model.Course course)
-	{ 
+	{
 		WriteSingleBackupSettingTag(writer, "root", "filename", _helper.GenerateBackupName(course));
 		WriteSingleBackupSettingTag(writer, "root", "users", course.BackupMetadata.BackupSettings.IncludeEnrolledUsers ? "1" : "0");
 		WriteSingleBackupSettingTag(writer, "root", "anonymize", course.BackupMetadata.BackupSettings.AnonymizeUserInformation ? "1" : "0");
@@ -194,8 +194,8 @@ public class MoodleBackupWriter : XmlWriterBase
 		WriteSingleBackupSettingTag(writer, "root", "xapistate", course.BackupMetadata.BackupSettings.IncludeUserStateInContent ? "1" : "0");
 		WriteSingleBackupSettingTag(writer, "root", "legacyfiles", course.BackupMetadata.BackupSettings.IncludeLegacyCourseFiles ? "1" : "0");
 	}
-	
-	
+
+
 	/// <summary>
 	/// writes a single setting tag, for use inside the settings section of moodle_backup.xml
 	/// </summary>
@@ -206,11 +206,11 @@ public class MoodleBackupWriter : XmlWriterBase
 	private void WriteSingleBackupSettingTag(XmlWriter writer, string level, string name, string value)
 	{
 		writer.WriteStartElement("setting");
-		
+
 		writer.WriteElementString("level", level);
 		writer.WriteElementString("name", name);
 		writer.WriteElementString("value", value);
-		
+
 		writer.WriteEndElement(); // Closes <setting>
 	}
 }

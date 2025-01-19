@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using CourseAsCode.Readers.YAML;
+﻿using CourseAsCode.Readers.YAML;
+using System.Globalization;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.Converters;
 using YamlDotNet.Serialization.NodeDeserializers;

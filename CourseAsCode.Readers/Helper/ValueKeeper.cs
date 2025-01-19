@@ -4,4 +4,5 @@
 public static class ValueKeeper
 {
 	public static string? CoursePath { get; set; }
+	public static int CurrentActivityId { get; set; }
 }

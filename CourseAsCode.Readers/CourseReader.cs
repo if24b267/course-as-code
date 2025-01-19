@@ -1,15 +1,10 @@
-﻿using System.Globalization;
-using System.Text.Json;
-using CourseAsCode.Model;
+﻿using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 using CourseAsCode.Readers.YAML.Readers;
-using YamlDotNet.Core;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.Converters;
-using YamlDotNet.Serialization.NodeDeserializers;
+using System.Text.Json;
 using CourseFormat = CourseAsCode.Readers.Enums.CourseFormat;
 
 namespace CourseAsCode.Readers;
@@ -62,6 +57,7 @@ public class CourseReader : ICourseReader
 		var yamlSectionsDefinition = YamlFileReaderHelper.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 
 		List<Section> sections = [];
+		ValueKeeper.CurrentActivityId = 1;
 
 		foreach (var section in yamlSectionsDefinition.Sections)
 		{

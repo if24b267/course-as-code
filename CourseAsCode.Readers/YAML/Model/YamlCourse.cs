@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using CourseAsCode.Model.Enums;
+﻿using CourseAsCode.Model.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace CourseAsCode.Readers.YAML.Model;
 

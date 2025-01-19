@@ -1,5 +1,5 @@
-using System.ComponentModel;
 using CourseAsCode.Model.Defaults;
+using System.ComponentModel;
 
 namespace CourseAsCode.Model;
 
@@ -15,7 +15,7 @@ public abstract class EnrolmentMethod(Role defaultRole)
 
 	public SystemDefaultsEnrolmentMethod SystemDefaults { get; set; } = new SystemDefaultsEnrolmentMethod();
 
-	
+
 	public class SystemDefaultsEnrolmentMethod
 	{
 		[Description("unique identifier for the enrolment method, used for referencing")]

@@ -10,3 +10,6 @@
 - Add proper Tests
 - Restructure Reader to use Dependency Injections
 - Further Improve Reader
+
+## Ideas
+- Activity ID -> two way sync between file and model -> so we can re-identify the same activities

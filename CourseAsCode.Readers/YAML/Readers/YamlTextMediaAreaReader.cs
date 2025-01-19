@@ -39,6 +39,7 @@ public class YamlTextMediaAreaReader : TextMediaAreaReader<TextAndMediaArea>
 	{
 		return new TextAndMediaArea()
 		{
+			ActivityId = ValueKeeper.CurrentActivityId,
 			Name = yamlTextMediaArea.Name,
 			Content = content
 		};

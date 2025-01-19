@@ -37,6 +37,7 @@ public class YamlActivityReader : ActivityReader<Activity>
 			case ActivityType.FILE:
 				return _fileReader.Read(modelObjectPath);
 			case ActivityType.LABEL:
+			case ActivityType.TEXTMEDIAAREA:
 				return _textMediaAreaReader.Read(modelObjectPath);
 		}
 
@@ -50,6 +51,7 @@ public class YamlActivityReader : ActivityReader<Activity>
 		// maybe a different class that reads the non specific parts of the activity
 		return new URL()
 		{
+			ActivityId = ValueKeeper.CurrentActivityId,
 			Name = yamlActivity.Name,
 			Description = yamlActivity.Description,
 			ExternalUrl = yamlActivity.URL

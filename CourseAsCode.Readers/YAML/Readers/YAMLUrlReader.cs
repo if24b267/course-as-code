@@ -29,6 +29,7 @@ public class YAMLUrlReader : UrlReader<URL>
 		// TODO: default values?
 		return new URL()
 		{
+			ActivityId = ValueKeeper.CurrentActivityId,
 			Name = yamlUrl.Name,
 			ExternalUrl = yamlUrl.URL,
 			Description = yamlUrl.Description
