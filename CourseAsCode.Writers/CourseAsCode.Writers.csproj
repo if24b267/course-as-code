@@ -17,4 +17,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\CourseAsCode.Model\CourseAsCode.Model.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Helper\" />
+	  <Folder Include="Static\" />
+	</ItemGroup>
 </Project>

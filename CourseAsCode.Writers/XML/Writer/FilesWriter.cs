@@ -2,11 +2,11 @@
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Writers.Helper;
-using CourseAsCode.Writers.Static;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Static;
 
 namespace CourseAsCode.Writers.XML.Writer;
 

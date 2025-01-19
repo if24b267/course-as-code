@@ -1,6 +1,6 @@
 using CourseAsCode.Model;
-using CourseAsCode.Writers.Helper;
 using System.Xml;
+using CourseAsCode.Writers.XML.Helper;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
