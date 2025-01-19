@@ -2,15 +2,15 @@
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.YAML.Readers;
 using CourseAsCode.Writers;
-using CourseAsCode.Writers.Helper;
 using NLog;
 using System.IO.Compression;
+using CourseAsCode.Writers.XML.Helper;
 
 namespace CourseAsCode
 {
 	internal class CourseAsCode
 	{
-		private static readonly Writers.Helper.GeneralHelper WriterGeneralHelper = GeneralHelper.Instance;
+		private static readonly GeneralHelper WriterGeneralHelper = GeneralHelper.Instance;
 		private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
 		static void Main(string?[] args)
@@ -103,7 +103,7 @@ namespace CourseAsCode
 			var course = courseReader.Read(inputPath, courseFormat);
 			var writer = new Writer();
 			var courseOutputPath = Path.GetFullPath(Path.Combine(outputPath, "moodleCourse"));
-			var success = writer.WriteXML(course, courseOutputPath);
+			var success = writer.WriteCourse(course, courseOutputPath);
 
 			if (!success)
 			{

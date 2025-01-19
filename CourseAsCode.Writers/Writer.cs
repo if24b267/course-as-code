@@ -1,13 +1,13 @@
 ﻿using CourseAsCode.Model;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Writers.Static;
+using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Sections;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Course;
 
 namespace CourseAsCode.Writers;
 
-public class Writer
+public class Writer : IWriter
 {
     // Writer
     private readonly CalendarWriter _calendarWriter = new CalendarWriter();
@@ -36,7 +36,7 @@ public class Writer
 
     private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public bool WriteXML(Course course, string outputPath)
+    public bool WriteCourse(Course course, string outputPath)
     {
         _logger.Debug($"Writing XML files to {outputPath}");
         course.BackupMetadata ??= new BackupMetadataDefaults().GetDefaultBackupMetadata();

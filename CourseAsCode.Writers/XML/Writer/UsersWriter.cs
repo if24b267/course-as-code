@@ -1,6 +1,6 @@
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Writers.Helper;
 using System.Xml;
+using CourseAsCode.Writers.XML.Helper;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 using User = CourseAsCode.Model.User;
 
