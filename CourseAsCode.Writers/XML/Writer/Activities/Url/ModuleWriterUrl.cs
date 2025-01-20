@@ -49,7 +49,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
             // Write contents of module tag
             var elements = new Dictionary<string, string>
             {
-                { "modulename", "url" },
+                { "modulename", urlObject.SystemDefaults.ModuleName },
                 { "sectionid", section.SystemDefaults.SectionId.ToString() },
                 { "sectionnumber", course.Sections.IndexOf(section).ToString() }, // Determine the index of the current section instance within the course's section list
                 { "idnumber", "$@NULL@$" },

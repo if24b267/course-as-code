@@ -33,6 +33,7 @@ public class MoodleBackupWriter : XmlWriterBase
         }
     }
 
+    
     /// <summary>
     /// writes the general settings within the information section of moodle_backup.xml
     /// </summary>
@@ -66,6 +67,7 @@ public class MoodleBackupWriter : XmlWriterBase
         WriteElements(writer, elements);
     }
 
+    
     /// <summary>
     /// writes the information section of moodle_backup.xml
     /// </summary>
@@ -96,6 +98,7 @@ public class MoodleBackupWriter : XmlWriterBase
         writer.WriteEndElement(); // Closes <details>
     }
 
+    
     /// <summary>
     /// writes the contents section of moodle_backup.xml
     /// </summary>
@@ -112,6 +115,7 @@ public class MoodleBackupWriter : XmlWriterBase
         writer.WriteEndElement(); // Closes <contents>
     }
 
+    
     /// <summary>
     /// Writes the activities subsection of the contents section of moodle_backup.xml.
     /// </summary>
@@ -124,6 +128,7 @@ public class MoodleBackupWriter : XmlWriterBase
         {
             foreach (var activity in section.Activities)
             {
+                // TODO: Refactor this to avoid duplicate code
                 if (activity is TextAndMediaArea textAndMediaArea)
                 {
                     writer.WriteStartElement("activity");
@@ -151,11 +156,26 @@ public class MoodleBackupWriter : XmlWriterBase
 
                     writer.WriteEndElement(); // Closes <activity>
                 }
+                
+                if (activity is MoodleFile moodleFile)
+                {
+                    writer.WriteStartElement("activity");
+
+                    writer.WriteElementString("moduleid", moodleFile.SystemDefaults.ModuleId.ToString());
+                    writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                    writer.WriteElementString("modulename", moodleFile.SystemDefaults.ModuleName);
+                    writer.WriteElementString("title", moodleFile.FileName);
+                    writer.WriteElementString("directory", $"activities/resource_{activity.ActivityId}");
+                    writer.WriteElementString("insubsection", string.Empty);
+
+                    writer.WriteEndElement(); // Closes <activity>
+                }
             }
         }
         writer.WriteEndElement(); // Closes <activities>
     }
 
+    
     /// <summary>
     /// Writes the sections subsection of the contents section of moodle_backup.xml.
     /// </summary>
@@ -179,6 +199,7 @@ public class MoodleBackupWriter : XmlWriterBase
         writer.WriteEndElement(); // Closes <sections>
     }
 
+    
     /// <summary>
     /// writes the course subsection of the contents section of moodle_backup.xml
     /// </summary>
@@ -200,6 +221,7 @@ public class MoodleBackupWriter : XmlWriterBase
         writer.WriteEndElement(); // Closes <course>
     }
 
+    
     /// <summary>
     /// writes the settings section of moodle_backup.xml
     /// </summary>
@@ -216,6 +238,7 @@ public class MoodleBackupWriter : XmlWriterBase
         writer.WriteEndElement(); // Closes <settings>
     }
 
+    
     /// <summary>
     /// writes the root level settings of the settings section of moodle_backup.xml, corresponds to the general backup settings selected by the user in the Moodle UI
     /// </summary>
@@ -269,6 +292,7 @@ public class MoodleBackupWriter : XmlWriterBase
         }
     }
 
+    
     /// <summary>
     /// Writes the activity settings of the settings section of moodle_backup.xml.
     /// </summary>
@@ -280,6 +304,7 @@ public class MoodleBackupWriter : XmlWriterBase
         {
             foreach (var activity in section.Activities)
             {
+                // TODO: Refactor this to avoid duplicate code
                 if (activity is TextAndMediaArea textAndMediaArea)
                 {
                     WriteSingleBackupSettingTag(writer, "activity", $"label_{activity.ActivityId}", $"label_{activity.ActivityId}_included", "1");
@@ -291,10 +316,17 @@ public class MoodleBackupWriter : XmlWriterBase
                     WriteSingleBackupSettingTag(writer, "activity", $"url_{activity.ActivityId}", $"url_{activity.ActivityId}_included", "1");
                     WriteSingleBackupSettingTag(writer, "activity", $"url_{activity.ActivityId}", $"url_{activity.ActivityId}_userinfo", "1");
                 }
+
+                if (activity is MoodleFile moodleFile)
+                {
+                    WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_included", "1");
+                    WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_userinfo", "1");
+                }
             }
         }
     }
 
+    
     /// <summary>
     /// Writes a single setting tag with the specified level, element, name, and value.
     /// </summary>
@@ -322,6 +354,7 @@ public class MoodleBackupWriter : XmlWriterBase
         writer.WriteEndElement(); // Closes <setting>
     }
 
+    
     /// <summary>
     /// writes a single setting tag, for use inside the settings section of moodle_backup.xml
     /// </summary>

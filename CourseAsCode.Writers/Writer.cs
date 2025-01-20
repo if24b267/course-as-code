@@ -4,6 +4,7 @@ using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
+using CourseAsCode.Writers.XML.Writer.Activities.File;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Course;
@@ -59,6 +60,10 @@ public class Writer : IWriter
     private readonly UrlWriter _urlWriter = new UrlWriter();
     private readonly ModuleWriterUrl _moduleWriterUrl = new ModuleWriterUrl();
     
+    // File Activity Writers
+    private readonly FileWriter _fileWriter = new FileWriter();
+    private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
+    
     private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
     public bool WriteCourse(Course course, string outputPath)
@@ -112,17 +117,13 @@ public class Writer : IWriter
         inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
 
         // -- Write activity files -- //
-        // Create files directory if it does not exist
         Directory.CreateDirectory(Path.Combine(outputPath, "files"));
-
-        // Create subfolder in files
-        //Directory.CreateDirectory(Path.Combine(outputPath, Path.Combine("files", "4e")));
-
-
-
         Directory.CreateDirectory(Path.Combine(outputPath, "activities"));
+        
+        // Iterate through all sections of the course
         foreach (var section in course.Sections)
         {
+            // Iterate through all activities of that section
             foreach (var activity in section.Activities)
             {
                 string activityPath = string.Empty;
@@ -143,6 +144,15 @@ public class Writer : IWriter
                     Directory.CreateDirectory(activityPath);
                     _urlWriter.WriteUrl(activityPath, urlObject);
                     _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
+                }
+
+                if (activity is MoodleFile moodleFile)
+                {
+                    // File-specific XML files
+                    activityPath = Path.Combine(outputPath, "activities", $"resource_{activity.ActivityId}");
+                    Directory.CreateDirectory(activityPath);
+                    _fileWriter.WriteFile(activityPath, moodleFile);
+                    _moduleWriterFile.WriteModule(activityPath, course, section, moodleFile);
                 }
                 
                 // General activity XML files
