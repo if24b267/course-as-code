@@ -15,8 +15,6 @@ public class MoodleFileDefaults
 
 	// System defaults
 	public const string DEFAULT_CONTENT_HASH = "d7ecb4a8bc606fbc2b104e0f94d6476246b024bf";
-	public static DateTime DEFAULT_TIME_CREATED = DateTime.Now;
-	public static DateTime DEFAULT_TIME_MODIFIED = DateTime.Now;
 	public static Component? DEFAULT_COMPONENT = Component.Course;
 	public static FileArea? DEFAULT_FILE_AREA = FileArea.CourseContent;
 	public const int DEFAULT_ITEM_ID = 0;
@@ -50,8 +48,6 @@ public class MoodleFileDefaults
 			SystemDefaults = new MoodleFile.SystemDefaultsFile()
 			{
 				ContentHash = DEFAULT_CONTENT_HASH,
-				TimeCreated = DEFAULT_TIME_CREATED,
-				TimeModified = DEFAULT_TIME_MODIFIED,
 				Component = DEFAULT_COMPONENT,
 				FileArea = DEFAULT_FILE_AREA,
 				ItemId = DEFAULT_ITEM_ID

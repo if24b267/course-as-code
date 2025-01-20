@@ -32,10 +32,6 @@ public class MoodleFile : Activity
 	{
 		[Description("SHA1 Hash of the file content")]
 		public string? ContentHash { get; set; } = MoodleFileDefaults.DEFAULT_CONTENT_HASH;
-		[Description("the date and time that the file was created")]
-		public DateTime TimeCreated { get; set; } = MoodleFileDefaults.DEFAULT_TIME_CREATED;
-		[Description("the date and time that the file was last modified")]
-		public DateTime TimeModified { get; set; } = MoodleFileDefaults.DEFAULT_TIME_MODIFIED;
 		[Description("refers to the subsystem or plugin responsible for the file")]
 		public Component? Component { get; set; } = MoodleFileDefaults.DEFAULT_COMPONENT;
 		[Description("Unknown Purpose (possibly WHERE the file is created: user's private files, course files, etc.)")]

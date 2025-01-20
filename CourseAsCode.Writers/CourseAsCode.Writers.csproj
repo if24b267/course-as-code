@@ -20,5 +20,6 @@
 	<ItemGroup>
 	  <Folder Include="Helper\" />
 	  <Folder Include="Static\" />
+	  <Folder Include="XML\Writer\Activities\Url\" />
 	</ItemGroup>
 </Project>

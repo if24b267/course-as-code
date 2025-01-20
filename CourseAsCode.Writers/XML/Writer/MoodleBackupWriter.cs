@@ -137,6 +137,20 @@ public class MoodleBackupWriter : XmlWriterBase
 
                     writer.WriteEndElement(); // Closes <activity>
                 }
+
+                if (activity is URL urlObject)
+                {
+                    writer.WriteStartElement("activity");
+
+                    writer.WriteElementString("moduleid", urlObject.SystemDefaults.ModuleId.ToString());
+                    writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                    writer.WriteElementString("modulename", urlObject.SystemDefaults.ModuleName);
+                    writer.WriteElementString("title", urlObject.Name);
+                    writer.WriteElementString("directory", $"activities/url_{activity.ActivityId}");
+                    writer.WriteElementString("insubsection", string.Empty);
+
+                    writer.WriteEndElement(); // Closes <activity>
+                }
             }
         }
         writer.WriteEndElement(); // Closes <activities>
@@ -270,6 +284,12 @@ public class MoodleBackupWriter : XmlWriterBase
                 {
                     WriteSingleBackupSettingTag(writer, "activity", $"label_{activity.ActivityId}", $"label_{activity.ActivityId}_included", "1");
                     WriteSingleBackupSettingTag(writer, "activity", $"label_{activity.ActivityId}", $"label_{activity.ActivityId}_userinfo", "1");
+                }
+
+                if (activity is URL urlObject)
+                {
+                    WriteSingleBackupSettingTag(writer, "activity", $"url_{activity.ActivityId}", $"url_{activity.ActivityId}_included", "1");
+                    WriteSingleBackupSettingTag(writer, "activity", $"url_{activity.ActivityId}", $"url_{activity.ActivityId}_userinfo", "1");
                 }
             }
         }
