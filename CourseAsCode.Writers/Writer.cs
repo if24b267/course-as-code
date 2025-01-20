@@ -141,7 +141,7 @@ public class Writer : IWriter
                     // URL-specific XML files
                     activityPath = Path.Combine(outputPath, "activities", $"url_{activity.ActivityId}");
                     Directory.CreateDirectory(activityPath);
-                    _urlWriter.WriteLabel(activityPath, urlObject);
+                    _urlWriter.WriteUrl(activityPath, urlObject);
                     _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
                 }
                 

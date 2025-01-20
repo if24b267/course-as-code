@@ -1,18 +1,20 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Writers.XML.Helper;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Url
 {
     public class UrlWriter : XmlWriterBase
     {
-        private int _currentModuleId = 59; // Initial moduleId
-
+        private readonly GeneralHelper _generalHelper = new GeneralHelper();
+        
+        
         /// <summary>
         /// Writes the url activity to an XML file.
         /// </summary>
-        /// <param name="outputPath">The output path where the label XML file will be saved.</param>
-        /// <param name="urlObject">The TextAndMediaArea activity to write.</param>
-        public void WriteLabel(string outputPath, URL urlObject)
+        /// <param name="outputPath">the output path where the url.xml file will be saved</param>
+        /// <param name="urlObject">the URL activity to write</param>
+        public void WriteUrl(string outputPath, URL urlObject)
         {
             string filePath = Path.GetFullPath(Path.Combine(outputPath, "url.xml"));
             using XmlWriter writer = XmlWriter.Create(filePath, Settings);
@@ -21,47 +23,52 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
             writer.WriteStartElement("activity");
 
             WriteActivityAttributes(writer, urlObject);
-            WriteLabelElement(writer, urlObject);
+            WriteUrlTag(writer, urlObject);
 
-            writer.WriteEndElement(); // End of activity
+            writer.WriteEndElement(); // Close <activity>
             writer.WriteEndDocument();
-
-            _currentModuleId++; // Increment moduleId for the next label
         }
 
+        
         /// <summary>
-        /// Writes the attributes of the activity element.
+        /// writes the activity tag and its attributes
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="urlObject">The TextAndMediaArea activity to write.</param>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="urlObject">initialized URL object to write</param>
         private void WriteActivityAttributes(XmlWriter writer, URL urlObject)
         {
             writer.WriteAttributeString("id", urlObject.ActivityId.ToString());
-            writer.WriteAttributeString("moduleid", _currentModuleId.ToString());
+            writer.WriteAttributeString("moduleid", urlObject.SystemDefaults.ModuleId.ToString());
             writer.WriteAttributeString("modulename", urlObject.SystemDefaults.ModuleName);
-            writer.WriteAttributeString("contextid", urlObject.Section?.SystemDefaults.SectionId.ToString() ?? "142");
+            writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(urlObject.Context));
         }
 
+        
         /// <summary>
         /// Writes the url element and its child elements.
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document.</param>
         /// <param name="urlObject">The TextAndMediaArea activity to write.</param>
-        private void WriteLabelElement(XmlWriter writer, URL urlObject)
+        private void WriteUrlTag(XmlWriter writer, URL urlObject)
         {
             writer.WriteStartElement("url");
             writer.WriteAttributeString("id", urlObject.ActivityId.ToString());
 
-            writer.WriteElementString("name", urlObject.Name);
-            writer.WriteElementString("intro", urlObject.Description ?? string.Empty);
-            writer.WriteElementString("introformat", "1");
-            writer.WriteElementString("externalurl", urlObject.ExternalUrl);
-            writer.WriteElementString("display", "0");
-            writer.WriteElementString("displayoptions", "a:1:{s:10:\"printintro\";i:1;}");
-            writer.WriteElementString("parameters", "a:0:{}");
-            writer.WriteElementString("timemodified", new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString());
+            // Write contents of url tag
+            var elements = new Dictionary<string, string>
+            {
+                { "name", urlObject.Name },
+                { "intro", urlObject.Description ?? string.Empty },
+                { "introformat", _generalHelper.EnumIntegerToString(urlObject.DescriptionFormat) },
+                { "externalurl", urlObject.ExternalUrl },
+                { "display", "0" }, // TODO: Determine meaning of this value
+                { "displayoptions", "a:1:{s:10:\"printintro\";i:1;}" }, // TODO: Determine meaning of this value
+                { "parameters", "a:0:{}" }, // TODO: Determine meaning of this value
+                { "timemodified", _generalHelper.DateTimeToUnixTimestamp(urlObject.TimeModified) }
+            };
+            WriteElements(writer, elements);
 
-            writer.WriteEndElement(); // End of url
+            writer.WriteEndElement(); // Close <url>
         }
     }
 }

@@ -40,7 +40,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
             using XmlWriter writer = XmlWriter.Create(filePath, Settings);
             
             writer.WriteStartDocument();
-                
+            
             // Create module tag with attributes
             writer.WriteStartElement("module");
             writer.WriteAttributeString("id", urlObject.SystemDefaults.ModuleId.ToString());
@@ -53,7 +53,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                 { "sectionid", section.SystemDefaults.SectionId.ToString() },
                 { "sectionnumber", course.Sections.IndexOf(section).ToString() }, // Determine the index of the current section instance within the course's section list
                 { "idnumber", "$@NULL@$" },
-                { "added", _generalHelper.DateTimeToUnixTimestamp(DateTime.Now) },
+                { "added", _generalHelper.DateTimeToUnixTimestamp(urlObject.TimeCreated) },
                 { "score", "0" },
                 { "indent", "0" },
                 { "visible", urlObject.VisibleToStudents ? "1" : "0" }, // TODO: Determine difference between these visibility flags
@@ -67,7 +67,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                 { "completionview", "0" },
                 { "completionexpected", "0" },
                 { "availability", "$@NULL@$" },
-                { "showdescription", "0" },
+                { "showdescription", urlObject.DisplayDescription ? "1" : "0" },
                 { "downloadcontent", "1" },
                 { "lang", _generalHelper.GetLanguageFromEnum(urlObject.Language) },
             };
