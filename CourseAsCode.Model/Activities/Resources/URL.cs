@@ -7,16 +7,16 @@ public class URL : Activity
 	[Description("the url itself")]
 	public string ExternalUrl { get; set; }
 
-	public SensibleDefaultsURL SensibleDefaults { get; set; } = new SensibleDefaultsURL();
-	public SystemDefaultsURL SystemDefaults { get; set; } = new SystemDefaultsURL();
+	public SensibleDefaultsUrl SensibleDefaults { get; set; } = new SensibleDefaultsUrl();
+	public SystemDefaultsUrl SystemDefaults { get; set; } = new SystemDefaultsUrl();
 
-	public class SensibleDefaultsURL
+	public class SensibleDefaultsUrl
 	{
 		// TODO
 	}
 
 
-	public class SystemDefaultsURL
+	public class SystemDefaultsUrl
 	{
 		public int ModuleId { get; set; } = 2;
 		public string ModuleName { get; set; } = "url";

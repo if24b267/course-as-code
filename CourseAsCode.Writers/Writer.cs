@@ -142,7 +142,7 @@ public class Writer : IWriter
                     activityPath = Path.Combine(outputPath, "activities", $"url_{activity.ActivityId}");
                     Directory.CreateDirectory(activityPath);
                     _urlWriter.WriteLabel(activityPath, urlObject);
-                    _moduleWriterUrl.WriteModule(activityPath, section);
+                    _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
                 }
                 
                 // General activity XML files
