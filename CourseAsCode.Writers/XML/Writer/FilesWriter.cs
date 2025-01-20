@@ -5,6 +5,7 @@ using CourseAsCode.Model.Enums;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Static;
 
@@ -12,10 +13,11 @@ namespace CourseAsCode.Writers.XML.Writer;
 
 public class FilesWriter : XmlWriterBase
 {
-	private int _fileIdCounter = 1;
 	private readonly FileHelper _fileHelper = FileHelper.Instance;
+	private readonly GeneralHelper _generalHelper = new GeneralHelper();
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
+	
 	public void WriteFiles(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "files.xml"));
@@ -31,13 +33,13 @@ public class FilesWriter : XmlWriterBase
 			{
 				if (activity is MoodleFile)
 				{
-					WriteSingleFile(writer, (MoodleFile)activity);
+					WriteSingleFile(writer, outputPath, (MoodleFile)activity);
 				}
 			}
 		}
 
 		writer.WriteEndElement(); // Close <files>
-
+		
 		writer.WriteEndDocument();
 	}
 
@@ -47,7 +49,7 @@ public class FilesWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="file">File to be written</param>
-	private void WriteSingleFile(XmlWriter writer, MoodleFile file)
+	private void WriteSingleFile(XmlWriter writer, string outputPath, MoodleFile file)
 	{
 		// Check if file exists / try to open the file
 		FileStream? fileStream = null;
@@ -72,22 +74,24 @@ public class FilesWriter : XmlWriterBase
 		// Write XML
 		WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string>
 		{
-			{ "id", _fileIdCounter++.ToString() }
+			{ "id", file.ActivityId.ToString() }
 		});
 
 		var elements = new Dictionary<string, string>
 		{
-			{ "contenthash", file.SystemDefaults.ContentHash ?? GetSha1Hash(fileStream) },
-			{ "contextid", file.SystemDefaults.Component == Component.Course ? "14" : "35" }, // TODO: It probably makes sense to make this value dependent on the value of `Component`
+			{ "contenthash", file.SystemDefaults.ContentHash ?? GetMoodleContentHash(fileStream) },
+			{ "contextid", _generalHelper.EnumIntegerToString(file.Context) },
 			{ "component", file.SystemDefaults.Component != null ? _fileHelper.GetComponentFromEnum((Component)file.SystemDefaults.Component) : "course" },
 			{ "filearea", file.SystemDefaults.FileArea != null ? _fileHelper.GetFileAreaFromEnum((FileArea)file.SystemDefaults.FileArea) : "content" },
 			{ "itemid", "0" }, // If there is only one of a file area per context, the itemid is 0, see https://moodledev.io/docs/5.0/apis/subsystems/files#file-areas
-			{ "filepath", file.FilePath },
+			{ "filepath", "/" }, // TODO: Why is this always "/"?
 			{ "filename", file.FileName },
 			{ "userid", file.SensibleDefaults.Author?.SystemDefaults.Id.ToString() ?? GeneralDefaults.DEFAULT_ADMIN_USER_ID.ToString() },
 			{ "filesize", fileStream.Length.ToString() },
 			{ "mimetype", MimeTypes.GetMimeType(file.FilePath) },
 			{ "status", "0" }, // TODO: Determine function of this field
+			{ "timecreated", _generalHelper.DateTimeToUnixTimestamp(file.TimeCreated)},
+			{ "timemodified", _generalHelper.DateTimeToUnixTimestamp(file.TimeModified)},
 			{ "source", file.FileName },
 			{ "author", file.SensibleDefaults.Author?.Username ?? "$@NULL@$" },
 			{ "license", file.SensibleDefaults.License != null ? _fileHelper.GetLicenseFromEnum((License)file.SensibleDefaults.License) : "unknown" }, // TODO: Add function that maps enum value to correct moodle values
@@ -98,7 +102,26 @@ public class FilesWriter : XmlWriterBase
 		};
 
 		WriteElements(writer, elements);
+		CopyFileToBackupFolder(outputPath, fileStream);
 		fileStream.Dispose();
+	}
+
+
+	/// <summary>
+	/// copies the file currently being processed from the input folder to the moodle backup folder
+	/// </summary>
+	/// <param name="outputPath"></param>
+	/// <param name="fileStream"></param>
+	private void CopyFileToBackupFolder(string outputPath, FileStream fileStream)
+	{
+		string fileHash = GetMoodleContentHash(fileStream);
+		string targetDirectory = Path.Combine(outputPath, "files", fileHash.Substring(0, 2));
+
+		Directory.CreateDirectory(targetDirectory);
+
+		string targetFilePath = Path.Combine(targetDirectory, fileHash);
+       
+		File.Copy(fileStream.Name, targetFilePath,true);
 	}
 
 
@@ -107,17 +130,15 @@ public class FilesWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="fileStream">FileStream of the file to be hashed</param>
 	/// <returns>SHA1 hash of the file content</returns>
-	private string GetSha1Hash(FileStream fileStream)
+	private string GetMoodleContentHash(FileStream fileStream)
 	{
-		using SHA1 sha1 = SHA1.Create();
+		using var sha1 = SHA1.Create();
+		fileStream.Seek(0, SeekOrigin.Begin);
+
 		byte[] hashBytes = sha1.ComputeHash(fileStream);
 
-		StringBuilder sb = new();
-		foreach (byte b in hashBytes)
-		{
-			sb.Append(b.ToString("X2"));
-		}
+		fileStream.Seek(0, SeekOrigin.Begin);
 
-		return sb.ToString();
+		return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
 	}
 }
