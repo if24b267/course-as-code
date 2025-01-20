@@ -26,7 +26,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
 
             writer.WriteElementString("name", activity.Name);
             writer.WriteElementString("intro", activity.Content ?? string.Empty);
-            writer.WriteElementString("introformat", "1"); // Assuming introformat is 1 for simplicity
+            writer.WriteElementString("introformat", "4"); 
             writer.WriteElementString("timemodified", new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString());
 
             writer.WriteEndElement(); // End of label
