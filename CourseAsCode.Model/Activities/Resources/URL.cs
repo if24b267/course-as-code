@@ -18,6 +18,7 @@ public class URL : Activity
 
 	public class SystemDefaultsURL
 	{
-		// TODO
+		public int ModuleId { get; set; } = 2;
+		public string ModuleName { get; set; } = "url";
 	}
 }
