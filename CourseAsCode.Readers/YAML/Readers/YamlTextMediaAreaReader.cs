@@ -1,4 +1,5 @@
 ﻿using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
@@ -37,8 +38,18 @@ public class YamlTextMediaAreaReader : TextMediaAreaReader<TextAndMediaArea>
 
 	private TextAndMediaArea? ConvertYamlTextMediaAreaAndContentToMoodleTextMediaArea(YamlTextMediaArea yamlTextMediaArea, string content)
 	{
+		var format = yamlTextMediaArea.Format switch
+		{
+			TextMediaFieldFormat.AUTO => FormattingFormat.MoodleAutoFormat,
+			TextMediaFieldFormat.HTML => FormattingFormat.HTML,
+			TextMediaFieldFormat.PLAIN => FormattingFormat.PlainText,
+			TextMediaFieldFormat.MARKDOWN => FormattingFormat.Markdown,
+			_ => FormattingFormat.MoodleAutoFormat
+		};
+		
 		return new TextAndMediaArea()
 		{
+			FormattingFormat = format,
 			ActivityId = ValueKeeper.CurrentActivityId,
 			Name = yamlTextMediaArea.Name,
 			Content = content
