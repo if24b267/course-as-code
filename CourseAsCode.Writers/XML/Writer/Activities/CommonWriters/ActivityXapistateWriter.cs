@@ -1,9 +1,13 @@
 ﻿using System.Xml;
 
-namespace CourseAsCode.Writers.XML.Writer.Activities.Url;
+namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 
-public class XapistateWriterUrl : XmlWriterBase
+public class ActivityXapistateWriter : XmlWriterBase
 {
+    /// <summary>
+    /// writes the xapistate.xml file required for an activity
+    /// </summary>
+    /// <param name="outputPath"></param>
     public void WriteState(string outputPath)
     {
         string filePath = Path.GetFullPath(Path.Combine(outputPath, "xapistate.xml"));
@@ -12,10 +16,7 @@ public class XapistateWriterUrl : XmlWriterBase
         writer.WriteStartDocument();
 
         writer.WriteStartElement("states");
-
-        // Add whitespace to prevent a self-closing tag
         writer.WriteWhitespace("\n");
-
         writer.WriteEndElement(); // Close <states>
 
         writer.WriteEndDocument();

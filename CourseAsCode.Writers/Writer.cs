@@ -3,7 +3,7 @@ using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using CourseAsCode.Writers.XML.Writer.Activities;
+using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Course;
@@ -37,32 +37,27 @@ public class Writer : IWriter
     private readonly BadgesWriter _badgesWriter = new BadgesWriter();
     private readonly CompletionWriter _completionWriter = new CompletionWriter();
     private readonly SectionWriter _sectionWriter = new SectionWriter();
-
+    
+    // -- Activity Writers -- //
+    // Common Activity Writers
+    private readonly ActivityGradesWriter _activityGradesWriter = new ActivityGradesWriter();
+    private readonly ActivityGradehistoryWriter _activityGradehistoryWriter = new ActivityGradehistoryWriter();
+    private readonly ActivityInforefWriter _activityInforefWriter = new ActivityInforefWriter();
+    private readonly ActivityRolesWriter _activityRolesWriter = new ActivityRolesWriter();
+    private readonly ActivityXapistateWriter _activityXapistateWriter = new ActivityXapistateWriter();
+    private readonly ActivityCalendarWriter _activityCalendarWriter = new ActivityCalendarWriter();
+    private readonly ActivityCommentsWriter _activityCommentsWriter = new ActivityCommentsWriter();
+    private readonly ActivityCompetenciesWriter _activityCompetenciesWriter = new ActivityCompetenciesWriter();
+    private readonly ActivityCompletionWriter _activityCompletionWriter = new ActivityCompletionWriter();
+    private readonly ActivityFiltersWriter _activityFiltersWriter = new ActivityFiltersWriter();
+    
+    // Text and Media Area (Label) Activity Writers
     private readonly LabelWriter _labelWriter = new LabelWriter();
     private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
-    private readonly GradesWriterLabel _gradesWriterLabel = new GradesWriterLabel();
-    private readonly GradehistoryWriterLabel _gradehistoryWriterLabel = new GradehistoryWriterLabel();
-    private readonly InforefWriterLabel _inforefWriterLabel = new InforefWriterLabel();
-    private readonly RolesWriterLabel _rolesWriterLabel = new RolesWriterLabel();
-    private readonly XapistateWriterLabel _xapistateWriterLabel = new XapistateWriterLabel();
-    private readonly CalendarWriterLabel _calendarWriterLabel = new CalendarWriterLabel();
-    private readonly CommentsWriterLabel _commentsWriterLabel = new CommentsWriterLabel();
-    private readonly CompetenciesWriterLabel _competenciesWriterLabel = new CompetenciesWriterLabel();
-    private readonly CompletionWriterLabel _completionWriterLabel = new CompletionWriterLabel();
-    private readonly FiltersWriterLabel _filtersWriterLabel = new FiltersWriterLabel();
     
+    // URL Activity Writers
     private readonly UrlWriter _urlWriter = new UrlWriter();
-    private readonly GradesWriterUrl _gradesWriterUrl = new GradesWriterUrl();
-    private readonly GradehistoryWriterUrl _gradehistoryWriterUrl = new GradehistoryWriterUrl();
-    private readonly CommentsWriterUrl _commentsWriterUrl = new CommentsWriterUrl();
-    private readonly CalendarWriterUrl _calendarWriterUrl = new CalendarWriterUrl();
-    private readonly InforefWriterUrl _inforefWriterUrl = new InforefWriterUrl();
-    private readonly RolesWriterUrl _rolesWriterUrl = new RolesWriterUrl();
-    private readonly XapistateWriterUrl _xapistateWriterUrl = new XapistateWriterUrl();
     private readonly ModuleWriterUrl _moduleWriterUrl = new ModuleWriterUrl();
-    private readonly CompletionWriterUrl _completionWriterUrl = new CompletionWriterUrl();
-    private readonly FiltersWriterUrl _filtersWriterUrl = new FiltersWriterUrl();
-    private readonly CompetenciesWriterUrl _competenciesWriterUrl = new CompetenciesWriterUrl();
     
     private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -78,7 +73,7 @@ public class Writer : IWriter
             course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
         }
 
-        // Course
+        // -- Write course files -- //
         // Create course directory if it does not exist
         Directory.CreateDirectory(Path.Combine(outputPath, "course"));
 
@@ -105,7 +100,7 @@ public class Writer : IWriter
         _badgesWriter.WriteBadges(outputPath);
         _completionWriter.WriteCompletion(course, outputPath);
 
-        // Sections
+        // -- Write section files -- //
         Directory.CreateDirectory(Path.Combine(outputPath, "sections"));
 
         // Write sections using SectionWriter
@@ -116,7 +111,7 @@ public class Writer : IWriter
         InforefSectionsWriter inforefSectionsWriter = new InforefSectionsWriter();
         inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
 
-        // Files
+        // -- Write activity files -- //
         // Create files directory if it does not exist
         Directory.CreateDirectory(Path.Combine(outputPath, "files"));
 
@@ -130,44 +125,39 @@ public class Writer : IWriter
         {
             foreach (var activity in section.Activities)
             {
+                string activityPath = string.Empty;
+                
                 if (activity is TextAndMediaArea textAndMediaArea)
                 {
-                    string activityPath = Path.Combine(outputPath, "activities", $"label_{activity.ActivityId}");
+                    // Text and Media Area (Label)-specific XML files
+                    activityPath = Path.Combine(outputPath, "activities", $"label_{activity.ActivityId}");
                     Directory.CreateDirectory(activityPath);
                     _labelWriter.WriteLabel(activityPath, textAndMediaArea);
-                    _calendarWriterLabel.WriteCalendar(activityPath);
-                    _commentsWriterLabel.WriteComments(activityPath);
-                    _competenciesWriterLabel.WriteCompetencies(activityPath);
-                    _completionWriterLabel.WriteCompletion(activityPath);
-                    _filtersWriterLabel.WriteFilters(activityPath);
-                    _gradesWriterLabel.WriteGrade(activityPath);
-                    _gradehistoryWriterLabel.WriteGradehistory(course, activityPath);
-                    _inforefWriterLabel.WriteInforefLabel(activityPath);
-                    _rolesWriterLabel.WriteRoles(activityPath);
-                    _xapistateWriterLabel.WriteState(activityPath);
                     _moduleWriterLabel.WriteModule(activityPath, section);
                 }
 
                 if (activity is URL urlObject)
                 {
-                    string activityPath = Path.Combine(outputPath, "activities", $"url_{activity.ActivityId}");
+                    // URL-specific XML files
+                    activityPath = Path.Combine(outputPath, "activities", $"url_{activity.ActivityId}");
                     Directory.CreateDirectory(activityPath);
                     _urlWriter.WriteLabel(activityPath, urlObject);
-                    _gradesWriterUrl.WriteGrade(activityPath);
-                    _gradehistoryWriterUrl.WriteGradehistory(course, activityPath);
-                    _commentsWriterUrl.WriteComments(activityPath);
-                    _calendarWriterUrl.WriteCalendar(activityPath);
-                    _inforefWriterUrl.WriteInforefLabel(activityPath);
-                    _rolesWriterUrl.WriteRoles(activityPath);
-                    _xapistateWriterUrl.WriteState(activityPath);
                     _moduleWriterUrl.WriteModule(activityPath, section);
-                    _completionWriterUrl.WriteCompletion(activityPath);
-                    _filtersWriterUrl.WriteFilters(activityPath);
-                    _competenciesWriterUrl.WriteCompetencies(activityPath);
                 }
+                
+                // General activity XML files
+                _activityCalendarWriter.WriteCalendar(activityPath);
+                _activityCommentsWriter.WriteComments(activityPath);
+                _activityCompetenciesWriter.WriteCompetencies(activityPath);
+                _activityCompletionWriter.WriteCompletion(activityPath);
+                _activityFiltersWriter.WriteFilters(activityPath);
+                _activityGradesWriter.WriteGrade(activityPath);
+                _activityGradehistoryWriter.WriteGradehistory(course, activityPath);
+                _activityInforefWriter.WriteInforefLabel(activityPath);
+                _activityRolesWriter.WriteRoles(activityPath);
+                _activityXapistateWriter.WriteState(activityPath);
             }
         }
-
-            return true;
+        return true;
     }
 }

@@ -1,0 +1,1 @@
+All activities share a large number of boilerplate XML files. The XML files, which are the same between all activities, should be implemented here. If a special implementation is required, this can be overwritten in the respective folder

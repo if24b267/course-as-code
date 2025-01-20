@@ -1,9 +1,13 @@
 ﻿using System.Xml;
 
-namespace CourseAsCode.Writers.XML.Writer;
+namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 
-public class FiltersWriterLabel : XmlWriterBase
+public class ActivityFiltersWriter : XmlWriterBase
 {
+    /// <summary>
+    /// writes the filters.xml file required for an activity
+    /// </summary>
+    /// <param name="outputPath"></param>
     public void WriteFilters(string outputPath)
     {
         string filePath = Path.GetFullPath(Path.Combine(outputPath, "filters.xml"));
