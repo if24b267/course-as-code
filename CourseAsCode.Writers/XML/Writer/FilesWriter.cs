@@ -79,7 +79,7 @@ public class FilesWriter : XmlWriterBase
 
 		var elements = new Dictionary<string, string>
 		{
-			{ "contenthash", file.SystemDefaults.ContentHash ?? GetMoodleContentHash(fileStream) },
+			{ "contenthash", GetMoodleContentHash(fileStream) },
 			{ "contextid", _generalHelper.EnumIntegerToString(file.Context) },
 			{ "component", file.SystemDefaults.Component != null ? _fileHelper.GetComponentFromEnum((Component)file.SystemDefaults.Component) : "course" },
 			{ "filearea", file.SystemDefaults.FileArea != null ? _fileHelper.GetFileAreaFromEnum((FileArea)file.SystemDefaults.FileArea) : "content" },
