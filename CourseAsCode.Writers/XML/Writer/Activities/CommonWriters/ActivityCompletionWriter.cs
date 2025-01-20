@@ -1,9 +1,13 @@
 ﻿using System.Xml;
 
-namespace CourseAsCode.Writers.XML.Writer;
+namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 
-public class CompletionWriterLabel : XmlWriterBase
+public class ActivityCompletionWriter : XmlWriterBase
 {
+    /// <summary>
+    /// writes the completion.xml file required for an activity
+    /// </summary>
+    /// <param name="outputPath"></param>
     public void WriteCompletion(string outputPath)
     {
         string filePath = Path.GetFullPath(Path.Combine(outputPath, "completion.xml"));

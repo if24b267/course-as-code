@@ -1,9 +1,13 @@
 ﻿using System.Xml;
 
-namespace CourseAsCode.Writers.XML.Writer;
+namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 
-public class CommentsWriterLabel : XmlWriterBase
+public class ActivityCommentsWriter : XmlWriterBase
 {
+    /// <summary>
+    /// writes the comments.xml file required for an activity
+    /// </summary>
+    /// <param name="outputPath"></param>
     public void WriteComments(string outputPath)
     {
         string filePath = Path.GetFullPath(Path.Combine(outputPath, "comments.xml"));

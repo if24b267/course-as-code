@@ -1,9 +1,13 @@
 ﻿using System.Xml;
 
-namespace CourseAsCode.Writers.XML.Writer;
+namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 
-public class CalendarWriterLabel : XmlWriterBase
+public class ActivityCalendarWriter : XmlWriterBase
 {
+    /// <summary>
+    /// writes the calendar.xml file required for an activity
+    /// </summary>
+    /// <param name="outputPath"></param>
     public void WriteCalendar(string outputPath)
     {
         string filePath = Path.GetFullPath(Path.Combine(outputPath, "calendar.xml"));
