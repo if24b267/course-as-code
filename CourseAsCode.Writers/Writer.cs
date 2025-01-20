@@ -2,11 +2,11 @@
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
-using CourseAsCode.Writers.XML.Sections;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Course;
+using CourseAsCode.Writers.XML.Writer.Sections;
 
 namespace CourseAsCode.Writers;
 
