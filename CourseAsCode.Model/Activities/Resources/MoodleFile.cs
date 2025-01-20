@@ -38,5 +38,8 @@ public class MoodleFile : Activity
 		public FileArea? FileArea { get; set; } = MoodleFileDefaults.DEFAULT_FILE_AREA;
 		[Description("the itemid is needed if the file area in question is not already uniquely identified by the contextid + component + filearea")]
 		public int ItemId { get; set; } = MoodleFileDefaults.DEFAULT_ITEM_ID;
+		
+		public int ModuleId { get; set; } = MoodleFileDefaults.DEFAULT_MODULE_ID;
+		public string ModuleName { get; set; } = MoodleFileDefaults.DEFAULT_MODULE_NAME;
 	}
 }
