@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using CourseAsCode.Model.Defaults.Activities.Resources;
 
 namespace CourseAsCode.Model.Activities.Resources;
 
@@ -21,7 +22,7 @@ public class URL : Activity
 
 	public class SystemDefaultsUrl
 	{
-		public int ModuleId { get; set; } = _rnd.Next(1, 100);
+		public int ModuleId { get; set; } = URLDefaults.DEFAULT_MODULE_ID;
 		public string ModuleName { get; set; } = "url";
 	}
 }

@@ -5,6 +5,8 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources;
 
 public class MoodleFileDefaults
 {
+	private static Random _rnd = new Random();
+	
 	// General defaults
 	public const string DEFAULT_FILE_NAME = "$@NULL@$";
 	public const string DEFAULT_FILE_PATH = "/";
@@ -19,7 +21,10 @@ public class MoodleFileDefaults
 	public static FileArea? DEFAULT_FILE_AREA = FileArea.CourseContent;
 	public const int DEFAULT_ITEM_ID = 0;
 
-
+	public static readonly int DEFAULT_MODULE_ID = _rnd.Next(1, 1000);
+	public const string DEFAULT_MODULE_NAME = "resource";
+	
+	
 	/// <summary>
 	/// Returns a MoodleFile object with all properties set to the default values
 	/// </summary>
