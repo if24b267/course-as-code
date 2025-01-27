@@ -163,7 +163,7 @@ public class Writer : IWriter
                 _activityFiltersWriter.WriteFilters(activityPath);
                 _activityGradesWriter.WriteGrade(activityPath);
                 _activityGradehistoryWriter.WriteGradehistory(course, activityPath);
-                _activityInforefWriter.WriteInforefLabel(activityPath);
+                _activityInforefWriter.WriteInforefLabel(course, activityPath);
                 _activityRolesWriter.WriteRoles(activityPath);
                 _activityXapistateWriter.WriteState(activityPath);
             }

@@ -9,6 +9,9 @@ namespace CourseAsCode.Model.Activities.Resources;
 
 public class MoodleFile : Activity
 {
+	private static Random _rnd = new Random();
+	
+	
 	[Description("name of the file that is to be included in the backup")]
 	public string FileName { get; set; } = MoodleFileDefaults.DEFAULT_FILE_NAME;
 	[Description("path to the file that is to be included in the backup")]
@@ -39,7 +42,7 @@ public class MoodleFile : Activity
 		[Description("the itemid is needed if the file area in question is not already uniquely identified by the contextid + component + filearea")]
 		public int ItemId { get; set; } = MoodleFileDefaults.DEFAULT_ITEM_ID;
 		
-		public int ModuleId { get; set; } = MoodleFileDefaults.DEFAULT_MODULE_ID;
+		public int ModuleId { get; set; } = _rnd.Next(1, 1000);
 		public string ModuleName { get; set; } = MoodleFileDefaults.DEFAULT_MODULE_NAME;
 	}
 }

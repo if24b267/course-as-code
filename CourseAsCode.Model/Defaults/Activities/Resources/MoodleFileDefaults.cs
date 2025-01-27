@@ -17,11 +17,10 @@ public class MoodleFileDefaults
 
 	// System defaults
 	public const string DEFAULT_CONTENT_HASH = "d7ecb4a8bc606fbc2b104e0f94d6476246b024bf";
-	public static Component? DEFAULT_COMPONENT = Component.Course;
+	public static Component? DEFAULT_COMPONENT = Component.Resource;
 	public static FileArea? DEFAULT_FILE_AREA = FileArea.CourseContent;
 	public const int DEFAULT_ITEM_ID = 0;
 
-	public static readonly int DEFAULT_MODULE_ID = _rnd.Next(1, 1000);
 	public const string DEFAULT_MODULE_NAME = "resource";
 	
 	
