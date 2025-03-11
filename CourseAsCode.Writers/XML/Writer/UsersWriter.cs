@@ -1,6 +1,6 @@
-using System.Xml;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Writers.Helper;
+using System.Xml;
+using CourseAsCode.Writers.XML.Helper;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 using User = CourseAsCode.Model.User;
 
@@ -10,16 +10,16 @@ public class UsersWriter : XmlWriterBase
 {
 	private readonly GeneralHelper _helper = GeneralHelper.Instance;
 	private readonly UserHelper _userHelper = new UserHelper();
-	
-	
+
+
 	public void WriteUsers(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "users.xml"));
 		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-		
+
 		writer.WriteStartDocument();
 		writer.WriteStartElement("users");
-		
+
 		foreach (var user in course.EnrolledUsers)
 		{
 			WriteSingleUser(writer, user);
@@ -28,7 +28,7 @@ public class UsersWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <users>
 		writer.WriteEndDocument();
 	}
-	
+
 
 	/// <summary>
 	/// writes a single user to the users.xml file
@@ -39,7 +39,7 @@ public class UsersWriter : XmlWriterBase
 	{
 		WriteStartElementWithAttributes(writer, "user", new Dictionary<string, string>
 		{
-			{ "id", user.SystemDefaults?.Id.ToString() ?? string.Empty },
+			{ "id", user.SystemDefaults.Id.ToString() },
 			{ "contextid", "15" } // TODO: Dynamically determine this value
 		});
 
@@ -52,7 +52,7 @@ public class UsersWriter : XmlWriterBase
 		writer.WriteEndElement(); // Close <user>
 	}
 
-	
+
 	/// <summary>
 	/// writes the majority of a single user's data in the `users` tag of the users.xml file
 	/// </summary>
@@ -64,7 +64,7 @@ public class UsersWriter : XmlWriterBase
 		{
 			{ "username", user.Username },
 			{ "idnumber", user.SystemDefaults.ExternalId.ToString() ?? "" },
-			{ "email", user.EMail?.ToString() ?? "" },
+			{ "email", user.EMail.ToString() },
 			{ "phone1", user.SensibleDefaults.PhoneNumber ?? ""},
 			{ "phone2", user.SensibleDefaults.MobilePhoneNumber ?? ""},
 			{ "deparment", user.SensibleDefaults.Department ?? ""},
@@ -75,9 +75,9 @@ public class UsersWriter : XmlWriterBase
 			{ "lastip", user.SystemDefaults.LastIP?.ToString() ?? "" },
 			{ "picture", "0"}, // TODO: Add ability to reference the user's picture here
 			{ "description", user.Description ?? "$@NULL@$" },
-			{ "descriptionformat", _helper.EnumIntegerToString(user.SystemDefaults.DescriptionFormat ?? FormattingFormat.HTML) },
+			{ "descriptionformat", _helper.EnumIntegerToString(user.SystemDefaults.DescriptionFormat) },
 			{ "imagealt", user.PictureDescription ?? "$@NULL@$"},
-			{ "auth", _userHelper.GetAuthMethodFromEnum(user.AuthMethod ?? AuthenticationMethod.ManualCreation) },
+			{ "auth", _userHelper.GetAuthMethodFromEnum(user.AuthMethod) },
 			{ "firstnamephonetic", user.SensibleDefaults.FirstNamePhonetic ?? "$@NULL@$"},
 			{ "lastnamephonetic", user.SensibleDefaults.LastNamePhonetic ?? "$@NULL@$"},
 			{ "middlename" , user.SensibleDefaults.MiddleName ?? "$@NULL@$"},
@@ -93,10 +93,10 @@ public class UsersWriter : XmlWriterBase
 			{ "firstaccess" , user.SystemDefaults.FirstAccess != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.FirstAccess) : "0" }, // TODO: Determine if default value is really 0
 			{ "lastaccess", user.SystemDefaults.LastAccess != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.LastAccess) : "0" }, // TODO: Determine if default value is really 0
 			{ "lastlogin", user.SystemDefaults.LastLogin != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SystemDefaults.LastLogin) : "0" }, // TODO: Determine if default value is really 0
-			{ "currentlogin", _helper.DateTimeToUnixTimestamp(DateTime.Now) ?? "0" }, // TODO: Determine function of this field
+			{ "currentlogin", _helper.DateTimeToUnixTimestamp(DateTime.Now) }, // TODO: Determine function of this field
 			{ "mailformat", "1" }, // TODO: Determine function of this field
 			{ "maildigest", _helper.EnumIntegerToString(user.UserPreferences.EMailDigestType ?? EMailDigestType.NoDigest) },
-			{ "maildisplay", _helper.EnumIntegerToString(user.UserPreferences.EMailVisibility ?? EMailVisibility.VisibleToEveryone) }, 
+			{ "maildisplay", _helper.EnumIntegerToString(user.UserPreferences.EMailVisibility ?? EMailVisibility.VisibleToEveryone) },
 			{ "autosubscribe", user.UserPreferences.AutoSubscribeToForums ? "1" : "0"},
 			{ "trackforums", user.UserPreferences.TrackReadPosts ? "1" : "0"},
 			{ "timecreated", _helper.DateTimeToUnixTimestamp(user.SystemDefaults.TimeCreated) },
@@ -113,57 +113,57 @@ public class UsersWriter : XmlWriterBase
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WriteCustomFieldsSection(XmlWriter writer, Model.User user)
+	private void WriteCustomFieldsSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("custom_fields");
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <custom_fields>
 	}
-	
-	
+
+
 	/// <summary>
 	/// writes the `preferences` section for a specific user in the users.xml file
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WriteTagsSection(XmlWriter writer, Model.User user)
+	private void WriteTagsSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("tags");
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <tags>
 	}
-	
-	
+
+
 	/// <summary>
 	/// writes the `preferences` section for a specific user in the users.xml file
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WritePreferencesSection(XmlWriter writer, Model.User user)
+	private void WritePreferencesSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("preferences");
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <preferences>
 	}
-	
-	
+
+
 	/// <summary>
 	/// writes the `roles` section for a specific user in the users.xml file
 	/// </summary>
 	/// <param name="writer">XmlWriter initialized on the correct document</param>
 	/// <param name="user">initialized Moodle User</param>
-	private void WriteRolesSection(XmlWriter writer, Model.User user)
+	private void WriteRolesSection(XmlWriter writer, User user)
 	{
 		writer.WriteStartElement("roles");
-		
+
 		writer.WriteStartElement("role_overrides");
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <role_overrides>
-		
+
 		writer.WriteStartElement("role_assignments");
 		writer.WriteString(" ");
 		writer.WriteEndElement(); // Close <role_assignments>
-		
+
 		writer.WriteEndElement(); // Close <roles>
 	}
 }

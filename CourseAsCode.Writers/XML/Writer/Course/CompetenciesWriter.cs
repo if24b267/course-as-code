@@ -7,7 +7,7 @@ public class CompetenciesWriter : XmlWriterBase
 	public void WriteCompetencies(Model.Course course, string outputPath)
 	{
 		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/competencies.xml"));
-		
+
 		using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 		{
 			writer.WriteStartDocument();
