@@ -1,10 +1,13 @@
 using System.Xml;
 using CourseAsCode.Model;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Sections;
 
 public class InforefSectionsWriter : XmlWriterBase
 {
+	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+	
 	public void WriteInforefSections(string outputPath, List<Section> sections)
 	{
 		foreach (var section in sections)

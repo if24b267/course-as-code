@@ -115,18 +115,17 @@ public class Writer : IWriter
         _completionWriter.WriteCompletion(course, outputPath);
 
         // -- Write section files -- //
-        _logger.Debug("Start writing section files to /sections");
-        
+
         // Create sections directory if it does not exist
         if (!SafeCreateDirectory(Path.Combine(outputPath, "sections")))
         {
             Environment.Exit(1);
         }
 
-        // Write sections using SectionWriter
+        // Create section.xml for each section
         _sectionWriter.WriteSections(outputPath, course.Sections);
 
-        // Write inforef sections using InforefSectionsWriter
+        // Create inforef.xml for each section
         InforefSectionsWriter inforefSectionsWriter = new InforefSectionsWriter();
         inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
         
@@ -143,8 +142,6 @@ public class Writer : IWriter
         // Iterate through all sections of the course
         foreach (var section in course.Sections)
         {
-            _logger.Debug($"Writing section {section.SystemDefaults.SectionId}: {section.Name}");
-            
             // Iterate through all activities of that section
             foreach (var activity in section.Activities)
             {
