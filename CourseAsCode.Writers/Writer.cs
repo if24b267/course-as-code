@@ -100,9 +100,12 @@ public class Writer : IWriter
         _inforefWriter.WriteInforef(course, outputPath);
         _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
         
+        // Root directory
+        _badgesWriter.WriteBadges(outputPath);
+        _completionWriter.WriteCompletion(course, outputPath);
         _filesWriter.WriteFiles(course, outputPath);
-        _gradehistoryWriter.WriteGradehistory(course, outputPath);
         _gradebookWriter.WriteGradebook(course, outputPath);
+        _gradehistoryWriter.WriteGradehistory(course, outputPath);
         _groupsWriter.WriteGroups(course, outputPath);
         _moodleBackupWriter.WriteMoodleBackup(course, outputPath);
         _outcomesWriter.WriteOutcomes(course, outputPath);
@@ -110,8 +113,8 @@ public class Writer : IWriter
         _rolesWriter.WriteRoles(course, outputPath);
         _scalesWriter.WriteScales(course, outputPath);
         _usersWriter.WriteUsers(course, outputPath);
-        _badgesWriter.WriteBadges(outputPath);
-        _completionWriter.WriteCompletion(course, outputPath);
+        
+        
 
         // -- Write section files -- //
 
