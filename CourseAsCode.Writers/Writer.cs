@@ -1,4 +1,5 @@
 ﻿using CourseAsCode.Model;
+using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
@@ -9,12 +10,13 @@ using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Writers.XML.Writer.Sections;
+using NLog;
 
 namespace CourseAsCode.Writers;
 
 public class Writer : IWriter
 {
-    // Writer
+    // -- General Writers -- //
     private readonly CalendarWriter _calendarWriter = new CalendarWriter();
     private readonly CommentsWriter _commentsWriter = new CommentsWriter();
     private readonly CompetenciesWriter _competenciesWriter = new CompetenciesWriter();
@@ -64,24 +66,35 @@ public class Writer : IWriter
     private readonly FileWriter _fileWriter = new FileWriter();
     private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
     
-    private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+    private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
     public bool WriteCourse(Course course, string outputPath)
     {
-        _logger.Debug($"Writing XML files to {outputPath}");
-        course.BackupMetadata ??= new BackupMetadataDefaults().GetDefaultBackupMetadata();
+        _logger.Debug($"Writer started for course {course.FullName} with ID {course.SystemDefaults.Id}");
+        _logger.Info($"The course will be saved at {outputPath}");
 
         // Ensure sections list is not empty
         if (course.Sections == null || course.Sections.Count == 0)
         {
-            _logger.Debug("No sections found, adding default section.");
+            _logger.Info("No sections specified by user, adding default section.");
             course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
         }
 
         // -- Write course files -- //
+        _logger.Debug($"Started writing course files in {outputPath}/course");
+        
         // Create course directory if it does not exist
-        Directory.CreateDirectory(Path.Combine(outputPath, "course"));
-
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(outputPath, "course"));
+        }
+        catch (Exception e)
+        {
+            _logger.Fatal($"Could not create course directory: {e.Message}");
+            Environment.Exit(1);
+        }
+        
+        // Write course XML files
         _calendarWriter.WriteCalendar(course, outputPath);
         _commentsWriter.WriteComments(course, outputPath);
         _competenciesWriter.WriteCompetencies(course, outputPath);
@@ -106,56 +119,90 @@ public class Writer : IWriter
         _completionWriter.WriteCompletion(course, outputPath);
 
         // -- Write section files -- //
-        Directory.CreateDirectory(Path.Combine(outputPath, "sections"));
+        _logger.Debug($"Started writing section files in {outputPath}/sections");
+        
+        // Create sections directory if it does not exist
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(outputPath, "sections"));
+        }
+        catch (Exception e)
+        {
+            _logger.Fatal($"Could not create sections directory: {e.Message}");
+            Environment.Exit(1);
+        }
 
         // Write sections using SectionWriter
-        _logger.Debug("Writing sections...");
         _sectionWriter.WriteSections(outputPath, course.Sections);
 
         // Write inforef sections using InforefSectionsWriter
         InforefSectionsWriter inforefSectionsWriter = new InforefSectionsWriter();
         inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
-
+        
+        
         // -- Write activity files -- //
-        Directory.CreateDirectory(Path.Combine(outputPath, "files"));
-        Directory.CreateDirectory(Path.Combine(outputPath, "activities"));
+        _logger.Debug($"Started writing activity files in {outputPath}/activities and {outputPath}/files");
+
+        // Ensure there is an activities directory
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(outputPath, "activities"));
+        }
+        catch (Exception e)
+        {
+            _logger.Fatal($"Could not create activities directory: {e.Message}");
+            Environment.Exit(1);
+        }
+        
+        // Ensure there is a file directory (used by activities that require files)
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(outputPath, "files"));
+        }
+        catch (Exception e)
+        {
+            _logger.Fatal($"Could not create files directory: {e.Message}");
+            Environment.Exit(1);
+        }
         
         // Iterate through all sections of the course
         foreach (var section in course.Sections)
         {
+            _logger.Debug($"Writing section {section.SystemDefaults.SectionId}: {section.Name}...");
+            
             // Iterate through all activities of that section
             foreach (var activity in section.Activities)
             {
-                string activityPath = string.Empty;
+                _logger.Debug($"Writing activity {activity.ActivityId}: {activity.Name}...");
                 
+                string? activityPath = string.Empty;
+                
+                // Text and Media Area (Label)-specific XML files
                 if (activity is TextAndMediaArea textAndMediaArea)
                 {
-                    // Text and Media Area (Label)-specific XML files
-                    activityPath = Path.Combine(outputPath, "activities", $"label_{activity.ActivityId}");
-                    Directory.CreateDirectory(activityPath);
-                    _labelWriter.WriteLabel(activityPath, textAndMediaArea);
-                    _moduleWriterLabel.WriteModule(activityPath, section);
+                    activityPath = CreateTextAndMediaArea(outputPath, activity, textAndMediaArea, section);
                 }
 
+                // URL-specific XML files
                 if (activity is URL urlObject)
                 {
-                    // URL-specific XML files
-                    activityPath = Path.Combine(outputPath, "activities", $"url_{activity.ActivityId}");
-                    Directory.CreateDirectory(activityPath);
-                    _urlWriter.WriteUrl(activityPath, urlObject);
-                    _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
+                    activityPath = CreateUrlActivity(course, outputPath, activity, urlObject, section);
                 }
 
+                // File-specific XML files
                 if (activity is MoodleFile moodleFile)
                 {
-                    // File-specific XML files
-                    activityPath = Path.Combine(outputPath, "activities", $"resource_{activity.ActivityId}");
-                    Directory.CreateDirectory(activityPath);
-                    _fileWriter.WriteFile(activityPath, moodleFile);
-                    _moduleWriterFile.WriteModule(activityPath, course, section, moodleFile);
+                    activityPath = CreateFileActivity(course, outputPath, activity, moodleFile, section);
                 }
                 
-                // General activity XML files
+                // Skip if activityPath is null (i.e. directory creation failed)
+                if (activityPath == null)
+                {
+                    _logger.Error($"Skipping activity {activity.ActivityId}: {activity.Name} due to directory creation failure.");
+                    continue;
+                }
+                
+                // General activity XML files (common for all activities)
                 _activityCalendarWriter.WriteCalendar(activityPath);
                 _activityCommentsWriter.WriteComments(activityPath);
                 _activityCompetenciesWriter.WriteCompetencies(activityPath);
@@ -169,5 +216,93 @@ public class Writer : IWriter
             }
         }
         return true;
+    }
+    
+    
+    /// <summary>
+    /// writes the XML files specific to the File activity
+    /// </summary>
+    /// <returns>
+    /// <para> the path to the directory where the files for that activity were written </para>
+    /// <para> null if the directory couldn't be created</para>
+    /// </returns>
+    private string? CreateFileActivity(Course course, string outputPath, Activity activity, MoodleFile moodleFile, Section section)
+    {
+        return CreateActivity(outputPath, activity, "resource", activityPath =>
+        {
+            _fileWriter.WriteFile(activityPath, moodleFile);
+            _moduleWriterFile.WriteModule(activityPath, course, section, moodleFile);
+        });
+    }
+
+    
+    /// <summary>
+    /// writes the XML files specific to the URL activity
+    /// </summary>
+    /// <returns>
+    /// <para> the path to the directory where the files for that activity were written </para>
+    /// <para> null if the directory couldn't be created</para>
+    /// </returns>
+    private string? CreateUrlActivity(Course course, string outputPath, Activity activity, URL urlObject, Section section)
+    {
+        return CreateActivity(outputPath, activity, "url", activityPath =>
+        {
+            _urlWriter.WriteUrl(activityPath, urlObject);
+            _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
+        });
+    }
+
+
+    /// <summary>
+    /// writes the XML files specific to the Text and Media Area (Label) activity
+    /// </summary>
+    /// <returns>
+    /// <para> the path to the directory where the files for that activity were written </para>
+    /// <para> null if the directory couldn't be created</para>
+    /// </returns>
+    private string? CreateTextAndMediaArea(string outputPath, Activity activity, TextAndMediaArea textAndMediaArea, Section section)
+    {
+        return CreateActivity(outputPath, activity, "label", activityPath =>
+        {
+            _labelWriter.WriteLabel(activityPath, textAndMediaArea);
+            _moduleWriterLabel.WriteModule(activityPath, section);
+        });
+    }
+    
+    
+    /// <summary>
+    /// Creates an activity directory using the specified prefix and processes it via the given action
+    /// </summary>
+    /// <param name="outputPath">The base output directory</param>
+    /// <param name="activity">The activity instance</param>
+    /// <param name="prefix">prefix that distinguishes the activity type (e.g., "resource", "url", "label")</param>
+    /// <param name="processActivity">A lambda that performs the writing logic for the activity</param>
+    /// <returns>The path to the created directory, or null if directory creation fails</returns>
+    private string? CreateActivity(string outputPath, Activity activity, string prefix, Action<string> processActivity)
+    {
+        string activityPath = Path.Combine(outputPath, "activities", $"{prefix}_{activity.ActivityId}");
+    
+        if (!SafeCreateDirectory(activityPath))
+        {
+            return null;
+        }
+    
+        processActivity(activityPath);
+        return activityPath;
+    }
+    
+    
+    private bool SafeCreateDirectory(string path)
+    {
+        try
+        {
+            Directory.CreateDirectory(path);
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.Fatal($"Could not create directory {path}: {e.Message}");
+            return false;
+        }
     }
 }
