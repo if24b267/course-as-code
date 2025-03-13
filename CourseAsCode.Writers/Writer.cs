@@ -81,7 +81,6 @@ public class Writer : IWriter
         }
 
         // -- Write course files -- //
-        _logger.Debug("Start writing course files to /course");
         
         // Create course directory if it does not exist
         if (!SafeCreateDirectory(Path.Combine(outputPath, "course")))
@@ -131,7 +130,6 @@ public class Writer : IWriter
         
         
         // -- Write activity files -- //
-        _logger.Debug("Start writing activity files to /activities and /files");
 
         // Ensure there is an activities and a files directory (used by activities that require files)
         if (!SafeCreateDirectory(Path.Combine(outputPath, "activities")) || !SafeCreateDirectory(Path.Combine(outputPath, "files")))

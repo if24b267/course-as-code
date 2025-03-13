@@ -134,7 +134,7 @@ public class CourseWriter : XmlWriterBase
 	{
 		if (course.Tags == null || course.Tags.Count == 0)
 		{
-			Logger.Debug("No tags found for course, skipping tags section");
+			Logger.Trace("No tags found for course, skipping tags section");
 			return;
 		}
 
