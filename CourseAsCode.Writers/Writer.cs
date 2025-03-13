@@ -89,14 +89,18 @@ public class Writer : IWriter
             Environment.Exit(1);
         }
         
-        // Write course XML files
+        // /course directory
         _calendarWriter.WriteCalendar(course, outputPath);
         _commentsWriter.WriteComments(course, outputPath);
         _competenciesWriter.WriteCompetencies(course, outputPath);
         _completiondefaultsWriter.WriteCompletionDefaults(course, outputPath);
         _contentbankWriter.WriteContentbank(course, outputPath);
-        _filtersWriter.WriteFilters(course, outputPath);
         _courseWriter.WriteCourse(course, outputPath);
+        _enrolmentsWriter.WriteEnrolment(course, outputPath);
+        _filtersWriter.WriteFilters(course, outputPath);
+        _inforefWriter.WriteInforef(course, outputPath);
+        _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
+        
         _filesWriter.WriteFiles(course, outputPath);
         _gradehistoryWriter.WriteGradehistory(course, outputPath);
         _gradebookWriter.WriteGradebook(course, outputPath);
@@ -107,9 +111,6 @@ public class Writer : IWriter
         _rolesWriter.WriteRoles(course, outputPath);
         _scalesWriter.WriteScales(course, outputPath);
         _usersWriter.WriteUsers(course, outputPath);
-        _enrolmentsWriter.WriteEnrolment(course, outputPath);
-        _inforefWriter.WriteInforef(course, outputPath);
-        _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
         _badgesWriter.WriteBadges(outputPath);
         _completionWriter.WriteCompletion(course, outputPath);
 
