@@ -70,27 +70,22 @@ public class Writer : IWriter
 
     public bool WriteCourse(Course course, string outputPath)
     {
-        _logger.Debug($"Writer started for course {course.FullName} with ID {course.SystemDefaults.Id}");
+        _logger.Debug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
         _logger.Info($"The course will be saved at {outputPath}");
 
         // Ensure sections list is not empty
         if (course.Sections == null || course.Sections.Count == 0)
         {
-            _logger.Info("No sections specified by user, adding default section.");
+            _logger.Info("No sections specified by user, adding default section");
             course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
         }
 
         // -- Write course files -- //
-        _logger.Debug($"Started writing course files in {outputPath}/course");
+        _logger.Debug("Start writing course files to /course");
         
         // Create course directory if it does not exist
-        try
+        if (!SafeCreateDirectory(Path.Combine(outputPath, "course")))
         {
-            Directory.CreateDirectory(Path.Combine(outputPath, "course"));
-        }
-        catch (Exception e)
-        {
-            _logger.Fatal($"Could not create course directory: {e.Message}");
             Environment.Exit(1);
         }
         
@@ -100,6 +95,7 @@ public class Writer : IWriter
         _competenciesWriter.WriteCompetencies(course, outputPath);
         _completiondefaultsWriter.WriteCompletionDefaults(course, outputPath);
         _contentbankWriter.WriteContentbank(course, outputPath);
+        _filtersWriter.WriteFilters(course, outputPath);
         _courseWriter.WriteCourse(course, outputPath);
         _filesWriter.WriteFiles(course, outputPath);
         _gradehistoryWriter.WriteGradehistory(course, outputPath);
@@ -112,23 +108,17 @@ public class Writer : IWriter
         _scalesWriter.WriteScales(course, outputPath);
         _usersWriter.WriteUsers(course, outputPath);
         _enrolmentsWriter.WriteEnrolment(course, outputPath);
-        _filtersWriter.WriteFilters(course, outputPath);
         _inforefWriter.WriteInforef(course, outputPath);
         _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
         _badgesWriter.WriteBadges(outputPath);
         _completionWriter.WriteCompletion(course, outputPath);
 
         // -- Write section files -- //
-        _logger.Debug($"Started writing section files in {outputPath}/sections");
+        _logger.Debug("Start writing section files to /sections");
         
         // Create sections directory if it does not exist
-        try
+        if (!SafeCreateDirectory(Path.Combine(outputPath, "sections")))
         {
-            Directory.CreateDirectory(Path.Combine(outputPath, "sections"));
-        }
-        catch (Exception e)
-        {
-            _logger.Fatal($"Could not create sections directory: {e.Message}");
             Environment.Exit(1);
         }
 
@@ -141,39 +131,23 @@ public class Writer : IWriter
         
         
         // -- Write activity files -- //
-        _logger.Debug($"Started writing activity files in {outputPath}/activities and {outputPath}/files");
+        _logger.Debug("Start writing activity files to /activities and /files");
 
-        // Ensure there is an activities directory
-        try
+        // Ensure there is an activities and a files directory (used by activities that require files)
+        if (!SafeCreateDirectory(Path.Combine(outputPath, "activities")) || !SafeCreateDirectory(Path.Combine(outputPath, "files")))
         {
-            Directory.CreateDirectory(Path.Combine(outputPath, "activities"));
-        }
-        catch (Exception e)
-        {
-            _logger.Fatal($"Could not create activities directory: {e.Message}");
-            Environment.Exit(1);
-        }
-        
-        // Ensure there is a file directory (used by activities that require files)
-        try
-        {
-            Directory.CreateDirectory(Path.Combine(outputPath, "files"));
-        }
-        catch (Exception e)
-        {
-            _logger.Fatal($"Could not create files directory: {e.Message}");
             Environment.Exit(1);
         }
         
         // Iterate through all sections of the course
         foreach (var section in course.Sections)
         {
-            _logger.Debug($"Writing section {section.SystemDefaults.SectionId}: {section.Name}...");
+            _logger.Debug($"Writing section {section.SystemDefaults.SectionId}: {section.Name}");
             
             // Iterate through all activities of that section
             foreach (var activity in section.Activities)
             {
-                _logger.Debug($"Writing activity {activity.ActivityId}: {activity.Name}...");
+                _logger.Debug($"Writing activity {activity.ActivityId}: {activity.Name}");
                 
                 string? activityPath = string.Empty;
                 
@@ -198,7 +172,7 @@ public class Writer : IWriter
                 // Skip if activityPath is null (i.e. directory creation failed)
                 if (activityPath == null)
                 {
-                    _logger.Error($"Skipping activity {activity.ActivityId}: {activity.Name} due to directory creation failure.");
+                    _logger.Error($"Skipping activity {activity.ActivityId}: {activity.Name} due to directory creation failure");
                     continue;
                 }
                 
