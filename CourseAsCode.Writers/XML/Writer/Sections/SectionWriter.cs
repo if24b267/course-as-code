@@ -10,8 +10,6 @@ public class SectionWriter : XmlWriterBase
 	
 	public void WriteSections(string outputPath, List<Section> sections)
 	{
-		int number = 0; // used to assign ascending numbers to sections
-		
 		foreach (Section section in sections)
 		{
 			string relativePath = $"{section.SystemDefaults.PathToSection}/section.xml";
@@ -26,12 +24,11 @@ public class SectionWriter : XmlWriterBase
 				}
 				catch (Exception ex)
 				{
-					Logger.Error(ex, $"Error creating directory for section {section.Name}");
-					Logger.Error($"Skipping section {section.Name}");
+					Logger.Error(ex, $"Error creating directory for section {section.SystemDefaults.SectionId}: {section.Name}");
+					Logger.Error($"Skipping section {section.SystemDefaults.SectionId}: {section.Name}");
 					continue;
 				}
-
-
+				
 				using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 				{
 					writer.WriteStartDocument();
@@ -41,7 +38,7 @@ public class SectionWriter : XmlWriterBase
 
 					var elements = new Dictionary<string, string>
 					{
-						{ "number", number.ToString() },
+						{ "number", section.SystemDefaults.SectionId.ToString() },
 						{ "name", section.Name ?? "$@NULL@$" },
 						{ "summary", section.Summary ?? "" },
 						{ "summaryformat", ((int)section.SystemDefaults.SummaryFormat).ToString() },
@@ -61,21 +58,17 @@ public class SectionWriter : XmlWriterBase
 
 					WriteElements(writer, elements);
 
-					writer.WriteEndElement();
+					writer.WriteEndElement(); // Close <section>
 
 					writer.WriteEndDocument();
 					
-					Logger.Debug($"Created {relativePath} for Section {number}: {section.Name}");
+					Logger.Debug($"Created {relativePath} for Section {section.SystemDefaults.SectionId}: {section.Name}");
 				}
 			}
 			catch (Exception e)
 			{
-				Logger.Error(e, $"Error writing {relativePath} for Section {number}: {section.Name}");
+				Logger.Error(e, $"Error writing {relativePath} for Section {section.SystemDefaults.SectionId}: {section.Name}");
 				throw;
-			}
-			finally
-			{
-				number++;
 			}
 		}
 	}

@@ -12,17 +12,39 @@ public class InforefSectionsWriter : XmlWriterBase
 	{
 		foreach (var section in sections)
 		{
-			string filePath = Path.GetFullPath(Path.Combine(outputPath, $"{section.SystemDefaults.PathToSection}/inforef.xml"));
-			Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+			string relativePath = $"{section.SystemDefaults.PathToSection}/inforef.xml";
 
-			using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+			try
 			{
-				writer.WriteStartDocument();
+				string filePath = Path.GetFullPath(Path.Combine(outputPath, relativePath));
 
-				writer.WriteStartElement("inforef");
-				writer.WriteEndElement();
+				try
+				{
+					Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+				}
+				catch (Exception ex)
+				{
+					Logger.Error(ex, $"Error creating directory for section {section.SystemDefaults.SectionId}: {section.Name}");
+					Logger.Error($"Skipping section {section.SystemDefaults.SectionId}: {section.Name}");
+					continue;
+				}
 
-				writer.WriteEndDocument();
+				using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+				{
+					writer.WriteStartDocument();
+
+					writer.WriteStartElement("inforef");
+					writer.WriteEndElement();
+
+					writer.WriteEndDocument();
+				}
+				
+				Logger.Debug($"Created {relativePath} for Section {section.SystemDefaults.SectionId}: {section.Name}");
+			}
+			catch (Exception e)
+			{
+				Logger.Error(e, $"Error writing {relativePath} for Section {section.SystemDefaults.SectionId}: {section.Name}");
+				throw;
 			}
 		}
 	}
