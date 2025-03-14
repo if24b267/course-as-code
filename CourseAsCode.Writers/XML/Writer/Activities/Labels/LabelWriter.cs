@@ -1,13 +1,33 @@
-﻿using CourseAsCode.Model.Activities;
-using CourseAsCode.Model.Activities.Resources;
+﻿using CourseAsCode.Model.Activities.Resources;
 using System.Xml;
+using CourseAsCode.Writers.XML.Helper;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
 {
     public class LabelWriter : XmlWriterBase
     {
-        private int _currentModuleId = 22; // Initial moduleId
-
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private const string DEFAULT_LABEL_RELATIVE_PATH = "label.xml";
+        
+        private int _currentModuleId = 22;
+        private readonly GeneralHelper _generalHelper;
+        
+        
+        // Constructor
+        public LabelWriter()
+        {
+            _generalHelper = GeneralHelper.Instance;
+        }
+        
+        
+        // Constructor using Dependency Injection for Unit Testing
+        public LabelWriter(GeneralHelper generalHelper)
+        {
+            _generalHelper = generalHelper;
+        }
+        
+        
         /// <summary>
         /// Writes the label activity to an XML file.
         /// </summary>
@@ -15,21 +35,33 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         /// <param name="activity">The TextAndMediaArea activity to write.</param>
         public void WriteLabel(string outputPath, TextAndMediaArea activity)
         {
-            string filePath = Path.GetFullPath(Path.Combine(outputPath, "label.xml"));
-            using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-
-            writer.WriteStartDocument();
-            writer.WriteStartElement("activity");
-
-            WriteActivityAttributes(writer, activity);
-            WriteLabelElement(writer, activity);
-
-            writer.WriteEndElement(); // End of activity
-            writer.WriteEndDocument();
-
-            _currentModuleId++; // Increment moduleId for the next label
+            try
+            {
+                string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_LABEL_RELATIVE_PATH));
+                
+                using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+                {
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("activity");
+                    
+                    WriteActivityAttributes(writer, activity);
+                    WriteLabelElement(writer, activity);
+                    
+                    writer.WriteEndElement(); // Close <activity>
+                    writer.WriteEndDocument();
+                }
+                
+                Logger.Debug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_LABEL_RELATIVE_PATH}");
+                _currentModuleId++; // Increment moduleId for the next label
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_LABEL_RELATIVE_PATH}");
+                throw;
+            }
         }
-
+        
+        
         /// <summary>
         /// Writes the attributes of the activity element.
         /// </summary>
@@ -42,7 +74,8 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
             writer.WriteAttributeString("modulename", activity.SystemDefaults.ModuleName);
             writer.WriteAttributeString("contextid", activity.Section?.SystemDefaults.SectionId.ToString() ?? "0");
         }
-
+        
+        
         /// <summary>
         /// Writes the label element and its child elements.
         /// </summary>
@@ -52,14 +85,13 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         {
             writer.WriteStartElement("label");
             writer.WriteAttributeString("id", activity.ActivityId.ToString());
-
+            
             writer.WriteElementString("name", activity.Name);
             writer.WriteElementString("intro", activity.Content ?? string.Empty);
-            writer.WriteElementString("introformat", activity.FormattingFormat.ToString("D"));
-            writer.WriteElementString("timemodified", new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString());
-
-            writer.WriteEndElement(); // End of label
+            writer.WriteElementString("introformat", _generalHelper.EnumIntegerToString(activity.FormattingFormat));
+            writer.WriteElementString("timemodified", _generalHelper.DateTimeToUnixTimestamp(DateTime.Now).ToString());
+            
+            writer.WriteEndElement(); // Close <label>
         }
     }
 }
-
