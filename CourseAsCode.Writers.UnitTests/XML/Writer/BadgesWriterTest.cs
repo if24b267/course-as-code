@@ -1,146 +1,89 @@
 ﻿using System.Xml;
+using CourseAsCode.Writers.UnitTests.Fakes;
 using CourseAsCode.Writers.XML.Writer;
+using NLog;
+using NSubstitute;
 
 namespace CourseAsCode.Writers.UnitTests.XML.Writer
 {
     [TestFixture]
     public class BadgesWriterTests
     {
-        /// <summary>
-        /// A test subclass of BadgesWriter that overrides protected methods to avoid file I/O and capture logging
-        /// </summary>
-        private class TestableBadgesWriter : BadgesWriter
+        private XmlWriterFactoryTest _testFactory;
+        private ILogger _testLogger;
+        BadgesWriter _testBadgesWriter;
+        
+        [SetUp]
+        public void SetUp()
         {
-            public StringWriter StringWriter { get; private set; } = new StringWriter();
-            public string CapturedDebugLog { get; private set; } = String.Empty;
-            public (Exception Exception, string Message) CapturedErrorLog { get; private set; }
-
-            
-            /// <summary>
-            /// Overrides the XML writer creation to use an in-memory StringWriter instead
-            /// </summary>
-            /// <param name="filePath">Ignored in this override</param>
-            /// <returns>An XmlWriter writing to the StringWriter</returns>
-            protected override XmlWriter CreateXmlWriter(string filePath)
-            {
-                return XmlWriter.Create(StringWriter, Settings);
-            }
-
-            
-            /// <summary>
-            /// Captures the debug log message instead of logging it externally
-            /// </summary>
-            /// <param name="message">The debug message</param>
-            protected override void LogDebug(string message)
-            {
-                CapturedDebugLog = message;
-            }
-
-            
-            /// <summary>
-            /// Captures the error log details instead of logging them externally
-            /// </summary>
-            /// <param name="ex">The exception to log</param>
-            /// <param name="message">The error message</param>
-            protected override void LogError(Exception ex, string message)
-            {
-                CapturedErrorLog = (ex, message);
-            }
+            _testFactory = new XmlWriterFactoryTest();
+            _testLogger = Substitute.For<ILogger>();
+            _testBadgesWriter = new BadgesWriter(_testFactory, _testLogger); // Use DI to inject the test factory and logger
         }
         
         
-        /// <summary>
-        /// A subclass of TestableBadgesWriter that simulates an exception during XmlWriter creation
-        /// </summary>
-        private class ExceptionThrowingBadgesWriter : TestableBadgesWriter
-        {
-            protected override XmlWriter CreateXmlWriter(string filePath)
-            {
-                throw new InvalidOperationException("Test exception");
-            }
-        }
-        
-        
-        /// <summary>
-        /// Verifies that the generated XML is well-formed.
-        /// </summary>
         [Test]
         public void WriteBadges_GeneratesValidXml()
         {
             // Arrange
-            var writer = new TestableBadgesWriter();
-            var dummyOutputPath = "dummyPath";
+            string dummyOutputPath = "dummyPath";
 
             // Act
-            writer.WriteBadges(dummyOutputPath);
-            string output = writer.StringWriter.ToString();
+            _testBadgesWriter.WriteBadges(dummyOutputPath);
+            string output = _testFactory.StringWriter.ToString();
 
-            // Assert: Loading the XML should not throw an exception.
+            // Assert: Loading the XML should not throw an exception (well-formed XML)
             Assert.DoesNotThrow(() =>
             {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(output);
+                var doc = new XmlDocument();
+                doc.LoadXml(output);
             });
         }
 
-        
-        /// <summary>
-        /// Checks that the root element of the generated XML is "badges".
-        /// </summary>
         [Test]
         public void WriteBadges_RootElementIsCorrect()
         {
             // Arrange
-            var writer = new TestableBadgesWriter();
-            var dummyOutputPath = "dummyPath";
+            string dummyOutputPath = "dummyPath";
 
             // Act
-            writer.WriteBadges(dummyOutputPath);
-            string output = writer.StringWriter.ToString();
+            _testBadgesWriter.WriteBadges(dummyOutputPath);
+            string output = _testFactory.StringWriter.ToString();
 
-            // Assert: The root element should be "badges".
-            var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(output);
-            Assert.IsNotNull(xmlDoc.DocumentElement);
-            Assert.That(xmlDoc.DocumentElement.Name, Is.EqualTo("badges"));
+            // Assert: The root element should be "badges"
+            var doc = new XmlDocument();
+            doc.LoadXml(output);
+            Assert.IsNotNull(doc.DocumentElement);
+            Assert.That(doc.DocumentElement.Name, Is.EqualTo("badges"));
         }
 
-        
-        /// <summary>
-        /// Verifies that a debug log message is captured upon successful writing
-        /// </summary>
         [Test]
         public void WriteBadges_LogsDebugOnSuccess()
         {
             // Arrange
-            var writer = new TestableBadgesWriter();
-            var dummyOutputPath = "dummyPath";
+            string dummyOutputPath = "dummyPath";
 
             // Act
-            writer.WriteBadges(dummyOutputPath);
+            _testBadgesWriter.WriteBadges(dummyOutputPath);
 
-            // Assert: Verify that the debug log message was captured.
-            Assert.IsNotNull(writer.CapturedDebugLog);
-            StringAssert.Contains("badges.xml", writer.CapturedDebugLog);
+            // Assert: Verify that logger.Debug is called with a message containing "badges.xml"
+            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("badges.xml")));
         }
 
-        
-        /// <summary>
-        /// Verifies that an error is logged when an exception occurs during XML writer creation
-        /// </summary>
         [Test]
         public void WriteBadges_LogsErrorOnException()
         {
             // Arrange
-            var writer = new ExceptionThrowingBadgesWriter();
-            var dummyOutputPath = "dummyPath";
+            var throwingFactory = new ExceptionThrowingXmlWriterFactory();
+            _testBadgesWriter = new BadgesWriter(throwingFactory, _testLogger);
+            
+            string dummyOutputPath = "dummyPath";
 
-            // Act
-            Assert.Throws<InvalidOperationException>(() => writer.WriteBadges(dummyOutputPath));
-
-            // Assert: Verify that the error log was captured.
-            Assert.IsNotNull(writer.CapturedErrorLog);
-            StringAssert.Contains("badges.xml", writer.CapturedErrorLog.Message);
+            // Act & Assert: An exception should be thrown
+            Assert.Throws<InvalidOperationException>(() => _testBadgesWriter.WriteBadges(dummyOutputPath));
+            
+            // Verify that logger.Error is called with a message containing "badges.xml"
+            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("badges.xml")));
         }
     }
 }

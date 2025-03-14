@@ -1,10 +1,41 @@
 using System.Xml;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
 
 namespace CourseAsCode.Writers.XML
 {
+    /// <summary>
+    /// Base class for XML writer classes. Provides common XML settings, a mechanism to create XmlWriter instances via an injected factory and logging capabilities
+    /// </summary>
     public abstract class XmlWriterBase
     {
+        protected readonly ILogger Logger;
+        private readonly IXmlWriterFactory xmlWriterFactory;
+        
+        
+        /// <summary>
+        /// Default constructor, initializing the logger and the XmlWriterFactory with default implementations
+        /// </summary>
+        protected XmlWriterBase()
+        {
+            xmlWriterFactory = new DefaultXmlWriterFactory();
+            Logger = LogManager.GetCurrentClassLogger();
+        }
+        
+        
+        /// <summary>
+        /// Initializes a new instance of the XmlWriterBase class with the specified XML writer factory and logger
+        /// </summary>
+        /// <param name="xmlWriterFactory">Factory used to create XmlWriter instances</param>
+        /// <param name="logger">Logger used for logging messages</param>
+        protected XmlWriterBase(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        {
+            this.xmlWriterFactory = xmlWriterFactory;
+            Logger = logger;
+        }
+        
+        
         /// <summary>
         /// The settings used for creating XmlWriter instances
         /// </summary>
@@ -14,11 +45,7 @@ namespace CourseAsCode.Writers.XML
             NewLineOnAttributes = false,
             OmitXmlDeclaration = false
         };
-
-        /// <summary>
-        /// The logger used for logging messages at various levels.
-        /// </summary>
-        protected readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        
 
         /// <summary>
         /// Writes all key-value pairs from the provided dictionary as XML tags to the file to which the XmlWriter is initialized
@@ -47,93 +74,97 @@ namespace CourseAsCode.Writers.XML
                 writer.WriteAttributeString(attribute.Key, attribute.Value);
             }
         }
-
+        
+        
         /// <summary>
-        /// Creates and returns an instance of an XmlWriter based on the provided file path and the current settings.
-        /// This method is virtual so that derived classes can override it to customize the XmlWriter creation process,
-        /// such as writing to an in-memory stream for testing.
+        /// Creates an XmlWriter instance using the injected factory
         /// </summary>
         /// <param name="filePath">The file path where the XML content will be written</param>
         /// <returns>An XmlWriter instance initialized with the current settings</returns>
-        protected virtual XmlWriter CreateXmlWriter(string filePath)
+        protected XmlWriter CreateXmlWriter(string filePath)
         {
-            return XmlWriter.Create(filePath, Settings);
+            return xmlWriterFactory.Create(filePath, Settings);
         }
         
-        // The following methods are all virtual to allow for testing and customization in derived classes
-        // -> They can be overridden in derived classes to provide custom logging behavior (or mock logging for testing)
 
         /// <summary>
         /// Logs a trace-level message using the configured logger
         /// </summary>
         /// <param name="message">The trace message to log</param>
-        protected virtual void LogTrace(string message)
+        protected void LogTrace(string message)
         {
             Logger.Trace(message);
         }
 
+        
         /// <summary>
         /// Logs an informational message using the configured logger
         /// </summary>
         /// <param name="message">The informational message to log</param>
-        protected virtual void LogInfo(string message)
+        protected void LogInfo(string message)
         {
             Logger.Info(message);
         }
 
+        
         /// <summary>
         /// Logs a warning-level message using the configured logger
         /// </summary>
         /// <param name="message">The warning message to log</param>
-        protected virtual void LogWarn(string message)
+        protected void LogWarn(string message)
         {
             Logger.Warn(message);
         }
 
+        
         /// <summary>
         /// Logs a warning-level message along with an associated exception using the configured logger
         /// </summary>
         /// <param name="ex">The exception associated with the warning</param>
         /// <param name="message">The warning message to log</param>
-        protected virtual void LogWarn(Exception ex, string message)
+        protected void LogWarn(Exception ex, string message)
         {
             Logger.Warn(ex, message);
         }
 
+        
         /// <summary>
         /// Logs an error-level message along with an associated exception using the configured logger
         /// </summary>
         /// <param name="ex">The exception associated with the error</param>
         /// <param name="message">The error message to log</param>
-        protected virtual void LogError(Exception ex, string message)
+        protected void LogError(Exception ex, string message)
         {
             Logger.Error(ex, message);
         }
 
+        
         /// <summary>
         /// Logs a fatal-level message using the configured logger.
         /// </summary>
         /// <param name="message">The fatal error message to log</param>
-        protected virtual void LogFatal(string message)
+        protected void LogFatal(string message)
         {
             Logger.Fatal(message);
         }
 
+        
         /// <summary>
         /// Logs a fatal-level message along with an associated exception using the configured logger
         /// </summary>
         /// <param name="ex">The exception associated with the fatal error</param>
         /// <param name="message">The fatal error message to log</param>
-        protected virtual void LogFatal(Exception ex, string message)
+        protected void LogFatal(Exception ex, string message)
         {
             Logger.Fatal(ex, message);
         }
 
+        
         /// <summary>
         /// Logs a debug-level message using the configured logger
         /// </summary>
         /// <param name="message">The debug message to log</param>
-        protected virtual void LogDebug(string message)
+        protected void LogDebug(string message)
         {
             Logger.Debug(message);
         }
