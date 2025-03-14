@@ -1,35 +1,67 @@
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Static;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class CourseWriter : XmlWriterBase
 {
-	private readonly CourseHelper _courseHelper = CourseHelper.Instance;
-	private readonly GeneralHelper _helper = GeneralHelper.Instance;
+	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+	private const string DEFAULT_COURSE_RELATIVE_PATH = "course/course.xml";
 
+	private readonly CourseHelper _courseHelper;
+	private readonly GeneralHelper _helper;
+
+	
+	// Constructor
+	public CourseWriter()
+	{
+		_courseHelper = CourseHelper.Instance;
+		_helper = GeneralHelper.Instance;
+	}
+	
+	
+	// Constructor supporting Dependency Injection for Unit Testing
+	public CourseWriter(CourseHelper courseHelper, GeneralHelper helper)
+	{
+		_courseHelper = courseHelper;
+		_helper = helper;
+	}
+	
 
 	public void WriteCourse(Model.Course course, string outputPath)
 	{
-		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/course.xml"));
+		try
+		{
+			string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_COURSE_RELATIVE_PATH));
+		
+			using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+			{
+				writer.WriteStartDocument();
 
-		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-		writer.WriteStartDocument();
+				writer.WriteStartElement("course"); // Root <course> tag with attributes
+				writer.WriteAttributeString("id", course.SystemDefaults.Id.ToString());
+				writer.WriteAttributeString("contextid", GeneralDefaults.COURSECONTEXTID.ToString());
 
-		writer.WriteStartElement("course"); // Root <course> tag with attributes
-		writer.WriteAttributeString("id", course.SystemDefaults.Id.ToString());
-		writer.WriteAttributeString("contextid", GeneralDefaults.COURSECONTEXTID.ToString());
+				WriteGeneralInformationToCourseSection(writer, course);
+				WriteCategorySection(writer, course);
+				WriteTagsSection(writer, course);
+				WriteCustomFieldsSection(writer, course);
+				WriteCourseFormatOptionsSection(writer, course);
 
-		WriteGeneralInformationToCourseSection(writer, course);
-		WriteCategorySection(writer, course);
-		WriteTagsSection(writer, course);
-		WriteCustomFieldsSection(writer, course);
-		WriteCourseFormatOptionsSection(writer, course);
+				writer.WriteEndElement(); // Close <course>
 
-		writer.WriteEndElement(); // Close <course>
-
-		writer.WriteEndDocument();
+				writer.WriteEndDocument();
+			}
+			
+			Logger.Debug($"Created {DEFAULT_COURSE_RELATIVE_PATH}");
+		}
+		catch (Exception e)
+		{
+			Logger.Error(e, $"Error writing {DEFAULT_COURSE_RELATIVE_PATH}");
+			throw;
+		}
 	}
 
 
@@ -83,9 +115,7 @@ public class CourseWriter : XmlWriterBase
 	/// <param name="course">initialized Moodle Course</param>
 	private void WriteCategorySection(XmlWriter writer, Model.Course course)
 	{
-		// A moodle course can only have a single category assigned to it
-
-		writer.WriteStartElement("category");
+		writer.WriteStartElement("category"); // A moodle course can only have a single category assigned to it
 
 		writer.WriteAttributeString("id", "0");
 		writer.WriteElementString("name", course.SensibleDefaults.CategoryName);
@@ -104,6 +134,7 @@ public class CourseWriter : XmlWriterBase
 	{
 		if (course.Tags == null || course.Tags.Count == 0)
 		{
+			Logger.Trace("No tags found for course, skipping tags section");
 			return;
 		}
 
@@ -111,6 +142,8 @@ public class CourseWriter : XmlWriterBase
 
 		for (int i = 0; i < course.Tags.Count; i++)
 		{
+			Logger.Debug($"Adding tag {i + 1}: {course.Tags[i]}");
+			
 			writer.WriteStartElement("tag");
 
 			writer.WriteAttributeString("id", (i + 1).ToString());

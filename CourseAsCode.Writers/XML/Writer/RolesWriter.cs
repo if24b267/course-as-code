@@ -1,28 +1,59 @@
 using CourseAsCode.Model;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
 public class RolesWriter : XmlWriterBase
 {
-	private readonly RolesHelper _rolesHelper = new RolesHelper();
+	private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+	private const string DEFAULT_ROLES_RELATIVE_PATH = "roles.xml";
+	
+	private readonly RolesHelper _rolesHelper;
+	
+	
+	// Constructor
+	public RolesWriter()
+	{
+		_rolesHelper = new RolesHelper();
+	}
+	
+	
+	// Constructor using Dependency Injection for Unit Testing
+	public RolesWriter(RolesHelper rolesHelper)
+	{
+		_rolesHelper = rolesHelper;
+	}
 
 
 	public void WriteRoles(Model.Course course, string outputPath)
 	{
-		string filePath = Path.GetFullPath(Path.Combine(outputPath, "roles.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-		writer.WriteStartDocument();
-		writer.WriteStartElement("roles_definition");
-
-		foreach (var role in course.Roles)
+		try
 		{
-			WriteSingleRole(writer, role);
-		}
+			string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_ROLES_RELATIVE_PATH));
 
-		writer.WriteEndElement(); // Close <roles_definition>
-		writer.WriteEndDocument();
+			using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+			{
+				writer.WriteStartDocument();
+				writer.WriteStartElement("roles_definition");
+
+				foreach (var role in course.Roles)
+				{
+					WriteSingleRole(writer, role);
+				}
+
+				writer.WriteEndElement(); // Close <roles_definition>
+				writer.WriteEndDocument();
+			}
+			
+			_logger.Debug($"Created {DEFAULT_ROLES_RELATIVE_PATH}");
+		}
+		catch (Exception e)
+		{
+			_logger.Error(e, $"Error writing {DEFAULT_ROLES_RELATIVE_PATH}");
+			throw;
+		}
 	}
 
 
@@ -51,5 +82,7 @@ public class RolesWriter : XmlWriterBase
 		WriteElements(writer, elements);
 
 		writer.WriteEndElement(); // Close <role>
+		
+		_logger.Trace($"Wrote role {role.Name} to {DEFAULT_ROLES_RELATIVE_PATH}");
 	}
 }
