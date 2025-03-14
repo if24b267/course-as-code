@@ -4,15 +4,33 @@ using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Writer.Activities.Interfaces;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.File
 {
     internal class ModuleWriterFile : XmlWriterBase, IActivityModuleWriter
     {
-        private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private const string DEFAULT_MODULE_RELATIVE_PATH = "module.xml";
         
-        private readonly MoodleVersionHelper _moodleVersionHelper = new MoodleVersionHelper();
-        private readonly GeneralHelper _generalHelper = new GeneralHelper();
+        private readonly MoodleVersionHelper _moodleVersionHelper;
+        private readonly GeneralHelper _generalHelper;
+        
+        
+        // Constructor
+        public ModuleWriterFile()
+        {
+            _moodleVersionHelper = MoodleVersionHelper.Instance;
+            _generalHelper = GeneralHelper.Instance;
+        }
+        
+        
+        // Constructor using Dependency Injection for Unit Testing
+        public ModuleWriterFile(MoodleVersionHelper moodleVersionHelper, GeneralHelper generalHelper)
+        {
+            _moodleVersionHelper = moodleVersionHelper;
+            _generalHelper = generalHelper;
+        }
         
         
         /// <summary>
@@ -24,59 +42,66 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         /// <param name="activityObject"></param>
         public void WriteModule(string outputPath, Model.Course course, Section section, Activity activityObject)
         {
-            // Cast the activityObject to URL + Error handling
-            MoodleFile? moodleFile = null;
             try
             {
-                moodleFile = (MoodleFile)activityObject;
-            }
-            catch (Exception ex)
-            {
-                _logger.Fatal("Couldn't generate module.xml for file (resource) activity. Error: {0}", ex.Message);
-                return;
-            }
-            
-            // Write the module.xml file
-            string filePath = Path.GetFullPath(Path.Combine(outputPath, "module.xml"));
-            using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-            
-            writer.WriteStartDocument();
-            
-            // Create module tag with attributes
-            writer.WriteStartElement("module");
-            writer.WriteAttributeString("id", moodleFile.SystemDefaults.ModuleId.ToString());
-            writer.WriteAttributeString("version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
-            
-            // Write contents of module tag
-            var elements = new Dictionary<string, string>
-            {
-                { "modulename", moodleFile.SystemDefaults.ModuleName },
-                { "sectionid", section.SystemDefaults.SectionId.ToString() },
-                { "sectionnumber", course.Sections.IndexOf(section).ToString() }, // Determine the index of the current section instance within the course's section list
-                { "idnumber", "$@NULL@$" },
-                { "added", _generalHelper.DateTimeToUnixTimestamp(moodleFile.TimeCreated) },
-                { "score", "0" },
-                { "indent", "0" },
-                { "visible", moodleFile.VisibleToStudents ? "1" : "0" }, // TODO: Determine difference between these visibility flags
-                { "visibleoncoursepage", moodleFile.VisibleToStudents ? "1" : "0" },
-                { "visibleold", moodleFile.VisibleToStudents ? "1" : "0" },
-                { "groupmode", _generalHelper.EnumIntegerToString(moodleFile.GroupMode) },
-                { "groupingid", "0" },
-                { "completion", "0" },
-                { "completiongradeitemnumber", "$@NULL@$" },
-                { "completionpassgrade", "0" },
-                { "completionview", "0" },
-                { "completionexpected", "0" },
-                { "availability", "$@NULL@$" },
-                { "showdescription", moodleFile.DisplayDescription ? "1" : "0" },
-                { "downloadcontent", "1" },
-                { "lang", _generalHelper.GetLanguageFromEnum(moodleFile.Language) },
-            };
-            WriteElements(writer, elements);
-            
-            WriteTags(writer, moodleFile.Tags);
+                // Cast the activityObject to URL
+                MoodleFile? moodleFile = (MoodleFile)activityObject;
 
-            writer.WriteEndElement(); // Close <module>
+                // Write the module.xml file
+                string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MODULE_RELATIVE_PATH));
+                using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+                {
+                    writer.WriteStartDocument();
+
+                    // Create module tag with attributes
+                    writer.WriteStartElement("module");
+                    writer.WriteAttributeString("id", moodleFile.SystemDefaults.ModuleId.ToString());
+                    writer.WriteAttributeString("version",
+                        _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
+
+                    // Write contents of module tag
+                    var elements = new Dictionary<string, string>
+                    {
+                        { "modulename", moodleFile.SystemDefaults.ModuleName },
+                        { "sectionid", section.SystemDefaults.SectionId.ToString() },
+                        {
+                            "sectionnumber", course.Sections.IndexOf(section).ToString()
+                        }, // Determine the index of the current section instance within the course's section list
+                        { "idnumber", "$@NULL@$" },
+                        { "added", _generalHelper.DateTimeToUnixTimestamp(moodleFile.TimeCreated) },
+                        { "score", "0" },
+                        { "indent", "0" },
+                        {
+                            "visible", moodleFile.VisibleToStudents ? "1" : "0"
+                        }, // TODO: Determine difference between these visibility flags
+                        { "visibleoncoursepage", moodleFile.VisibleToStudents ? "1" : "0" },
+                        { "visibleold", moodleFile.VisibleToStudents ? "1" : "0" },
+                        { "groupmode", _generalHelper.EnumIntegerToString(moodleFile.GroupMode) },
+                        { "groupingid", "0" },
+                        { "completion", "0" },
+                        { "completiongradeitemnumber", "$@NULL@$" },
+                        { "completionpassgrade", "0" },
+                        { "completionview", "0" },
+                        { "completionexpected", "0" },
+                        { "availability", "$@NULL@$" },
+                        { "showdescription", moodleFile.DisplayDescription ? "1" : "0" },
+                        { "downloadcontent", "1" },
+                        { "lang", _generalHelper.GetLanguageFromEnum(moodleFile.Language) },
+                    };
+                    WriteElements(writer, elements);
+
+                    WriteTags(writer, moodleFile.Tags, outputPath);
+
+                    writer.WriteEndElement(); // Close <module>
+                    
+                    Logger.Debug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
+                throw;
+            }
         }
 
 
@@ -85,7 +110,8 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document</param>
         /// <param name="tags">Tags to be written, represented as a list of strings</param>
-        private void WriteTags(XmlWriter writer, List<string>? tags)
+        /// <param name="outputPath">The path to the directory where the file is being written, used for logging</param>
+        private void WriteTags(XmlWriter writer, List<string>? tags, string outputPath)
         {
             int tagId = 0;
             
@@ -102,6 +128,8 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
                     writer.WriteElementString("rawname", tag);
 
                     writer.WriteEndElement(); // Close <tag>
+                    
+                    Logger.Trace($"Added tag '{tag}' to {Path.GetFileName(outputPath)}");
                 }
             }
 
