@@ -56,8 +56,9 @@ public class GeneralHelper
 	public string DateTimeToUnixTimestamp(DateTime dateTime)
 	{
 		// Ensure the DateTime is in UTC
+		DateTime viennaTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified);
 		TimeZoneInfo viennaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-		DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(dateTime, viennaTimeZone);
+		DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(viennaTime, viennaTimeZone);
 		
 		// Define the Unix epoch (January 1, 1970, 00:00:00 UTC)
 		DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
