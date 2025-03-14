@@ -1,417 +1,409 @@
-using CourseAsCode.Model;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Static;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
 
-namespace CourseAsCode.Writers.XML.Writer;
-
-public class MoodleBackupWriter : XmlWriterBase
+namespace CourseAsCode.Writers.XML.Writer
 {
-    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-    private const string DEFAULT_MOODLE_BACKUP_RELATIVE_PATH = "moodle_backup.xml";
-    
-    private readonly GeneralHelper _helper;
-    private readonly MoodleVersionHelper _moodleVersionHelper;
-    private readonly CourseHelper _courseHelper;
-    
-    
-    // Constructor
-    public MoodleBackupWriter()
+    public class MoodleBackupWriter : XmlWriterBase
     {
-        _helper = GeneralHelper.Instance;
-        _moodleVersionHelper = MoodleVersionHelper.Instance;
-        _courseHelper = CourseHelper.Instance;
-    }
-    
-    
-    // Constructor supporting Dependency Injection for Unit Testing
-    public MoodleBackupWriter(GeneralHelper helper, MoodleVersionHelper moodleVersionHelper, CourseHelper courseHelper)
-    {
-        _helper = helper;
-        _moodleVersionHelper = moodleVersionHelper;
-        _courseHelper = courseHelper;
-    }
+        private const string DEFAULT_MOODLE_BACKUP_RELATIVE_PATH = "moodle_backup.xml";
 
-    
-    public void WriteMoodleBackup(Model.Course course, string outputPath)
-    {
-        try
+        private readonly GeneralHelper _helper;
+        private readonly MoodleVersionHelper _moodleVersionHelper;
+        private readonly CourseHelper _courseHelper;
+
+        /// <summary>
+        /// Default constructor.
+        /// Initializes helper singletons and passes default XML writer factory and logger to the base class
+        /// </summary>
+        public MoodleBackupWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
-            string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MOODLE_BACKUP_RELATIVE_PATH));
+            _helper = GeneralHelper.Instance;
+            _moodleVersionHelper = MoodleVersionHelper.Instance;
+            _courseHelper = CourseHelper.Instance;
+        }
 
-            using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+        /// <summary>
+        /// Constructor supporting Dependency Injection for Unit Testing
+        /// </summary>
+        public MoodleBackupWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger,
+                                  GeneralHelper helper, MoodleVersionHelper moodleVersionHelper, CourseHelper courseHelper)
+            : base(xmlWriterFactory, logger)
+        {
+            _helper = helper;
+            _moodleVersionHelper = moodleVersionHelper;
+            _courseHelper = courseHelper;
+        }
+
+        public void WriteMoodleBackup(Model.Course course, string outputPath)
+        {
+            try
             {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("moodle_backup");
-                writer.WriteStartElement("information");
+                string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MOODLE_BACKUP_RELATIVE_PATH));
 
-                WriteGeneralSettings(writer, course);
-                WriteDetails(writer, course);
-                WriteContents(writer, course);
-                WriteSettings(writer, course);
+                using (XmlWriter writer = CreateXmlWriter(filePath))
+                {
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("moodle_backup");
+                    writer.WriteStartElement("information");
 
-                writer.WriteEndElement(); // Closes <information>
-                writer.WriteEndElement(); // Closes <moodle_backup>
-                writer.WriteEndDocument();
+                    WriteGeneralSettings(writer, course);
+                    WriteDetails(writer, course);
+                    WriteContents(writer, course);
+                    WriteSettings(writer, course);
+
+                    writer.WriteEndElement(); // Closes <information>
+                    writer.WriteEndElement(); // Closes <moodle_backup>
+                    writer.WriteEndDocument();
+                }
+
+                LogDebug($"Created {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
             }
-            
-            Logger.Debug($"Created {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
-        }
-        catch (Exception e)
-        {
-            Logger.Error(e, $"Error writing {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
-            throw;
-        }
-    }
-
-    
-    /// <summary>
-    /// writes the general settings within the information section of moodle_backup.xml
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document</param>
-    /// <param name="course">initialized Moodle Course</param>
-    private void WriteGeneralSettings(XmlWriter writer, Model.Course course)
-    {
-        var elements = new Dictionary<string, string>
-        {
-            { "name", _helper.GenerateBackupName(course) },
-            { "moodle_version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion) },
-            { "moodle_release", _moodleVersionHelper.GetMoodleReleaseStringFromEnum(course.BackupMetadata.MoodleVersion) },
-            { "backup_version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion) },
-            { "backup_release", _moodleVersionHelper.GetMoodleReleaseStringFromEnum(course.BackupMetadata.MoodleVersion) },
-            { "backup_date", _helper.DateTimeToUnixTimestamp(course.BackupMetadata.SystemDefaults.CreationDate) },
-            { "mnet_remoteusers", course.BackupMetadata.SystemDefaults.MNetRemoteUsers.ToString() ?? "0" },
-            { "include_files", course.BackupMetadata.SensibleDefaults.FilesIncluded ? "1" : "0" },
-            { "include_file_references_to_external_content", course.BackupMetadata.SystemDefaults.IncludeFileReferencesToExternalContent ? "1" : "0" },
-            { "original_wwwroot", course.BackupMetadata.MoodleUrl.ToString() },
-            { "original_site_identifier_hash", "0" },
-            { "original_course_id", course.SystemDefaults.Id.ToString() },
-            { "original_course_format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format) },
-            { "original_course_fullname", course.FullName },
-            { "original_course_shortname", course.ShortName },
-            { "original_course_startdate", _helper.DateTimeToUnixTimestamp(course.StartDate) },
-            { "original_course_enddate", course.EndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)course.EndDate) : "0" },
-            { "original_course_contextid", GeneralDefaults.COURSECONTEXTID.ToString() },
-            { "original_system_contextid", GeneralDefaults.SYSTEMCONTEXTID.ToString() }
-        };
-
-        WriteElements(writer, elements);
-    }
-
-    
-    /// <summary>
-    /// writes the information section of moodle_backup.xml
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document</param>
-    /// <param name="course">initialized Moodle Course</param>
-    private void WriteDetails(XmlWriter writer, Model.Course course)
-    {
-        writer.WriteStartElement("details");
-
-        WriteStartElementWithAttributes(writer, "detail", new Dictionary<string, string>
-        {
-            { "backup_id", course.BackupMetadata.SystemDefaults.BackupId }
-        });
-
-        var elements = new Dictionary<string, string>
-        {
-            { "type", course.BackupMetadata.SystemDefaults.WholeSiteBackup ? "site" : "course" },
-            { "format", course.BackupMetadata.SystemDefaults.UsesNewBackupFormat ? "moodle2" : "moodle1" },
-            { "interactive", "1" },
-            { "mode", "10" },
-            { "execution", "1" },
-            { "executiontime", "0" }
-        };
-
-        WriteElements(writer, elements);
-
-        writer.WriteEndElement(); // Closes <detail>
-        writer.WriteEndElement(); // Closes <details>
-    }
-
-    
-    /// <summary>
-    /// writes the contents section of moodle_backup.xml
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document</param>
-    /// <param name="course">initialized Moodle Course</param>
-    private void WriteContents(XmlWriter writer, Model.Course course)
-    {
-        writer.WriteStartElement("contents");
-
-        WriteActivities(writer, course);
-        WriteSections(writer, course);
-        WriteCourseSubsection(writer, course);
-
-        writer.WriteEndElement(); // Closes <contents>
-    }
-
-    
-    /// <summary>
-    /// Writes the activities subsection of the contents section of moodle_backup.xml.
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document.</param>
-    /// <param name="course">Initialized Moodle Course.</param>
-    private void WriteActivities(XmlWriter writer, Model.Course course)
-    {
-        writer.WriteStartElement("activities");
-        foreach (var section in course.Sections)
-        {
-            foreach (var activity in section.Activities)
+            catch (Exception e)
             {
-                // TODO: Refactor this to avoid duplicate code
-                if (activity is TextAndMediaArea textAndMediaArea)
-                {
-                    writer.WriteStartElement("activity");
-
-                    writer.WriteElementString("moduleid", textAndMediaArea.SystemDefaults.ModuleId.ToString());
-                    writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                    writer.WriteElementString("modulename", textAndMediaArea.SystemDefaults.ModuleName);
-                    writer.WriteElementString("title", textAndMediaArea.Name);
-                    writer.WriteElementString("directory", $"activities/label_{activity.ActivityId}");
-                    writer.WriteElementString("insubsection", string.Empty);
-
-                    writer.WriteEndElement(); // Closes <activity>
-                }
-
-                if (activity is URL urlObject)
-                {
-                    writer.WriteStartElement("activity");
-
-                    writer.WriteElementString("moduleid", urlObject.SystemDefaults.ModuleId.ToString());
-                    writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                    writer.WriteElementString("modulename", urlObject.SystemDefaults.ModuleName);
-                    writer.WriteElementString("title", urlObject.Name);
-                    writer.WriteElementString("directory", $"activities/url_{activity.ActivityId}");
-                    writer.WriteElementString("insubsection", string.Empty);
-
-                    writer.WriteEndElement(); // Closes <activity>
-                }
-                
-                if (activity is MoodleFile moodleFile)
-                {
-                    writer.WriteStartElement("activity");
-
-                    writer.WriteElementString("moduleid", moodleFile.SystemDefaults.ModuleId.ToString());
-                    writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                    writer.WriteElementString("modulename", moodleFile.SystemDefaults.ModuleName);
-                    writer.WriteElementString("title", moodleFile.FileName);
-                    writer.WriteElementString("directory", $"activities/resource_{activity.ActivityId}");
-                    writer.WriteElementString("insubsection", string.Empty);
-
-                    writer.WriteEndElement(); // Closes <activity>
-                }
-                
-                Logger.Trace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
+                LogError(e, $"Error writing {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
+                throw;
             }
         }
-        writer.WriteEndElement(); // Closes <activities>
-    }
 
-    
-    /// <summary>
-    /// Writes the sections subsection of the contents section of moodle_backup.xml.
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document.</param>
-    /// <param name="course">Initialized Moodle Course.</param>
-    private void WriteSections(XmlWriter writer, Model.Course course)
-    {
-        writer.WriteStartElement("sections");
-        foreach (var section in course.Sections)
+        /// <summary>
+        /// writes the general settings within the information section of moodle_backup.xml
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="course">initialized Moodle Course</param>
+        private void WriteGeneralSettings(XmlWriter writer, Model.Course course)
         {
-            writer.WriteStartElement("section");
-
-            writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-            writer.WriteElementString("title", section.Name ?? "0");
-            writer.WriteElementString("directory", section.SystemDefaults.PathToSection);
-            writer.WriteElementString("parentcmid", string.Empty);
-            writer.WriteElementString("modname", string.Empty);
-
-            writer.WriteEndElement(); // Closes <section>
-            
-            Logger.Trace($"Added reference for 'Section {section.SystemDefaults.SectionId}: {section.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
-        }
-        writer.WriteEndElement(); // Closes <sections>
-    }
-
-    
-    /// <summary>
-    /// writes the course subsection of the contents section of moodle_backup.xml
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document</param>
-    /// <param name="course">initialized Moodle Course</param>
-    private void WriteCourseSubsection(XmlWriter writer, Model.Course course)
-    {
-        writer.WriteStartElement("course");
-
-        var elements = new Dictionary<string, string>
-        {
-            { "courseid", course.SystemDefaults.Id.ToString() },
-            { "title", course.ShortName },
-            { "directory", "course" }
-        };
-
-        WriteElements(writer, elements);
-
-        writer.WriteEndElement(); // Closes <course>
-    }
-
-    
-    /// <summary>
-    /// writes the settings section of moodle_backup.xml
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document</param>
-    /// <param name="course">initialized Moodle Course</param>
-    private void WriteSettings(XmlWriter writer, Model.Course course)
-    {
-        writer.WriteStartElement("settings");
-
-        WriteRootLevelSettings(writer, course);
-        WriteSectionSettings(writer, course);
-        WriteActivitySettings(writer, course);
-
-        writer.WriteEndElement(); // Closes <settings>
-    }
-
-    
-    /// <summary>
-    /// writes the root level settings of the settings section of moodle_backup.xml, corresponds to the general backup settings selected by the user in the Moodle UI
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document</param>
-    /// <param name="course">initialized Moodle Course</param>
-    private void WriteRootLevelSettings(XmlWriter writer, Model.Course course)
-    {
-        var settings = new Dictionary<string, string>
-        {
-            { "filename", _helper.GenerateBackupName(course) },
-            { "users", course.BackupMetadata.BackupSettings.IncludeEnrolledUsers ? "1" : "0" },
-            { "anonymize", course.BackupMetadata.BackupSettings.AnonymizeUserInformation ? "1" : "0" },
-            { "role_assignments", course.BackupMetadata.BackupSettings.IncludeUserRoleAssignments ? "1" : "0" },
-            { "activities", course.BackupMetadata.BackupSettings.IncludeActivitiesAndResources ? "1" : "0" },
-            { "blocks", course.BackupMetadata.BackupSettings.IncludeBlocks ? "1" : "0" },
-            { "files", course.BackupMetadata.BackupSettings.IncludeFiles ? "1" : "0" },
-            { "filters", course.BackupMetadata.BackupSettings.IncludeFilters ? "1" : "0" },
-            { "comments", course.BackupMetadata.BackupSettings.IncludeComments ? "1" : "0" },
-            { "badges", course.BackupMetadata.BackupSettings.IncludeBadges ? "1" : "0" },
-            { "calendarevents", course.BackupMetadata.BackupSettings.IncludeCalendarEvents ? "1" : "0" },
-            { "userscompletion", course.BackupMetadata.BackupSettings.IncludeUserCompletionDetails ? "1" : "0" },
-            { "logs", course.BackupMetadata.BackupSettings.IncludeCourseLogs ? "1" : "0" },
-            { "grade_histories", course.BackupMetadata.BackupSettings.IncludeGradeHistory ? "1" : "0" },
-            { "questionbank", course.BackupMetadata.BackupSettings.IncludeQuestionBank ? "1" : "0" },
-            { "groups", course.BackupMetadata.BackupSettings.IncludeGroupsAndGroupings ? "1" : "0" },
-            { "competencies", course.BackupMetadata.BackupSettings.IncludeCompetencies ? "1" : "0" },
-            { "customfield", course.BackupMetadata.BackupSettings.IncludeCustomFields ? "1" : "0" },
-            { "contentbankcontent", course.BackupMetadata.BackupSettings.IncludeContentBankContent ? "1" : "0" },
-            { "xapistate", course.BackupMetadata.BackupSettings.IncludeUserStateInContent ? "1" : "0" },
-            { "legacyfiles", course.BackupMetadata.BackupSettings.IncludeLegacyCourseFiles ? "1" : "0" }
-        };
-
-        foreach (var setting in settings)
-        {
-            WriteSingleBackupSettingTag(writer, "root", setting.Key, setting.Value);
-        }
-    }
-
-
-    /// <summary>
-    /// Writes the section settings of the settings section of moodle_backup.xml.
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document.</param>
-    /// <param name="course">Initialized Moodle Course.</param>
-    private void WriteSectionSettings(XmlWriter writer, Model.Course course)
-    {
-        foreach (var section in course.Sections)
-        {
-            WriteSingleBackupSettingTag(writer, "section", $"section_{section.SystemDefaults.SectionId}", $"section_{section.SystemDefaults.SectionId}_included", "1");
-            WriteSingleBackupSettingTag(writer, "section", $"section_{section.SystemDefaults.SectionId}", $"section_{section.SystemDefaults.SectionId}_userinfo", "1");
-            
-            Logger.Trace($"Added setting for 'Section {section.SystemDefaults.SectionId}: {section.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
-        }
-    }
-
-    
-    /// <summary>
-    /// Writes the activity settings of the settings section of moodle_backup.xml.
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document.</param>
-    /// <param name="course">Initialized Moodle Course.</param>
-    private void WriteActivitySettings(XmlWriter writer, Model.Course course)
-    {
-        foreach (var section in course.Sections)
-        {
-            foreach (var activity in section.Activities)
+            var elements = new Dictionary<string, string>
             {
-                // TODO: Refactor this to avoid duplicate code
-                if (activity is TextAndMediaArea textAndMediaArea)
-                {
-                    WriteSingleBackupSettingTag(writer, "activity", $"label_{activity.ActivityId}", $"label_{activity.ActivityId}_included", "1");
-                    WriteSingleBackupSettingTag(writer, "activity", $"label_{activity.ActivityId}", $"label_{activity.ActivityId}_userinfo", "1");
-                }
+                { "name", _helper.GenerateBackupName(course) },
+                { "moodle_version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion) },
+                { "moodle_release", _moodleVersionHelper.GetMoodleReleaseStringFromEnum(course.BackupMetadata.MoodleVersion) },
+                { "backup_version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion) },
+                { "backup_release", _moodleVersionHelper.GetMoodleReleaseStringFromEnum(course.BackupMetadata.MoodleVersion) },
+                { "backup_date", _helper.DateTimeToUnixTimestamp(course.BackupMetadata.SystemDefaults.CreationDate) },
+                { "mnet_remoteusers", course.BackupMetadata.SystemDefaults.MNetRemoteUsers.ToString() ?? "0" },
+                { "include_files", course.BackupMetadata.SensibleDefaults.FilesIncluded ? "1" : "0" },
+                { "include_file_references_to_external_content", course.BackupMetadata.SystemDefaults.IncludeFileReferencesToExternalContent ? "1" : "0" },
+                { "original_wwwroot", course.BackupMetadata.MoodleUrl.ToString() },
+                { "original_site_identifier_hash", "0" },
+                { "original_course_id", course.SystemDefaults.Id.ToString() },
+                { "original_course_format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format) },
+                { "original_course_fullname", course.FullName },
+                { "original_course_shortname", course.ShortName },
+                { "original_course_startdate", _helper.DateTimeToUnixTimestamp(course.StartDate) },
+                { "original_course_enddate", course.EndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)course.EndDate) : "0" },
+                { "original_course_contextid", GeneralDefaults.COURSECONTEXTID.ToString() },
+                { "original_system_contextid", GeneralDefaults.SYSTEMCONTEXTID.ToString() }
+            };
 
-                if (activity is URL urlObject)
-                {
-                    WriteSingleBackupSettingTag(writer, "activity", $"url_{activity.ActivityId}", $"url_{activity.ActivityId}_included", "1");
-                    WriteSingleBackupSettingTag(writer, "activity", $"url_{activity.ActivityId}", $"url_{activity.ActivityId}_userinfo", "1");
-                }
+            WriteElements(writer, elements);
+        }
 
-                if (activity is MoodleFile moodleFile)
+        /// <summary>
+        /// writes the information section of moodle_backup.xml
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="course">initialized Moodle Course</param>
+        private void WriteDetails(XmlWriter writer, Model.Course course)
+        {
+            writer.WriteStartElement("details");
+
+            WriteStartElementWithAttributes(writer, "detail", new Dictionary<string, string>
+            {
+                { "backup_id", course.BackupMetadata.SystemDefaults.BackupId }
+            });
+
+            var elements = new Dictionary<string, string>
+            {
+                { "type", course.BackupMetadata.SystemDefaults.WholeSiteBackup ? "site" : "course" },
+                { "format", course.BackupMetadata.SystemDefaults.UsesNewBackupFormat ? "moodle2" : "moodle1" },
+                { "interactive", "1" },
+                { "mode", "10" },
+                { "execution", "1" },
+                { "executiontime", "0" }
+            };
+
+            WriteElements(writer, elements);
+
+            writer.WriteEndElement(); // Closes <detail>
+            writer.WriteEndElement(); // Closes <details>
+        }
+
+        /// <summary>
+        /// writes the contents section of moodle_backup.xml
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="course">initialized Moodle Course</param>
+        private void WriteContents(XmlWriter writer, Model.Course course)
+        {
+            writer.WriteStartElement("contents");
+
+            WriteActivities(writer, course);
+            WriteSections(writer, course);
+            WriteCourseSubsection(writer, course);
+
+            writer.WriteEndElement(); // Closes <contents>
+        }
+
+        /// <summary>
+        /// Writes the activities subsection of the contents section of moodle_backup.xml.
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">Initialized Moodle Course.</param>
+        private void WriteActivities(XmlWriter writer, Model.Course course)
+        {
+            writer.WriteStartElement("activities");
+            foreach (var section in course.Sections)
+            {
+                foreach (var activity in section.Activities)
                 {
-                    WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_included", "1");
-                    WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_userinfo", "1");
+                    // TODO: Refactor this to avoid duplicate code
+                    if (activity is TextAndMediaArea textAndMediaArea)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", textAndMediaArea.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", textAndMediaArea.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", textAndMediaArea.Name);
+                        writer.WriteElementString("directory", $"activities/label_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // Closes <activity>
+                    }
+
+                    if (activity is URL urlObject)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", urlObject.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", urlObject.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", urlObject.Name);
+                        writer.WriteElementString("directory", $"activities/url_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // Closes <activity>
+                    }
+                    
+                    if (activity is MoodleFile moodleFile)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", moodleFile.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", moodleFile.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", moodleFile.FileName);
+                        writer.WriteElementString("directory", $"activities/resource_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // Closes <activity>
+                    }
+                    
+                    LogTrace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
                 }
+            }
+            writer.WriteEndElement(); // Closes <activities>
+        }
+
+        /// <summary>
+        /// Writes the sections subsection of the contents section of moodle_backup.xml.
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">Initialized Moodle Course.</param>
+        private void WriteSections(XmlWriter writer, Model.Course course)
+        {
+            writer.WriteStartElement("sections");
+            foreach (var section in course.Sections)
+            {
+                writer.WriteStartElement("section");
+
+                writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                writer.WriteElementString("title", section.Name ?? "0");
+                writer.WriteElementString("directory", section.SystemDefaults.PathToSection);
+                writer.WriteElementString("parentcmid", string.Empty);
+                writer.WriteElementString("modname", string.Empty);
+
+                writer.WriteEndElement(); // Closes <section>
                 
-                Logger.Trace($"Added setting for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
+                LogTrace($"Added reference for 'Section {section.SystemDefaults.SectionId}: {section.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
+            }
+            writer.WriteEndElement(); // Closes <sections>
+        }
+
+        /// <summary>
+        /// writes the course subsection of the contents section of moodle_backup.xml
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="course">initialized Moodle Course</param>
+        private void WriteCourseSubsection(XmlWriter writer, Model.Course course)
+        {
+            writer.WriteStartElement("course");
+
+            var elements = new Dictionary<string, string>
+            {
+                { "courseid", course.SystemDefaults.Id.ToString() },
+                { "title", course.ShortName },
+                { "directory", "course" }
+            };
+
+            WriteElements(writer, elements);
+
+            writer.WriteEndElement(); // Closes <course>
+        }
+
+        /// <summary>
+        /// writes the settings section of moodle_backup.xml
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="course">initialized Moodle Course</param>
+        private void WriteSettings(XmlWriter writer, Model.Course course)
+        {
+            writer.WriteStartElement("settings");
+
+            WriteRootLevelSettings(writer, course);
+            WriteSectionSettings(writer, course);
+            WriteActivitySettings(writer, course);
+
+            writer.WriteEndElement(); // Closes <settings>
+        }
+
+        /// <summary>
+        /// writes the root level settings of the settings section of moodle_backup.xml, corresponds to the general backup settings selected by the user in the Moodle UI
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="course">initialized Moodle Course</param>
+        private void WriteRootLevelSettings(XmlWriter writer, Model.Course course)
+        {
+            var settings = new Dictionary<string, string>
+            {
+                { "filename", _helper.GenerateBackupName(course) },
+                { "users", course.BackupMetadata.BackupSettings.IncludeEnrolledUsers ? "1" : "0" },
+                { "anonymize", course.BackupMetadata.BackupSettings.AnonymizeUserInformation ? "1" : "0" },
+                { "role_assignments", course.BackupMetadata.BackupSettings.IncludeUserRoleAssignments ? "1" : "0" },
+                { "activities", course.BackupMetadata.BackupSettings.IncludeActivitiesAndResources ? "1" : "0" },
+                { "blocks", course.BackupMetadata.BackupSettings.IncludeBlocks ? "1" : "0" },
+                { "files", course.BackupMetadata.BackupSettings.IncludeFiles ? "1" : "0" },
+                { "filters", course.BackupMetadata.BackupSettings.IncludeFilters ? "1" : "0" },
+                { "comments", course.BackupMetadata.BackupSettings.IncludeComments ? "1" : "0" },
+                { "badges", course.BackupMetadata.BackupSettings.IncludeBadges ? "1" : "0" },
+                { "calendarevents", course.BackupMetadata.BackupSettings.IncludeCalendarEvents ? "1" : "0" },
+                { "userscompletion", course.BackupMetadata.BackupSettings.IncludeUserCompletionDetails ? "1" : "0" },
+                { "logs", course.BackupMetadata.BackupSettings.IncludeCourseLogs ? "1" : "0" },
+                { "grade_histories", course.BackupMetadata.BackupSettings.IncludeGradeHistory ? "1" : "0" },
+                { "questionbank", course.BackupMetadata.BackupSettings.IncludeQuestionBank ? "1" : "0" },
+                { "groups", course.BackupMetadata.BackupSettings.IncludeGroupsAndGroupings ? "1" : "0" },
+                { "competencies", course.BackupMetadata.BackupSettings.IncludeCompetencies ? "1" : "0" },
+                { "customfield", course.BackupMetadata.BackupSettings.IncludeCustomFields ? "1" : "0" },
+                { "contentbankcontent", course.BackupMetadata.BackupSettings.IncludeContentBankContent ? "1" : "0" },
+                { "xapistate", course.BackupMetadata.BackupSettings.IncludeUserStateInContent ? "1" : "0" },
+                { "legacyfiles", course.BackupMetadata.BackupSettings.IncludeLegacyCourseFiles ? "1" : "0" }
+            };
+
+            foreach (var setting in settings)
+            {
+                WriteSingleBackupSettingTag(writer, "root", setting.Key, setting.Value);
             }
         }
-    }
 
-    
-    /// <summary>
-    /// Writes a single setting tag with the specified level, element, name, and value.
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document.</param>
-    /// <param name="level">Value of the level tag inside the setting tag.</param>
-    /// <param name="element">Value of the activity or section tag inside the setting tag.</param>
-    /// <param name="name">Value of the name tag inside the setting tag.</param>
-    /// <param name="value">Value of the value tag inside the setting tag.</param>
-    private void WriteSingleBackupSettingTag(XmlWriter writer, string level, string element, string name, string value)
-    {
-        writer.WriteStartElement("setting");
-
-        writer.WriteElementString("level", level);
-        if (level == "activity")
+        /// <summary>
+        /// Writes the section settings of the settings section of moodle_backup.xml.
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">Initialized Moodle Course.</param>
+        private void WriteSectionSettings(XmlWriter writer, Model.Course course)
         {
-            writer.WriteElementString("activity", element);
+            foreach (var section in course.Sections)
+            {
+                WriteSingleBackupSettingTag(writer, "section", $"section_{section.SystemDefaults.SectionId}", $"section_{section.SystemDefaults.SectionId}_included", "1");
+                WriteSingleBackupSettingTag(writer, "section", $"section_{section.SystemDefaults.SectionId}", $"section_{section.SystemDefaults.SectionId}_userinfo", "1");
+
+                LogTrace($"Added setting for 'Section {section.SystemDefaults.SectionId}: {section.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
+            }
         }
-        else if (level == "section")
+
+        /// <summary>
+        /// Writes the activity settings of the settings section of moodle_backup.xml.
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">Initialized Moodle Course.</param>
+        private void WriteActivitySettings(XmlWriter writer, Model.Course course)
         {
-            writer.WriteElementString("section", element);
+            foreach (var section in course.Sections)
+            {
+                foreach (var activity in section.Activities)
+                {
+                    // TODO: Refactor this to avoid duplicate code
+                    if (activity is TextAndMediaArea textAndMediaArea)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"label_{activity.ActivityId}", $"label_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"label_{activity.ActivityId}", $"label_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is URL urlObject)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"url_{activity.ActivityId}", $"url_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"url_{activity.ActivityId}", $"url_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is MoodleFile moodleFile)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    LogTrace($"Added setting for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
+                }
+            }
         }
-        writer.WriteElementString("name", name);
-        writer.WriteElementString("value", value);
 
-        writer.WriteEndElement(); // Closes <setting>
-    }
+        /// <summary>
+        /// Writes a single setting tag with the specified level, element, name, and value.
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="level">Value of the level tag inside the setting tag.</param>
+        /// <param name="element">Value of the activity or section tag inside the setting tag.</param>
+        /// <param name="name">Value of the name tag inside the setting tag.</param>
+        /// <param name="value">Value of the value tag inside the setting tag.</param>
+        private void WriteSingleBackupSettingTag(XmlWriter writer, string level, string element, string name, string value)
+        {
+            writer.WriteStartElement("setting");
 
-    
-    /// <summary>
-    /// writes a single setting tag, for use inside the settings section of moodle_backup.xml
-    /// </summary>
-    /// <param name="writer">XmlWriter initialized on the correct document</param>
-    /// <param name="level">value of the level tag inside the setting tag</param>
-    /// <param name="name">value of the name tag inside the setting tag</param>
-    /// <param name="value">value of the value tag inside the setting tag</param>
-    private void WriteSingleBackupSettingTag(XmlWriter writer, string level, string name, string value)
-    {
-        writer.WriteStartElement("setting");
+            writer.WriteElementString("level", level);
+            if (level == "activity")
+            {
+                writer.WriteElementString("activity", element);
+            }
+            else if (level == "section")
+            {
+                writer.WriteElementString("section", element);
+            }
+            writer.WriteElementString("name", name);
+            writer.WriteElementString("value", value);
 
-        writer.WriteElementString("level", level);
-        writer.WriteElementString("name", name);
-        writer.WriteElementString("value", value);
+            writer.WriteEndElement(); // Closes <setting>
+        }
 
-        writer.WriteEndElement(); // Closes <setting>
+        /// <summary>
+        /// writes a single setting tag, for use inside the settings section of moodle_backup.xml
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="level">value of the level tag inside the setting tag</param>
+        /// <param name="name">value of the name tag inside the setting tag</param>
+        /// <param name="value">value of the value tag inside the setting tag</param>
+        private void WriteSingleBackupSettingTag(XmlWriter writer, string level, string name, string value)
+        {
+            writer.WriteStartElement("setting");
+
+            writer.WriteElementString("level", level);
+            writer.WriteElementString("name", name);
+            writer.WriteElementString("value", value);
+
+            writer.WriteEndElement(); // Closes <setting>
+        }
     }
 }
-

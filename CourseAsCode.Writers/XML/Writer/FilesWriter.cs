@@ -3,121 +3,112 @@ using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using System.Security.Cryptography;
-using System.Text;
 using System.Xml;
-using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
 using NLog;
-using NLog.Fluent;
 
-namespace CourseAsCode.Writers.XML.Writer;
-
-public class FilesWriter : XmlWriterBase
+namespace CourseAsCode.Writers.XML.Writer
 {
-	private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-	private const string DEFAULT_FILE_RELATIVE_PATH = "files.xml";
-	
-	private readonly FileHelper _fileHelper;
-	private readonly GeneralHelper _generalHelper;
-	
-	
-	// Constructor
-	public FilesWriter()
-	{
-		_fileHelper = FileHelper.Instance;
-		_generalHelper = GeneralHelper.Instance;
-	}
-	
-	
-	// Constructor supporting Dependency Injection for Unit Testing
-	public FilesWriter(FileHelper fileHelper, GeneralHelper generalHelper)
-	{
-		_fileHelper = fileHelper;
-		_generalHelper = generalHelper;
-	}
-	
-	
-	public void WriteFiles(Model.Course course, string outputPath)
-	{
-		string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_FILE_RELATIVE_PATH));
+    public class FilesWriter : XmlWriterBase
+    {
+        private const string DEFAULT_FILE_RELATIVE_PATH = "files.xml";
+        private readonly FileHelper _fileHelper;
+        private readonly GeneralHelper _generalHelper;
 
-		try
-		{
-			using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
-			{
-				writer.WriteStartDocument();
+        /// <summary>
+        /// Default constructor using default implementations for dependencies
+        /// </summary>
+        public FilesWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        {
+            _fileHelper = FileHelper.Instance;
+            _generalHelper = GeneralHelper.Instance;
+        }
 
-				writer.WriteStartElement("files");
+        /// <summary>
+        /// Constructor supporting Dependency Injection for Unit Testing
+        /// </summary>
+        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, FileHelper fileHelper, GeneralHelper generalHelper) : base(xmlWriterFactory, logger)
+        {
+            _fileHelper = fileHelper;
+            _generalHelper = generalHelper;
+        }
 
-				foreach (Section section in course.Sections)
-				{
-					foreach (Activity activity in section.Activities)
-					{
-						if (activity is MoodleFile)
-						{
-							WriteSingleFile(writer, outputPath, (MoodleFile)activity);
-						}
-					}
-				}
+        public void WriteFiles(Model.Course course, string outputPath)
+        {
+            string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_FILE_RELATIVE_PATH));
 
-				writer.WriteEndElement(); // Close <files>
+            try
+            {
+                using (XmlWriter writer = CreateXmlWriter(filePath))
+                {
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("files");
 
-				writer.WriteEndDocument();
-			}
+                    foreach (Section section in course.Sections)
+                    {
+                        foreach (Activity activity in section.Activities)
+                        {
+                            if (activity is MoodleFile file)
+                            {
+                                WriteSingleFile(writer, outputPath, file);
+                            }
+                        }
+                    }
 
-			Logger.Debug($"Created {DEFAULT_FILE_RELATIVE_PATH}");
-		}
-		catch (Exception e)
-		{
-			Logger.Error(e, $"Error writing {DEFAULT_FILE_RELATIVE_PATH}");
-			throw;
-		}
-	}
+                    writer.WriteEndElement(); // Close <files>
+                    writer.WriteEndDocument();
+                }
 
-	
-	/// <summary>
-	/// Writes a single file to the XML file
-	/// </summary>
-	/// <param name="writer">XmlWriter initialized on the correct document</param>
-	/// <param name="file">File to be written</param>
-	private void WriteSingleFile(XmlWriter writer, string outputPath, MoodleFile file)
-	{
-		// Check if file exists / try to open the file
-		FileStream? fileStream = null;
-		try
-		{
-			if (!File.Exists(file.FilePath))
-			{
-				Logger.Warn($"{file.FilePath} does not exist. Skipping file");
-				return;
-			}
+                LogDebug($"Created {DEFAULT_FILE_RELATIVE_PATH}");
+            }
+            catch (Exception e)
+            {
+                LogError(e, $"Error writing {DEFAULT_FILE_RELATIVE_PATH}");
+                throw;
+            }
+        }
 
-			fileStream = File.OpenRead(file.FilePath);
-			Logger.Debug($"Found {file.FilePath}");
-		}
-		catch (Exception ex)
-		{
-			Logger.Error(ex, $"Error opening {file.FilePath}. Skipping file");
-			return;
-		}
+        /// <summary>
+        /// Writes a single file entry to the XML document.
+        /// </summary>
+        private void WriteSingleFile(XmlWriter writer, string outputPath, MoodleFile file)
+        {
+            FileStream? fileStream = null;
+            try
+            {
+                if (!File.Exists(file.FilePath))
+                {
+                    LogWarn($"{file.FilePath} does not exist. Skipping file");
+                    return;
+                }
 
-		string? contentHash = null;
-		try
-		{
-			contentHash = GetMoodleContentHash(fileStream);
-		}
-		catch (Exception ex)
-		{
-			Logger.Error(ex, $"Skipping file {Path.GetFileName(fileStream.Name)}");
-			return;
-		}
+                fileStream = File.OpenRead(file.FilePath);
+                LogDebug($"Found {file.FilePath}");
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Error opening {file.FilePath}. Skipping file");
+                return;
+            }
 
-		// Write XML
-		WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string>
-		{
-			{ "id", file.ActivityId.ToString() }
-		});
+            string? contentHash = null;
+            try
+            {
+                contentHash = GetMoodleContentHash(fileStream);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Skipping file {Path.GetFileName(fileStream.Name)}");
+                return;
+            }
+
+            WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string>
+            {
+                { "id", file.ActivityId.ToString() }
+            });
 
 		var elements = new Dictionary<string, string>
 		{
@@ -143,67 +134,56 @@ public class FilesWriter : XmlWriterBase
 			{ "reference", "$@NULL@$" } // TODO: Determine function of this field
 		};
 
-		WriteElements(writer, elements);
-		CopyFileToBackupFolder(outputPath, fileStream, contentHash);
-		fileStream.Dispose();
-	}
+            WriteElements(writer, elements);
+            CopyFileToBackupFolder(outputPath, fileStream, contentHash);
+            fileStream.Dispose();
+        }
 
+        /// <summary>
+        /// Copies the file currently being processed from the input folder to the Moodle backup folder.
+        /// </summary>
+        private void CopyFileToBackupFolder(string outputPath, FileStream fileStream, string contentHash)
+        {
+            string? targetFilePath = null;
 
-	/// <summary>
-	/// copies the file currently being processed from the input folder to the moodle backup folder
-	/// </summary>
-	/// <param name="outputPath"></param>
-	/// <param name="fileStream"></param>
-	private void CopyFileToBackupFolder(string outputPath, FileStream fileStream, string contentHash)
-	{
-		string? targetFilePath = null;
-		
-		try
-		{
-			string targetDirectory = Path.Combine(outputPath, "files", contentHash.Substring(0, 2));
+            try
+            {
+                string targetDirectory = Path.Combine(outputPath, "files", contentHash.Substring(0, 2));
+                Directory.CreateDirectory(targetDirectory);
+                targetFilePath = Path.Combine(targetDirectory, contentHash);
 
-			Directory.CreateDirectory(targetDirectory);
+                File.Copy(fileStream.Name, targetFilePath, true);
+                LogDebug($"Copied {Path.GetFileName(fileStream.Name)} to {targetFilePath}");
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Error copying file {Path.GetFileName(fileStream.Name)} to {targetFilePath ?? "undefined"}");
+            }
+        }
 
-			targetFilePath = Path.Combine(targetDirectory, contentHash);
-       
-			File.Copy(fileStream.Name, targetFilePath,true);
-		
-			Logger.Debug($"Copied {Path.GetFileName(fileStream.Name)} to {targetFilePath}");
-		}
-		catch (Exception ex)
-		{
-			Logger.Error(ex, $"Error copying file {Path.GetFileName(fileStream.Name)} to {targetFilePath ?? "undefined"}");
-		}
-	}
+        /// <summary>
+        /// Calculates the SHA1 hash of the file content.
+        /// </summary>
+        private string GetMoodleContentHash(FileStream fileStream)
+        {
+            string hash = string.Empty;
 
+            try
+            {
+                using var sha1 = SHA1.Create();
+                fileStream.Seek(0, SeekOrigin.Begin);
+                byte[] hashBytes = sha1.ComputeHash(fileStream);
+                fileStream.Seek(0, SeekOrigin.Begin);
+                hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+            }
+            catch (Exception ex)
+            {
+                LogWarn(ex, $"Error calculating hash for file {Path.GetFileName(fileStream.Name)}");
+                throw;
+            }
 
-	/// <summary>
-	/// Calculates the SHA1 hash of the file content
-	/// </summary>
-	/// <param name="fileStream">FileStream of the file to be hashed</param>
-	/// <returns>SHA1 hash of the file content</returns>
-	private string GetMoodleContentHash(FileStream fileStream)
-	{
-		string hash = string.Empty;
-		
-		try
-		{
-			using var sha1 = SHA1.Create();
-			fileStream.Seek(0, SeekOrigin.Begin);
-
-			byte[] hashBytes = sha1.ComputeHash(fileStream);
-
-			fileStream.Seek(0, SeekOrigin.Begin);
-
-			hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-		}
-		catch (Exception ex)
-		{
-			Logger.Warn(ex, $"Error calculating hash for file {Path.GetFileName(fileStream.Name)}");
-			throw;
-		}
-		
-		Logger.Debug($"Calculated hash {hash} for file {Path.GetFileName(fileStream.Name)}");
-		return hash;
-	}
+            LogDebug($"Calculated hash {hash} for file {Path.GetFileName(fileStream.Name)}");
+            return hash;
+        }
+    }
 }
