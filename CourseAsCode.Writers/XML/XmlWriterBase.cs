@@ -137,6 +137,16 @@ namespace CourseAsCode.Writers.XML
         {
             Logger.Error(ex, message);
         }
+        
+        
+        /// <summary>
+        /// Logs an error-level message using the configured logger
+        /// </summary>
+        /// <param name="message">The error message to log</param>
+        protected void LogError( string message)
+        {
+            Logger.Error(message);
+        }
 
         
         /// <summary>
