@@ -16,7 +16,7 @@ namespace CourseAsCode.Writers.UnitTests.XML.Writer
         [SetUp]
         public void SetUp()
         {
-            _testFactory = new XmlWriterFactoryTest();
+            _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
             _testLogger = Substitute.For<ILogger>();
             _testBadgesWriter = new BadgesWriter(_testFactory, _testLogger); // Use DI to inject the test factory and logger
         }

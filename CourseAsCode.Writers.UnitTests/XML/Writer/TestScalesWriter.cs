@@ -1,0 +1,91 @@
+﻿using System.Xml;
+using CourseAsCode.Model;
+using NSubstitute;
+using NLog;
+using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Writers.UnitTests.Fakes;
+
+namespace CourseAsCode.Writers.UnitTests.XML.Writer
+{
+    [TestFixture]
+    public class ScalesWriterTests
+    {
+        private XmlWriterFactoryTest _testFactory;
+        private ILogger _testLogger;
+        private ScalesWriter _scalesWriter;
+        private Model.Course _dummyCourse;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
+            _testLogger = Substitute.For<ILogger>();
+            _scalesWriter = new ScalesWriter(_testFactory, _testLogger); // Use DI to inject the test factory and logger
+            _dummyCourse = new Model.Course();
+        }
+
+        [Test]
+        public void WriteScales_GeneratesValidXml()
+        {
+            // Arrange
+            string dummyOutputPath = "dummyPath";
+
+            // Act
+            _scalesWriter.WriteScales(_dummyCourse, dummyOutputPath);
+            string output = _testFactory.StringWriter.ToString();
+
+            // Assert: Loading the XML should not throw an exception (well-formed XML)
+            Assert.DoesNotThrow(() =>
+            {
+                var doc = new XmlDocument();
+                doc.LoadXml(output);
+            });
+        }
+
+        [Test]
+        public void WriteScales_RootElementIsScalesDefinition()
+        {
+            // Arrange
+            string dummyOutputPath = "dummyPath";
+
+            // Act
+            _scalesWriter.WriteScales(_dummyCourse, dummyOutputPath);
+            string output = _testFactory.StringWriter.ToString();
+
+            // Assert: Verify that the root element is "scales_definition"
+            var doc = new XmlDocument();
+            doc.LoadXml(output);
+            Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element");
+            Assert.That(doc.DocumentElement.Name, Is.EqualTo("scales_definition"));
+        }
+
+        [Test]
+        public void WriteScales_LogsDebugOnSuccess()
+        {
+            // Arrange
+            string dummyOutputPath = "dummyPath";
+
+            // Act
+            _scalesWriter.WriteScales(_dummyCourse, dummyOutputPath);
+
+            // Assert: Verify that logger.Debug was called with a message containing "scales.xml"
+            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("scales.xml")));
+        }
+
+        [Test]
+        public void WriteScales_LogsErrorOnException()
+        {
+            // Arrange: Use an XML writer factory that throws an exception
+            var throwingFactory = new ExceptionThrowingXmlWriterFactory();
+            _scalesWriter = new ScalesWriter(throwingFactory, _testLogger);
+            string dummyOutputPath = "dummyPath";
+
+            // Act & Assert: Verify that an exception is thrown
+            Assert.Throws<InvalidOperationException>(() =>
+                _scalesWriter.WriteScales(_dummyCourse, dummyOutputPath));
+
+            // Verify that logger.Error was called with a message containing "scales.xml"
+            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("scales.xml")));
+        }
+    }
+}
