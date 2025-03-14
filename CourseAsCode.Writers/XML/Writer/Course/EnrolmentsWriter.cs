@@ -3,46 +3,76 @@ using CourseAsCode.Model.Enrolments;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Static;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class EnrolmentsWriter : XmlWriterBase
 {
-	private int _enrolmentIdCounter = 1;
-	private readonly GeneralHelper _helper = GeneralHelper.Instance;
+	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+	private const string DEFAULT_ENROLMENTS_RELATIVE_PATH = "course/enrolments.xml";
+	
+	private int _enrolmentIdCounter = 1; // used to assign ascending IDs to each enrolment
+	private readonly GeneralHelper _helper;
 
+	
+	// Constructor
+	public EnrolmentsWriter()
+	{
+		_helper = GeneralHelper.Instance;
+	}
+	
+	
+	// Constructor supporting Dependency Injection for Unit Testing
+	public EnrolmentsWriter(GeneralHelper helper)
+	{
+		_helper = helper;
+	}
 
+	
 	public void WriteEnrolment(Model.Course course, string outputPath)
 	{
-		string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/enrolments.xml"));
-
-		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-		writer.WriteStartDocument();
-
-		writer.WriteStartElement("enrolments");
-		writer.WriteStartElement("enrols");
-
-		// Only write the enrolment methods that are actually used in the course
-		foreach (EnrolmentMethod enrolmentMethod in course.EnrolmentMethods)
+		try
 		{
-			if (enrolmentMethod is ManualEnrolment)
+			string filePath = Path.GetFullPath(Path.Combine(outputPath, "course/enrolments.xml"));
+
+			using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
 			{
-				WriteManualEnrolSection(writer, course);
+				writer.WriteStartDocument();
+
+				writer.WriteStartElement("enrolments");
+				writer.WriteStartElement("enrols");
+
+				// Only write the enrolment methods that are actually used in the course
+				foreach (EnrolmentMethod enrolmentMethod in course.EnrolmentMethods)
+				{
+					if (enrolmentMethod is ManualEnrolment)
+					{
+						WriteManualEnrolSection(writer, course);
+					}
+					if (enrolmentMethod is GuestEnrolment)
+					{
+						WriteGuestEnrolSection(writer, course);
+					}
+					if (enrolmentMethod is SelfEnrolment)
+					{
+						WriteSelfEnrolSection(writer, course);
+					}
+				}
+
+				writer.WriteEndElement(); // Close <enrols>
+				writer.WriteEndElement(); // Close <enrolments>
+
+				writer.WriteEndDocument();
 			}
-			if (enrolmentMethod is GuestEnrolment)
-			{
-				WriteGuestEnrolSection(writer, course);
-			}
-			if (enrolmentMethod is SelfEnrolment)
-			{
-				WriteSelfEnrolSection(writer, course);
-			}
+			
+			Logger.Debug($"Created {DEFAULT_ENROLMENTS_RELATIVE_PATH}");
 		}
-
-		writer.WriteEndElement(); // Close <enrols>
-		writer.WriteEndElement(); // Close <enrolments>
-
-		writer.WriteEndDocument();
+		catch (Exception e)
+		{
+			Logger.Error(e, $"Error writing {DEFAULT_ENROLMENTS_RELATIVE_PATH}");
+			throw;
+		}
 	}
 
 
@@ -107,6 +137,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			if (user.EnrolmentMethod is ManualEnrolment)
 			{
 				WriterUserEnrolmentSection(writer, user);
+				Logger.Debug($"Enrolled user {user.SystemDefaults.Id}: {user.Username} -> Manual Enrolment");
 			}
 		}
 
@@ -175,6 +206,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			if (user.EnrolmentMethod is GuestEnrolment)
 			{
 				WriterUserEnrolmentSection(writer, user);
+				Logger.Debug($"Enrolled user {user.SystemDefaults.Id}: {user.Username} -> Guest Enrolment");
 			}
 		}
 
@@ -243,6 +275,7 @@ public class EnrolmentsWriter : XmlWriterBase
 			if (user.EnrolmentMethod is SelfEnrolment)
 			{
 				WriterUserEnrolmentSection(writer, user);
+				Logger.Debug($"Enrolled user {user.SystemDefaults.Id}: {user.Username} -> Self Enrolment");
 			}
 		}
 
@@ -275,7 +308,7 @@ public class EnrolmentsWriter : XmlWriterBase
 		};
 
 		WriteElements(writer, elements);
-
+		
 		writer.WriteEndElement(); // Close <enrolment>
 	}
 }

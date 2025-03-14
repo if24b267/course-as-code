@@ -3,33 +3,66 @@ using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Static;
 using CourseAsCode.Model.Activities.Resources;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer;
 
 public class MoodleBackupWriter : XmlWriterBase
 {
-    private readonly GeneralHelper _helper = GeneralHelper.Instance;
-    private readonly MoodleVersionHelper _moodleVersionHelper = MoodleVersionHelper.Instance;
-    private readonly CourseHelper _courseHelper = CourseHelper.Instance;
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    private const string DEFAULT_MOODLE_BACKUP_RELATIVE_PATH = "moodle_backup.xml";
+    
+    private readonly GeneralHelper _helper;
+    private readonly MoodleVersionHelper _moodleVersionHelper;
+    private readonly CourseHelper _courseHelper;
+    
+    
+    // Constructor
+    public MoodleBackupWriter()
+    {
+        _helper = GeneralHelper.Instance;
+        _moodleVersionHelper = MoodleVersionHelper.Instance;
+        _courseHelper = CourseHelper.Instance;
+    }
+    
+    
+    // Constructor supporting Dependency Injection for Unit Testing
+    public MoodleBackupWriter(GeneralHelper helper, MoodleVersionHelper moodleVersionHelper, CourseHelper courseHelper)
+    {
+        _helper = helper;
+        _moodleVersionHelper = moodleVersionHelper;
+        _courseHelper = courseHelper;
+    }
 
+    
     public void WriteMoodleBackup(Model.Course course, string outputPath)
     {
-        string filePath = Path.GetFullPath(Path.Combine(outputPath, "moodle_backup.xml"));
-
-        using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+        try
         {
-            writer.WriteStartDocument();
-            writer.WriteStartElement("moodle_backup");
-            writer.WriteStartElement("information");
+            string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MOODLE_BACKUP_RELATIVE_PATH));
 
-            WriteGeneralSettings(writer, course);
-            WriteDetails(writer, course);
-            WriteContents(writer, course);
-            WriteSettings(writer, course);
+            using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("moodle_backup");
+                writer.WriteStartElement("information");
 
-            writer.WriteEndElement(); // Closes <information>
-            writer.WriteEndElement(); // Closes <moodle_backup>
-            writer.WriteEndDocument();
+                WriteGeneralSettings(writer, course);
+                WriteDetails(writer, course);
+                WriteContents(writer, course);
+                WriteSettings(writer, course);
+
+                writer.WriteEndElement(); // Closes <information>
+                writer.WriteEndElement(); // Closes <moodle_backup>
+                writer.WriteEndDocument();
+            }
+            
+            Logger.Debug($"Created {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, $"Error writing {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
+            throw;
         }
     }
 
@@ -170,6 +203,8 @@ public class MoodleBackupWriter : XmlWriterBase
 
                     writer.WriteEndElement(); // Closes <activity>
                 }
+                
+                Logger.Trace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
             }
         }
         writer.WriteEndElement(); // Closes <activities>
@@ -195,6 +230,8 @@ public class MoodleBackupWriter : XmlWriterBase
             writer.WriteElementString("modname", string.Empty);
 
             writer.WriteEndElement(); // Closes <section>
+            
+            Logger.Trace($"Added reference for 'Section {section.SystemDefaults.SectionId}: {section.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
         }
         writer.WriteEndElement(); // Closes <sections>
     }
@@ -289,6 +326,8 @@ public class MoodleBackupWriter : XmlWriterBase
         {
             WriteSingleBackupSettingTag(writer, "section", $"section_{section.SystemDefaults.SectionId}", $"section_{section.SystemDefaults.SectionId}_included", "1");
             WriteSingleBackupSettingTag(writer, "section", $"section_{section.SystemDefaults.SectionId}", $"section_{section.SystemDefaults.SectionId}_userinfo", "1");
+            
+            Logger.Trace($"Added setting for 'Section {section.SystemDefaults.SectionId}: {section.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
         }
     }
 
@@ -322,6 +361,8 @@ public class MoodleBackupWriter : XmlWriterBase
                     WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_included", "1");
                     WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_userinfo", "1");
                 }
+                
+                Logger.Trace($"Added setting for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
             }
         }
     }

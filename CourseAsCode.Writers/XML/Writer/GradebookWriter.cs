@@ -4,6 +4,9 @@ namespace CourseAsCode.Writers.XML.Writer;
 
 public class GradebookWriter : XmlWriterBase
 {
+	private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+	private const string DEFAULT_GRADEBOOK_RELATIVE_PATH = "gradebook.xml";
+	
 	private int _gradeCategoryIdCounter = 1;
 	private int _gradeItemIdCounter = 1;
 	private int _gradeSettingIdCounter = 1;
@@ -11,20 +14,32 @@ public class GradebookWriter : XmlWriterBase
 
 	public void WriteGradebook(Model.Course course, string outputPath)
 	{
-		string filePath = Path.GetFullPath(Path.Combine(outputPath, "gradebook.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
+		string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_GRADEBOOK_RELATIVE_PATH));
 
-		writer.WriteStartDocument();
-		writer.WriteStartElement("gradebook");
+		try
+		{
+			using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+			{
+				writer.WriteStartDocument();
+				writer.WriteStartElement("gradebook");
 
-		WriteAttributes(writer, course);
-		WriteGradeCategories(writer, course);
-		WriteGradeItems(writer, course);
-		WriteGradeLetters(writer, course);
-		WriteGradeSettings(writer, course);
+				WriteAttributes(writer, course);
+				WriteGradeCategories(writer, course);
+				WriteGradeItems(writer, course);
+				WriteGradeLetters(writer, course);
+				WriteGradeSettings(writer, course);
 
-		writer.WriteEndElement(); // Close <gradebook>
-		writer.WriteEndDocument();
+				writer.WriteEndElement(); // Close <gradebook>
+				writer.WriteEndDocument();
+			}
+			
+			Logger.Debug($"Created {DEFAULT_GRADEBOOK_RELATIVE_PATH}");
+		}
+		catch (Exception e)
+		{
+			Logger.Error(e, $"Error writing {DEFAULT_GRADEBOOK_RELATIVE_PATH}");
+			throw;
+		}
 	}
 
 

@@ -2,11 +2,15 @@ using CourseAsCode.Model;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Static;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course;
 
 public class RoleAssignmentsWriter : XmlWriterBase
 {
+	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+	private const string DEFAULT_ROLE_ASSIGNMENTS_RELATIVE_PATH = "course/roles.xml";
+	
 	private readonly GeneralHelper _helper = GeneralHelper.Instance;
 
 
@@ -17,29 +21,42 @@ public class RoleAssignmentsWriter : XmlWriterBase
 	/// <param name="outputPath"></param>
 	public void WriteRoleAssignments(Model.Course course, string outputPath)
 	{
-		var filePath = Path.GetFullPath(Path.Combine(outputPath, "course/roles.xml"));
-		using var writer = XmlWriter.Create(filePath, Settings);
-
-		writer.WriteStartDocument();
-		writer.WriteStartElement("roles");
-
-		// Role overrides
-		writer.WriteStartElement("role_overrides");
-		writer.WriteString(" ");
-		writer.WriteEndElement(); // Close </role_overrides>
-
-		// Role assignments
-		writer.WriteStartElement("role_assignments");
-
-		for (int i = 0; i < course.EnrolledUsers.Count; i++)
+		try
 		{
-			WriteSingleRoleAssignment(writer, course.EnrolledUsers[i], i);
+			string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_ROLE_ASSIGNMENTS_RELATIVE_PATH));
+
+			using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+			{
+				writer.WriteStartDocument();
+				writer.WriteStartElement("roles");
+
+				// Role overrides
+				writer.WriteStartElement("role_overrides");
+				writer.WriteString(" ");
+				writer.WriteEndElement(); // Close </role_overrides>
+
+				// Role assignments
+				writer.WriteStartElement("role_assignments");
+
+				for (int i = 0; i < course.EnrolledUsers.Count; i++)
+				{
+					WriteSingleRoleAssignment(writer, course.EnrolledUsers[i], i);
+					Logger.Debug($"Assigned role {course.EnrolledUsers[i].Role.SystemDefaults.RoleId} to user {course.EnrolledUsers[i].SystemDefaults.Id}: '{course.EnrolledUsers[i].Username}'");
+				}
+
+				writer.WriteEndElement(); // Close </role_assignments>
+
+				writer.WriteEndElement(); // Close </roles>
+				writer.WriteEndDocument();
+			}
+			
+			Logger.Debug($"Created {DEFAULT_ROLE_ASSIGNMENTS_RELATIVE_PATH}");
 		}
-
-		writer.WriteEndElement(); // Close </role_assignments>
-
-		writer.WriteEndElement(); // Close </roles>
-		writer.WriteEndDocument();
+		catch (Exception e)
+		{
+			Logger.Error(e, $"Error writing {DEFAULT_ROLE_ASSIGNMENTS_RELATIVE_PATH}");
+			throw;
+		}
 	}
 
 

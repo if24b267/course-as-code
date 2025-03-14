@@ -1,12 +1,30 @@
 using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.File
 {
     public class FileWriter : XmlWriterBase
     {
-        private readonly GeneralHelper _generalHelper = new GeneralHelper();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private const string DEFAULT_FILE_RELATIVE_PATH = "resource.xml";
+
+        private readonly GeneralHelper _generalHelper;
+        
+        
+        // Constructor
+        public FileWriter()
+        {
+            _generalHelper = new GeneralHelper();
+        }
+        
+        
+        // Constructor using Dependency Injection for Unit Testing
+        public FileWriter(GeneralHelper generalHelper)
+        {
+            _generalHelper = generalHelper;
+        }
         
         
         /// <summary>
@@ -16,17 +34,29 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         /// <param name="moodleFile">the file to write</param>
         public void WriteFile(string outputPath, MoodleFile moodleFile)
         {
-            string filePath = Path.GetFullPath(Path.Combine(outputPath, "resource.xml"));
-            using XmlWriter writer = XmlWriter.Create(filePath, Settings);
+            try
+            {
+                string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_FILE_RELATIVE_PATH));
 
-            writer.WriteStartDocument();
-            writer.WriteStartElement("activity");
+                using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+                {
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("activity");
 
-            WriteActivityAttributes(writer, moodleFile);
-            WriteResourceTag(writer, moodleFile);
+                    WriteActivityAttributes(writer, moodleFile);
+                    WriteResourceTag(writer, moodleFile);
 
-            writer.WriteEndElement(); // Close <activity>
-            writer.WriteEndDocument();
+                    writer.WriteEndElement(); // Close <activity>
+                    writer.WriteEndDocument();
+                }
+                
+                Logger.Debug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_FILE_RELATIVE_PATH}");
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_FILE_RELATIVE_PATH}");
+                throw;
+            }
         }
 
         

@@ -1,6 +1,7 @@
 using CourseAsCode.Model.Enums;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
+using NLog;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 using User = CourseAsCode.Model.User;
 
@@ -8,28 +9,59 @@ namespace CourseAsCode.Writers.XML.Writer;
 
 public class UsersWriter : XmlWriterBase
 {
-	private readonly GeneralHelper _helper = GeneralHelper.Instance;
-	private readonly UserHelper _userHelper = new UserHelper();
+	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+	private const string DEFAULT_USERS_RELATIVE_PATH = "users.xml";
+	
+	private readonly GeneralHelper _helper;
+	private readonly UserHelper _userHelper;
 
-
-	public void WriteUsers(Model.Course course, string outputPath)
+	
+	// Constructor
+	public UsersWriter()
 	{
-		string filePath = Path.GetFullPath(Path.Combine(outputPath, "users.xml"));
-		using XmlWriter writer = XmlWriter.Create(filePath, Settings);
-
-		writer.WriteStartDocument();
-		writer.WriteStartElement("users");
-
-		foreach (var user in course.EnrolledUsers)
-		{
-			WriteSingleUser(writer, user);
-		}
-
-		writer.WriteEndElement(); // Close <users>
-		writer.WriteEndDocument();
+		_helper = GeneralHelper.Instance;
+		_userHelper = new UserHelper();
+	}
+	
+	
+	// Constructor using Dependency Injection for Unit Testing
+	public UsersWriter(GeneralHelper helper, UserHelper userHelper)
+	{
+		_helper = helper;
+		_userHelper = userHelper;
 	}
 
+	
+	public void WriteUsers(Model.Course course, string outputPath)
+	{
+		try
+		{
+			string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_USERS_RELATIVE_PATH));
 
+			using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+			{
+				writer.WriteStartDocument();
+				writer.WriteStartElement("users");
+
+				foreach (var user in course.EnrolledUsers)
+				{
+					WriteSingleUser(writer, user);
+				}
+
+				writer.WriteEndElement(); // Close <users>
+				writer.WriteEndDocument();
+			}
+
+			Logger.Debug($"Created {DEFAULT_USERS_RELATIVE_PATH}");
+		}
+		catch (Exception e)
+		{
+			Logger.Error(e, $"Error writing {DEFAULT_USERS_RELATIVE_PATH}");
+			throw;
+		}
+	}
+		
+	
 	/// <summary>
 	/// writes a single user to the users.xml file
 	/// </summary>
@@ -50,6 +82,8 @@ public class UsersWriter : XmlWriterBase
 		WriteRolesSection(writer, user);
 
 		writer.WriteEndElement(); // Close <user>
+		
+		Logger.Trace($"Added user {user.SystemDefaults.Id}: '{user.Username}' to {DEFAULT_USERS_RELATIVE_PATH}");
 	}
 
 

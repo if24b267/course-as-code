@@ -1,10 +1,13 @@
 using CourseAsCode.Model.Enums;
+using NLog;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
 namespace CourseAsCode.Writers.XML.Helper;
 
 public class GeneralHelper
 {
+	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+	
 	#region Singleton
 	private static GeneralHelper? _instance;
 
@@ -38,8 +41,11 @@ public class GeneralHelper
 
 		var date = DateTime.Now.ToString("yyyyMMdd");
 		var time = DateTime.Now.ToString("HHmm");
+		
+		string backupName = $"backup-moodle2-course-{courseId}-{shortName}-{date}-{time}.mbz";
+		Logger.Trace($"Generated backup name: {backupName}");
 
-		return $"backup-moodle2-course-{courseId}-{shortName}-{date}-{time}.mbz";
+		return backupName;
 	}
 
 
@@ -57,6 +63,8 @@ public class GeneralHelper
 
 		// Calculate the difference in seconds
 		long unixTimestamp = (long)(utcDateTime - unixEpoch).TotalSeconds;
+		
+		Logger.Trace($"Converted {dateTime} to Unix Timestamp: {unixTimestamp}");
 
 		return unixTimestamp.ToString();
 	}

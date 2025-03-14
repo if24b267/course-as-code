@@ -1,30 +1,59 @@
 ﻿using System.Xml;
 using CourseAsCode.Model;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
 {
     internal class ModuleWriterLabel : XmlWriterBase
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private const string DEFAULT_MODULE_RELATIVE_PATH = "module.xml";
+        
         private int _currentModuleId = 0; // Initial moduleId
-
+        
+        
+        /// <summary>
+        /// Writes the module.xml file for a label activity.
+        /// </summary>
+        /// <param name="outputPath">The directory where module.xml will be saved.</param>
+        /// <param name="section">The section model providing context information.</param>
         public void WriteModule(string outputPath, Section section)
         {
-            string filePath = Path.GetFullPath(Path.Combine(outputPath, "module.xml"));
-
-            using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+            try
             {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("module");
-
-                writer.WriteAttributeString("id", _currentModuleId.ToString());
-                writer.WriteAttributeString("version", "2024100700");
-                WriteGeneralInformationToModules(writer, section.SystemDefaults.SectionId);
-                writer.WriteEndElement();
+                string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MODULE_RELATIVE_PATH));
+                
+                using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+                {
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("module");
+                    
+                    writer.WriteAttributeString("id", _currentModuleId.ToString());
+                    writer.WriteAttributeString("version", "2024100700");
+                    
+                    WriteGeneralInformationToModules(writer, section.SystemDefaults.SectionId);
+                    
+                    writer.WriteEndElement(); // Close <module>
+                    writer.WriteEndDocument();
+                }
+                
+                Logger.Debug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
+                
+                _currentModuleId++; // Increment moduleId for the next label
             }
-
-            _currentModuleId++; // Increment moduleId for the next label
+            catch (Exception e)
+            {
+                Logger.Error(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
+                throw;
+            }
         }
-
+        
+        
+        /// <summary>
+        /// Writes the general information elements into the module tag.
+        /// </summary>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="sectionId">The section id from the Section model.</param>
         private void WriteGeneralInformationToModules(XmlWriter writer, int sectionId)
         {
             var elements = new Dictionary<string, string>
