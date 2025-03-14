@@ -241,8 +241,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 { "expiry_threshhold", selfEnrolment.NotifyThreshold?.ToString() ?? "0" },
                 { "notifyall", selfEnrolment.NotifyStudent ? "1" : "0" },
                 { "password", selfEnrolment.Password ?? " " },
-                { "cost", "$@NULL@$" },
-                { "currency", "$@NULL@$" },
+                { "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
+                { "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
                 { "roleid", selfEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
                 { "customint1", "0" },
                 { "customint2", selfEnrolment.UnenrolInactiveAfter?.ToString() ?? "$@NULL@$" }, // Unenrol Inactive Users
