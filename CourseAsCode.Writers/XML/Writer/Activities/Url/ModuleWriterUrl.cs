@@ -3,24 +3,25 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Interfaces;
 using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Url
 {
-    internal class ModuleWriterUrl : XmlWriterBase, IActivityModuleWriter
+    public class ModuleWriterUrl : XmlWriterBase, IActivityModuleWriter
     {
         private const string DEFAULT_MODULE_RELATIVE_PATH = "module.xml";
         
-        private readonly MoodleVersionHelper _moodleVersionHelper;
-        private readonly GeneralHelper _generalHelper;
+        private readonly IMoodleVersionHelper _moodleVersionHelper;
+        private readonly IGeneralHelper _generalHelper;
         
         /// <summary>
         /// Default constructor using default implementations for dependencies
         /// </summary>
-        public ModuleWriterUrl() 
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public ModuleWriterUrl() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _moodleVersionHelper = MoodleVersionHelper.Instance;
             _generalHelper = GeneralHelper.Instance;
@@ -31,7 +32,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
         /// </summary>
         /// <param name="moodleVersionHelper">Injected MoodleVersionHelper instance</param>
         /// <param name="generalHelper">Injected GeneralHelper instance</param>
-        public ModuleWriterUrl(MoodleVersionHelper moodleVersionHelper, GeneralHelper generalHelper)
+        public ModuleWriterUrl(IXmlWriterFactory xmlWriterFactory, ILogger Logger, IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper) : base(xmlWriterFactory, Logger)
         {
             _moodleVersionHelper = moodleVersionHelper;
             _generalHelper = generalHelper;

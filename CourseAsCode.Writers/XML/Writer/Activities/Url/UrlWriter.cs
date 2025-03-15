@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
@@ -10,13 +11,12 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
     public class UrlWriter : XmlWriterBase
     {
         private const string DEFAULT_URL_RELATIVE_PATH = "url.xml";
-        private readonly GeneralHelper _generalHelper;
+        private readonly IGeneralHelper _generalHelper;
 
         /// <summary>
         /// Default constructor using default implementations for dependencies
         /// </summary>
-        public UrlWriter() 
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public UrlWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _generalHelper = GeneralHelper.Instance;
         }
@@ -27,8 +27,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
         /// <param name="xmlWriterFactory">Injected XML writer factory</param>
         /// <param name="logger">Injected logger instance</param>
         /// <param name="generalHelper">Injected general helper</param>
-        public UrlWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, GeneralHelper generalHelper)
-            : base(xmlWriterFactory, logger)
+        public UrlWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper) : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper;
         }
