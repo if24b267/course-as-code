@@ -1,8 +1,9 @@
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 
 namespace CourseAsCode.Writers.XML.Helper;
 
-public class FileHelper
+public class FileHelper : IFileHelper
 {
 	#region Singleton
 	private static FileHelper? _instance;

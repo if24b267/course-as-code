@@ -2,7 +2,7 @@ using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Writers.XML.Helper;
 
-public class CourseHelper
+public class CourseHelper : ICourseHelper
 {
 	#region Singleton
 	private static CourseHelper? _instance;

@@ -1,34 +1,39 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Url
 {
     public class UrlWriter : XmlWriterBase
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private const string DEFAULT_URL_RELATIVE_PATH = "url.xml";
-        
-        private readonly GeneralHelper _generalHelper;
-        
-        
-        // Constructor
-        public UrlWriter()
+        private readonly IGeneralHelper _generalHelper;
+
+        /// <summary>
+        /// Default constructor using default implementations for dependencies
+        /// </summary>
+        public UrlWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _generalHelper = GeneralHelper.Instance;
         }
-        
-        
-        // Constructor using Dependency Injection for Unit Testing
-        public UrlWriter(GeneralHelper generalHelper)
+
+        /// <summary>
+        /// Constructor using Dependency Injection for Unit Testing
+        /// </summary>
+        /// <param name="xmlWriterFactory">Injected XML writer factory</param>
+        /// <param name="logger">Injected logger instance</param>
+        /// <param name="generalHelper">Injected general helper</param>
+        public UrlWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper) : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper;
         }
-        
-        
+
         /// <summary>
-        /// Writes the url activity to an XML file.
+        /// Writes the url activity to an XML file
         /// </summary>
         /// <param name="outputPath">the output path where the url.xml file will be saved</param>
         /// <param name="urlObject">the URL activity to write</param>
@@ -37,29 +42,28 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
             try
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_URL_RELATIVE_PATH));
-                
-                using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+
+                using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
                     writer.WriteStartElement("activity");
-                    
+
                     WriteActivityAttributes(writer, urlObject);
                     WriteUrlTag(writer, urlObject);
-                    
+
                     writer.WriteEndElement(); // Close <activity>
                     writer.WriteEndDocument();
                 }
-                
-                Logger.Debug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_URL_RELATIVE_PATH}");
+
+                LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_URL_RELATIVE_PATH}");
             }
             catch (Exception e)
             {
-                Logger.Error(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_URL_RELATIVE_PATH}");
+                LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_URL_RELATIVE_PATH}");
                 throw;
             }
         }
-        
-        
+
         /// <summary>
         /// writes the activity tag and its attributes
         /// </summary>
@@ -72,18 +76,17 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
             writer.WriteAttributeString("modulename", urlObject.SystemDefaults.ModuleName);
             writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(urlObject.Context));
         }
-        
-        
+
         /// <summary>
-        /// Writes the url element and its child elements.
+        /// Writes the url element and its child elements
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="urlObject">The URL object to write.</param>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="urlObject">The URL object to write</param>
         private void WriteUrlTag(XmlWriter writer, URL urlObject)
         {
             writer.WriteStartElement("url");
             writer.WriteAttributeString("id", urlObject.ActivityId.ToString());
-            
+
             // Write contents of url tag
             var elements = new Dictionary<string, string>
             {
@@ -96,9 +99,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                 { "parameters", "a:0:{}" }, // TODO: Determine meaning of this value
                 { "timemodified", _generalHelper.DateTimeToUnixTimestamp(urlObject.TimeModified).ToString() }
             };
-            
+
             WriteElements(writer, elements);
-            
+
             writer.WriteEndElement(); // Close <url>
         }
     }

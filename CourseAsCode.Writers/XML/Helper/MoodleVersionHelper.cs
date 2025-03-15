@@ -2,7 +2,7 @@ using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Writers.XML.Helper;
 
-public class MoodleVersionHelper
+public class MoodleVersionHelper : IMoodleVersionHelper
 {
 	// See https://moodledev.io/general/releases
 
