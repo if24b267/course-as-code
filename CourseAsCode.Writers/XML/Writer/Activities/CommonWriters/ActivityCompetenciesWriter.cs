@@ -1,25 +1,40 @@
 ﻿using System.Xml;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
 {
     public class ActivityCompetenciesWriter : XmlWriterBase
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private const string DEFAULT_COMPETENCIES_RELATIVE_PATH = "competencies.xml";
-        
-        
+
         /// <summary>
-        /// Writes the competencies.xml file required for an activity.
+        /// Default constructor using default implementations for dependencies
         /// </summary>
-        /// <param name="outputPath">The output directory path.</param>
+        public ActivityCompetenciesWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        {
+        }
+
+        /// <summary>
+        /// Constructor supporting Dependency Injection for Unit Testing
+        /// </summary>
+        public ActivityCompetenciesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+            : base(xmlWriterFactory, logger)
+        {
+        }
+
+        /// <summary>
+        /// Writes the competencies.xml file required for an activity
+        /// </summary>
+        /// <param name="outputPath">The output directory path</param>
         public void WriteCompetencies(string outputPath)
         {
             try
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_COMPETENCIES_RELATIVE_PATH));
                 
-                using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+                using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
                     writer.WriteStartElement("course_module_competencies");
@@ -34,11 +49,11 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                     writer.WriteEndDocument();
                 }
                 
-                Logger.Debug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_COMPETENCIES_RELATIVE_PATH}");
+                LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_COMPETENCIES_RELATIVE_PATH}");
             }
             catch (Exception e)
             {
-                Logger.Error(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_COMPETENCIES_RELATIVE_PATH}");
+                LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_COMPETENCIES_RELATIVE_PATH}");
                 throw;
             }
         }

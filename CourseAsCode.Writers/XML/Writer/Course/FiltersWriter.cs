@@ -1,19 +1,35 @@
 using System.Xml;
 using NLog;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
     public class FiltersWriter : XmlWriterBase
     {
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private const string DEFAULT_FILTERS_RELATIVE_PATH = "course/filters.xml";
-        
+
+        /// <summary>
+        /// Default constructor using default implementations for dependencies.
+        /// </summary>
+        public FiltersWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        {
+        }
+
+        /// <summary>
+        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// </summary>
+        public FiltersWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+            : base(xmlWriterFactory, logger)
+        {
+        }
+
         public void WriteFilters(Model.Course course, string outputPath)
         {
             try
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_FILTERS_RELATIVE_PATH));
-                using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+                using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
                     writer.WriteStartElement("filters");
@@ -29,12 +45,12 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                     writer.WriteEndElement(); // Close </filters>
                     writer.WriteEndDocument();
                 }
-                
-                _logger.Debug($"Created {DEFAULT_FILTERS_RELATIVE_PATH}");
+
+                LogDebug($"Created {DEFAULT_FILTERS_RELATIVE_PATH}");
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"Error writing {DEFAULT_FILTERS_RELATIVE_PATH}");
+                LogError(e, $"Error writing {DEFAULT_FILTERS_RELATIVE_PATH}");
                 throw;
             }
         }

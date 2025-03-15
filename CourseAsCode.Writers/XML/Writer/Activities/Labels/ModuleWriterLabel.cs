@@ -1,59 +1,75 @@
 ﻿using System.Xml;
 using CourseAsCode.Model;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
 {
     internal class ModuleWriterLabel : XmlWriterBase
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private const string DEFAULT_MODULE_RELATIVE_PATH = "module.xml";
-        
         private int _currentModuleId = 0; // Initial moduleId
-        
-        
+
         /// <summary>
-        /// Writes the module.xml file for a label activity.
+        /// Default constructor using default implementations for dependencies
         /// </summary>
-        /// <param name="outputPath">The directory where module.xml will be saved.</param>
-        /// <param name="section">The section model providing context information.</param>
+        public ModuleWriterLabel() 
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        {
+        }
+
+        /// <summary>
+        /// Constructor using Dependency Injection for Unit Testing
+        /// </summary>
+        /// <param name="xmlWriterFactory">Injected XML writer factory</param>
+        /// <param name="logger">Injected logger instance</param>
+        public ModuleWriterLabel(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+            : base(xmlWriterFactory, logger)
+        {
+        }
+
+        /// <summary>
+        /// Writes the module.xml file for a label activity
+        /// </summary>
+        /// <param name="outputPath">The directory where module.xml will be saved</param>
+        /// <param name="section">The section model providing context information</param>
         public void WriteModule(string outputPath, Section section)
         {
             try
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MODULE_RELATIVE_PATH));
-                
-                using (XmlWriter writer = XmlWriter.Create(filePath, Settings))
+
+                using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
                     writer.WriteStartElement("module");
-                    
+
                     writer.WriteAttributeString("id", _currentModuleId.ToString());
                     writer.WriteAttributeString("version", "2024100700");
-                    
+
                     WriteGeneralInformationToModules(writer, section.SystemDefaults.SectionId);
-                    
+
                     writer.WriteEndElement(); // Close <module>
                     writer.WriteEndDocument();
                 }
-                
-                Logger.Debug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
-                
+
+                LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
+
                 _currentModuleId++; // Increment moduleId for the next label
             }
             catch (Exception e)
             {
-                Logger.Error(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
+                LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
                 throw;
             }
         }
-        
-        
+
         /// <summary>
-        /// Writes the general information elements into the module tag.
+        /// Writes the general information elements into the module tag
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="sectionId">The section id from the Section model.</param>
+        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="sectionId">The section id from the Section model</param>
         private void WriteGeneralInformationToModules(XmlWriter writer, int sectionId)
         {
             var elements = new Dictionary<string, string>

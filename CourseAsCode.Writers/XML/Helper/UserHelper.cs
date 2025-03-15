@@ -2,7 +2,7 @@ using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Writers.XML.Helper;
 
-public class UserHelper
+public class UserHelper : IUserHelper
 {
 	public string GetCountryFromEnum(Country country)
 	{
