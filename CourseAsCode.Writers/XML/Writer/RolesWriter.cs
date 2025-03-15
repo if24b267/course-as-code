@@ -1,5 +1,6 @@
 using CourseAsCode.Model;
 using System.Xml;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -11,7 +12,7 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_ROLES_RELATIVE_PATH = "roles.xml";
         
-        private readonly RolesHelper _rolesHelper;
+        private readonly IRolesHelper _rolesHelper;
         
         /// <summary>
         /// Default constructor.
@@ -25,7 +26,7 @@ namespace CourseAsCode.Writers.XML.Writer
         /// <summary>
         /// Constructor using Dependency Injection for Unit Testing
         /// </summary>
-        public RolesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, RolesHelper rolesHelper) : base(xmlWriterFactory, logger)
+        public RolesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IRolesHelper rolesHelper) : base(xmlWriterFactory, logger)
         {
             _rolesHelper = rolesHelper;
         }

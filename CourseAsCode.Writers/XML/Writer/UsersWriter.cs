@@ -1,6 +1,7 @@
 using CourseAsCode.Model.Enums;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
@@ -13,11 +14,11 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_USERS_RELATIVE_PATH = "users.xml";
 	
-        private readonly GeneralHelper _helper;
-        private readonly UserHelper _userHelper;
+        private readonly IGeneralHelper _helper;
+        private readonly IUserHelper _userHelper;
 	
         /// <summary>
-        /// Default constructor using default implementations for dependencies.
+        /// Default constructor using default implementations for dependencies
         /// </summary>
         public UsersWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
@@ -26,9 +27,9 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 	
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing.
+        /// Constructor using Dependency Injection for Unit Testing
         /// </summary>
-        public UsersWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, GeneralHelper helper, UserHelper userHelper) : base(xmlWriterFactory, logger)
+        public UsersWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper, IUserHelper userHelper) : base(xmlWriterFactory, logger)
         {
             _helper = helper;
             _userHelper = userHelper;

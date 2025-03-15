@@ -2,7 +2,7 @@ using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Writers.XML.Helper;
 
-public class RolesHelper
+public class RolesHelper : IRolesHelper
 {
 	public string GetArchetypeFromEnum(Archetype archetype)
 	{

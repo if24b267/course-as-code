@@ -2,6 +2,7 @@ using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Static;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
@@ -12,9 +13,9 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_MOODLE_BACKUP_RELATIVE_PATH = "moodle_backup.xml";
 
-        private readonly GeneralHelper _helper;
-        private readonly MoodleVersionHelper _moodleVersionHelper;
-        private readonly CourseHelper _courseHelper;
+        private readonly IGeneralHelper _helper;
+        private readonly IMoodleVersionHelper _moodleVersionHelper;
+        private readonly ICourseHelper _courseHelper;
 
         /// <summary>
         /// Default constructor.
@@ -31,7 +32,7 @@ namespace CourseAsCode.Writers.XML.Writer
         /// Constructor supporting Dependency Injection for Unit Testing
         /// </summary>
         public MoodleBackupWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger,
-                                  GeneralHelper helper, MoodleVersionHelper moodleVersionHelper, CourseHelper courseHelper)
+                                  IGeneralHelper helper, IMoodleVersionHelper moodleVersionHelper, ICourseHelper courseHelper)
             : base(xmlWriterFactory, logger)
         {
             _helper = helper;
