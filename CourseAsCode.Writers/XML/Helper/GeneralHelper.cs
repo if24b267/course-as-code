@@ -1,10 +1,11 @@
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using NLog;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
 namespace CourseAsCode.Writers.XML.Helper;
 
-public class GeneralHelper
+public class GeneralHelper : IGeneralHelper
 {
 	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 	

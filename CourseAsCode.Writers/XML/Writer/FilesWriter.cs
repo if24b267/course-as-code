@@ -5,6 +5,7 @@ using CourseAsCode.Model.Enums;
 using System.Security.Cryptography;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
@@ -15,25 +16,29 @@ namespace CourseAsCode.Writers.XML.Writer
     public class FilesWriter : XmlWriterBase
     {
         private const string DEFAULT_FILE_RELATIVE_PATH = "files.xml";
-        private readonly FileHelper _fileHelper;
-        private readonly GeneralHelper _generalHelper;
+        private readonly IFileHelper _fileHelper;
+        private readonly IGeneralHelper _generalHelper;
+        private readonly IFileService _fileService;
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
         public FilesWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _fileHelper = FileHelper.Instance;
             _generalHelper = GeneralHelper.Instance;
+            _fileService = new FileService();
         }
 
         /// <summary>
         /// Constructor supporting Dependency Injection for Unit Testing
         /// </summary>
-        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, FileHelper fileHelper, GeneralHelper generalHelper) : base(xmlWriterFactory, logger)
+        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IFileHelper fileHelper, IGeneralHelper generalHelper, IFileService fileService)
+            : base(xmlWriterFactory, logger)
         {
             _fileHelper = fileHelper;
             _generalHelper = generalHelper;
+            _fileService = fileService;
         }
 
         public void WriteFiles(Model.Course course, string outputPath)
@@ -79,13 +84,13 @@ namespace CourseAsCode.Writers.XML.Writer
             FileStream? fileStream = null;
             try
             {
-                if (!File.Exists(file.FilePath))
+                if (!_fileService.Exists(file.FilePath))
                 {
                     LogWarn($"{file.FilePath} does not exist. Skipping file");
                     return;
                 }
 
-                fileStream = File.OpenRead(file.FilePath);
+                fileStream = _fileService.OpenRead(file.FilePath);
                 LogDebug($"Found {file.FilePath}");
             }
             catch (Exception ex)
@@ -149,10 +154,10 @@ namespace CourseAsCode.Writers.XML.Writer
             try
             {
                 string targetDirectory = Path.Combine(outputPath, "files", contentHash.Substring(0, 2));
-                Directory.CreateDirectory(targetDirectory);
+                _fileService.CreateDirectory(targetDirectory);
                 targetFilePath = Path.Combine(targetDirectory, contentHash);
 
-                File.Copy(fileStream.Name, targetFilePath, true);
+                _fileService.Copy(fileStream.Name, targetFilePath, true);
                 LogDebug($"Copied {Path.GetFileName(fileStream.Name)} to {targetFilePath}");
             }
             catch (Exception ex)
