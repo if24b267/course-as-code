@@ -2,6 +2,7 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Enrolments;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Static;
 using NLog;
 using CourseAsCode.Writers.XML.Logic;
@@ -13,7 +14,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
     {
         private const string DEFAULT_ENROLMENTS_RELATIVE_PATH = "course/enrolments.xml";
         private int _enrolmentIdCounter = 1; // used to assign ascending IDs to each enrolment
-        private readonly GeneralHelper _helper;
+        private readonly IGeneralHelper _helper;
 
         /// <summary>
         /// Default constructor using default implementations for dependencies.
@@ -27,7 +28,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public EnrolmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, GeneralHelper helper)
+        public EnrolmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
             _helper = helper;

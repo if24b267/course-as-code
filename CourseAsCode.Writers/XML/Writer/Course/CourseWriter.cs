@@ -1,5 +1,6 @@
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Static;
 using NLog;
 using CourseAsCode.Writers.XML.Logic;
@@ -11,8 +12,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
     {
         private const string DEFAULT_COURSE_RELATIVE_PATH = "course/course.xml";
 
-        private readonly CourseHelper _courseHelper;
-        private readonly GeneralHelper _helper;
+        private readonly ICourseHelper _courseHelper;
+        private readonly IGeneralHelper _helper;
 
         /// <summary>
         /// Default constructor using default implementations for dependencies
@@ -28,7 +29,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// Constructor supporting Dependency Injection for Unit Testing
         /// </summary>
         public CourseWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, 
-                            CourseHelper courseHelper, GeneralHelper helper)
+                            ICourseHelper courseHelper, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
             _courseHelper = courseHelper;

@@ -1,6 +1,7 @@
 using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Static;
 using NLog;
 using CourseAsCode.Writers.XML.Logic;
@@ -13,7 +14,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         private const string DEFAULT_ROLE_ASSIGNMENTS_RELATIVE_PATH = "course/roles.xml";
 
         // Helper singleton
-        private readonly GeneralHelper _helper = GeneralHelper.Instance;
+        private readonly IGeneralHelper _helper = GeneralHelper.Instance;
 
         /// <summary>
         /// Default constructor using default implementations for dependencies.
@@ -25,7 +26,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public RoleAssignmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, GeneralHelper helper)
+        public RoleAssignmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
             _helper = helper;
