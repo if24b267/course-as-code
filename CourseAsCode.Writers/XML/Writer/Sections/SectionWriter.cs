@@ -8,19 +8,22 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
 {
     public class SectionWriter : XmlWriterBase
     {
+        private readonly IFileService _fileService;
+        
         /// <summary>
         /// Default constructor using default implementations for dependencies
         /// </summary>
         public SectionWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
+            _fileService = new FileService();
         }
         
         /// <summary>
         /// Constructor supporting Dependency Injection for Unit Testing
         /// </summary>
-        public SectionWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
-            : base(xmlWriterFactory, logger)
+        public SectionWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IFileService fileService) : base(xmlWriterFactory, logger)
         {
+            _fileService = fileService;
         }
         
         public void WriteSections(string outputPath, List<Section> sections)
@@ -35,7 +38,7 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
 
                     try
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+                        _fileService.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new InvalidOperationException());
                     }
                     catch (Exception ex)
                     {
