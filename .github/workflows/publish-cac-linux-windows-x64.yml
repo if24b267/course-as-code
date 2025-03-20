@@ -31,10 +31,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: writer-test-results-${{ env.GIT_ARTIFACT_VERSION }}
-        path: CourseAsCode.Writers.Tests/TestResults/writer-test_results.trx
+        path: "**/*test_results.trx"
 
   publish:
-    name: Publish CourseAsCode for Linux & Windows x64
+    name: Publish for Linux & Windows x64
     runs-on: ubuntu-latest
     needs: test # This job depends on the "test" job
 

@@ -3,9 +3,6 @@ description: 'Checkout code, set up .NET, restore dependencies, and generate ver
 runs:
   using: 'composite'
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
