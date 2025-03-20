@@ -1,11 +1,10 @@
-name: Publish CourseAsCode for Linux & Windows x64
+name: Publish & Test CourseAsCode
 
 on:
   push:
 
 jobs:
   publish-cac-linux-windows-x64:
-    name: Publish and Test CourseAsCode for Linux & Windows x64
     runs-on: ubuntu-latest
 
     steps:
