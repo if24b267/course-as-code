@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Setup and Generate Version
       uses: ./.github/actions/setup
 
@@ -36,6 +39,9 @@ jobs:
     needs: test # This job depends on the "test" job
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Setup and Generate Version
       uses: ./.github/actions/setup
 
