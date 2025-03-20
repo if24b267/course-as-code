@@ -1,0 +1,21 @@
+name: 'Setup and Generate Version'
+description: 'Checkout code, set up .NET, restore dependencies, and generate version identifier.'
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.x'
+
+    - name: Restore dependencies
+      shell: bash
+      run: dotnet restore
+
+    - name: Generate version identifier
+      id: git_artifact_version
+      shell: bash
+      run: echo "GIT_ARTIFACT_VERSION=$(date +'%Y%m%d%H%M%S')-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
