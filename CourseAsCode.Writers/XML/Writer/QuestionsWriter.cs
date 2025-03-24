@@ -233,7 +233,7 @@ namespace CourseAsCode.Writers.XML.Writer
                     break;
                 // Implement additional question types here
                 default:
-                    LogWarn($"Unsupported question type {question.GetType().Name} – skipping plugin block");
+                    LogWarn($"Unsupported question type {question.GetType().Name} � skipping plugin block");
                     break;
             }
 
