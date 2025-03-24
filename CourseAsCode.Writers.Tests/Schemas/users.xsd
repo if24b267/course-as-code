@@ -1,0 +1,95 @@
+﻿<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="users">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="user" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="username" type="xs:string"/>
+							<xs:element name="idnumber" type="xs:string"/>
+							<xs:element name="email" type="xs:string"/>
+							<xs:element name="phone1" type="xs:string"/>
+							<xs:element name="phone2" type="xs:string"/>
+							<xs:element name="institution" type="xs:string"/>
+							<xs:element name="department" type="xs:string"/>
+							<xs:element name="address" type="xs:string"/>
+							<xs:element name="city" type="xs:string"/>
+							<xs:element name="country" type="xs:string"/>
+							<xs:element name="lastip" type="xs:string"/>
+							<xs:element name="picture" type="xs:int"/>
+							<xs:element name="description" type="xs:string"/>
+							<xs:element name="descriptionformat" type="xs:int"/>
+							<xs:element name="imagealt" type="xs:string"/>
+							<xs:element name="auth" type="xs:string"/>
+							<xs:element name="firstnamephonetic" type="xs:string"/>
+							<xs:element name="lastnamephonetic" type="xs:string"/>
+							<xs:element name="middlename" type="xs:string"/>
+							<xs:element name="alternatename" type="xs:string"/>
+							<xs:element name="firstname" type="xs:string"/>
+							<xs:element name="lastname" type="xs:string"/>
+							<xs:element name="confirmed" type="xs:int"/>
+							<xs:element name="policyagreed" type="xs:int"/>
+							<xs:element name="deleted" type="xs:int"/>
+							<xs:element name="lang" type="xs:string"/>
+							<xs:element name="theme" type="xs:string"/>
+							<xs:element name="timezone" type="xs:string"/>
+							<xs:element name="firstaccess" type="xs:int"/>
+							<xs:element name="lastaccess" type="xs:int"/>
+							<xs:element name="lastlogin" type="xs:int"/>
+							<xs:element name="currentlogin" type="xs:int"/>
+							<xs:element name="mailformat" type="xs:int"/>
+							<xs:element name="maildigest" type="xs:int"/>
+							<xs:element name="maildisplay" type="xs:int"/>
+							<xs:element name="autosubscribe" type="xs:int"/>
+							<xs:element name="trackforums" type="xs:int"/>
+							<xs:element name="timecreated" type="xs:int"/>
+							<xs:element name="timemodified" type="xs:int"/>
+							<xs:element name="trustbitmask" type="xs:int"/>
+							<xs:element name="custom_fields" type="xs:string"/>
+							<xs:element name="tags">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="tag" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="name" type="xs:string"/>
+													<xs:element name="rawname" type="xs:string"/>
+												</xs:sequence>
+												<xs:attribute name="id" type="xs:int" use="required"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="preferences">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="preference" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="name" type="xs:string"/>
+													<xs:element name="value" type="xs:string"/>
+												</xs:sequence>
+												<xs:attribute name="id" type="xs:int" use="required"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="roles">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="role_overrides" type="xs:string"/>
+										<xs:element name="role_assignments" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="id" type="xs:int" use="required"/>
+						<xs:attribute name="contextid" type="xs:int" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
