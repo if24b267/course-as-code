@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseAsCode.Readers", "Cou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseAsCode.Writers.Tests", "CourseAsCode.Writers.Tests\CourseAsCode.Writers.Tests.csproj", "{E8772979-4B9D-4D4B-8D2D-FD1316EB0EAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseAsCode.Readers.Tests", "CourseAsCode.Readers.Tests\CourseAsCode.Readers.Tests.csproj", "{2AE70289-40FB-4AE8-B525-3958598539BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{E8772979-4B9D-4D4B-8D2D-FD1316EB0EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8772979-4B9D-4D4B-8D2D-FD1316EB0EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8772979-4B9D-4D4B-8D2D-FD1316EB0EAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AE70289-40FB-4AE8-B525-3958598539BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AE70289-40FB-4AE8-B525-3958598539BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AE70289-40FB-4AE8-B525-3958598539BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AE70289-40FB-4AE8-B525-3958598539BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

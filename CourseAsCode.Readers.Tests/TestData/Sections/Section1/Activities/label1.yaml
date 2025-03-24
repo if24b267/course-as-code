@@ -1,0 +1,5 @@
+Type: LABEL
+Name: Test Label 1
+Content:
+  - Type: MARKDOWN
+    ContentFilePath: This is a test label
