@@ -102,8 +102,8 @@ namespace CourseAsCode.Writers.XML.Writer
                 { "email", user.EMail.ToString() },
                 { "phone1", user.SensibleDefaults.PhoneNumber ?? "" },
                 { "phone2", user.SensibleDefaults.MobilePhoneNumber ?? "" },
-                { "deparment", user.SensibleDefaults.Department ?? "" },
                 { "institution", user.SensibleDefaults.Institution ?? "" },
+                { "department", user.SensibleDefaults.Department ?? "" },
                 { "address", user.SensibleDefaults.Address ?? "" },
                 { "city", user.City ?? "" },
                 { "country", _userHelper.GetCountryFromEnum(user.Country ?? Country.Austria) },
@@ -150,7 +150,6 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteCustomFieldsSection(XmlWriter writer, User user)
         {
             writer.WriteStartElement("custom_fields");
-            writer.WriteString(" ");
             writer.WriteEndElement(); // Close <custom_fields>
         }
 	
@@ -162,7 +161,6 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteTagsSection(XmlWriter writer, User user)
         {
             writer.WriteStartElement("tags");
-            writer.WriteString(" ");
             writer.WriteEndElement(); // Close <tags>
         }
 	
@@ -174,7 +172,6 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WritePreferencesSection(XmlWriter writer, User user)
         {
             writer.WriteStartElement("preferences");
-            writer.WriteString(" ");
             writer.WriteEndElement(); // Close <preferences>
         }
 	
@@ -188,11 +185,9 @@ namespace CourseAsCode.Writers.XML.Writer
             writer.WriteStartElement("roles");
 	
             writer.WriteStartElement("role_overrides");
-            writer.WriteString(" ");
             writer.WriteEndElement(); // Close <role_overrides>
 	
             writer.WriteStartElement("role_assignments");
-            writer.WriteString(" ");
             writer.WriteEndElement(); // Close <role_assignments>
 	
             writer.WriteEndElement(); // Close <roles>
