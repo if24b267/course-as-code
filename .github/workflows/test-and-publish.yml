@@ -15,8 +15,11 @@ jobs:
     - name: Setup and Generate Version
       uses: ./.github/actions/setup
 
-    - name: Run NUnit tests
+    - name: Run Writer NUnit tests
       run: dotnet test CourseAsCode.Writers.Tests --logger "trx;LogFileName=writer-test_results.trx"
+      
+    - name: Run Reader NUnit tests
+      run: dotnet test CourseAsCode.Readers.Tests --logger "trx;LogFileName=reader-test_results.trx"
 
     - name: Publish Test Results
       uses: dorny/test-reporter@v2

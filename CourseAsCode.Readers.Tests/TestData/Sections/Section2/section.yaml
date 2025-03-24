@@ -1,0 +1,5 @@
+SectionName: Test Section 2
+Summary: Test section 2 summary
+VisibleToStudents: false
+Activities:
+  - ActivityFilePath: Activities/url2.yaml

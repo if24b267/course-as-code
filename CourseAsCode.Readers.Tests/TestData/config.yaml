@@ -1,0 +1,19 @@
+CourseName: Test Course
+ShortName: TC
+Summary: Test course summary
+Description: Test course description
+Visible: true
+Category: TestCategory
+CategoryId: 1
+CategoryDescription: Test category description
+StartDate: 01-01-2024 00:00
+EndDate: 31-12-2024 23:59
+IdNumber: 12345
+ShowGrades: true
+GroupMode: 0
+ForceGroupMode: false
+EnableCompletionTracking: true
+NumberOfAnnouncements: 5
+ForcedLanguage: en
+ShowActivityDates: true
+ShowCompletionConditions: true

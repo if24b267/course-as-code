@@ -29,7 +29,17 @@ public class YAMLSectionReader : SectionReader<Section>
 			foreach (var yamlSectionActivity in yamlSection.Activities)
 			{
 				var tempPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), yamlSectionActivity.ActivityFilePath));
+				if (tempPath == modelObjectPath)
+				{
+					_logger.Error($"Circular reference detected in section {yamlSection.SectionName}.");
+					continue;
+				}
 				var activity = _activityReader.Read(tempPath);
+				if (activity == null)
+				{
+					_logger.Error($"Could not read activity from file {tempPath}.");
+					continue;
+				}
 				activities.Add(activity);
 				ValueKeeper.CurrentActivityId++;
 			}
