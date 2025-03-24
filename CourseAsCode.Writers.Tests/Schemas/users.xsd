@@ -49,13 +49,30 @@
 							<xs:element name="tags">
 								<xs:complexType>
 									<xs:sequence>
-										
+										<xs:element name="tag" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="name" type="xs:string"/>
+													<xs:element name="rawname" type="xs:string"/>
+												</xs:sequence>
+												<xs:attribute name="id" type="xs:int" use="required"/>
+											</xs:complexType>
+										</xs:element>
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
 							<xs:element name="preferences">
 								<xs:complexType>
 									<xs:sequence>
+										<xs:element name="preference" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="name" type="xs:string"/>
+													<xs:element name="value" type="xs:string"/>
+												</xs:sequence>
+												<xs:attribute name="id" type="xs:int" use="required"/>
+											</xs:complexType>
+										</xs:element>
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>

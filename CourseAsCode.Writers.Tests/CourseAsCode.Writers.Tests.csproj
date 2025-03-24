@@ -26,4 +26,8 @@
       <ProjectReference Include="..\CourseAsCode.Writers\CourseAsCode.Writers.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Integration\" />
+    </ItemGroup>
+
 </Project>

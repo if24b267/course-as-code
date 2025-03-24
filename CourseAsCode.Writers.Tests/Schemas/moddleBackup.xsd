@@ -1,0 +1,119 @@
+﻿<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="moodle_backup">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="information">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name" type="xs:string"/>
+							<xs:element name="moodle_version" type="xs:string"/>
+							<xs:element name="moodle_release" type="xs:string"/>
+							<xs:element name="backup_version" type="xs:string"/>
+							<xs:element name="backup_release" type="xs:string"/>
+							<xs:element name="backup_date" type="xs:int"/>
+							<xs:element name="mnet_remoteusers" type="xs:int"/>
+							<xs:element name="include_files" type="xs:int"/>
+							<xs:element name="include_file_references_to_external_content" type="xs:int"/>
+							<xs:element name="original_wwwroot" type="xs:string"/>
+							<xs:element name="original_site_identifier_hash" type="xs:string"/>
+							<xs:element name="original_course_id" type="xs:int"/>
+							<xs:element name="original_course_format" type="xs:string"/>
+							<xs:element name="original_course_fullname" type="xs:string"/>
+							<xs:element name="original_course_shortname" type="xs:string"/>
+							<xs:element name="original_course_startdate" type="xs:int"/>
+							<xs:element name="original_course_enddate" type="xs:int"/>
+							<xs:element name="original_course_contextid" type="xs:int"/>
+							<xs:element name="original_system_contextid" type="xs:int"/>
+							<xs:element name="details">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="detail" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="type" type="xs:string"/>
+													<xs:element name="format" type="xs:string"/>
+													<xs:element name="interactive" type="xs:int"/>
+													<xs:element name="mode" type="xs:int"/>
+													<xs:element name="execution" type="xs:int"/>
+													<xs:element name="executiontime" type="xs:int"/>
+												</xs:sequence>
+												<xs:attribute name="backup_id" type="xs:string" use="required"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="contents">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="activities">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="activity" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="moduleid" type="xs:int"/>
+																<xs:element name="sectionid" type="xs:int"/>
+																<xs:element name="modulename" type="xs:string"/>
+																<xs:element name="title" type="xs:string"/>
+																<xs:element name="directory" type="xs:string"/>
+																<xs:element name="insubsection" type="xs:string"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="sections">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="section" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="sectionid" type="xs:int"/>
+																<xs:element name="title" type="xs:string"/>
+																<xs:element name="directory" type="xs:string"/>
+																<xs:element name="parentcmid" type="xs:string"/>
+																<xs:element name="modname" type="xs:string"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="course">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="courseid" type="xs:int"/>
+													<xs:element name="title" type="xs:string"/>
+													<xs:element name="directory" type="xs:string"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="settings">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="setting" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="level" type="xs:string"/>
+													<xs:element name="name" type="xs:string"/>
+													<xs:element name="value" type="xs:string"/>
+													<xs:element name="section" type="xs:string" minOccurs="0"/>
+													<xs:element name="activity" type="xs:string" minOccurs="0"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
