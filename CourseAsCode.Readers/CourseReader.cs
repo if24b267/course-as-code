@@ -53,6 +53,13 @@ public class CourseReader : ICourseReader
 		var courseConfigYamlFile = rootNode.Children.FirstOrDefault(c => c is { IsDirectory: false, Name: "config.yaml", Depth: 1 });
 		var courseSectionsYamlFile = rootNode.Children.FirstOrDefault(c => c is { IsDirectory: false, Name: "sections.yaml", Depth: 1 });
 
+		if (courseSectionsYamlFile == null || courseConfigYamlFile == null)
+		{
+			_logger.Error($"Course is missing a config.yaml or sections.yaml file.");
+			throw new FileNotFoundException("Course is missing a config.yaml or sections.yaml file.");
+			return null;
+		}
+
 		var yamlYamlCourse = YamlFileReaderHelper.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
 		var yamlSectionsDefinition = YamlFileReaderHelper.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 

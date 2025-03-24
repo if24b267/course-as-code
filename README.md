@@ -1,2 +1,2 @@
 # CourseAsCode
-[![Publish CourseAsCode for Linux & Windows x64](https://github.com/Davimalu/course-as-code/actions/workflows/publish-cac-linux-windows-x64.yml/badge.svg?branch=develop)](https://github.com/Davimalu/course-as-code/actions/workflows/publish-cac-linux-windows-x64.yml)
+[![Publish & Test CourseAsCode](https://github.com/Davimalu/course-as-code/actions/workflows/test-and-publish.yml/badge.svg?branch=develop)](https://github.com/Davimalu/course-as-code/actions/workflows/test-and-publish.yml)
