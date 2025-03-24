@@ -34,7 +34,6 @@ namespace CourseAsCode.Writers.XML.Writer
                     writer.WriteStartDocument();
                     
                     writer.WriteStartElement("question_categories");
-                    writer.WriteString(" ");
                     writer.WriteEndElement(); // Close <question_categories>
                     
                     writer.WriteEndDocument();

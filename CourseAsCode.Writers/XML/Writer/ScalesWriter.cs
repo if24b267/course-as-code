@@ -34,7 +34,6 @@ namespace CourseAsCode.Writers.XML.Writer
                     writer.WriteStartDocument();
 
                     writer.WriteStartElement("scales_definition");
-                    writer.WriteString(" ");
                     writer.WriteEndElement(); // Close <scales_definition>
 
                     writer.WriteEndDocument();

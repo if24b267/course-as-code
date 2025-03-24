@@ -58,7 +58,6 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteGroupCustomFieldsSection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("groupcustomfields");
-            writer.WriteString(" ");
             writer.WriteEndElement(); // Close <groupcustomfields>
         }
 
@@ -72,7 +71,6 @@ namespace CourseAsCode.Writers.XML.Writer
             writer.WriteStartElement("groupings");
 
             writer.WriteStartElement("groupingcustomfields");
-            writer.WriteString(" ");
             writer.WriteEndElement(); // Close <groupingcustomfields>
 
             writer.WriteEndElement(); // Close <groupings>
