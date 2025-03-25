@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Integration\" />
+      <Folder Include="Integration\course\" />
     </ItemGroup>
 
 </Project>
