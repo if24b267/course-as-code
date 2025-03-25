@@ -41,10 +41,6 @@ namespace CourseAsCode.Writers.XML.Writer
                 {
                     writer.WriteStartDocument();
                     writer.WriteStartElement("badges");
-
-                    // Add whitespace to prevent a self-closing tag
-                    writer.WriteWhitespace("\n");
-
                     writer.WriteEndElement(); // Close <badges>
                     writer.WriteEndDocument();
                 }

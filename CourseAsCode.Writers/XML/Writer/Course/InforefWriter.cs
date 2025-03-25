@@ -90,7 +90,14 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         {
             writer.WriteStartElement(type);
 
-            writer.WriteElementString("id", instance.SystemDefaults.Id.ToString());
+            if (type == "role")
+            {
+                writer.WriteElementString("id", instance.SystemDefaults.RoleId.ToString());
+            }
+            else
+            {
+                writer.WriteElementString("id", instance.SystemDefaults.Id.ToString());
+            }
 
             writer.WriteEndElement(); // Close </type>
         }
