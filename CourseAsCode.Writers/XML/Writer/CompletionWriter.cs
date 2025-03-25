@@ -38,11 +38,7 @@ namespace CourseAsCode.Writers.XML.Writer
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-                    writer.WriteStartElement("course_completion");
-                    
-                    // Add whitespace to prevent a self-closing tag
-                    writer.WriteWhitespace("\n");
-                    
+                    writer.WriteStartElement("course_completion");                  
                     writer.WriteEndElement(); // Close </course_completion>
                     writer.WriteEndDocument();
                 }
