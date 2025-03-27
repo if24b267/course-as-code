@@ -6,11 +6,11 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.UnitTests.Fakes;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using NLog;
 using NSubstitute;
-using CourseAsCode.Writers.XML.Writer.Activities.Url;
 
-namespace CourseAsCode.Writers.UnitTests.XML.Writer.Activities.Url
+namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
 {
     [TestFixture]
     public class ModuleWriterUrlTests
