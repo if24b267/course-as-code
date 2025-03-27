@@ -143,6 +143,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             // Verify inner elements from the dictionary
             Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyUrl.SystemDefaults.ModuleName));
             Assert.That(moduleElement["sectionid"]?.InnerText, Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
+            Assert.That(moduleElement?["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
             
             // Inner elements from the mocked helper methods
             Assert.That(moduleElement["added"]?.InnerText, Is.EqualTo("1234567890"));
@@ -167,7 +168,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             Assert.IsNotNull(tagNodes, "No <tag> elements found despite having tags");
             Assert.That(tagNodes.Count, Is.EqualTo(_dummyUrl.Tags!.Count));
 
-            // Check details of the first tag.
+            // Check details of the first tag
             var firstTag = tagNodes[0] as XmlElement;
             Assert.That(firstTag?.GetAttribute("id"), Is.EqualTo("0"));
             Assert.That(firstTag["name"]?.InnerText, Is.EqualTo("tag1"));

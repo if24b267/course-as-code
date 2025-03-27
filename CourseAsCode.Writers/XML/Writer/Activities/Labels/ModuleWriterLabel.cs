@@ -13,11 +13,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
 {
     public class ModuleWriterLabel : XmlWriterBase, IActivityModuleWriter
     {
+        private const string DEFAULT_MODULE_RELATIVE_PATH = "module.xml";
+        
         private readonly IMoodleVersionHelper _moodleVersionHelper;
         private readonly IGeneralHelper _generalHelper;
-        
-        private const string DEFAULT_MODULE_RELATIVE_PATH = "module.xml";
-        private int _currentModuleId = 0; // Initial moduleId
 
         /// <summary>
         /// Default constructor using default implementations for dependencies
@@ -65,7 +64,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
                     writer.WriteStartDocument();
                     writer.WriteStartElement("module");
 
-                    writer.WriteAttributeString("id", _currentModuleId.ToString());
+                    writer.WriteAttributeString("id", labelObject.SystemDefaults.ModuleId.ToString());
                     writer.WriteAttributeString("version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
                     
                     WriteGeneralInformationToModules(writer, outputPath, course, section, labelObject);
@@ -75,8 +74,6 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
                 }
 
                 LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
-
-                _currentModuleId++; // Increment moduleId for the next label
             }
             catch (Exception e)
             {

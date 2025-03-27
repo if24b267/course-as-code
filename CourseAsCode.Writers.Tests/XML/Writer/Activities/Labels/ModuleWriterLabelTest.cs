@@ -122,8 +122,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             doc.LoadXml(output);
             var moduleElement = doc.DocumentElement;
 
-            // Assert: "id" attribute is set to the current module id (initially "0") and "version" attribute is set via the moodle version helper
-            Assert.That(moduleElement?.GetAttribute("id"), Is.EqualTo("0"));
+            // Assert: "id" attribute is set to the label's module id and "version" attribute via the moodle version helper
+            Assert.That(moduleElement?.GetAttribute("id"), Is.EqualTo(_dummyLabel.SystemDefaults.ModuleId.ToString()));
             Assert.That(moduleElement.GetAttribute("version"), Is.EqualTo("2024100700"));
         }
 
@@ -143,8 +143,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
 
             // Verify inner elements from the dictionary
             Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyLabel.SystemDefaults.ModuleName));
-            Assert.That(moduleElement["sectionid"]?.InnerText,
-                Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
+            Assert.That(moduleElement["sectionid"]?.InnerText, Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
+            Assert.That(moduleElement?["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
 
             // Inner elements from the mocked helper methods
             Assert.That(moduleElement["added"]?.InnerText, Is.EqualTo("1234567890"));
