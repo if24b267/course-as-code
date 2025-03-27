@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Text.RegularExpressions;
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
@@ -72,7 +73,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
                 ExternalUrl = "https://example.com",
                 TimeCreated = DateTime.Now,
                 VisibleToStudents = true,
-                GroupMode = 0,
+                GroupMode = GroupMode.NoGroups,
                 DisplayDescription = true,
                 Language = Language.English,
                 Tags = new List<string> { "tag1", "tag2" }
@@ -118,7 +119,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
-            // Assert: The root element is <module> with expected attributes
+            // Assert: "id" attribute is set to the current module id (initially "0") and "version" attribute is set via the moodle version helper
             var moduleElement = doc.DocumentElement;
 
             Assert.That(moduleElement?.GetAttribute("id"), Is.EqualTo(_dummyUrl.SystemDefaults.ModuleId.ToString()));
@@ -158,23 +159,19 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
-            // Assert: Verify that the <tags> element exists and contains tag elements
+            // Assert: Verify that a <tags> element exists and contains the expected number of <tag> elements
             var tagsElement = doc.DocumentElement?.SelectSingleNode("tags") as XmlElement;
             Assert.IsNotNull(tagsElement, "The <tags> element is missing");
-            
-            // Verify that the <tags> element contains the expected number of <tag> elements
+
             var tagNodes = tagsElement.SelectNodes("tag");
-            if (_dummyUrl.Tags != null && _dummyUrl.Tags.Count > 0)
-            {
-                Assert.IsNotNull(tagNodes, "No <tag> elements found despite having tags");
-                Assert.That(tagNodes.Count, Is.EqualTo(_dummyUrl.Tags.Count));
-                
-                // Check first tag element's content
-                var firstTag = tagNodes[0] as XmlElement;
-                Assert.That(firstTag?.GetAttribute("id"), Is.EqualTo("0"));
-                Assert.That(firstTag["name"]?.InnerText, Is.EqualTo("tag1"));
-                Assert.That(firstTag["rawname"]?.InnerText, Is.EqualTo("tag1"));
-            }
+            Assert.IsNotNull(tagNodes, "No <tag> elements found despite having tags");
+            Assert.That(tagNodes.Count, Is.EqualTo(_dummyUrl.Tags!.Count));
+
+            // Check details of the first tag.
+            var firstTag = tagNodes[0] as XmlElement;
+            Assert.That(firstTag?.GetAttribute("id"), Is.EqualTo("0"));
+            Assert.That(firstTag["name"]?.InnerText, Is.EqualTo("tag1"));
+            Assert.That(firstTag["rawname"]?.InnerText, Is.EqualTo("tag1"));
         }
 
         [Test]
@@ -210,7 +207,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
             _moduleWriterUrl = new ModuleWriterUrl(throwingFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper);
             
-            // Act & Assert: Verify that an exception is thrown
+            // Act & Assert: Verify that an exception is thrown and an error is logged
             Assert.Throws<InvalidOperationException>(() =>
                 _moduleWriterUrl.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyUrl));
             

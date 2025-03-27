@@ -11,7 +11,7 @@ using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
 {
-    internal class ModuleWriterLabel : XmlWriterBase, IActivityModuleWriter
+    public class ModuleWriterLabel : XmlWriterBase, IActivityModuleWriter
     {
         private readonly IMoodleVersionHelper _moodleVersionHelper;
         private readonly IGeneralHelper _generalHelper;
