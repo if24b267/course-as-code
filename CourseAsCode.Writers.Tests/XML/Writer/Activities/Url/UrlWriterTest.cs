@@ -1,13 +1,12 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.UnitTests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using NLog;
 using NSubstitute;
-using CourseAsCode.Writers.XML.Writer.Activities.Url;
 
-namespace CourseAsCode.Writers.UnitTests.XML.Writer.Activities.Url
+namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
 {
     [TestFixture]
     public class UrlWriterTests
@@ -78,7 +77,7 @@ namespace CourseAsCode.Writers.UnitTests.XML.Writer.Activities.Url
         }
 
         [Test]
-        public void WriteUrl_ContainsUrlChildElementWithRequiredElements()
+        public void WriteUrl_ContainsUrlElementWithRequiredElements()
         {
             // Act
             _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl);
