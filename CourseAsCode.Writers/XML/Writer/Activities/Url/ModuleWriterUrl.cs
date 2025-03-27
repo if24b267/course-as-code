@@ -14,10 +14,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
     public class ModuleWriterUrl : XmlWriterBase, IActivityModuleWriter
     {
         private const string DEFAULT_MODULE_RELATIVE_PATH = "module.xml";
-        
+
         private readonly IMoodleVersionHelper _moodleVersionHelper;
         private readonly IGeneralHelper _generalHelper;
-        
+
         /// <summary>
         /// Default constructor using default implementations for dependencies
         /// </summary>
@@ -26,18 +26,21 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
             _moodleVersionHelper = MoodleVersionHelper.Instance;
             _generalHelper = GeneralHelper.Instance;
         }
-        
+
         /// <summary>
         /// Constructor using Dependency Injection for Unit Testing
         /// </summary>
+        /// <param name="xmlWriterFactory">Injected XML writer factory</param>
+        /// <param name="logger">Injected logger instance</param>
         /// <param name="moodleVersionHelper">Injected MoodleVersionHelper instance</param>
         /// <param name="generalHelper">Injected GeneralHelper instance</param>
-        public ModuleWriterUrl(IXmlWriterFactory xmlWriterFactory, ILogger Logger, IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper) : base(xmlWriterFactory, Logger)
+        public ModuleWriterUrl(IXmlWriterFactory xmlWriterFactory, ILogger logger,
+            IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper) : base(xmlWriterFactory, logger)
         {
             _moodleVersionHelper = moodleVersionHelper;
             _generalHelper = generalHelper;
         }
-        
+
         /// <summary>
         /// Writes the modules.xml file required for a URL activity
         /// </summary>
@@ -54,18 +57,18 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                 {
                     throw new InvalidCastException("The provided activity is not of type URL.");
                 }
-                
+
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MODULE_RELATIVE_PATH));
-                
+
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-                    
+
                     writer.WriteStartElement("module");
                     writer.WriteAttributeString("id", urlObject.SystemDefaults.ModuleId.ToString());
                     writer.WriteAttributeString("version",
                         _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
-                    
+
                     // Write contents of module tag
                     var elements = new Dictionary<string, string>
                     {
@@ -93,12 +96,12 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                     };
                     WriteElements(writer, elements);
                     
-                    WriteTags(writer, urlObject.Tags, outputPath);
-                    
+                    TagsWriter.WriteTags(writer, urlObject.Tags, outputPath, Logger);
+
                     writer.WriteEndElement(); // Close <module>
                     writer.WriteEndDocument();
                 }
-                
+
                 LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
             }
             catch (Exception e)
@@ -106,36 +109,6 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                 LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_MODULE_RELATIVE_PATH}");
                 throw;
             }
-        }
-        
-        /// <summary>
-        /// Writes the tags section of module.xml for a URL activity
-        /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="tags">Tags to be written, represented as a list of strings</param>
-        /// <param name="outputPath">The output directory path, used for logging</param>
-        private void WriteTags(XmlWriter writer, List<string>? tags, string outputPath)
-        {
-            int tagId = 0;
-            
-            writer.WriteStartElement("tags");
-            
-            if (tags != null)
-            {
-                foreach (string tag in tags)
-                {
-                    writer.WriteStartElement("tag");
-                    writer.WriteAttributeString("id", tagId++.ToString());
-                    
-                    writer.WriteElementString("name", tag);
-                    writer.WriteElementString("rawname", tag);
-                    
-                    writer.WriteEndElement(); // Close <tag>
-                    LogTrace($"Added tag '{tag}' to {Path.GetFileName(outputPath)}");
-                }
-            }
-            
-            writer.WriteEndElement(); // Close <tags>
         }
     }
 }

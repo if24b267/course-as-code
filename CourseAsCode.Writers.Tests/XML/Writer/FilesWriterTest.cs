@@ -1,16 +1,16 @@
 ﻿using System.Xml;
-using NLog;
-using NSubstitute;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Writers.UnitTests.Fakes;
+using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
+using NLog;
+using NSubstitute;
 
-namespace CourseAsCode.Writers.UnitTests.XML.Writer
+namespace CourseAsCode.Writers.Tests.XML.Writer
 {
     [TestFixture]
     public class FilesWriterTests

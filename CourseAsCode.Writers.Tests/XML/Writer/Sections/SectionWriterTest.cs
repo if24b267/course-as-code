@@ -1,12 +1,12 @@
 ﻿using System.Xml;
 using CourseAsCode.Model;
+using CourseAsCode.Writers.Tests.Fakes;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer.Sections;
 using NLog;
 using NSubstitute;
-using CourseAsCode.Writers.XML.Writer.Sections;
-using CourseAsCode.Writers.UnitTests.Fakes;
-using CourseAsCode.Writers.XML.Logic.Interfaces;
 
-namespace CourseAsCode.Writers.UnitTests.XML.Writer.Sections
+namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
 {
     [TestFixture]
     public class SectionWriterTests

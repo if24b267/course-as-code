@@ -1,10 +1,10 @@
 ﻿using System.Xml;
-using NSubstitute;
-using NLog;
+using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using CourseAsCode.Writers.UnitTests.Fakes;
+using NLog;
+using NSubstitute;
 
-namespace CourseAsCode.Writers.UnitTests.XML.Writer.Activities.CommonWriters
+namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
 {
     [TestFixture]
     public class ActivityGradehistoryWriterTests

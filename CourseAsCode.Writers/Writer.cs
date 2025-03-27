@@ -153,7 +153,7 @@ public class Writer : IWriter
                 // Text and Media Area (Label)-specific XML files
                 if (activity is TextAndMediaArea textAndMediaArea)
                 {
-                    activityPath = CreateTextAndMediaArea(outputPath, activity, textAndMediaArea, section);
+                    activityPath = CreateTextAndMediaArea(course, outputPath, activity, textAndMediaArea, section);
                 }
 
                 // URL-specific XML files
@@ -233,12 +233,12 @@ public class Writer : IWriter
     /// <para> the path to the directory where the files for that activity were written </para>
     /// <para> null if the directory couldn't be created</para>
     /// </returns>
-    private string? CreateTextAndMediaArea(string outputPath, Activity activity, TextAndMediaArea textAndMediaArea, Section section)
+    private string? CreateTextAndMediaArea(Course course, string outputPath, Activity activity, TextAndMediaArea textAndMediaArea, Section section)
     {
         return CreateActivity(outputPath, activity, "label", activityPath =>
         {
             _labelWriter.WriteLabel(activityPath, textAndMediaArea);
-            _moduleWriterLabel.WriteModule(activityPath, section);
+            _moduleWriterLabel.WriteModule(activityPath, course, section, textAndMediaArea);
         });
     }
     

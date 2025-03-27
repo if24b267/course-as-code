@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
@@ -10,8 +11,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
     public class LabelWriter : XmlWriterBase
     {
         private const string DEFAULT_LABEL_RELATIVE_PATH = "label.xml";
-        private int _currentModuleId = 22;
-        private readonly GeneralHelper _generalHelper;
+        private readonly IGeneralHelper _generalHelper;
 
         /// <summary>
         /// Default constructor using default implementations for dependencies
@@ -28,7 +28,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         /// <param name="xmlWriterFactory">Injected XML writer factory</param>
         /// <param name="logger">Injected logger</param>
         /// <param name="generalHelper">Injected general helper</param>
-        public LabelWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, GeneralHelper generalHelper)
+        public LabelWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper;
@@ -58,7 +58,6 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
                 }
 
                 LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_LABEL_RELATIVE_PATH}");
-                _currentModuleId++; // Increment moduleId for the next label
             }
             catch (Exception e)
             {
@@ -75,9 +74,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         private void WriteActivityAttributes(XmlWriter writer, TextAndMediaArea activity)
         {
             writer.WriteAttributeString("id", activity.ActivityId.ToString());
-            writer.WriteAttributeString("moduleid", _currentModuleId.ToString());
+            writer.WriteAttributeString("moduleid", activity.SystemDefaults.ModuleId.ToString());
             writer.WriteAttributeString("modulename", activity.SystemDefaults.ModuleName);
-            writer.WriteAttributeString("contextid", activity.Section?.SystemDefaults.SectionId.ToString() ?? "0");
+            writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(activity.Context));
         }
 
         /// <summary>
