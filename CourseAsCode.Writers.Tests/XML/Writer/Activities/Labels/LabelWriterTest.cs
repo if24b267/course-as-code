@@ -2,7 +2,6 @@
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.UnitTests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using NLog;

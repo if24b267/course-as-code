@@ -1,6 +1,7 @@
 using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
@@ -10,7 +11,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
     public class FileWriter : XmlWriterBase
     {
         private const string DEFAULT_FILE_RELATIVE_PATH = "resource.xml";
-        private readonly GeneralHelper _generalHelper;
+        private readonly IGeneralHelper _generalHelper;
 
         /// <summary>
         /// Default constructor using default implementations for dependencies
@@ -27,7 +28,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         /// <param name="xmlWriterFactory">The XML writer factory to use</param>
         /// <param name="logger">The logger instance to use</param>
         /// <param name="generalHelper">The general helper instance to use</param>
-        public FileWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, GeneralHelper generalHelper)
+        public FileWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper;
