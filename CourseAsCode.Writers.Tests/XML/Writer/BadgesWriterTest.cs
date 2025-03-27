@@ -4,7 +4,7 @@ using CourseAsCode.Writers.XML.Writer;
 using NLog;
 using NSubstitute;
 
-namespace CourseAsCode.Writers.UnitTests.XML.Writer
+namespace CourseAsCode.Writers.Tests.XML.Writer
 {
     [TestFixture]
     public class BadgesWriterTests

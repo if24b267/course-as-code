@@ -23,7 +23,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
         private ModuleWriterLabel _moduleWriterLabel;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
-        private Course _dummyCourse;
+        private Model.Course _dummyCourse;
         private Section _dummySection;
         private TextAndMediaArea _dummyLabel; // Label activity
 
@@ -50,7 +50,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
                 new ModuleWriterLabel(_testFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger);
 
             // Create a dummy course with backup metadata and one section.
-            _dummyCourse = new Course
+            _dummyCourse = new Model.Course
             {
                 BackupMetadata = new BackupMetadata { MoodleVersion = MoodleVersion.Moodle450 },
                 Sections = new List<Section>()

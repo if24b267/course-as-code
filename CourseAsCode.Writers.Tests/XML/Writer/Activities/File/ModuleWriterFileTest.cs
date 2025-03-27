@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml;
+﻿using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
@@ -13,7 +10,6 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
 using NLog;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
 {
@@ -27,7 +23,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
         private ModuleWriterFile _moduleWriterFile;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
-        private Course _dummyCourse;
+        private Model.Course _dummyCourse;
         private Section _dummySection;
         private MoodleFile _dummyFile; // File (resource) activity
 
@@ -52,7 +48,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             _moduleWriterFile = new ModuleWriterFile(_testFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger);
 
             // Create a dummy course with backup metadata and one section.
-            _dummyCourse = new Course
+            _dummyCourse = new Model.Course
             {
                 BackupMetadata = new BackupMetadata { MoodleVersion = MoodleVersion.Moodle450 },
                 Sections = new List<Section>()

@@ -1,14 +1,14 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Enums;
-using NLog;
-using NSubstitute;
-using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Writers.UnitTests.Fakes;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Static;
+using CourseAsCode.Writers.XML.Writer.Course;
+using NLog;
+using NSubstitute;
 
-namespace CourseAsCode.Writers.UnitTests.XML.Writer.Course
+namespace CourseAsCode.Writers.Tests.XML.Writer.Course
 {
     [TestFixture]
     public class CourseWriterTests

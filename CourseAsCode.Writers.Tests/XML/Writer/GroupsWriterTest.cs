@@ -1,11 +1,10 @@
 ﻿using System.Xml;
-using CourseAsCode.Model;
-using NSubstitute;
-using NLog;
-using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.UnitTests.Fakes;
+using CourseAsCode.Writers.XML.Writer;
+using NLog;
+using NSubstitute;
 
-namespace CourseAsCode.Writers.UnitTests.XML.Writer
+namespace CourseAsCode.Writers.Tests.XML.Writer
 {
     [TestFixture]
     public class GroupsWriterTests
