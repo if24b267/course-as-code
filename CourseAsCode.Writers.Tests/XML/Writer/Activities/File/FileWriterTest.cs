@@ -3,9 +3,9 @@ using NLog;
 using NSubstitute;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.UnitTests.Fakes;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
 {

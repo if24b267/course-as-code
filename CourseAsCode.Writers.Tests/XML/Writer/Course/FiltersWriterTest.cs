@@ -1,5 +1,5 @@
 ﻿using System.Xml;
-using CourseAsCode.Writers.UnitTests.Fakes;
+using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Course;
 using NLog;
 using NSubstitute;

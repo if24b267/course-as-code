@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 using CourseAsCode.Model;
-using CourseAsCode.Writers.UnitTests.Fakes;
+using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Sections;
 using NLog;
