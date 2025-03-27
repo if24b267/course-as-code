@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 
-namespace CourseAsCode.Writers.UnitTests.Fakes;
+namespace CourseAsCode.Writers.Tests.Fakes;
 
 /// <summary>
 /// An implementation of IXmlWriterFactory that writes to an in-memory StringWriter
