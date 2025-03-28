@@ -523,7 +523,7 @@ Create a class Answer, then a question has a list of Answers
 |-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
 | AnswerGrade                 | float     | questions.xml | fraction           | float           | the grade that is given to the student if this answer is selected                            |
 
-usually 1.0000000 for correct answers and 0.0000000 for incorrect answers, but can also be anything in between.
+usually 1.0000000 for correct answers and 0.0000000 for incorrect answers, but can also be anything in between.  
 Negative values down to -1.0000000 are also possible, e.g. to subtract points for incorrect answers.
 
 ##### AnswerFeedback
@@ -612,8 +612,8 @@ Create a class hint, then a question has a list of hints
 | ShowNoOfCorrectAnswers      | bool      | questions.xml | shownumcorrect     | int (1/0)       | if enabled, the number of correct answers is shown to the student when the hint is shown |
 
 ### Hint Penalty
-When questions are run using the ‘Interactive with multiple tries’ or ‘Adaptive mode’ behaviour, so that the student will have several tries to get the question right, then this option controls how much they are penalised for each incorrect try.
-The penalty is a proportion of the total question grade, so if the question is worth three marks, and the penalty is 0.333333, then the student will score 3 if they get the question right first time, 2 if they get it right second try, and 1 if they get it right on the third try.
+When questions are run using the ‘Interactive with multiple tries’ or ‘Adaptive mode’ behaviour, so that the student will have several tries to get the question right, then this option controls how much they are penalised for each incorrect try.  
+The penalty is a proportion of the total question grade, so if the question is worth three marks, and the penalty is 0.333333, then the student will score 3 if they get the question right first time, 2 if they get it right second try, and 1 if they get it right on the third try.  
 For some multi-part questions this scoring logic is applied separately to each part of the question. The details depend on the question type and can be complicated, but the principle is to give students credit for the knowledge they have demonstrated as fairly as possible.
 
 | Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
@@ -623,5 +623,5 @@ For some multi-part questions this scoring logic is applied separately to each p
 ### Tags
 
 ## Additional Remarks
-Moodle seems to have its own kind of versioning system for questions. Even when a question is edited, the old version is not deleted but stored in the database and also included in the XML file.
+Moodle seems to have its own kind of versioning system for questions. Even when a question is edited, the old version is not deleted but stored in the database and also included in the XML file.  
 The new question is just placed alongside the old question and the `version` tag is counted up by one.
