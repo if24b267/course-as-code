@@ -215,7 +215,167 @@ Only affects the display of grades, not the grades stored in the database or the
 `-1` is equal to `Same as for grades`
 
 ## SafeExamBrowser
-// TODO: Seems like A LOT of work
+If any of these settings are not set, they are set to `$@NULL@$` in the XML file.
+
+### Require Safe Exam Browser
+
+| Name in Internal Data Model | Data Type      | XML File | Name in Moodle XML     | Data Type (XML) | Description                                                                                                     |
+|-----------------------------|----------------|----------|------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
+| RequireSEB                  | SEBMode (Enum) | quiz.xml | questiondecimalpoints  | int (-1 - 7)    | specifies the number of digits shown after the decimal point when displaying the marks for individual questions |
+
+#### SEBMode
+
+| Value in Internal Data Model | Value in Moodle XML                            | Description                                                                                     |
+|------------------------------|------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| Disabled                     | all SEB configs tags missing from the XML file | Safe Exam Browser is not required for this quiz                                                 |
+| EnabledManualConfig          | 1                                              | Safe Exam Browser is required for this quiz, the config is done manually in Moodle              |
+| EnabledUploadConfig          | ???                                            |                                                                                                 |
+| EnabledClientConfig          | 4                                              | No specific configuration of SEB is enforced - the quiz can be attempted with any configuration |
+
+// TODO: Moodle doesn't allow you to click through the Upload config option without providing a .seb config file - we need to get our hands on one of these files.
+
+### Show Safe Exam Browser Download Button
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML  | Data Type (XML) | Description                                                                                                    |
+|-----------------------------|-----------|----------|---------------------|-----------------|----------------------------------------------------------------------------------------------------------------|
+| ShowSEBDownloadButton       | boolean   | quiz.xml | showsebdownloadlink | int (1/0)       | if enabled, a button is shown on the quiz start page that allows the student to download the Safe Exam Browser |
+
+### Safe Exam Browser Exit Link
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                                                                                                         |
+|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SEBQuitLinkButton           | string    | quiz.xml | linkquitseb        | string          | if set, an "Exit Safe Exam Browser" button will be shown on the page that appears after the exam is submitted - clicking the link allows the student to exit SEB without having to enter a password |
+
+For an HTTPS site, the link provided must start with `https://`. If no link is provided, the button will not be shown.
+_Quit Links_: Administrators specify a particular URL as the quit link within SEB's settings. This URL can be any valid web address. When SEB detects navigation to this predefined URL, it initiates the process to close the application.
+
+### Safe Exam Browser Confirm Quitting
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                 |
+|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------------------|
+| SEBConfirmQuitLink          | boolean   | quiz.xml | userconfirmquit    | int (1/0)       | if enabled, users have to confirm quitting SEB when a quit link is detected |
+
+### Enable Quitting of Safe Exam Browser
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                |
+|-----------------------------|-----------|----------|--------------------|-----------------|----------------------------------------------------------------------------|
+| SEBEnableQuit               | boolean   | quiz.xml | allowuserquitseb   | int (1/0)       | if enabled, users can quit SEB by clicking the quit button in the task bar |
+
+Alternatively, users can also exit SEB by pressing `Ctrl + Q` or by clicking the close button in the top right corner of the browser window.
+
+### Quit Password
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML)    | Description                                                      |
+|-----------------------------|-----------|----------|--------------------|--------------------|------------------------------------------------------------------|
+| SEBQuitPassword             | string    | quiz.xml | quitpassword       | string (plaintext) | if set, a password must be entered to quit the Safe Exam Browser |
+
+If no quit password is set, then SEB just prompts "Are you sure you want to quit SEB?" when the user tries to quit.
+
+### Enabled Reload in Exams
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                        |
+|-----------------------------|-----------|----------|--------------------|-----------------|------------------------------------|
+| SEBEnableReload             | boolean   | quiz.xml | allowreloadinexam  | int (1/0)       | if enabled, page reload is allowed |
+
+The user can reload the page by pressing the reload button in the task bar, by pressing `F5` or by pressing `Ctrl + R`.
+
+### Safe Exam Browser: Show Task Bar
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                 |
+|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------------------|
+| SEBShowTaskBar              | boolean   | quiz.xml | showsebtaskbar     | int (1/0)       | if enabled, the task bar is shown in the Safe Exam Browser window          |
+
+The task bar is required to display items such as Wi-Fi control, reload button, time and keyboard layout.
+
+### Safe Exam Browser: Show Reload Button
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                            |
+|-----------------------------|-----------|----------|--------------------|-----------------|------------------------------------------------------------------------|
+| SEBShowReloadButton         | boolean   | quiz.xml | showreloadbutton   | int (1/0)       | if enabled, a reload button is shown in the Safe Exam Browser task bar |
+
+### Safe Exam browser: Show Time
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                     |
+|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------|
+| SEBShowTime                 | boolean   | quiz.xml | showtime           | int (1/0)       | if enabled, the time is shown in the Safe Exam Browser task bar |
+
+### Safe Exam browser: Show Keyboard Layout
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                |
+|-----------------------------|-----------|----------|--------------------|-----------------|----------------------------------------------------------------------------|
+| SEBShowKeyboardLayout       | boolean   | quiz.xml | showkeyboardlayout | int (1/0)       | if enabled, the keyboard layout is shown in the Safe Exam Browser task bar |
+
+Also allows the user to switch to other keyboard layouts, which have been enabled in the operating system.
+
+### Safe Exam browser: Show Wi-Fi Control
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                   |
+|-----------------------------|-----------|----------|--------------------|-----------------|-------------------------------------------------------------------------------|
+| SEBShowWifiControl          | boolean   | quiz.xml | showwificontrol    | int (1/0)       | if enabled, a Wi-Fi control button is shown in the Safe Exam Browser task bar |
+
+The button allows users to reconnect to Wi-Fi networks which have previously been connected to.
+
+### Safe Exam browser: Enable audio controls
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                 |
+|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------------------|
+| SEBEnableAudioControls      | boolean   | quiz.xml | enableaudiocontrol | int (1/0)       | if enabled, audio controls are shown in the Safe Exam Browser task bar      |
+
+### Safe Exam browser: Enable spell checking
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                 |
+|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------------------|
+| SEBEnableSpellCheck         | boolean   | quiz.xml | allowspellchecking | int (1/0)       | if enabled, spell checking is enabled in the Safe Exam Browser             |
+
+### Safe Exam browser: Enable URL filtering
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML   | Data Type (XML) | Description                                              |
+|-----------------------------|-----------|----------|----------------------|-----------------|----------------------------------------------------------|
+| SEBEnableURLFiltering       | boolean   | quiz.xml | activateurlfiltering | int (1/0)       | if enabled, URLs will be filtered when loading web pages |
+
+Requires a filter to be defined in the following settings:
+
+#### Safe Exam Browser: Filter embedded content
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML    | Data Type (XML) | Description                                                              |
+|-----------------------------|-----------|----------|-----------------------|-----------------|--------------------------------------------------------------------------|
+| SEBFilterEmbeddedContent    | boolean   | quiz.xml | filterembeddedcontent | int (1/0)       | if enabled, embedded content will also be filtered using the filter set  |
+
+#### Safe Exam Browser: Allowed URLs
+
+| Name in Internal Data Model | Data Type    | XML File | Name in Moodle XML | Data Type (XML) | Description                                                             |
+|-----------------------------|--------------|----------|--------------------|-----------------|-------------------------------------------------------------------------|
+| SEBAllowedURLs              | List<string> | quiz.xml | expressionsallowed | string          | a list of URLs that are allowed to be accessed in the Safe Exam Browser |
+
+#### Safe Exam Browser: Allowed URLs (Regex)
+
+| Name in Internal Data Model | Data Type    | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                            |
+|-----------------------------|--------------|----------|--------------------|-----------------|----------------------------------------------------------------------------------------|
+| SEBAllowedURLsRegex         | List<string> | quiz.xml | regexallowed       | string          | a list of regular expressions that are allowed to be accessed in the Safe Exam Browser |
+
+#### Safe Exam Browser: Blocked URLs
+
+| Name in Internal Data Model | Data Type    | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                  |
+|-----------------------------|--------------|----------|--------------------|-----------------|------------------------------------------------------------------------------|
+| SEBBlockedURLs              | List<string> | quiz.xml | expressionsblocked | string          | a list of URLs that are blocked from being accessed in the Safe Exam Browser | 
+
+#### Safe Exam Browser: Blocked URLs (Regex)
+
+| Name in Internal Data Model | Data Type    | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                 |
+|-----------------------------|--------------|----------|--------------------|-----------------|---------------------------------------------------------------------------------------------|
+| SEBBlockedURLsRegex         | List<string> | quiz.xml | regexblocked       | string          | a list of regular expressions that are blocked from being accessed in the Safe Exam Browser |
+
+### Safe Exam Browser: Allowed Exam Keys
+
+See [Safe Exam Browser Documentation](https://safeexambrowser.org/developer/documents/SEB-Specification-BrowserExamKey.pdf) for an explanation of exam keys
+Basically, exam keys in Safe Exam Browser are unique identifiers generated for each exam to verify that the correct SEB version and specific exam settings are being used by the student.
+They work by adding a SHA256-hashed key (combined with the requested URL) to each HTTP request, allowing the LMS to securely validate the browser’s configuration.
+
+| Name in Internal Data Model | Data Type    | XML File | Name in Moodle XML     | Data Type (XML)  | Description                                                     |
+|-----------------------------|--------------|----------|------------------------|------------------|-----------------------------------------------------------------|
+| SEBAllowedExamKeys          | List<string> | quiz.xml | allowedbrowserexamkeys | string           | a list of browser exam keys that are allowed to access the quiz |
+
+If no exam keys are provided, no check is performed -> any browser version and/or configuration can be used.
 
 ## Password
 
