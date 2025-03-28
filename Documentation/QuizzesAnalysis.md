@@ -398,3 +398,230 @@ By specifying additional grade boundaries (as percentage), the text shown can de
 | GradeBoundary               | float                    | quiz.xml | mingrade & maxgrade | float           | the minimum grade (in percent) required to show this feedback                                |
 | FeedbackText                | string                   | quiz.xml | feedbacktext        | string          | the text that is shown to the student if the grade is greater than or equal to GradeBoundary |
 | OverallFeedbackFormat       | FormattingFormat (Enum)  | quiz.xml | feedbackformat      | int             | the format in which the feedback text is provided, e.g. plain text, HTML, Markdown           |
+
+# Questions
+
+## All Question Types
+
+### Category
+A question can only have one category associated with it. Which categories are available is stored in `questions.xml` in the root folder of the moodle backup.  
+Each of these categories has a `question_bank_entries` tag that includes all questions that are part of this category.
+
+Each of these questions is given a unique `id` which is used to reference the question in the quiz activity (`quiz.xml` file).
+
+### Question Name
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                |
+|-----------------------------|-----------|---------------|--------------------|-----------------|--------------------------------------------------------------------------------------------|
+| QuestionName                | string    | questions.xml | name               | string          | the name of the question - the question will be shown using that name in the question bank |
+
+### Question Text
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                      |
+|-----------------------------|-----------|---------------|--------------------|-----------------|----------------------------------------------------------------------------------|
+| QuestionText                | string    | questions.xml | questiontext       | string          | the text of the question                                                         |
+
+#### Question Text Format
+
+| Name in Internal Data Model | Data Type               | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                      |
+|-----------------------------|-------------------------|---------------|--------------------|-----------------|----------------------------------------------------------------------------------|
+| QuestionTextFormat          | FormattingFormat (Enum) | questions.xml | questiontextform   | int             | the format in which the question text is provided, e.g. plain text, HTML, Markdown |
+
+### Question Status
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML)          | Description                                                             |
+|-----------------------------|-----------|---------------|--------------------|--------------------------|-------------------------------------------------------------------------|
+| QuestionReady               | bool      | questions.xml | status             | string (??? and `ready`) | whether the question is just a draft (false) or ready to be used (true) |
+
+### Default Mark
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                        |
+|-----------------------------|-----------|---------------|--------------------|-----------------|------------------------------------------------------------------------------------|
+| DefaultMark                 | float     | questions.xml | defaultmark        | float           | the default mark for the question, if not specified otherwise in the quiz activity |
+
+### General Feedback
+General feedback is shown to the student after they have completed the question. Unlike specific feedback, which depends on the question type and what response the student gave, the same general feedback is shown to all students.  
+This can be used to give students a fully worked answer and perhaps a link to more information they can use if they did not understand the question.
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                  |
+|-----------------------------|-----------|---------------|--------------------|-----------------|------------------------------------------------------------------------------|
+| GeneralFeedback             | string    | questions.xml | generalfeedback    | string          | the general feedback that is shown to the student after the question is done |
+
+#### General Feedback Format
+
+| Name in Internal Data Model | Data Type               | XML File      | Name in Moodle XML    | Data Type (XML) | Description                                                                            |
+|-----------------------------|-------------------------|---------------|-----------------------|-----------------|----------------------------------------------------------------------------------------|
+| GeneralFeedbackFormat       | FormattingFormat (Enum) | questions.xml | generalfeedbackformat | int             | the format in which the general feedback is provided, e.g. plain text, HTML, Markdown  |
+
+### Question Type
+
+| Name in Internal Data Model | Data Type           | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                |
+|-----------------------------|---------------------|---------------|--------------------|-----------------|----------------------------------------------------------------------------|
+| QuestionType                | QuestionType (Enum) | questions.xml | qtype              | string          | determines the type of the question, e.g. multiple choice, True/False, ... |
+
+#### QuestionType
+
+| Value in Internal Data Model | Value in Moodle XML | Description              |
+|------------------------------|---------------------|--------------------------|
+| MultipleChoice               | multichoice         | Multiple Choice question |
+
+## Multiple Choice Questions specific
+
+### Shuffle Answers
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| ShuffleAnswers              | bool      | questions.xml | shuffleanswers     | int (1/0)       | if enabled, the order of the answer is randomly shuffled for each attempt                     |
+
+only works if the "Shuffle within questions" option is also enabled in the activity settings
+
+### Choice Numbering
+
+| Name in Internal Data Model | Data Type              | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                     |
+|-----------------------------|------------------------|---------------|--------------------|-----------------|-------------------------------------------------------------------------------------------------|
+| ChoiceNumbering             | NumberingFormat (Enum) | questions.xml | answernumbering    | string          | what format should be used to number the choices in the question, e.g. 1, 2, 3, 4 or A, B, C, D |
+
+#### NumberingFormat
+
+| Value in Internal Data Model | Value in Moodle XML | Description                                                    |
+|------------------------------|---------------------|----------------------------------------------------------------|
+| AlphabeticLower              | abc                 | Choices are numbered using letters, e.g. a, b, c, d            |
+| AlphabeticUpper              | ABCD                | Choices are numbered using letters, e.g. A, B, C, D            |
+| Numeric                      | 123                 | Choices are numbered using numbers, e.g. 1, 2, 3, 4            |
+| RomanLower                   | iii                 | Choices are numbered using roman numerals, e.g. i, ii, iii, iv |
+| RomanUpper                   | IIII                | Choices are numbered using roman numerals, e.g. I, II, III, IV |
+| None                         | none                | Choices are not numbered at all                                |
+
+### Show standard instructions
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML      | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|-------------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| ShowStandardInstructions    | bool      | questions.xml | showstandardinstruction | int (1/0)       | if enabled, the standard instructions for the question type are shown to the student          |
+
+e.g. "Select one:" or "Select one or more:" for multiple choice questions
+
+### Answers
+Create a class Answer, then a question has a list of Answers
+
+#### Answer
+
+##### AnswerText
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| AnswerText                  | string    | questions.xml | answertext         | string          | the text of the answer                                                                       |
+
+###### AnswerTextFormat
+
+| Name in Internal Data Model | Data Type               | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                      |
+|-----------------------------|-------------------------|---------------|--------------------|-----------------|----------------------------------------------------------------------------------|
+| AnswerTextFormat            | FormattingFormat (Enum) | questions.xml | answerformat       | int             | the format in which the answer text is provided, e.g. plain text, HTML, Markdown |
+
+##### AnswerGrade
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| AnswerGrade                 | float     | questions.xml | fraction           | float           | the grade that is given to the student if this answer is selected                            |
+
+usually 1.0000000 for correct answers and 0.0000000 for incorrect answers, but can also be anything in between.  
+Negative values down to -1.0000000 are also possible, e.g. to subtract points for incorrect answers.
+
+##### AnswerFeedback
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| AnswerFeedback              | string    | questions.xml | feedback           | string          | the feedback that is shown to the student if this answer is selected                          |
+
+###### AnswerFeedbackFormat
+
+| Name in Internal Data Model | Data Type               | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                      |
+|-----------------------------|-------------------------|---------------|--------------------|-----------------|----------------------------------------------------------------------------------|
+| AnswerFeedbackFormat        | FormattingFormat (Enum) | questions.xml | feedbackformat     | int             | the format in which the feedback text is provided, e.g. plain text, HTML, Markdown |
+
+### Single or Multiple Choice
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| SingleChoiceQuestion        | bool      | questions.xml | single             | int (1/0)       | if enabled, only one answer can be selected, otherwise multiple answers can be selected       |
+
+### Specific Feedback
+
+#### Correct Response Feedback
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| CorrectResponseFeedback     | string    | questions.xml | correctfeedback    | string          | the feedback that is given to the student if the student's response is correct               |
+
+#### Correct Response Feedback Format
+
+| Name in Internal Data Model    | Data Type               | XML File      | Name in Moodle XML    | Data Type (XML) | Description                                                                        |
+|--------------------------------|-------------------------|---------------|-----------------------|-----------------|------------------------------------------------------------------------------------|
+| CorrectResponseFeedbackFormat  | FormattingFormat (Enum) | questions.xml | correctfeedbackformat | int             | the format in which the feedback text is provided, e.g. plain text, HTML, Markdown |
+
+#### Partially Correct Response Feedback
+
+| Name in Internal Data Model      | Data Type | XML File      | Name in Moodle XML       | Data Type (XML) | Description                                                                              |
+|----------------------------------|-----------|---------------|--------------------------|-----------------|------------------------------------------------------------------------------------------|
+| PartiallyCorrectResponseFeedback | string    | questions.xml | partiallycorrectfeedback | string          | the feedback that is given to the student if the student's response is partially correct |
+
+#### Partially Correct Response Feedback Format
+
+| Name in Internal Data Model            | Data Type               | XML File      | Name in Moodle XML             | Data Type (XML) | Description                                                                        |
+|----------------------------------------|-------------------------|---------------|--------------------------------|-----------------|------------------------------------------------------------------------------------|
+| PartiallyCorrectResponseFeedbackFormat | FormattingFormat (Enum) | questions.xml | partiallycorrectfeedbackformat | int             | the format in which the feedback text is provided, e.g. plain text, HTML, Markdown |
+
+#### Incorrect Response Feedback
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                      |
+|-----------------------------|-----------|---------------|--------------------|-----------------|----------------------------------------------------------------------------------|
+| IncorrectResponseFeedback   | string    | questions.xml | incorrectfeedback  | string          | the feedback that is given to the student if the student's response is incorrect |
+
+#### Incorrect Response Feedback Format
+
+| Name in Internal Data Model     | Data Type               | XML File      | Name in Moodle XML      | Data Type (XML) | Description                                                                        |
+|---------------------------------|-------------------------|---------------|-------------------------|-----------------|------------------------------------------------------------------------------------|
+| IncorrectResponseFeedbackFormat | FormattingFormat (Enum) | questions.xml | incorrectfeedbackformat | int             | the format in which the feedback text is provided, e.g. plain text, HTML, Markdown |
+
+### Hints (Multiple Tries)
+Create a class hint, then a question has a list of hints
+
+#### Hint
+
+##### HintText
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| HintText                    | string    | questions.xml | hint               | string          | the text of the hint                                                                        |
+
+###### HintTextFormat
+
+| Name in Internal Data Model | Data Type               | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                    |
+|-----------------------------|-------------------------|---------------|--------------------|-----------------|--------------------------------------------------------------------------------|
+| HintTextFormat              | FormattingFormat (Enum) | questions.xml | hintformat         | int             | the format in which the hint text is provided, e.g. plain text, HTML, Markdown |
+
+##### Clear Incorrect Responses
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                      |
+|-----------------------------|-----------|---------------|--------------------|-----------------|----------------------------------------------------------------------------------|
+| ClearIncorrectResponses     | bool      | questions.xml | clearwrong         | int (1/0)       | if enabled, the student's incorrect responses are cleared when the hint is shown |
+
+##### Show the number of correct answers
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                              |
+|-----------------------------|-----------|---------------|--------------------|-----------------|------------------------------------------------------------------------------------------|
+| ShowNoOfCorrectAnswers      | bool      | questions.xml | shownumcorrect     | int (1/0)       | if enabled, the number of correct answers is shown to the student when the hint is shown |
+
+### Hint Penalty
+When questions are run using the ‘Interactive with multiple tries’ or ‘Adaptive mode’ behaviour, so that the student will have several tries to get the question right, then this option controls how much they are penalised for each incorrect try.  
+The penalty is a proportion of the total question grade, so if the question is worth three marks, and the penalty is 0.333333, then the student will score 3 if they get the question right first time, 2 if they get it right second try, and 1 if they get it right on the third try.  
+For some multi-part questions this scoring logic is applied separately to each part of the question. The details depend on the question type and can be complicated, but the principle is to give students credit for the knowledge they have demonstrated as fairly as possible.
+
+| Name in Internal Data Model | Data Type | XML File      | Name in Moodle XML | Data Type (XML) | Description                                                                                   |
+|-----------------------------|-----------|---------------|--------------------|-----------------|-----------------------------------------------------------------------------------------------|
+| HintPenalty                 | float     | questions.xml | penalty            | float           | the penalty that is applied to the student's grade for each incorrect try                     |
+
+### Tags
+
+## Additional Remarks
+Moodle seems to have its own kind of versioning system for questions. Even when a question is edited, the old version is not deleted but stored in the database and also included in the XML file.  
+The new question is just placed alongside the old question and the `version` tag is counted up by one.
