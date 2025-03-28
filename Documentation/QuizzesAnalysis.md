@@ -246,7 +246,7 @@ If any of these settings are not set, they are set to `$@NULL@$` in the XML file
 |-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | SEBQuitLinkButton           | string    | quiz.xml | linkquitseb        | string          | if set, an "Exit Safe Exam Browser" button will be shown on the page that appears after the exam is submitted - clicking the link allows the student to exit SEB without having to enter a password |
 
-For an HTTPS site, the link provided must start with `https://`. If no link is provided, the button will not be shown.
+For an HTTPS site, the link provided must start with `https://`. If no link is provided, the button will not be shown.  
 _Quit Links_: Administrators specify a particular URL as the quit link within SEB's settings. This URL can be any valid web address. When SEB detects navigation to this predefined URL, it initiates the process to close the application.
 
 ### Safe Exam Browser Confirm Quitting
@@ -367,7 +367,7 @@ Requires a filter to be defined in the following settings:
 
 ### Safe Exam Browser: Allowed Exam Keys
 
-See [Safe Exam Browser Documentation](https://safeexambrowser.org/developer/documents/SEB-Specification-BrowserExamKey.pdf) for an explanation of exam keys
+See [Safe Exam Browser Documentation](https://safeexambrowser.org/developer/documents/SEB-Specification-BrowserExamKey.pdf) for an explanation of exam keys  
 Basically, exam keys in Safe Exam Browser are unique identifiers generated for each exam to verify that the correct SEB version and specific exam settings are being used by the student.
 They work by adding a SHA256-hashed key (combined with the requested URL) to each HTTP request, allowing the LMS to securely validate the browser’s configuration.
 
