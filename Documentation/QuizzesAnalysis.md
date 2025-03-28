@@ -17,17 +17,15 @@ all quizzes seem to have `modulename=quiz` and `moduleid=227`
 
 ## Description Format
 
-| Name in Internal Data Model | Data Type               | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                      |
-|----------------------------|-------------------------|----------|--------------------|----------------|----------------------------------------------------------------------------------|
-| DescriptionFormat          | FormattingFormat (Enum) | quiz.xml | introformat        | int            | the format in which the description is provided, e.g. plain text, HTML, Markdown |
+| Name in Internal Data Model | Data Type                | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                      |
+|-----------------------------|--------------------------|----------|--------------------|-----------------|----------------------------------------------------------------------------------|
+| DescriptionFormat           | FormattingFormat (Enum)  | quiz.xml | introformat        | int             | the format in which the description is provided, e.g. plain text, HTML, Markdown |
 
 ## Display Description on course page
 
-| Name in Internal Data Model    | Data Type | XML File   | Name in Moodle XML  | Data Type (XML) | Description                                                                                      |
-|--------------------------------|-----------|------------|---------------------|-----------------|--------------------------------------------------------------------------------------------------|
-| DisplayDescriptionOnCoursePage | Boolean   | module.xml | visibleoncoursepage | int ( 1 / 0 )   | if enabled, the description will be displayed on the course page just below the link to the quiz |
-
-// TODO: check if this is correct
+| Name in Internal Data Model    | Data Type | XML File   | Name in Moodle XML | Data Type (XML) | Description                                                                                      |
+|--------------------------------|-----------|------------|--------------------|-----------------|--------------------------------------------------------------------------------------------------|
+| DisplayDescriptionOnCoursePage | Boolean   | module.xml | showdescription    | int (1/0)       | if enabled, the description will be displayed on the course page just below the link to the quiz |
 
 ## Quiz Opening Time
 
@@ -60,9 +58,9 @@ If the student is actively working on the quiz at the time, then the countdown t
 
 | Value in Internal Data Model | Value in Moodle XML | Description                                                                                 |
 |------------------------------|---------------------|---------------------------------------------------------------------------------------------|
-| AutoSubmit                   | ???                 | Open attempts are submitted automatically                                                   |
+| AutoSubmit                   | autosubmit          | Open attempts are submitted automatically                                                   |
 | GracePeriod                  | graceperiod         | There is a grace period when open attempts can be submitted, but no more questions answered |
-| DoNotCount                   | ???                 | Attempts must be submitted before time expires, or they are not counted                     |
+| DoNotCount                   | autoabandon         | Attempts must be submitted before time expires, or they are not counted                     |
 
 
 ## GradeToPass
@@ -79,8 +77,6 @@ The value is used in activity and course completion and in the gradebook, where 
 |-----------------------------|-----------|----------|--------------------|-----------------|----------------------------------------------------------------------------------------------|
 | AllowedAttempts             | int       | quiz.xml | attempts_number    | int             | the number of quiz attempts allowed. A value of 0 means that unlimited attempts are allowed  |
 
-// TODO: check if this is correct
-
 ## Grading method
 
 | Name in Internal Data Model | Data Type            | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                             |
@@ -92,26 +88,24 @@ The value is used in activity and course completion and in the gradebook, where 
 | Value in Internal Data Model | Value in Moodle XML | Description                                         |
 |------------------------------|---------------------|-----------------------------------------------------|
 | HighestGrade                 | 1                   | the highest grade of all attempts                   |
-| AverageGrade                 | ???                 | the average (mean) grade of all attempts            |
-| FirstAttempt                 | ???                 | the first attempt (all other attempts are ignored)  |
-| LastAttempt                  | ???                 | the last attempt (all other attempts are ignored)   |
+| AverageGrade                 | 2                   | the average (mean) grade of all attempts            |
+| FirstAttempt                 | 3                   | the first attempt (all other attempts are ignored)  |
+| LastAttempt                  | 4                   | the last attempt (all other attempts are ignored)   |
 
 ## New Page Threshhold
 
-| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                            |
-|-----------------------------|-----------|----------|--------------------|-----------------|----------------------------------------------------------------------------------------|
-| NewPageThreshold            | int       | quiz.xml | questionsperpage   | int             | page breaks will automatically be inserted after x questions according to this setting |
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                                                 |
+|-----------------------------|-----------|----------|--------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| NewPageThreshold            | int       | quiz.xml | questionsperpage   | int             | page breaks will automatically be inserted after x questions according to this setting, 0 means no page breaks -> all questions on one page |
 
 For longer quizzes, it makes sense to stretch the quiz over several pages by limiting the number of questions per page.
 When adding questions to the quiz, page breaks will automatically be inserted according to this setting. However, page breaks may later be moved manually on the editing page.
 
-// TODO: Determine value for no page breaks
-
 ## Shuffle within questions
 
 | Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                     |
-|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
-| ShuffleWithinQuestions      | boolean   | quiz.xml | shuffleanswers     | int ( 1 / 0 )   | if enabled,  the parts making up each questions will be randomly shuffled each time a student attempts the quiz |
+|-----------------------------|-----------|----------|--------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
+| ShuffleWithinQuestions      | boolean   | quiz.xml | shuffleanswers     | int (1/0)   | if enabled,  the parts making up each questions will be randomly shuffled each time a student attempts the quiz |
 
 Only works if the option is also enabled in the questions settings.
 This setting only applies to questions that have multiple parts, such as multiple choice or matching questions.
@@ -126,33 +120,45 @@ Alternatively, you may wish for students to submit each questions as they go alo
 
 ### QuestionBehaviour
 
-| Value in Internal Data Model | Value in Moodle XML | Description                                                                                                                                                                                                                                                                                                                                                                                                       |
-|------------------------------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Adaptive                     |                     | Immediate Feedback, but allows students to have multiple attempts at the question before moving on to the next question. Students get fewer marks on subsequent attempts.                                                                                                                                                                                                                                         |
-| AdaptiveNoPenalties          |                     | Immediate Feedback, but allows students to have multiple attempts at the question before moving on to the next question. No penalties for subsequent attempts.                                                                                                                                                                                                                                                    |
-| Deferred                     | deferredfeedback    | Students must enter an answer to each question and then submit the entire quiz before anything is graded or they get any feedback.                                                                                                                                                                                                                                                                                |
-| DeferredCBM                  |                     | Certainty-based marking (CBM): the student does not only answer the question, but they also indicate how sure they are they got the question right. The grading is adjusted by the choice of certainty.                                                                                                                                                                                                           |
-| Immediate                    |                     | Students can submit their response immediately during the quiz attempt and get it graded. However, they can only submit one response and cannot change it later.                                                                                                                                                                                                                                                  |
-| ImmediateCBM                 |                     | Certainty-based marking (CBM): the student does not only answer the question, but they also indicate how sure they are they got the question right. The grading is adjusted by the choice of certainty.                                                                                                                                                                                                           |
-| InteractiveMultipleTries     |                     | Allows multiple attempts on a question with possible grade penalties. Students submit answers via the 'Check' button and can retry using 'Try again' if incorrect. After each wrong attempt, a hint is displayed. Once correct, answers cannot be changed. If attempts run out, the student is graded accordingly and shown feedback. The number of tries equals the number of hints plus one (minimum of three). |
+| Value in Internal Data Model | Value in Moodle XML | Description                                                                                                                                                                                                                                                                                                                                                                                                      |
+|------------------------------|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Adaptive                     | adaptive            | Immediate Feedback, but allows students to have multiple attempts at the question before moving on to the next question. Students get fewer marks on subsequent attempts                                                                                                                                                                                                                                         |
+| AdaptiveNoPenalties          | adaptivenopenalty   | Immediate Feedback, but allows students to have multiple attempts at the question before moving on to the next question. No penalties for subsequent attempts                                                                                                                                                                                                                                                    |
+| Deferred                     | deferredfeedback    | Students must enter an answer to each question and then submit the entire quiz before anything is graded or they get any feedback                                                                                                                                                                                                                                                                                |
+| DeferredCBM                  | deferredcbm         | Certainty-based marking (CBM): the student does not only answer the question, but they also indicate how sure they are they got the question right. The grading is adjusted by the choice of certainty                                                                                                                                                                                                           |
+| Immediate                    | immediatefeedback   | Students can submit their response immediately during the quiz attempt and get it graded. However, they can only submit one response and cannot change it later                                                                                                                                                                                                                                                  |
+| ImmediateCBM                 | immediatecbm        | Certainty-based marking (CBM): the student does not only answer the question, but they also indicate how sure they are they got the question right. The grading is adjusted by the choice of certainty                                                                                                                                                                                                           |
+| InteractiveMultipleTries     | interactive         | Allows multiple attempts on a question with possible grade penalties. Students submit answers via the 'Check' button and can retry using 'Try again' if incorrect. After each wrong attempt, a hint is displayed. Once correct, answers cannot be changed. If attempts run out, the student is graded accordingly and shown feedback. The number of tries equals the number of hints plus one (minimum of three) |
 
-// TODO: Check if this is correct
+### AllowRedosDuringAttempt
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                                                                               |
+|-----------------------------|-----------|----------|--------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| AllowRedosDuringAttempt     | boolean   | quiz.xml | canredoquestions   | int (1/0)       | if enabled, students can redo questions during the attempt. This is only applicable to some question behaviours like Immediate, ImmediateCBM and InteractiveMultipleTries |
+
+If enabled, after finishing attempting a question, a 'Try another question like this one' button is displayed. This allows for a similar questions (selected randomly) to be attempted or the same question to be attempted again without the entire quiz attempt having to be submitted and another attempt started.
+This setting is only applicable to question behaviours where it is possible to finish a questions before the attempt is submitted.
 
 ## AttemptBuildsOnPreviousAttempts
 
 | Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                                           |
 |-----------------------------|-----------|----------|--------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| BuildOnPreviousAttempts     | boolean   | quiz.xml | attemptonlast      | int ( 1 / 0 )   | if multiple attempts are allowed and this settings is enabled, each new quiz attempt will contain the results of the previous attempt |
-
-// TODO: Check if this is correct
+| BuildOnPreviousAttempts     | boolean   | quiz.xml | attemptonlast      | int (1/0)       | if multiple attempts are allowed and this settings is enabled, each new quiz attempt will contain the results of the previous attempt |
 
 ## Review Options
 These options control what information students can see when they review a quiz attempt or look at the quiz reports.
 
 Corresponding tags are `reviewattempt`, `reviewcorrectness`, `reviewmaxmarks`, `reviewmarks`, `reviewspecificfeedback`, `reviewgeneralfeedback`, `reviewrightanswer` and `reviewoverallfeedback`.
 Information seems to be stored in a numeric code, similar to file permissions in Unix.
-`4368` -> all parameters enabled
-`69904` -> only the "Attempt" parameter enabled
+
+`4368` -> parameter enabled at all times
+`272` -> parameter enabled for AfterAttempt and QuizClosed
+`4112` -> parameter enabled for ImmediatelyAfter and QuizClosed
+`4096` -> parameter enabled only for ImmediatelyAfter
+`4368` -> parameter enabled for ImmediatelyAfter, AfterAttempt and QuizClosed
+`0` -> parameter disabled for all states
+
+//I'm not sure if these values are even consistent
 // TODO: Further research needed
 
 ### Time
@@ -189,14 +195,14 @@ each of these values is a boolean
 | Value in Internal Data Model | Value in Moodle XML |
 |------------------------------|---------------------|
 | NoImage                      | 0                   |
-| SmallImage                   | ???                 |
-| LargeImage                   | ???                 |
+| SmallImage                   | 1                   |
+| LargeImage                   | 2                   |
 
 ## GradeDecimalsToDisplay
 
 | Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                         |
 |-----------------------------|-----------|----------|--------------------|-----------------|-------------------------------------------------------------------------------------|
-| DecimalsToDisplayGrades     | int       | quiz.xml | decimalpoints      | int ( 0 - 5 )   | specifies the number of digits shown after the decimal point when displaying grades |
+| DecimalsToDisplayGrades     | int       | quiz.xml | decimalpoints      | int (0 - 5)     | specifies the number of digits shown after the decimal point when displaying grades |
 
 Only affects the display of grades, not the grades stored in the database or the internal calculations
 
@@ -204,7 +210,7 @@ Only affects the display of grades, not the grades stored in the database or the
 
 | Name in Internal Data Model | Data Type | XML File | Name in Moodle XML     | Data Type (XML) | Description                                                                                                     |
 |-----------------------------|-----------|----------|------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
-| DecimalsToDisplayMarks      | int       | quiz.xml | questiondecimalpoints  | int ( -1 - 7 )  | specifies the number of digits shown after the decimal point when displaying the marks for individual questions |
+| DecimalsToDisplayMarks      | int       | quiz.xml | questiondecimalpoints  | int (-1 - 7)    | specifies the number of digits shown after the decimal point when displaying the marks for individual questions |
 
 `-1` is equal to `Same as for grades`
 
