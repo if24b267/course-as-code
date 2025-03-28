@@ -1,166 +1,234 @@
 # Basic parameters that can be set for a quiz
 
+## quiz.xml
+all quizzes seem to have `modulename=quiz` and `moduleid=227`
+
 ## Name
-The activity name
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                               |
+|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------|
+| Name                        | string    | quiz.xml | name               | string          | name of the activity (present in the activity base class) |
 
 ## Description
-The activity descriptionh
 
-### Display Description on course page
-Boolean
-if enabled, the description will be displayed on the course page just below the link to the quiz
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                      |
+|-----------------------------|-----------|----------|--------------------|-----------------|------------------------------------------------------------------|
+| Description                 | string    | quiz.xml | intro              | string          | description of the activity (present in the activity base class) |
+
+## Description Format
+
+| Name in Internal Data Model | Data Type               | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                      |
+|----------------------------|-------------------------|----------|--------------------|----------------|----------------------------------------------------------------------------------|
+| DescriptionFormat          | FormattingFormat (Enum) | quiz.xml | introformat        | int            | the format in which the description is provided, e.g. plain text, HTML, Markdown |
+
+## Display Description on course page
+
+| Name in Internal Data Model    | Data Type | XML File   | Name in Moodle XML  | Data Type (XML) | Description                                                                                      |
+|--------------------------------|-----------|------------|---------------------|-----------------|--------------------------------------------------------------------------------------------------|
+| DisplayDescriptionOnCoursePage | Boolean   | module.xml | visibleoncoursepage | int ( 1 / 0 )   | if enabled, the description will be displayed on the course page just below the link to the quiz |
+
+// TODO: check if this is correct
 
 ## Quiz Opening Time
-DateTime
-when the quiz opens
 
-Students can only start the quiz after the open time has passed
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                      |
+|-----------------------------|-----------|----------|--------------------|-----------------|------------------------------------------------------------------|
+| OpenTime                    | DateTime  | quiz.xml | timeopen           | unix timestamp  | Students can only start the quiz after the open time has passed  |
 
 ## Quiz Closing Time
-DateTime
-when the quiz closes
 
-Students must end the quiz before the closing time has passed
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                    |
+|-----------------------------|-----------|----------|--------------------|-----------------|----------------------------------------------------------------|
+| CloseTime                   | DateTime  | quiz.xml | timeclose          | unix timestamp  | Students must end the quiz before the closing time has passed  |
 
 ## Time Limit
 
-if enabled, the time limit is stated on the initial quiz page and a countdown timer is displayed in the quiz navigation block
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                                   |
+|----------------------------|-----------|----------|--------------------|-----------------|-------------------------------------------------------------------------------------------------------------------------------|
+| TimeLimit                  | int       | quiz.xml | timelimit          | int (seconds)   | if enabled, the time limit is stated on the initial quiz page and a countdown timer is displayed in the quiz navigation block |
 
 ## Time Expiry Handling
-Enum
-
 this variable controls what happens if a student fails to submit their quiz attempt before the time expires.
-If the student is actively working on the quiz at the time, then the countdown timer will always automatically submit the attempt for them but if they have logged out, 
-then this setting controls what happens
+If the student is actively working on the quiz at the time, then the countdown timer will always automatically submit the attempt for them but if they have logged out, then this setting controls what happens
 
-Open attempts are submitted automatically
-There is a grace period when open attempts can be submitted, but no more questions anwered
-    -> amount of extra time allowed needs to be defined ("Submission grace period")
-Attempts must be submitted before time expires, or they are not counted
+| Name in Internal Data Model | Data Type               | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                      |
+|-----------------------------|-------------------------|----------|--------------------|-----------------|--------------------------------------------------------------------------------------------------|
+| TimeExpiryHandling          | TimeExpiryHandle (Enum) | quiz.xml | overduehandling    | string          | controls what happens if a student fails to submit their quiz attempt before the time expires    |
+| GracePeriod                 | int                     | quiz.xml | graceperiod        | int (seconds)   | if TimeExpiryHandling is set to GracePeriod, this variable specifies the grace period in seconds |
+
+### TimeExpiryHandle
+
+| Value in Internal Data Model | Value in Moodle XML | Description                                                                                 |
+|------------------------------|---------------------|---------------------------------------------------------------------------------------------|
+| AutoSubmit                   | ???                 | Open attempts are submitted automatically                                                   |
+| GracePeriod                  | graceperiod         | There is a grace period when open attempts can be submitted, but no more questions answered |
+| DoNotCount                   | ???                 | Attempts must be submitted before time expires, or they are not counted                     |
+
 
 ## GradeToPass
-int (0-10)
 
-determines the minimum grade required to pass. The value is used in activity and course completion and in the gradebook, where pass grades are highlighted in green and fail grades in red
+| Name in Internal Data Model | Data Type    | XML File   | Name in Moodle XML | Data Type (XML) | Description                                    |
+|-----------------------------|--------------|------------|--------------------|-----------------|------------------------------------------------|
+| GradeToPass                 | float (0-10) | grades.xml | gradepass          | float           | determines the minimum grade required to pass  |
+
+The value is used in activity and course completion and in the gradebook, where pass grades are highlighted in green and fail grades in red
 
 ## Attempts allowed
-the number of allowed attempts
-0 - 10 or unlimited
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                  |
+|-----------------------------|-----------|----------|--------------------|-----------------|----------------------------------------------------------------------------------------------|
+| AllowedAttempts             | int       | quiz.xml | attempts_number    | int             | the number of quiz attempts allowed. A value of 0 means that unlimited attempts are allowed  |
+
+// TODO: check if this is correct
 
 ## Grading method
-Enum
 
-When multiple attempts are allowed, the following methods are available for calculating the final quiz grade:
-- Highest Grade of all attempts
-- Average (mean) grade of all attempts
-- First attempt (all other attempts are ignored)
-- Last attempt (all other attempts are ignored)
+| Name in Internal Data Model | Data Type            | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                             |
+|-----------------------------|----------------------|----------|--------------------|-----------------|---------------------------------------------------------------------------------------------------------|
+| GradingMethod               | GradingMethod (Enum) | quiz.xml | grademethod        | int             | when multiple attempts are allowed, multiple methods are available for calculating the final quiz grade |
+
+### GradingMethod
+
+| Value in Internal Data Model | Value in Moodle XML | Description                                         |
+|------------------------------|---------------------|-----------------------------------------------------|
+| HighestGrade                 | 1                   | the highest grade of all attempts                   |
+| AverageGrade                 | ???                 | the average (mean) grade of all attempts            |
+| FirstAttempt                 | ???                 | the first attempt (all other attempts are ignored)  |
+| LastAttempt                  | ???                 | the last attempt (all other attempts are ignored)   |
 
 ## New Page Threshhold
-int
-For longer quizzes it makes sense to stretch the quiz over several pages by limiting the number of questions per page. When adding questions to the quiz, page breaks will automatically be inserted according to this setting. However page breaks may later be moved manually on editing page.
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                            |
+|-----------------------------|-----------|----------|--------------------|-----------------|----------------------------------------------------------------------------------------|
+| NewPageThreshold            | int       | quiz.xml | questionsperpage   | int             | page breaks will automatically be inserted after x questions according to this setting |
+
+For longer quizzes, it makes sense to stretch the quiz over several pages by limiting the number of questions per page.
+When adding questions to the quiz, page breaks will automatically be inserted according to this setting. However, page breaks may later be moved manually on the editing page.
+
+// TODO: Determine value for no page breaks
 
 ## Shuffle within questions
-bool
 
-if enabled, the parts making up each questions will be randomly shuffled each time a student attempts the quiz, provided the option is also enabled in the questions settings. This setting only applies to questions that have multiple parts, such as multiple choice or matching questions.
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                     |
+|-----------------------------|-----------|----------|--------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
+| ShuffleWithinQuestions      | boolean   | quiz.xml | shuffleanswers     | int ( 1 / 0 )   | if enabled,  the parts making up each questions will be randomly shuffled each time a student attempts the quiz |
+
+Only works if the option is also enabled in the questions settings.
+This setting only applies to questions that have multiple parts, such as multiple choice or matching questions.
 
 ## Question Behaviour
-Enum
-
-Students can interact with the questions in the quiz in various different ways. For example, you may wish the students to enter an answer to each questions and then submit the entire quiz, before anything is graded or they get any feedback. That would be "Deferred feedback" mode.
-
+Students can interact with the questions in the quiz in various different ways. For example, you may wish the students to enter an answer to each question and then submit the entire quiz, before anything is graded or they get any feedback. That would be "Deferred feedback" mode.
 Alternatively, you may wish for students to submit each questions as they go along to get immediate feedback and if they do not get it right immediately, have another try for fewer marks. That would be "Interactive with multiple tries" mode.
 
-| Value in Internal Data Model  | Value in Moodle XML | Description |
-|------------------------------|---------------------|-------------|
-| Adaptive                     |                     | Immediate Feedback, but allows students to have multiple attempts at the question before moving on to the next question. Students get fewer marks on subsequent attempts. |
-| AdaptiveNoPenalties          |                     | Immediate Feedback, but allows students to have multiple attempts at the question before moving on to the next question. No penalties for subsequent attempts. |
-| Deferred                     |                     | Students must enter an answer to each question and then submit the entire quiz before anything is graded or they get any feedback. |
-| DeferredCBM                  |                     | Certainty-based marking (CBM): the student does not only answer the question, but they also indicate how sure they are they got the question right. The grading is adjusted by the choice of certainty. |
-| Immediate                    |                     | Students can submit their response immediately during the quiz attempt and get it graded. However, they can only submit one response and cannot change it later. |
-| ImmediateCBM                 |                     | Certainty-based marking (CBM): the student does not only answer the question, but they also indicate how sure they are they got the question right. The grading is adjusted by the choice of certainty. |
+| Name in Internal Data Model | Data Type                | XML File | Name in Moodle XML  | Data Type (XML) | Description                                                       |
+|-----------------------------|--------------------------|----------|---------------------|-----------------|-------------------------------------------------------------------|
+| QuestionBehaviour           | QuestionBehaviour (Enum) | quiz.xml | preferredbehaviour  | string          | the way in which students interact with the questions in the quiz |
+
+### QuestionBehaviour
+
+| Value in Internal Data Model | Value in Moodle XML | Description                                                                                                                                                                                                                                                                                                                                                                                                       |
+|------------------------------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Adaptive                     |                     | Immediate Feedback, but allows students to have multiple attempts at the question before moving on to the next question. Students get fewer marks on subsequent attempts.                                                                                                                                                                                                                                         |
+| AdaptiveNoPenalties          |                     | Immediate Feedback, but allows students to have multiple attempts at the question before moving on to the next question. No penalties for subsequent attempts.                                                                                                                                                                                                                                                    |
+| Deferred                     | deferredfeedback    | Students must enter an answer to each question and then submit the entire quiz before anything is graded or they get any feedback.                                                                                                                                                                                                                                                                                |
+| DeferredCBM                  |                     | Certainty-based marking (CBM): the student does not only answer the question, but they also indicate how sure they are they got the question right. The grading is adjusted by the choice of certainty.                                                                                                                                                                                                           |
+| Immediate                    |                     | Students can submit their response immediately during the quiz attempt and get it graded. However, they can only submit one response and cannot change it later.                                                                                                                                                                                                                                                  |
+| ImmediateCBM                 |                     | Certainty-based marking (CBM): the student does not only answer the question, but they also indicate how sure they are they got the question right. The grading is adjusted by the choice of certainty.                                                                                                                                                                                                           |
 | InteractiveMultipleTries     |                     | Allows multiple attempts on a question with possible grade penalties. Students submit answers via the 'Check' button and can retry using 'Try again' if incorrect. After each wrong attempt, a hint is displayed. Once correct, answers cannot be changed. If attempts run out, the student is graded accordingly and shown feedback. The number of tries equals the number of hints plus one (minimum of three). |
 
-## AttemptBuildsOnPreviousAttempts
-boolean
+// TODO: Check if this is correct
 
-if multiple attempts are allowed and this settings is enabled, each new quiz attempt will contain the results of the previous attempt.
-This allows a quiz to be completed over several attempts.
+## AttemptBuildsOnPreviousAttempts
+
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                                           |
+|-----------------------------|-----------|----------|--------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| BuildOnPreviousAttempts     | boolean   | quiz.xml | attemptonlast      | int ( 1 / 0 )   | if multiple attempts are allowed and this settings is enabled, each new quiz attempt will contain the results of the previous attempt |
+
+// TODO: Check if this is correct
 
 ## Review Options
 These options control what information students can see when they review a quiz attempt or look at the quiz reports.
 
+Corresponding tags are `reviewattempt`, `reviewcorrectness`, `reviewmaxmarks`, `reviewmarks`, `reviewspecificfeedback`, `reviewgeneralfeedback`, `reviewrightanswer` and `reviewoverallfeedback`.
+Information seems to be stored in a numeric code, similar to file permissions in Unix.
+`4368` -> all parameters enabled
+`69904` -> only the "Attempt" parameter enabled
+// TODO: Further research needed
+
 ### Time
-| Value in Internal Data Model  | Value in Moodle XML | Description |
-|------------------------------|---------------------|-------------|
-| DuringAttempt                     |                     | only applicable to some question behaviours like InteractiveMultipleTries. Displays feedback during the attempt |
-| ImmediatelyAfter          |                     | student can see their grade immediately after clicking on "Submit all and finish" |
-| AfterAttempt                     |                     | student can see their grade two minutes after they clicked on "Submit all and finish" |
-| QuizClosed                  |                     | student can see their grade after the quiz close date has passed. If the quiz doesn't have a close date, this state is never reached |
+| Value in Internal Data Model | Value in Moodle XML | Description                                                                                                                          |
+|------------------------------|---------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| DuringAttempt                |                     | only applicable to some question behaviours like InteractiveMultipleTries. Displays feedback during the attempt                      |
+| ImmediatelyAfter             |                     | student can see their grade immediately after clicking on "Submit all and finish"                                                    |
+| AfterAttempt                 |                     | student can see their grade two minutes after they clicked on "Submit all and finish"                                                |
+| QuizClosed                   |                     | student can see their grade after the quiz close date has passed. If the quiz doesn't have a close date, this state is never reached |
 
 ### Parameters
 each of these values is a boolean
 
-| Value in Internal Data Model  | Value in Moodle XML | Description |
-|------------------------------|---------------------|-------------|
-| Attempt                     |                     | whether the student can review the attempt at all |
-| WhetherCorrect          |                     | whether the student can see if he answered the question "correct", "partially correct" or "incorrect". Also displays the colour highlighting that conveys this information |
-| MaximumMarks                     |                     | whether the student can see the maximum mark he could have achieved for each question |
-| Marks                  |                     | whether the student can see the mark obtained for each question and the overall attempt score - only available if MaximumMarks is true |
-| SpecificFeedback                     |                     | whether the student can see feedback that depends on what response the student gave |
-| GeneralFeedback          |                     | whether the student can see general feedback, displayed to all students regardless of their answer. E.g. a fully worked answer and a link to more information |
-| RightAnswer                     |                     | whether the student can see what would have been the correct answer(s) |
-| OverallFeedback                  |                     | whether the sudent can see the feedback given at the end of the attempt, depending on the sutdent's total mark |
+| Value in Internal Data Model   | Value in Moodle XML | Description                                                                                                                                                                |
+|--------------------------------|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Attempt                        |                     | whether the student can review the attempt at all                                                                                                                          |
+| WhetherCorrect                 |                     | whether the student can see if he answered the question "correct", "partially correct" or "incorrect". Also displays the colour highlighting that conveys this information |
+| MaximumMarks                   |                     | whether the student can see the maximum mark he could have achieved for each question                                                                                      |
+| Marks                          |                     | whether the student can see the mark obtained for each question and the overall attempt score - only available if MaximumMarks is true                                     |
+| SpecificFeedback               |                     | whether the student can see feedback that depends on what response the student gave                                                                                        |
+| GeneralFeedback                |                     | whether the student can see general feedback, displayed to all students regardless of their answer. E.g. a fully worked answer and a link to more information              |
+| RightAnswer                    |                     | whether the student can see what would have been the correct answer(s)                                                                                                     |
+| OverallFeedback                |                     | whether the sudent can see the feedback given at the end of the attempt, depending on the sutdent's total mark                                                             |
 
 
 ## ShowPicture
-Enum
 
-if enabled, a student's name and picture will be shown on-screen during the attempt and on the review screen, making it easier to check that the sutdent is logged in as themselves
+| Name in Internal Data Model | Data Type             | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                                                                                                       |
+|-----------------------------|-----------------------|----------|--------------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ShowPicture                 | PictureOptions (Enum) | quiz.xml | showuserpicture    | int             | if enabled, a student's name and picture will be shown on-screen during the attempt and on the review screen, making it easier to check that the student is logged in as himself  |
 
-| Value in Internal Data Model  | Value in Moodle XML |
+### PictureOptions
+
+| Value in Internal Data Model | Value in Moodle XML |
 |------------------------------|---------------------|
-| NoImage                     |                     |
-| SmallImage          |                     |
-| LargeImage                     |                     |
+| NoImage                      | 0                   |
+| SmallImage                   | ???                 |
+| LargeImage                   | ???                 |
 
 ## GradeDecimalsToDisplay
-int (0-5)
 
-specifies the number of digits shown after the decimal point when displaying grades.
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                         |
+|-----------------------------|-----------|----------|--------------------|-----------------|-------------------------------------------------------------------------------------|
+| DecimalsToDisplayGrades     | int       | quiz.xml | decimalpoints      | int ( 0 - 5 )   | specifies the number of digits shown after the decimal point when displaying grades |
+
 Only affects the display of grades, not the grades stored in the database or the internal calculations
 
-
 ## MarkDecimalsToDisplay
-int (0-7)
 
-specifies the number of digits shown after the decimal point when displaying the marks for individual questions
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML     | Data Type (XML) | Description                                                                                                     |
+|-----------------------------|-----------|----------|------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
+| DecimalsToDisplayMarks      | int       | quiz.xml | questiondecimalpoints  | int ( -1 - 7 )  | specifies the number of digits shown after the decimal point when displaying the marks for individual questions |
+
+`-1` is equal to `Same as for grades`
 
 ## SafeExamBrowser
-TODO: Seems like A LOT of work
+// TODO: Seems like A LOT of work
 
 ## Password
-string
 
-if a password is specified, a student must enter it in order to attempt the quiz
+| Name in Internal Data Model | Data Type | XML File | Name in Moodle XML | Data Type (XML)    | Description                                                                      |
+|-----------------------------|-----------|----------|--------------------|--------------------|----------------------------------------------------------------------------------|
+| Password                    | string    | quiz.xml | password           | string (plaintext) | if a password is specified, a student must enter it in order to attempt the quiz |
 
 ## Feedback
 Overall Feedback is text that is shown after a quiz has been attempted (Overall Feedback)
 By specifying additional grade boundaries (as percentage), the text shown can depend on the grade obtained (Specific Feedback)
 
-### OverallFeedback
-eigene Klasse dafür anlegen?
+| Name in Internal Data Model | Data Type      | XML File | Name in Moodle XML   | Data Type (XML) | Description                                                                 |
+|-----------------------------|----------------|----------|----------------------|-----------------|-----------------------------------------------------------------------------|
+| Feedback                    | List<Feedback> | quiz.xml | feedbacks            | various         | the feedback that is shown to the student after the quiz has been attempted |
 
-- FeedbackText
-- OverallFeedbackFormat
-    - FormattingFormatt Enum
+### Feedback (Class)
 
-### SpecificFeedback
-eigene Klasse dafür anlegen?
-
-- GradeBoundary 
-- FeedbackText
-- OverallFeedbackFormat
-    - FormattingFormatt Enum´
-
+| Name in Internal Data Model | Data Type                | XML File | Name in Moodle XML  | Data Type (XML) | Description                                                                                  |
+|-----------------------------|--------------------------|----------|---------------------|-----------------|----------------------------------------------------------------------------------------------|
+| GradeBoundary               | float                    | quiz.xml | mingrade & maxgrade | float           | the minimum grade (in percent) required to show this feedback                                |
+| FeedbackText                | string                   | quiz.xml | feedbacktext        | string          | the text that is shown to the student if the grade is greater than or equal to GradeBoundary |
+| OverallFeedbackFormat       | FormattingFormat (Enum)  | quiz.xml | feedbackformat      | int             | the format in which the feedback text is provided, e.g. plain text, HTML, Markdown           |
