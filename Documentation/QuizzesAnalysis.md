@@ -46,7 +46,7 @@ all quizzes seem to have `modulename=quiz` and `moduleid=227`
 | TimeLimit                  | int       | quiz.xml | timelimit          | int (seconds)   | if enabled, the time limit is stated on the initial quiz page and a countdown timer is displayed in the quiz navigation block |
 
 ## Time Expiry Handling
-this variable controls what happens if a student fails to submit their quiz attempt before the time expires.
+this variable controls what happens if a student fails to submit their quiz attempt before the time expires.  
 If the student is actively working on the quiz at the time, then the countdown timer will always automatically submit the attempt for them but if they have logged out, then this setting controls what happens
 
 | Name in Internal Data Model | Data Type               | XML File | Name in Moodle XML | Data Type (XML) | Description                                                                                      |
@@ -98,7 +98,7 @@ The value is used in activity and course completion and in the gradebook, where 
 |-----------------------------|-----------|----------|--------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | NewPageThreshold            | int       | quiz.xml | questionsperpage   | int             | page breaks will automatically be inserted after x questions according to this setting, 0 means no page breaks -> all questions on one page |
 
-For longer quizzes, it makes sense to stretch the quiz over several pages by limiting the number of questions per page.
+For longer quizzes, it makes sense to stretch the quiz over several pages by limiting the number of questions per page.  
 When adding questions to the quiz, page breaks will automatically be inserted according to this setting. However, page breaks may later be moved manually on the editing page.
 
 ## Shuffle within questions
@@ -107,11 +107,11 @@ When adding questions to the quiz, page breaks will automatically be inserted ac
 |-----------------------------|-----------|----------|--------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
 | ShuffleWithinQuestions      | boolean   | quiz.xml | shuffleanswers     | int (1/0)   | if enabled,  the parts making up each questions will be randomly shuffled each time a student attempts the quiz |
 
-Only works if the option is also enabled in the questions settings.
+Only works if the option is also enabled in the questions settings.  
 This setting only applies to questions that have multiple parts, such as multiple choice or matching questions.
 
 ## Question Behaviour
-Students can interact with the questions in the quiz in various different ways. For example, you may wish the students to enter an answer to each question and then submit the entire quiz, before anything is graded or they get any feedback. That would be "Deferred feedback" mode.
+Students can interact with the questions in the quiz in various different ways. For example, you may wish the students to enter an answer to each question and then submit the entire quiz, before anything is graded or they get any feedback. That would be "Deferred feedback" mode.  
 Alternatively, you may wish for students to submit each questions as they go along to get immediate feedback and if they do not get it right immediately, have another try for fewer marks. That would be "Interactive with multiple tries" mode.
 
 | Name in Internal Data Model | Data Type                | XML File | Name in Moodle XML  | Data Type (XML) | Description                                                       |
@@ -136,7 +136,7 @@ Alternatively, you may wish for students to submit each questions as they go alo
 |-----------------------------|-----------|----------|--------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | AllowRedosDuringAttempt     | boolean   | quiz.xml | canredoquestions   | int (1/0)       | if enabled, students can redo questions during the attempt. This is only applicable to some question behaviours like Immediate, ImmediateCBM and InteractiveMultipleTries |
 
-If enabled, after finishing attempting a question, a 'Try another question like this one' button is displayed. This allows for a similar questions (selected randomly) to be attempted or the same question to be attempted again without the entire quiz attempt having to be submitted and another attempt started.
+If enabled, after finishing attempting a question, a 'Try another question like this one' button is displayed. This allows for a similar questions (selected randomly) to be attempted or the same question to be attempted again without the entire quiz attempt having to be submitted and another attempt started.  
 This setting is only applicable to question behaviours where it is possible to finish a questions before the attempt is submitted.
 
 ## AttemptBuildsOnPreviousAttempts
@@ -148,17 +148,17 @@ This setting is only applicable to question behaviours where it is possible to f
 ## Review Options
 These options control what information students can see when they review a quiz attempt or look at the quiz reports.
 
-Corresponding tags are `reviewattempt`, `reviewcorrectness`, `reviewmaxmarks`, `reviewmarks`, `reviewspecificfeedback`, `reviewgeneralfeedback`, `reviewrightanswer` and `reviewoverallfeedback`.
+Corresponding tags are `reviewattempt`, `reviewcorrectness`, `reviewmaxmarks`, `reviewmarks`, `reviewspecificfeedback`, `reviewgeneralfeedback`, `reviewrightanswer` and `reviewoverallfeedback`.  
 Information seems to be stored in a numeric code, similar to file permissions in Unix.
 
-`4368` -> parameter enabled at all times
-`272` -> parameter enabled for AfterAttempt and QuizClosed
-`4112` -> parameter enabled for ImmediatelyAfter and QuizClosed
-`4096` -> parameter enabled only for ImmediatelyAfter
-`4368` -> parameter enabled for ImmediatelyAfter, AfterAttempt and QuizClosed
-`0` -> parameter disabled for all states
+`4368` -> parameter enabled at all times  
+`272` -> parameter enabled for AfterAttempt and QuizClosed  
+`4112` -> parameter enabled for ImmediatelyAfter and QuizClosed  
+`4096` -> parameter enabled only for ImmediatelyAfter  
+`4368` -> parameter enabled for ImmediatelyAfter, AfterAttempt and QuizClosed  
+`0` -> parameter disabled for all states  
 
-//I'm not sure if these values are even consistent
+//I'm not sure if these values are even consistent  
 // TODO: Further research needed
 
 ### Time
@@ -224,7 +224,7 @@ Only affects the display of grades, not the grades stored in the database or the
 | Password                    | string    | quiz.xml | password           | string (plaintext) | if a password is specified, a student must enter it in order to attempt the quiz |
 
 ## Feedback
-Overall Feedback is text that is shown after a quiz has been attempted (Overall Feedback)
+Overall Feedback is text that is shown after a quiz has been attempted (Overall Feedback)  
 By specifying additional grade boundaries (as percentage), the text shown can depend on the grade obtained (Specific Feedback)
 
 | Name in Internal Data Model | Data Type      | XML File | Name in Moodle XML   | Data Type (XML) | Description                                                                 |
