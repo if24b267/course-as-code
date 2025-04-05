@@ -13,12 +13,14 @@ public class YamlActivityReader : IActivityReader
 	private readonly IFileReader _fileReader;
 	private readonly ITextAndMediaAreaReader _textMediaAreaReader;
 	private readonly IUrlReader _urlReader;
+	private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
 
-	public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader)
+	public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper)
 	{
 		_fileReader = fileReader;
 		_textMediaAreaReader = textMediaAreaReader;
 		_urlReader = urlReader;
+		_yamlFileReaderHelper = yamlFileReaderHelper;
 	}
 
 	public Activity? Read(string modelObjectPath)
@@ -31,7 +33,7 @@ public class YamlActivityReader : IActivityReader
 		}
 
 		// TODO: this might error
-		var yamlActivity = YamlFileReaderHelper.DeserializeFromFile<YamlActivity>(modelObjectPath);
+		var yamlActivity = _yamlFileReaderHelper.DeserializeFromFile<YamlActivity>(modelObjectPath);
 
 		if (yamlActivity == null)
 		{

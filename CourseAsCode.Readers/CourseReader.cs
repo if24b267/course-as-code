@@ -17,11 +17,19 @@ public class CourseReader : ICourseReader
 	private Course? _course;
 	private readonly ISectionReader _sectionReader;
 	private readonly IServiceProvider _serviceProvider;
+	private readonly IYamlFileReaderHelper _yamlReader;
 
-	public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
+	public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader)
 	{
 		_sectionReader = sectionReader;
 		_serviceProvider = serviceProvider;
+		_yamlReader = yamlReader;
+	}
+
+	// For backward compatibility
+	public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
+		: this(sectionReader, serviceProvider, new YamlFileReaderHelper())
+	{
 	}
 
 	public Course? Read(string path, CourseFormat format)
@@ -61,8 +69,8 @@ public class CourseReader : ICourseReader
 			throw new FileNotFoundException("Course is missing a config.yaml or sections.yaml file.");
 		}
 
-		var yamlYamlCourse = YamlFileReaderHelper.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
-		var yamlSectionsDefinition = YamlFileReaderHelper.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
+		var yamlYamlCourse = _yamlReader.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
+		var yamlSectionsDefinition = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 
 		List<Section> sections = [];
 		ValueKeeper.CurrentActivityId = 1;
@@ -138,7 +146,7 @@ public class CourseReader : ICourseReader
 	public static void ConfigureYamlServices(IServiceCollection services)
 	{
 		// Register helpers
-		services.AddSingleton<YamlFileReaderHelper>();
+		services.AddSingleton<IYamlFileReaderHelper, YamlFileReaderHelper>();
 		services.AddSingleton<DirectoryReader>();
 
 		// Register readers with interfaces

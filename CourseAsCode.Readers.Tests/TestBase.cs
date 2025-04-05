@@ -8,6 +8,7 @@ namespace CourseAsCode.Readers.Tests
 		protected string TestDataPath { get; private set; }
 		protected string TempDirectory { get; private set; }
 
+
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{

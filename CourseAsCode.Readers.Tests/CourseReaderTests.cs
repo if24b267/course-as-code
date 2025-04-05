@@ -365,7 +365,7 @@ Sections:
 				Assert.That(serviceProvider.GetService<IFileReader>(), Is.Not.Null);
 				Assert.That(serviceProvider.GetService<ITextAndMediaAreaReader>(), Is.Not.Null);
 				Assert.That(serviceProvider.GetService<IUrlReader>(), Is.Not.Null);
-				Assert.That(serviceProvider.GetService<YamlFileReaderHelper>(), Is.Not.Null);
+				Assert.That(serviceProvider.GetService<IYamlFileReaderHelper>(), Is.Not.Null);
 				Assert.That(serviceProvider.GetService<DirectoryReader>(), Is.Not.Null);
 			});
 		}

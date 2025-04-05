@@ -2,13 +2,14 @@ using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Readers;
+using YamlDotNet.Core;
 
 namespace CourseAsCode.Readers.Tests.YAML.Readers
 {
 	[TestFixture]
 	public class YamlActivityReaderTests : TestBase
 	{
-		private YamlActivityReader _reader;
+		private IActivityReader _activityReader;
 		private IFileReader _mockFileReader;
 		private ITextAndMediaAreaReader _mockTextMediaAreaReader;
 		private IUrlReader _mockUrlReader;
@@ -20,6 +21,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 			_mockFileReader = Substitute.For<IFileReader>();
 			_mockTextMediaAreaReader = Substitute.For<ITextAndMediaAreaReader>();
 			_mockUrlReader = Substitute.For<IUrlReader>();
+			_activityReader = new YamlActivityReader(new YamlFileReader(new YamlFileReaderHelper()), _mockTextMediaAreaReader, _mockUrlReader, new YamlFileReaderHelper());
 
 			// Configure mock URL reader to return a valid URL object
 			_mockUrlReader.Read(Arg.Any<string>()).Returns(new URL
@@ -30,7 +32,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 				ActivityId = 1
 			});
 
-			_reader = new YamlActivityReader(_mockFileReader, _mockTextMediaAreaReader, _mockUrlReader);
+
 			ValueKeeper.CurrentActivityId = 1;
 		}
 
@@ -41,7 +43,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 			var nonExistentPath = Path.Combine(TempDirectory, "nonexistent.yaml");
 
 			// Act
-			var result = _reader.Read(nonExistentPath);
+			var result = _activityReader.Read(nonExistentPath);
 
 			// Assert
 			Assert.That(result, Is.Null);
@@ -60,7 +62,7 @@ URL: https://example.com
 			var filePath = CreateTestYamlFile("url.yaml", yamlContent);
 
 			// Act
-			var result = _reader.Read(filePath);
+			var result = _activityReader.Read(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -80,7 +82,7 @@ URL: https://example.com
 		}
 
 		[Test]
-		public void Read_InvalidYamlActivity_ReturnsNull()
+		public void Read_InvalidYamlActivity_ReturnsError()
 		{
 			// Arrange
 			var yamlContent = @"
@@ -91,8 +93,7 @@ Description: Activity Description
 			var filePath = CreateTestYamlFile("invalid.yaml", yamlContent);
 
 			// Act & Assert
-			var ex = Assert.Throws<YamlDotNet.Core.YamlException>(() =>
-				_reader.Read(filePath));
+			Assert.Throws<YamlException>(() => _activityReader.Read(filePath));
 		}
 
 		[Test]
@@ -115,7 +116,7 @@ FilePath: files/test.txt
 			});
 
 			// Act
-			var result = _reader.Read(filePath);
+			var result = _mockFileReader.Read(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -149,7 +150,7 @@ Content:
 			});
 
 			// Act
-			var result = _reader.Read(filePath);
+			var result = _mockTextMediaAreaReader.Read(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
