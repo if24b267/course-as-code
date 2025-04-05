@@ -1,19 +1,20 @@
 ﻿using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.YAML.Readers;
 
-public class YamlActivityReader : ActivityReader<Activity>
+public class YamlActivityReader : IActivityReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private YamlFileReader _fileReader = new YamlFileReader();
 	private YamlTextMediaAreaReader _textMediaAreaReader = new YamlTextMediaAreaReader();
 	private YAMLUrlReader _urlReader = new YAMLUrlReader();
-	public override Activity? Read(string modelObjectPath)
+
+	public Activity? Read(string modelObjectPath)
 	{
 		_logger.Debug($"Reading Activity from {modelObjectPath}");
 		if (!File.Exists(modelObjectPath))

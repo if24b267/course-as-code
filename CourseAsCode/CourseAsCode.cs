@@ -5,6 +5,7 @@ using CourseAsCode.Writers;
 using NLog;
 using System.IO.Compression;
 using CourseAsCode.Writers.XML.Helper;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseAsCode
 {
@@ -99,6 +100,11 @@ namespace CourseAsCode
 			_logger.Debug($"Resolved output path: {outputPath}");
 			_logger.Debug($"Resolved format: {courseFormat}");
 
+			var serviceCollection = new ServiceCollection();
+			ConfigureServices(serviceCollection);
+			var serviceProvider = serviceCollection.BuildServiceProvider();
+			_logger.Debug("Service provider created.");
+
 			var courseReader = new CourseReader(new YAMLSectionReader());
 			var course = courseReader.Read(inputPath, courseFormat);
 			var writer = new Writer();
@@ -139,6 +145,11 @@ namespace CourseAsCode
 			Console.WriteLine("  -o <Output Path>    - Required: The output folder path (relative or absolute).");
 			Console.WriteLine("  -f <Format>         - Optional: The input format (currently only YAML is supported).");
 			Console.WriteLine("  -h or --help        - Optional: Displays this help message.");
+		}
+
+		public static void ConfigureServices(IServiceCollection services)
+		{
+
 		}
 	}
 }

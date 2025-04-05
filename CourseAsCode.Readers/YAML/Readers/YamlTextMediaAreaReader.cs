@@ -3,15 +3,16 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.YAML.Readers;
 
-public class YamlTextMediaAreaReader : TextMediaAreaReader<TextAndMediaArea>
+public class YamlTextMediaAreaReader : ITextAndMediaAreaReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-	public override TextAndMediaArea? Read(string modelObjectPath)
+	public TextAndMediaArea? Read(string modelObjectPath)
 	{
 		if (!File.Exists(modelObjectPath))
 		{
@@ -25,6 +26,7 @@ public class YamlTextMediaAreaReader : TextMediaAreaReader<TextAndMediaArea>
 
 		foreach (var content in yamlFile.Content)
 		{
+			// TODO: implement more types
 			switch (content.Type)
 			{
 				case TextMediaContentType.MARKDOWN:
@@ -58,6 +60,7 @@ public class YamlTextMediaAreaReader : TextMediaAreaReader<TextAndMediaArea>
 
 	private string? ReadMarkdownFile(string markdownFilePath)
 	{
+		_logger.Debug($"Reading markdown file {markdownFilePath}");
 		if (!File.Exists(markdownFilePath))
 		{
 			_logger.Error($"File {markdownFilePath} does not exist.");

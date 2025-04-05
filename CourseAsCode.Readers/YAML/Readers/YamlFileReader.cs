@@ -1,15 +1,16 @@
 ﻿using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.YAML.Readers;
 
-public class YamlFileReader : FileReader<MoodleFile>
+public class YamlFileReader : IFileReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-	public override MoodleFile? Read(string modelObjectPath)
+	public MoodleFile? Read(string modelObjectPath)
 	{
 		if (!File.Exists(modelObjectPath))
 		{
@@ -17,10 +18,7 @@ public class YamlFileReader : FileReader<MoodleFile>
 			return null;
 		}
 
-
 		var yamlFile = YamlFileReaderHelper.DeserializeFromFile<YamlFile>(modelObjectPath);
-
-
 
 		var fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), yamlFile.FilePath));
 		yamlFile.FilePath = fullPath;

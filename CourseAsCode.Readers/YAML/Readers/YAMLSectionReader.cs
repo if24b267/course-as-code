@@ -2,17 +2,18 @@
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.YAML.Readers;
 
-public class YAMLSectionReader : SectionReader<Section>
+public class YAMLSectionReader : ISectionReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	// TODO: dependency injection
 	private YamlActivityReader _activityReader = new YamlActivityReader();
 
-	public override Section? Read(string modelObjectPath)
+	public Section? Read(string modelObjectPath)
 	{
 		_logger.Debug($"Reading {modelObjectPath}");
 		if (!File.Exists(modelObjectPath))
