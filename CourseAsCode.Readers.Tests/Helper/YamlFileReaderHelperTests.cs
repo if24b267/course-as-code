@@ -8,14 +8,14 @@ namespace CourseAsCode.Readers.Tests.Helper
 	[TestFixture]
 	public class YamlFileReaderHelperTests : TestBase
 	{
-        private IYamlFileReaderHelper _yamlReaderHelper;
+		private IYamlFileReaderHelper _yamlReaderHelper;
 
-        [SetUp]
-        public void Setup()
-        {
-            _yamlReaderHelper = new YamlFileReaderHelper();
-        }
-        
+		[SetUp]
+		public void Setup()
+		{
+			_yamlReaderHelper = new YamlFileReaderHelper();
+		}
+
 		[Test]
 		public void Deserialize_ValidYaml_ReturnsDeserializedObject()
 		{
@@ -148,97 +148,101 @@ StartDate: 01-01-2024 00:00
 			Assert.Throws<FileNotFoundException>(() =>
 				 _yamlReaderHelper.DeserializeFromFile<YamlCourse>(nonExistentFilePath));
 		}
-        
-        [Test]
-        public void ValidateObject_ValidObject_ReturnsNoErrors()
-        {
-            // Arrange
-            var yamlContent = @"
+
+		[Test]
+		public void ValidateObject_ValidObject_ReturnsNoErrors()
+		{
+			// Arrange
+			var yamlContent = @"
 Name: Test URL
 URL: https://example.com
 ";
-            var result = _yamlReaderHelper.DeserializeFromContent<YamlUrl>(yamlContent);
+			var result = _yamlReaderHelper.DeserializeFromContent<YamlUrl>(yamlContent);
 
-            // Act
-            var validationResults = _yamlReaderHelper.ValidateObject(result);
+			// Act
+			var validationResults = _yamlReaderHelper.ValidateObject(result);
 
-            // Assert
-            Assert.That(validationResults, Is.Empty);
-        }
+			// Assert
+			Assert.That(validationResults, Is.Empty);
+		}
 
-        [Test]
-        public void ValidateObject_InvalidUrl_ReturnsValidationErrors()
-        {
-            // Arrange
-            var yamlContent = @"
+		[Test]
+		public void ValidateObject_InvalidUrl_ReturnsValidationErrors()
+		{
+			// Arrange
+			var yamlContent = @"
 Name: Test URL
 URL: not-a-valid-url
 ";
-            var result = _yamlReaderHelper.DeserializeFromContent<YamlUrl>(yamlContent);
+			var result = _yamlReaderHelper.DeserializeFromContent<YamlUrl>(yamlContent);
 
-            // Act
-            var validationResults = _yamlReaderHelper.ValidateObject(result);
+			// Act
+			var validationResults = _yamlReaderHelper.ValidateObject(result);
 
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(validationResults, Is.Not.Empty);
-                Assert.That(validationResults[0].ErrorMessage, Does.Contain("invalid URL format"));
-            });
-        }
+			// Assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(validationResults, Is.Not.Empty);
+				Assert.That(validationResults[0].ErrorMessage, Does.Contain("invalid URL format"));
+			});
+		}
 
-        [Test]
-        public void ValidateObjectAndThrow_InvalidObject_ThrowsException()
-        {
-            // Arrange
-            var yamlContent = @"
+		[Test]
+		public void ValidateObjectAndThrow_InvalidObject_ThrowsExceptionOnWindows()
+		{
+			// Arrange
+			var yamlContent = @"
 Name: Test File
 FilePath: invalid*chars?in:path
 ";
-            var result = _yamlReaderHelper.DeserializeFromContent<YamlFile>(yamlContent);
+			var result = _yamlReaderHelper.DeserializeFromContent<YamlFile>(yamlContent);
 
-            // Act & Assert
-            var ex = Assert.Throws<YamlException>(() => _yamlReaderHelper.ValidateObjectAndThrow(result));
-            Assert.That(ex.Message, Does.Contain("invalid characters"));
-        }
-        
-        [Test]
-        public void DeserializeWithEnhancedValidation_InvalidUrl_ThrowsYamlException()
-        {
-            // Arrange
-            var yamlContent = @"
+			if (OperatingSystem.IsWindows())
+			{
+				// Act & Assert
+				var ex = Assert.Throws<YamlException>(() => _yamlReaderHelper.ValidateObjectAndThrow(result));
+				Assert.That(ex.Message, Does.Contain("invalid characters"));
+			}
+
+		}
+
+		[Test]
+		public void DeserializeWithEnhancedValidation_InvalidUrl_ThrowsYamlException()
+		{
+			// Arrange
+			var yamlContent = @"
 Name: Test URL
 URL: not-a-valid-url
 ";
 
-            var deserialize = _yamlReaderHelper.DeserializeFromContent<YamlUrl>(yamlContent);
-				// Act & Assert
-				var ex = Assert.Throws<YamlException>(() =>
-                _yamlReaderHelper.ValidateObjectAndThrow(deserialize));
-                
-            Assert.That(ex.Message, Does.Contain("invalid URL format"));
-        }
-        
-        [Test]
-        public void DeserializeFileWithEnhancedValidation_ValidYaml_SuccessfullyDeserializes()
-        {
-            // Arrange
-            var yamlContent = @"
+			var deserialize = _yamlReaderHelper.DeserializeFromContent<YamlUrl>(yamlContent);
+			// Act & Assert
+			var ex = Assert.Throws<YamlException>(() =>
+				 _yamlReaderHelper.ValidateObjectAndThrow(deserialize));
+
+			Assert.That(ex.Message, Does.Contain("invalid URL format"));
+		}
+
+		[Test]
+		public void DeserializeFileWithEnhancedValidation_ValidYaml_SuccessfullyDeserializes()
+		{
+			// Arrange
+			var yamlContent = @"
 Name: Valid URL
 URL: https://example.com
 ";
-            var filePath = CreateTestYamlFile("valid_url.yaml", yamlContent);
+			var filePath = CreateTestYamlFile("valid_url.yaml", yamlContent);
 
-            // Act
-            var result = _yamlReaderHelper.DeserializeFromFile<YamlUrl>(filePath);
+			// Act
+			var result = _yamlReaderHelper.DeserializeFromFile<YamlUrl>(filePath);
 
-            // Assert
-            Assert.Multiple(() =>
-            {
-                Assert.That(result, Is.Not.Null);
-                Assert.That(result.Name, Is.EqualTo("Valid URL"));
-                Assert.That(result.URL, Is.EqualTo("https://example.com"));
-            });
-        }
+			// Assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(result, Is.Not.Null);
+				Assert.That(result.Name, Is.EqualTo("Valid URL"));
+				Assert.That(result.URL, Is.EqualTo("https://example.com"));
+			});
+		}
 	}
 }

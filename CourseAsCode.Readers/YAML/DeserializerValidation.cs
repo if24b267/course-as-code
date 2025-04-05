@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Text.RegularExpressions;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
@@ -199,7 +198,7 @@ public class DeserializerValidation(INodeDeserializer nodeDeserializer) : INodeD
 		foreach (var device in deviceNames)
 		{
 			if (fileName.Equals(device, StringComparison.OrdinalIgnoreCase) ||
-			    fileName.StartsWith(device + ".", StringComparison.OrdinalIgnoreCase))
+				 fileName.StartsWith(device + ".", StringComparison.OrdinalIgnoreCase))
 			{
 				return true;
 			}

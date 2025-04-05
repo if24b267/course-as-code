@@ -10,12 +10,12 @@ public class YamlUrlReader : IUrlReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private readonly IYamlFileReaderHelper _yamlReaderHelper;
-	
+
 	public YamlUrlReader(IYamlFileReaderHelper yamlReaderHelper)
 	{
 		_yamlReaderHelper = yamlReaderHelper;
 	}
-	
+
 	// For backward compatibility
 	public YamlUrlReader() : this(new YamlFileReaderHelper())
 	{
@@ -34,7 +34,7 @@ public class YamlUrlReader : IUrlReader
 		{
 			// DeserializeFromContent YAML to object
 			var yamlUrl = _yamlReaderHelper.DeserializeFromFile<YamlUrl>(modelObjectPath);
-			
+
 			// Validate the URL format
 			var validationResults = _yamlReaderHelper.ValidateObject(yamlUrl);
 			if (validationResults.Any())
@@ -42,7 +42,7 @@ public class YamlUrlReader : IUrlReader
 				var errors = string.Join(", ", validationResults.Select(r => r.ErrorMessage));
 				_logger.Warn($"Validation warnings for URL '{modelObjectPath}': {errors}");
 			}
-			
+
 			var modelUrl = ConvertYamlUrlToModelUrl(yamlUrl);
 			return modelUrl;
 		}

@@ -11,12 +11,12 @@ public class YamlTextMediaAreaReader : ITextAndMediaAreaReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
-	
+
 	public YamlTextMediaAreaReader(IYamlFileReaderHelper yamlFileReaderHelper)
 	{
 		_yamlFileReaderHelper = yamlFileReaderHelper;
 	}
-	
+
 	// For backward compatibility
 	public YamlTextMediaAreaReader() : this(new YamlFileReaderHelper())
 	{

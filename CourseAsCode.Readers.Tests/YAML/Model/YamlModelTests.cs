@@ -15,7 +15,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Model
 		{
 			_yamlReader = new YamlFileReaderHelper();
 		}
-		
+
 		[Test]
 		public void YamlCourse_DeserializesCorrectly()
 		{

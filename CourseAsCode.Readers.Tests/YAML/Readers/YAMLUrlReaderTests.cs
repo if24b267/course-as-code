@@ -15,31 +15,31 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 		public void Setup()
 		{
 			var mockYamlFileReader = Substitute.For<IYamlFileReaderHelper>();
-				mockYamlFileReader.DeserializeFromFile<YamlUrl>(Arg.Any<string>())
-					.Returns(callInfo =>
+			mockYamlFileReader.DeserializeFromFile<YamlUrl>(Arg.Any<string>())
+				.Returns(callInfo =>
+				{
+					var path = callInfo.Arg<string>();
+					if (!File.Exists(path)) return null;
+
+					var content = File.ReadAllText(path);
+					if (content.Contains("URL:"))
 					{
-						var path = callInfo.Arg<string>();
-						if (!File.Exists(path)) return null;
-						
-						var content = File.ReadAllText(path);
-						if (content.Contains("URL:"))
+						return new YamlUrl
 						{
-							return new YamlUrl
-							{
-								Name = "Test URL",
-								Description = "URL Description",
-								URL = "https://example.com"
-							};
-						}
-						
-						// Throw exception for invalid files
-						throw new YamlDotNet.Core.YamlException("Required property missing");
-					});
-				
-				mockYamlFileReader.ValidateObject(Arg.Any<object>())
-					.Returns(new List<System.ComponentModel.DataAnnotations.ValidationResult>());
-				
-				_reader = new YamlUrlReader(mockYamlFileReader);
+							Name = "Test URL",
+							Description = "URL Description",
+							URL = "https://example.com"
+						};
+					}
+
+					// Throw exception for invalid files
+					throw new YamlDotNet.Core.YamlException("Required property missing");
+				});
+
+			mockYamlFileReader.ValidateObject(Arg.Any<object>())
+				.Returns(new List<System.ComponentModel.DataAnnotations.ValidationResult>());
+
+			_reader = new YamlUrlReader(mockYamlFileReader);
 			ValueKeeper.CurrentActivityId = 1;
 		}
 

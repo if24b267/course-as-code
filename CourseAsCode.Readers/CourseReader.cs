@@ -25,7 +25,7 @@ public class CourseReader : ICourseReader
 		_serviceProvider = serviceProvider;
 		_yamlReader = yamlReader;
 	}
-	
+
 	// For backward compatibility
 	public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
 		: this(sectionReader, serviceProvider, new YamlFileReaderHelper())

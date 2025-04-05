@@ -2,8 +2,6 @@ using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Readers;
-using NSubstitute.ExceptionExtensions;
-using System.Reflection.PortableExecutable;
 using YamlDotNet.Core;
 
 namespace CourseAsCode.Readers.Tests.YAML.Readers

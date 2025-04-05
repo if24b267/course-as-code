@@ -40,8 +40,8 @@ namespace CourseAsCode.Readers.Tests.Utils
 
 			// Create a real section reader with the mock activity reader
 			// Create a mock YamlFileReaderHelper
-				var mockYamlFileReader = Substitute.For<IYamlFileReaderHelper>();
-				return new YamlSectionReader(mockActivityReader, mockYamlFileReader);
+			var mockYamlFileReader = Substitute.For<IYamlFileReaderHelper>();
+			return new YamlSectionReader(mockActivityReader, mockYamlFileReader);
 		}
 
 		public static IModelObjectReader<T> CreateMockModelObjectReader<T>() where T : class
