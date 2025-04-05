@@ -4,6 +4,7 @@ public class DirectoryReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
+	// Keep static method for backward compatibility during transition
 	public static FileNode ReadDirectory(string path, int depth = 0)
 	{
 		_logger.Debug($"Reading directory: {path}, Depth: {depth}");
@@ -30,5 +31,11 @@ public class DirectoryReader
 		}
 
 		return rootNode;
+	}
+	
+	// Instance method for DI
+	public FileNode Read(string path, int depth = 0)
+	{
+		return ReadDirectory(path, depth);
 	}
 }

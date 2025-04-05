@@ -1,12 +1,55 @@
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Readers.Enums;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Readers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseAsCode.Readers.Tests
 {
 	[TestFixture]
 	public class EdgeCaseTests : TestBase
 	{
+		private ServiceProvider _serviceProvider;
+		private IActivityReader _mockActivityReader;
+		private IFileReader _mockFileReader;
+		private ITextAndMediaAreaReader _mockTextMediaReader;
+		private IUrlReader _mockUrlReader;
+		private ISectionReader _mockSectionReader;
+		private ICourseReader _courseReader;
+
+		[SetUp]
+		public void Setup()
+		{
+			// Create mocks for all dependencies
+			_mockActivityReader = Substitute.For<IActivityReader>();
+			_mockFileReader = Substitute.For<IFileReader>();
+			_mockTextMediaReader = Substitute.For<ITextAndMediaAreaReader>();
+			_mockUrlReader = Substitute.For<IUrlReader>();
+			_mockSectionReader = Substitute.For<ISectionReader>();
+			
+			// Create service collection and register mocks
+			var services = new ServiceCollection();
+			services.AddSingleton(_mockFileReader);
+			services.AddSingleton(_mockTextMediaReader);
+			services.AddSingleton(_mockUrlReader);
+			services.AddSingleton(_mockActivityReader);
+			services.AddSingleton(_mockSectionReader);
+			
+			var mockServiceProvider = Substitute.For<IServiceProvider>();
+			mockServiceProvider.GetService(typeof(ISectionReader)).Returns(_mockSectionReader);
+			
+			_courseReader = new CourseReader(_mockSectionReader, mockServiceProvider);
+			
+			// Build the service provider
+			_serviceProvider = services.BuildServiceProvider();
+		}
+		
+		[TearDown]
+		public void TearDown()
+		{
+			_serviceProvider?.Dispose();
+		}
+
 		[Test]
 		public void CourseReader_EmptySectionsYaml_ReturnsCourseWithNoSections()
 		{
@@ -18,10 +61,8 @@ namespace CourseAsCode.Readers.Tests
 			File.WriteAllText(configPath, "CourseName: Test Course");
 			File.WriteAllText(sectionsPath, "Sections: []");
 
-			var reader = new CourseReader(new YAMLSectionReader());
-
 			// Act
-			var result = reader.Read(testDir, CourseFormat.YAML);
+			var result = _courseReader.Read(testDir, CourseFormat.YAML);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -39,7 +80,7 @@ namespace CourseAsCode.Readers.Tests
 			var yamlContent = "SectionName: Empty Section";
 			var filePath = CreateTestYamlFile("emptySection.yaml", yamlContent);
 
-			var reader = new YAMLSectionReader();
+			var reader = new YAMLSectionReader(_mockActivityReader);
 
 			// Act
 			var result = reader.Read(filePath);
@@ -73,10 +114,14 @@ Sections:
   - SectionPath: Sections/NonexistentSection
 ");
 
-			var reader = new CourseReader(new YAMLSectionReader());
+			// Configure mock section reader to return a valid section only for the first path
+			_mockSectionReader.Read(Arg.Is<string>(s => s.Contains("Section1")))
+				.Returns(new Model.Section { Name = "Valid Section" });
+			_mockSectionReader.Read(Arg.Is<string>(s => s.Contains("NonexistentSection")))
+				.Returns((Model.Section)null);
 
 			// Act
-			var result = reader.Read(testDir, CourseFormat.YAML);
+			var result = _courseReader.Read(testDir, CourseFormat.YAML);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -99,7 +144,7 @@ Name: Test URL
 ";
 			var filePath = CreateTestYamlFile("malformed.yaml", yamlContent);
 
-			var reader = new YamlActivityReader();
+			var reader = new YamlActivityReader(_mockFileReader, _mockTextMediaReader, _mockUrlReader);
 
 			// Act & Assert
 			Assert.Throws<YamlDotNet.Core.YamlException>(() => reader.Read(filePath));
@@ -128,15 +173,10 @@ URL: https://example.com
 
 			// Create a section reader with a mocked activity reader that always returns null
 			// to simulate a circular reference
-			var mockActivityReader = Substitute.For<YamlActivityReader>();
-			mockActivityReader.Read(Arg.Any<string>()).Returns((Activity?)null);
+			var mockCircularActivityReader = Substitute.For<IActivityReader>();
+			mockCircularActivityReader.Read(Arg.Any<string>()).Returns((Activity?)null);
 
-			var reader = new YAMLSectionReader();
-
-			// Use reflection to set the private _activityReader field
-			var field = typeof(YAMLSectionReader).GetField("_activityReader",
-				 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-			field?.SetValue(reader, mockActivityReader);
+			var reader = new YAMLSectionReader(mockCircularActivityReader);
 
 			// Act
 			var result = reader.Read(sectionFilePath);

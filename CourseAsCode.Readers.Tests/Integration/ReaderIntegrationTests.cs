@@ -1,33 +1,55 @@
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Readers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseAsCode.Readers.Tests.Integration
 {
 	[TestFixture]
 	public class ReaderIntegrationTests : TestBase
 	{
+		private ServiceProvider _serviceProvider;
+		private IActivityReader _activityReader;
+		private ISectionReader _sectionReader;
+		private ICourseReader _courseReader;
+
 		[SetUp]
 		public void SetUp()
 		{
 			// Call the base SetUp method
 			base.SetUp();
 
+			// Setup dependency injection
+			var services = new ServiceCollection();
+			CourseReader.ConfigureYamlServices(services);
+			_serviceProvider = services.BuildServiceProvider();
+			
+			// Get readers from DI container
+			_activityReader = _serviceProvider.GetRequiredService<IActivityReader>();
+			_sectionReader = _serviceProvider.GetRequiredService<ISectionReader>();
+			_courseReader = _serviceProvider.GetRequiredService<ICourseReader>();
+
 			// Reset ValueKeeper state at the beginning of each test
 			ValueKeeper.CurrentActivityId = 1;
 			ValueKeeper.CurrentSectionId = 1;
+		}
+		
+		[TearDown]
+		public void TearDown()
+		{
+			_serviceProvider?.Dispose();
 		}
 
 		[Test]
 		public void YamlActivityReader_IntegratesWithYamlUrlReader()
 		{
 			// Arrange
-			var activityReader = new YamlActivityReader();
 			var urlFilePath = Path.Combine(TestDataPath, "Sections", "Section1", "Activities", "url1.yaml");
 			ValueKeeper.CurrentActivityId = 10;
 
 			// Act
-			var result = activityReader.Read(urlFilePath);
+			var result = _activityReader.Read(urlFilePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -47,13 +69,12 @@ namespace CourseAsCode.Readers.Tests.Integration
 		public void YamlSectionReader_IntegratesWithYamlActivityReader()
 		{
 			// Arrange
-			var sectionReader = new YAMLSectionReader();
 			var sectionFilePath = Path.Combine(TestDataPath, "Sections", "Section1", "section.yaml");
 			ValueKeeper.CurrentActivityId = 1;
 			ValueKeeper.CurrentSectionId = 5;
 
 			// Act
-			var result = sectionReader.Read(sectionFilePath);
+			var result = _sectionReader.Read(sectionFilePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -78,12 +99,11 @@ namespace CourseAsCode.Readers.Tests.Integration
 		public void CourseReader_IntegratesWithSectionAndActivityReaders()
 		{
 			// Arrange
-			var courseReader = new CourseReader(new YAMLSectionReader());
 			ValueKeeper.CurrentActivityId = 1;
 			ValueKeeper.CurrentSectionId = 1;
 
-			// Act
-			var result = courseReader.ReadYaml(TestDataPath);
+			// Act - Use CourseReader directly from DI
+			var result = ((CourseReader)_courseReader).ReadYaml(TestDataPath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -113,12 +133,11 @@ namespace CourseAsCode.Readers.Tests.Integration
 		public void YamlTextMediaAreaReader_IntegratesWithActivityReader()
 		{
 			// Arrange
-			var activityReader = new YamlActivityReader();
 			var labelFilePath = Path.Combine(TestDataPath, "Sections", "Section1", "Activities", "label1.yaml");
 			ValueKeeper.CurrentActivityId = 20;
 
 			// Act
-			var result = activityReader.Read(labelFilePath);
+			var result = _activityReader.Read(labelFilePath);
 
 			// Assert
 			Assert.Multiple(() =>

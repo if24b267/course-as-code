@@ -10,7 +10,7 @@ namespace CourseAsCode.Readers.Tests.Utils
 	{
 		public static YAMLSectionReader CreateMockSectionReader()
 		{
-			var mockActivityReader = Substitute.For<YamlActivityReader>();
+			var mockActivityReader = Substitute.For<IActivityReader>();
 
 			// Configure the mock to return different activities based on the input path
 			mockActivityReader.Read(Arg.Is<string>(s => s.Contains("url")))
@@ -39,14 +39,7 @@ namespace CourseAsCode.Readers.Tests.Utils
 				 });
 
 			// Create a real section reader with the mock activity reader
-			var sectionReader = new YAMLSectionReader();
-
-			// Use reflection to set the private _activityReader field
-			var field = typeof(YAMLSectionReader).GetField("_activityReader",
-				 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-			field?.SetValue(sectionReader, mockActivityReader);
-
-			return sectionReader;
+			return new YAMLSectionReader(mockActivityReader);
 		}
 
 		public static IModelObjectReader<T> CreateMockModelObjectReader<T>() where T : class

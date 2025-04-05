@@ -1,5 +1,6 @@
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Readers;
 
 namespace CourseAsCode.Readers.Tests.YAML.Readers
@@ -8,11 +9,28 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 	public class YamlActivityReaderTests : TestBase
 	{
 		private YamlActivityReader _reader;
+		private IFileReader _mockFileReader;
+		private ITextAndMediaAreaReader _mockTextMediaAreaReader;
+		private IUrlReader _mockUrlReader;
 
 		[SetUp]
 		public void Setup()
 		{
-			_reader = new YamlActivityReader();
+			// Setup mock readers
+			_mockFileReader = Substitute.For<IFileReader>();
+			_mockTextMediaAreaReader = Substitute.For<ITextAndMediaAreaReader>();
+			_mockUrlReader = Substitute.For<IUrlReader>();
+			
+			// Configure mock URL reader to return a valid URL object
+			_mockUrlReader.Read(Arg.Any<string>()).Returns(new URL 
+			{ 
+				Name = "Test URL", 
+				Description = "URL Description", 
+				ExternalUrl = "https://example.com",
+				ActivityId = 1
+			});
+			
+			_reader = new YamlActivityReader(_mockFileReader, _mockTextMediaAreaReader, _mockUrlReader);
 			ValueKeeper.CurrentActivityId = 1;
 		}
 
@@ -55,6 +73,9 @@ URL: https://example.com
 				Assert.That(url.Description, Is.EqualTo("URL Description"));
 				Assert.That(url.ExternalUrl, Is.EqualTo("https://example.com"));
 				Assert.That(url.ActivityId, Is.EqualTo(1));
+				
+				// Verify URL reader was called
+				_mockUrlReader.Received(1).Read(filePath);
 			});
 		}
 
@@ -70,7 +91,6 @@ Description: Activity Description
 			var filePath = CreateTestYamlFile("invalid.yaml", yamlContent);
 
 			// Act & Assert
-
 			var ex = Assert.Throws<YamlDotNet.Core.YamlException>(() =>
 				_reader.Read(filePath));
 		}
@@ -86,11 +106,26 @@ Description: File Description
 FilePath: files/test.txt
 ";
 			var filePath = CreateTestYamlFile("file.yaml", yamlContent);
+			
+			// Configure mock file reader
+			_mockFileReader.Read(Arg.Any<string>()).Returns(new MoodleFile
+			{
+				Name = "Test File",
+				ActivityId = 1
+			});
 
-			// Act & Assert
-			// This might fail if FileReader is not properly initialized, but this is a good test
-			// to ensure the delegation works correctly
-			Assert.DoesNotThrow(() => _reader.Read(filePath));
+			// Act
+			var result = _reader.Read(filePath);
+
+			// Assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(result, Is.Not.Null);
+				Assert.That(result, Is.TypeOf<MoodleFile>());
+				
+				// Verify File reader was called
+				_mockFileReader.Received(1).Read(filePath);
+			});
 		}
 
 		[Test]
@@ -105,12 +140,26 @@ Content:
     ContentFilePath: test
 ";
 			var filePath = CreateTestYamlFile("label.yaml", yamlContent);
+			
+			// Configure mock text media reader
+			_mockTextMediaAreaReader.Read(Arg.Any<string>()).Returns(new TextAndMediaArea
+			{
+				Name = "Test Label",
+				ActivityId = 1
+			});
 
-			// Act & Assert
-			// This might fail if TextMediaAreaReader is not properly initialized, but this is a good test
-			// to ensure the delegation works correctly
-			Assert.DoesNotThrow(() => _reader.Read(filePath));
+			// Act
+			var result = _reader.Read(filePath);
 
+			// Assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(result, Is.Not.Null);
+				Assert.That(result, Is.TypeOf<TextAndMediaArea>());
+				
+				// Verify TextMediaArea reader was called
+				_mockTextMediaAreaReader.Received(1).Read(filePath);
+			});
 		}
 	}
 }

@@ -3,6 +3,7 @@ using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Readers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseAsCode.Readers.Tests
 {
@@ -10,13 +11,21 @@ namespace CourseAsCode.Readers.Tests
 	public class CourseReaderTests : TestBase
 	{
 		private CourseReader _reader;
-		private YAMLSectionReader _mockSectionReader;
+		private ISectionReader _mockSectionReader;
+		private IServiceProvider _serviceProvider;
 
 		[SetUp]
 		public void Setup()
 		{
-			_mockSectionReader = Substitute.For<YAMLSectionReader>();
-			_reader = new CourseReader(_mockSectionReader);
+			// Create mocks
+			_mockSectionReader = Substitute.For<ISectionReader>();
+			var mockServiceProvider = Substitute.For<IServiceProvider>();
+			
+			// Setup service provider to return mocked dependencies
+			mockServiceProvider.GetService(typeof(ISectionReader)).Returns(_mockSectionReader);
+			
+			_serviceProvider = mockServiceProvider;
+			_reader = new CourseReader(_mockSectionReader, _serviceProvider);
 		}
 
 		[Test]
@@ -334,6 +343,31 @@ Sections:
 				// Verify final counter values
 				Assert.That(ValueKeeper.CurrentSectionId, Is.EqualTo(3)); // 1 + 2 sections
 				Assert.That(result.Sections, Has.Count.EqualTo(2));
+			});
+		}
+		
+		[Test]
+		public void ConfigureYamlServices_RegistersAllServices()
+		{
+			// Arrange
+			var services = new ServiceCollection();
+			
+			// Act
+			CourseReader.ConfigureYamlServices(services);
+			var serviceProvider = services.BuildServiceProvider();
+			
+			// Assert
+			Assert.Multiple(() =>
+			{
+				// Verify all required services are registered
+				Assert.That(serviceProvider.GetService<ICourseReader>(), Is.Not.Null);
+				Assert.That(serviceProvider.GetService<ISectionReader>(), Is.Not.Null);
+				Assert.That(serviceProvider.GetService<IActivityReader>(), Is.Not.Null);
+				Assert.That(serviceProvider.GetService<IFileReader>(), Is.Not.Null);
+				Assert.That(serviceProvider.GetService<ITextAndMediaAreaReader>(), Is.Not.Null);
+				Assert.That(serviceProvider.GetService<IUrlReader>(), Is.Not.Null);
+				Assert.That(serviceProvider.GetService<YamlFileReaderHelper>(), Is.Not.Null);
+				Assert.That(serviceProvider.GetService<DirectoryReader>(), Is.Not.Null);
 			});
 		}
 	}

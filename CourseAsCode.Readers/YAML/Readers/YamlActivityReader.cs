@@ -10,9 +10,16 @@ namespace CourseAsCode.Readers.YAML.Readers;
 public class YamlActivityReader : IActivityReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-	private YamlFileReader _fileReader = new YamlFileReader();
-	private YamlTextMediaAreaReader _textMediaAreaReader = new YamlTextMediaAreaReader();
-	private YAMLUrlReader _urlReader = new YAMLUrlReader();
+	private readonly IFileReader _fileReader;
+	private readonly ITextAndMediaAreaReader _textMediaAreaReader;
+	private readonly IUrlReader _urlReader;
+
+	public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader)
+	{
+		_fileReader = fileReader;
+		_textMediaAreaReader = textMediaAreaReader;
+		_urlReader = urlReader;
+	}
 
 	public Activity? Read(string modelObjectPath)
 	{

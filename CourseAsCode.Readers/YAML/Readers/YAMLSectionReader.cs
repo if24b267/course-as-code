@@ -10,8 +10,12 @@ namespace CourseAsCode.Readers.YAML.Readers;
 public class YAMLSectionReader : ISectionReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-	// TODO: dependency injection
-	private YamlActivityReader _activityReader = new YamlActivityReader();
+	private readonly IActivityReader _activityReader;
+
+	public YAMLSectionReader(IActivityReader activityReader)
+	{
+		_activityReader = activityReader;
+	}
 
 	public Section? Read(string modelObjectPath)
 	{

@@ -15,12 +15,13 @@ public class CourseReader : ICourseReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private Course? _course;
-	private YAMLSectionReader _yamlSectionReader;
+	private readonly ISectionReader _sectionReader;
+	private readonly IServiceProvider _serviceProvider;
 
-	// TODO: dependency injection with services
-	public CourseReader(YAMLSectionReader yamlSectionReader)
+	public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
 	{
-		_yamlSectionReader = yamlSectionReader;
+		_sectionReader = sectionReader;
+		_serviceProvider = serviceProvider;
 	}
 
 	public Course? Read(string path, CourseFormat format)
@@ -46,11 +47,6 @@ public class CourseReader : ICourseReader
 
 	public Course? ReadYaml(string coursePath)
 	{
-		var serviceCollection = new ServiceCollection();
-		ConfigureYamlServices(serviceCollection);
-		var serviceProvider = serviceCollection.BuildServiceProvider();
-		_logger.Debug("Service provider created.");
-
 		_logger.Debug($"Reading YAML course from {coursePath}");
 		ValueKeeper.CoursePath = coursePath;
 
@@ -63,7 +59,6 @@ public class CourseReader : ICourseReader
 		{
 			_logger.Error($"Course is missing a config.yaml or sections.yaml file.");
 			throw new FileNotFoundException("Course is missing a config.yaml or sections.yaml file.");
-			return null;
 		}
 
 		var yamlYamlCourse = YamlFileReaderHelper.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
@@ -75,7 +70,7 @@ public class CourseReader : ICourseReader
 
 		foreach (var section in yamlSectionsDefinition.Sections)
 		{
-			var sectionRead = _yamlSectionReader.Read(Path.GetFullPath(Path.Combine(coursePath, section.SectionPath, "section.yaml")));
+			var sectionRead = _sectionReader.Read(Path.GetFullPath(Path.Combine(coursePath, section.SectionPath, "section.yaml")));
 
 			if (sectionRead != null)
 			{
@@ -142,6 +137,16 @@ public class CourseReader : ICourseReader
 
 	public static void ConfigureYamlServices(IServiceCollection services)
 	{
-
+		// Register helpers
+		services.AddSingleton<YamlFileReaderHelper>();
+		services.AddSingleton<DirectoryReader>();
+		
+		// Register readers with interfaces
+		services.AddSingleton<IFileReader, YamlFileReader>();
+		services.AddSingleton<ITextAndMediaAreaReader, YamlTextMediaAreaReader>();
+		services.AddSingleton<IUrlReader, YAMLUrlReader>();
+		services.AddSingleton<IActivityReader, YamlActivityReader>();
+		services.AddSingleton<ISectionReader, YAMLSectionReader>();
+		services.AddSingleton<ICourseReader, CourseReader>();
 	}
 }

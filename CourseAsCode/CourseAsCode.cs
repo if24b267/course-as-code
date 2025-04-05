@@ -1,6 +1,6 @@
 ﻿using CourseAsCode.Readers;
 using CourseAsCode.Readers.Enums;
-using CourseAsCode.Readers.YAML.Readers;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Writers;
 using NLog;
 using System.IO.Compression;
@@ -100,7 +100,12 @@ namespace CourseAsCode
 			_logger.Debug($"Resolved output path: {outputPath}");
 			_logger.Debug($"Resolved format: {courseFormat}");
 
-			var courseReader = new CourseReader(new YAMLSectionReader());
+			// Setup dependency injection
+			var serviceCollection = new ServiceCollection();
+			CourseReader.ConfigureYamlServices(serviceCollection);
+			var serviceProvider = serviceCollection.BuildServiceProvider();
+
+			var courseReader = serviceProvider.GetRequiredService<ICourseReader>();
 			var course = courseReader.Read(inputPath, courseFormat);
 			var writer = new Writer();
 			var courseOutputPath = Path.GetFullPath(Path.Combine(outputPath, "moodleCourse"));
