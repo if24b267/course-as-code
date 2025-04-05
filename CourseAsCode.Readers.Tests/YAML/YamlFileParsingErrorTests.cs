@@ -213,7 +213,7 @@ FilePath: invalid*chars?in:path
 		}
 
 		[Test]
-		public void ValidateObject_WithInvalidCharsInFilePath_ReturnsValidationErrors()
+		public void ValidateObject_WithInvalidCharsInFilePath_ReturnsValidationErrorsOnWindows()
 		{
 			// Arrange
 			var yamlContent = @"
@@ -225,12 +225,15 @@ FilePath: invalid*chars?in:path
 			// Act
 			var validationResults = _yamlReaderHelper.ValidateObject(result);
 
-			// Assert
-			Assert.Multiple(() =>
+			if (OperatingSystem.IsWindows())
 			{
-				Assert.That(validationResults, Is.Not.Empty);
-				Assert.That(validationResults[0].ErrorMessage, Does.Contain("invalid characters"));
-			});
+				// Assert
+				Assert.Multiple(() =>
+				{
+					Assert.That(validationResults, Is.Not.Empty);
+					Assert.That(validationResults[0].ErrorMessage, Does.Contain("invalid characters"));
+				});
+			}
 		}
 
 		[Test]
