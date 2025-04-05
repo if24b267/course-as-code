@@ -2,8 +2,12 @@
 
 public class DirectoryReader
 {
+	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
+	// Keep static method for backward compatibility during transition
 	public static FileNode ReadDirectory(string path, int depth = 0)
 	{
+		_logger.Debug($"Reading directory: {path}, Depth: {depth}");
 		if (!Directory.Exists(path))
 		{
 			throw new DirectoryNotFoundException($"The directory '{path}' does not exist.");
@@ -14,10 +18,12 @@ public class DirectoryReader
 
 		foreach (var directory in directoryInfo.GetDirectories())
 		{
+			_logger.Debug($"Found directory: {directory.Name} - reading it");
 			// Recursively read subdirectories
 			rootNode.Children.Add(ReadDirectory(directory.FullName, depth + 1));
 		}
 
+		_logger.Debug($"Found {directoryInfo.GetFiles().Length} files in {directoryInfo.Name} - reading");
 		foreach (var file in directoryInfo.GetFiles())
 		{
 			// Add files directly
@@ -25,5 +31,11 @@ public class DirectoryReader
 		}
 
 		return rootNode;
+	}
+
+	// Instance method for DI
+	public FileNode Read(string path, int depth = 0)
+	{
+		return ReadDirectory(path, depth);
 	}
 }

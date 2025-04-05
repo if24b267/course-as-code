@@ -6,8 +6,7 @@ using YamlDotNet.Serialization.NodeDeserializers;
 
 namespace CourseAsCode.Readers.Helper;
 
-// TODO: maybe inject this into every read with dependency injection and no static class, not sure if needed tho
-public static class YamlFileReaderHelper
+public class YamlFileReaderHelper
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private static readonly string[] DATE_FORMATS = ["dd-MM-yyyy HH:mm"];
@@ -20,6 +19,7 @@ public static class YamlFileReaderHelper
 			s => s.InsteadOf<ObjectNodeDeserializer>())
 		.Build();
 
+	// Keep static methods for backwards compatibility and transition to DI
 	public static T DeserializeFromContent<T>(string yamlContent)
 	{
 		_logger.Debug($"Deserializing YAML content to {typeof(T).Name}");
@@ -45,5 +45,16 @@ public static class YamlFileReaderHelper
 
 		var yamlContent = File.ReadAllText(filePath);
 		return DeserializeFromContent<T>(yamlContent);
+	}
+
+	// Instance methods for DI
+	public T Deserialize<T>(string yamlContent)
+	{
+		return DeserializeFromContent<T>(yamlContent);
+	}
+
+	public T DeserializeFile<T>(string filePath)
+	{
+		return DeserializeFromFile<T>(filePath);
 	}
 }

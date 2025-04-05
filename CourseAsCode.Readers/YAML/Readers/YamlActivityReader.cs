@@ -1,19 +1,29 @@
 ﻿using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.YAML.Readers;
 
-public class YamlActivityReader : ActivityReader<Activity>
+public class YamlActivityReader : IActivityReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-	private YamlFileReader _fileReader = new YamlFileReader();
-	private YamlTextMediaAreaReader _textMediaAreaReader = new YamlTextMediaAreaReader();
-	public override Activity? Read(string modelObjectPath)
+	private readonly IFileReader _fileReader;
+	private readonly ITextAndMediaAreaReader _textMediaAreaReader;
+	private readonly IUrlReader _urlReader;
+
+	public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader)
 	{
+		_fileReader = fileReader;
+		_textMediaAreaReader = textMediaAreaReader;
+		_urlReader = urlReader;
+	}
+
+	public Activity? Read(string modelObjectPath)
+	{
+		_logger.Debug($"Reading Activity from {modelObjectPath}");
 		if (!File.Exists(modelObjectPath))
 		{
 			_logger.Error($"File {modelObjectPath} does not exist.");
@@ -33,11 +43,14 @@ public class YamlActivityReader : ActivityReader<Activity>
 		{
 			// TODO: do we maybe want this in a different reader? -> problem: we dont follow the interface structure since we dont want to read the file twice
 			case ActivityType.URL:
-				return ConvertYamlActivityToMoodleUrl(yamlActivity);
+				_logger.Debug($"Reading URL activity from {modelObjectPath}");
+				return _urlReader.Read(modelObjectPath);
 			case ActivityType.FILE:
+				_logger.Debug($"Reading file activity from {modelObjectPath}");
 				return _fileReader.Read(modelObjectPath);
 			case ActivityType.LABEL:
 			case ActivityType.TEXTMEDIAAREA:
+				_logger.Debug($"Reading text media area activity from {modelObjectPath}");
 				return _textMediaAreaReader.Read(modelObjectPath);
 		}
 
@@ -45,6 +58,7 @@ public class YamlActivityReader : ActivityReader<Activity>
 		return null;
 	}
 
+	// TODO: remove this, but first make the defaults work better
 	private URL? ConvertYamlActivityToMoodleUrl(YamlActivity yamlActivity)
 	{
 		// TODO: improve activity reading -> every activity could for example have visible to students set
