@@ -4,5 +4,5 @@ namespace CourseAsCode.Readers.Interfaces;
 
 public interface IAssignmentReader : IModelObjectReader<Activity>
 {
-	
+
 }

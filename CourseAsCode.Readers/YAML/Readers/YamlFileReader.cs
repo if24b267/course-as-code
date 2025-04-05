@@ -1,5 +1,4 @@
 ﻿using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;

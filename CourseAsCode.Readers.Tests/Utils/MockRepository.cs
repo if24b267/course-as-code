@@ -8,7 +8,7 @@ namespace CourseAsCode.Readers.Tests.Utils
 {
 	public static class MockRepository
 	{
-		public static YAMLSectionReader CreateMockSectionReader()
+		public static YamlSectionReader CreateMockSectionReader()
 		{
 			var mockActivityReader = Substitute.For<IActivityReader>();
 
@@ -39,7 +39,7 @@ namespace CourseAsCode.Readers.Tests.Utils
 				 });
 
 			// Create a real section reader with the mock activity reader
-			return new YAMLSectionReader(mockActivityReader);
+			return new YamlSectionReader(mockActivityReader);
 		}
 
 		public static IModelObjectReader<T> CreateMockModelObjectReader<T>() where T : class

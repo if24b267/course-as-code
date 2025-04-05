@@ -7,12 +7,12 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 	[TestFixture]
 	public class YAMLUrlReaderTests : TestBase
 	{
-		private YAMLUrlReader _reader;
+		private YamlUrlReader _reader;
 
 		[SetUp]
 		public void Setup()
 		{
-			_reader = new YAMLUrlReader();
+			_reader = new YamlUrlReader();
 			ValueKeeper.CurrentActivityId = 1;
 		}
 

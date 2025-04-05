@@ -1,6 +1,5 @@
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Interfaces;
-using CourseAsCode.Readers.YAML.Readers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseAsCode.Readers.Tests.Integration
@@ -18,12 +17,12 @@ namespace CourseAsCode.Readers.Tests.Integration
 			var services = new ServiceCollection();
 			CourseReader.ConfigureYamlServices(services);
 			_serviceProvider = services.BuildServiceProvider();
-			
+
 			// Get the reader from DI container
 			var sectionReader = _serviceProvider.GetRequiredService<ISectionReader>();
 			_reader = new CourseReader(sectionReader, _serviceProvider);
 		}
-		
+
 		[TearDown]
 		public void TearDown()
 		{

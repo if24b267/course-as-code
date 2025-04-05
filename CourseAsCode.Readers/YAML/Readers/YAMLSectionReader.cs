@@ -1,18 +1,17 @@
 ﻿using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
-using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.YAML.Readers;
 
-public class YAMLSectionReader : ISectionReader
+public class YamlSectionReader : ISectionReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private readonly IActivityReader _activityReader;
 
-	public YAMLSectionReader(IActivityReader activityReader)
+	public YamlSectionReader(IActivityReader activityReader)
 	{
 		_activityReader = activityReader;
 	}

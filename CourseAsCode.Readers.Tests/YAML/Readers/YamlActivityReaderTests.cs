@@ -20,16 +20,16 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 			_mockFileReader = Substitute.For<IFileReader>();
 			_mockTextMediaAreaReader = Substitute.For<ITextAndMediaAreaReader>();
 			_mockUrlReader = Substitute.For<IUrlReader>();
-			
+
 			// Configure mock URL reader to return a valid URL object
-			_mockUrlReader.Read(Arg.Any<string>()).Returns(new URL 
-			{ 
-				Name = "Test URL", 
-				Description = "URL Description", 
+			_mockUrlReader.Read(Arg.Any<string>()).Returns(new URL
+			{
+				Name = "Test URL",
+				Description = "URL Description",
 				ExternalUrl = "https://example.com",
 				ActivityId = 1
 			});
-			
+
 			_reader = new YamlActivityReader(_mockFileReader, _mockTextMediaAreaReader, _mockUrlReader);
 			ValueKeeper.CurrentActivityId = 1;
 		}
@@ -73,7 +73,7 @@ URL: https://example.com
 				Assert.That(url.Description, Is.EqualTo("URL Description"));
 				Assert.That(url.ExternalUrl, Is.EqualTo("https://example.com"));
 				Assert.That(url.ActivityId, Is.EqualTo(1));
-				
+
 				// Verify URL reader was called
 				_mockUrlReader.Received(1).Read(filePath);
 			});
@@ -106,7 +106,7 @@ Description: File Description
 FilePath: files/test.txt
 ";
 			var filePath = CreateTestYamlFile("file.yaml", yamlContent);
-			
+
 			// Configure mock file reader
 			_mockFileReader.Read(Arg.Any<string>()).Returns(new MoodleFile
 			{
@@ -122,7 +122,7 @@ FilePath: files/test.txt
 			{
 				Assert.That(result, Is.Not.Null);
 				Assert.That(result, Is.TypeOf<MoodleFile>());
-				
+
 				// Verify File reader was called
 				_mockFileReader.Received(1).Read(filePath);
 			});
@@ -140,7 +140,7 @@ Content:
     ContentFilePath: test
 ";
 			var filePath = CreateTestYamlFile("label.yaml", yamlContent);
-			
+
 			// Configure mock text media reader
 			_mockTextMediaAreaReader.Read(Arg.Any<string>()).Returns(new TextAndMediaArea
 			{
@@ -156,7 +156,7 @@ Content:
 			{
 				Assert.That(result, Is.Not.Null);
 				Assert.That(result, Is.TypeOf<TextAndMediaArea>());
-				
+
 				// Verify TextMediaArea reader was called
 				_mockTextMediaAreaReader.Received(1).Read(filePath);
 			});

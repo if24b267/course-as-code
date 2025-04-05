@@ -140,13 +140,13 @@ public class CourseReader : ICourseReader
 		// Register helpers
 		services.AddSingleton<YamlFileReaderHelper>();
 		services.AddSingleton<DirectoryReader>();
-		
+
 		// Register readers with interfaces
 		services.AddSingleton<IFileReader, YamlFileReader>();
 		services.AddSingleton<ITextAndMediaAreaReader, YamlTextMediaAreaReader>();
-		services.AddSingleton<IUrlReader, YAMLUrlReader>();
+		services.AddSingleton<IUrlReader, YamlUrlReader>();
 		services.AddSingleton<IActivityReader, YamlActivityReader>();
-		services.AddSingleton<ISectionReader, YAMLSectionReader>();
+		services.AddSingleton<ISectionReader, YamlSectionReader>();
 		services.AddSingleton<ICourseReader, CourseReader>();
 	}
 }

@@ -1,7 +1,6 @@
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
-using CourseAsCode.Readers.YAML.Readers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseAsCode.Readers.Tests.Integration
@@ -24,7 +23,7 @@ namespace CourseAsCode.Readers.Tests.Integration
 			var services = new ServiceCollection();
 			CourseReader.ConfigureYamlServices(services);
 			_serviceProvider = services.BuildServiceProvider();
-			
+
 			// Get readers from DI container
 			_activityReader = _serviceProvider.GetRequiredService<IActivityReader>();
 			_sectionReader = _serviceProvider.GetRequiredService<ISectionReader>();
@@ -34,7 +33,7 @@ namespace CourseAsCode.Readers.Tests.Integration
 			ValueKeeper.CurrentActivityId = 1;
 			ValueKeeper.CurrentSectionId = 1;
 		}
-		
+
 		[TearDown]
 		public void TearDown()
 		{

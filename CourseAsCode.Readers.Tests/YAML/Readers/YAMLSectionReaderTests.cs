@@ -8,7 +8,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 	[TestFixture]
 	public class YAMLSectionReaderTests : TestBase
 	{
-		private YAMLSectionReader _reader;
+		private YamlSectionReader _reader;
 		private IActivityReader _mockActivityReader;
 
 		[SetUp]
@@ -16,7 +16,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 		{
 			// Setup a mock activity reader that returns null or a simple activity
 			_mockActivityReader = Substitute.For<IActivityReader>();
-			_reader = new YAMLSectionReader(_mockActivityReader);
+			_reader = new YamlSectionReader(_mockActivityReader);
 
 			ValueKeeper.CurrentSectionId = 1;
 		}

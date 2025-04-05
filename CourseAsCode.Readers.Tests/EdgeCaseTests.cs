@@ -26,7 +26,7 @@ namespace CourseAsCode.Readers.Tests
 			_mockTextMediaReader = Substitute.For<ITextAndMediaAreaReader>();
 			_mockUrlReader = Substitute.For<IUrlReader>();
 			_mockSectionReader = Substitute.For<ISectionReader>();
-			
+
 			// Create service collection and register mocks
 			var services = new ServiceCollection();
 			services.AddSingleton(_mockFileReader);
@@ -34,16 +34,16 @@ namespace CourseAsCode.Readers.Tests
 			services.AddSingleton(_mockUrlReader);
 			services.AddSingleton(_mockActivityReader);
 			services.AddSingleton(_mockSectionReader);
-			
+
 			var mockServiceProvider = Substitute.For<IServiceProvider>();
 			mockServiceProvider.GetService(typeof(ISectionReader)).Returns(_mockSectionReader);
-			
+
 			_courseReader = new CourseReader(_mockSectionReader, mockServiceProvider);
-			
+
 			// Build the service provider
 			_serviceProvider = services.BuildServiceProvider();
 		}
-		
+
 		[TearDown]
 		public void TearDown()
 		{
@@ -80,7 +80,7 @@ namespace CourseAsCode.Readers.Tests
 			var yamlContent = "SectionName: Empty Section";
 			var filePath = CreateTestYamlFile("emptySection.yaml", yamlContent);
 
-			var reader = new YAMLSectionReader(_mockActivityReader);
+			var reader = new YamlSectionReader(_mockActivityReader);
 
 			// Act
 			var result = reader.Read(filePath);
@@ -176,7 +176,7 @@ URL: https://example.com
 			var mockCircularActivityReader = Substitute.For<IActivityReader>();
 			mockCircularActivityReader.Read(Arg.Any<string>()).Returns((Activity?)null);
 
-			var reader = new YAMLSectionReader(mockCircularActivityReader);
+			var reader = new YamlSectionReader(mockCircularActivityReader);
 
 			// Act
 			var result = reader.Read(sectionFilePath);

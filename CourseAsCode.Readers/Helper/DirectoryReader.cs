@@ -32,7 +32,7 @@ public class DirectoryReader
 
 		return rootNode;
 	}
-	
+
 	// Instance method for DI
 	public FileNode Read(string path, int depth = 0)
 	{

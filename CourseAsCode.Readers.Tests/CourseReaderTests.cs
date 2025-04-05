@@ -2,7 +2,6 @@ using CourseAsCode.Model;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
-using CourseAsCode.Readers.YAML.Readers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseAsCode.Readers.Tests
@@ -20,10 +19,10 @@ namespace CourseAsCode.Readers.Tests
 			// Create mocks
 			_mockSectionReader = Substitute.For<ISectionReader>();
 			var mockServiceProvider = Substitute.For<IServiceProvider>();
-			
+
 			// Setup service provider to return mocked dependencies
 			mockServiceProvider.GetService(typeof(ISectionReader)).Returns(_mockSectionReader);
-			
+
 			_serviceProvider = mockServiceProvider;
 			_reader = new CourseReader(_mockSectionReader, _serviceProvider);
 		}
@@ -345,17 +344,17 @@ Sections:
 				Assert.That(result.Sections, Has.Count.EqualTo(2));
 			});
 		}
-		
+
 		[Test]
 		public void ConfigureYamlServices_RegistersAllServices()
 		{
 			// Arrange
 			var services = new ServiceCollection();
-			
+
 			// Act
 			CourseReader.ConfigureYamlServices(services);
 			var serviceProvider = services.BuildServiceProvider();
-			
+
 			// Assert
 			Assert.Multiple(() =>
 			{
