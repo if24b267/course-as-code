@@ -85,7 +85,7 @@ URL: https://example.com
 		}
 
 		[Test]
-		public void Read_MissingUrlField_ThrowsYamlException()
+		public void Read_MissingUrlField_ReturnsNull()
 		{
 			// Arrange
 			var yamlContent = @"
@@ -94,11 +94,8 @@ Description: URL Description
 ";
 			var filePath = CreateTestYamlFile("url.yaml", yamlContent);
 
-			// Act & Assert
-			var ex = Assert.Throws<YamlDotNet.Core.YamlException>(() => _reader.Read(filePath));
-
-			// Verify the exception message mentions that URL is required
-			Assert.That(ex.Message, Does.Contain("URL"));
+			var read = _reader.Read(filePath);
+			Assert.That(read, Is.Null);
 		}
 
 		[Test]

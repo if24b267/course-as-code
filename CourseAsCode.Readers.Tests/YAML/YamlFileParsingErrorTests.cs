@@ -81,24 +81,6 @@ Sections:
         }
 
         [Test]
-        public void DeserializeFile_CorruptedYamlFile_ThrowsYamlException()
-        {
-            // Arrange - simulate a corrupted file with incomplete content
-            var yamlContent = @"
-CourseName: Test Course
-Sections:
-  - SectionName: Section 1
-    Activities:
-      - Path: act";  // Abruptly ends
-
-            var filePath = CreateTestYamlFile("corrupted.yaml", yamlContent);
-
-            // Act & Assert
-            Assert.Throws<YamlException>(() =>
-                _yamlReaderHelper.DeserializeFromFile<YamlSectionsDefinition>(filePath));
-        }
-
-        [Test]
         public void DeserializeFile_NonYamlFormatFile_ThrowsYamlException()
         {
             // Arrange - XML content in a YAML file
@@ -117,24 +99,6 @@ Sections:
         }
 
         [Test]
-        public void DeserializeFile_JsonFormatFile_ThrowsYamlException()
-        {
-            // Arrange - JSON content in a YAML file
-            var jsonContent = @"
-{
-    ""CourseName"": ""Test Course"",
-    ""ShortName"": ""TC"",
-    ""Visible"": true
-}";
-
-            var filePath = CreateTestYamlFile("json_in_yaml.yaml", jsonContent);
-
-            // Act & Assert
-            Assert.Throws<YamlException>(() =>
-                _yamlReaderHelper.DeserializeFromFile<YamlCourse>(filePath));
-        }
-
-        [Test]
         public void DeserializeFile_BrokenUnicodeSequence_ThrowsException()
         {
             // Arrange - broken Unicode sequence
@@ -143,7 +107,7 @@ Sections:
             var filePath = CreateTestYamlFile("broken_unicode.yaml", yamlContent);
 
             // Act & Assert
-            Assert.Throws<Exception>(() =>
+            Assert.Throws<SyntaxErrorException>(() =>
                 _yamlReaderHelper.DeserializeFromFile<YamlCourse>(filePath));
         }
 

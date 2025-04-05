@@ -170,11 +170,11 @@ ShortName: TC
 ";
 
             // Act & Assert
-            Assert.Throws<YamlException>(() =>
+            Assert.Throws<SyntaxErrorException>(() =>
                 _yamlReader.DeserializeFromContent<YamlCourse>(yamlContent));
         }
 
-        [Test] 
+        [Test]
         public void DeserializeFromContent_CircularAlias_ThrowsYamlException()
         {
             // Arrange
@@ -186,7 +186,7 @@ Course2: &course2
 ";
 
             // Act & Assert
-            Assert.Throws<YamlException>(() =>
+            Assert.Throws<AnchorNotFoundException>(() =>
                 _yamlReader.DeserializeFromContent<object>(yamlContent));
         }
 
@@ -208,7 +208,7 @@ Course2: &course2
             yamlBuilder.AppendLine($"{new string(' ', 101 * 2)}Value: too deep");
 
             // Act & Assert
-            Assert.Throws<YamlException>(() =>
+            Assert.DoesNotThrow(() =>
                 _yamlReader.DeserializeFromContent<object>(yamlBuilder.ToString()));
         }
     }

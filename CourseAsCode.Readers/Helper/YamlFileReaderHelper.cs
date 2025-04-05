@@ -26,7 +26,7 @@ public class YamlFileReaderHelper : IYamlFileReaderHelper
             .WithTypeConverter(new DateTimeConverter(
                 provider: CultureInfo.InvariantCulture,
                 formats: DATE_FORMATS))
-            //.IgnoreUnmatchedProperties()
+            .IgnoreUnmatchedProperties()
             .WithNodeDeserializer(i => new DeserializerValidation(i),
                 s => s.InsteadOf<ObjectNodeDeserializer>())
             .Build();
