@@ -1,5 +1,6 @@
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Readers.Enums;
+using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Readers;
 using Microsoft.Extensions.DependencyInjection;
@@ -80,7 +81,7 @@ namespace CourseAsCode.Readers.Tests
 			var yamlContent = "SectionName: Empty Section";
 			var filePath = CreateTestYamlFile("emptySection.yaml", yamlContent);
 
-			var reader = new YamlSectionReader(_mockActivityReader);
+			var reader = new YamlSectionReader(_mockActivityReader, new YamlFileReaderHelper());
 
 			// Act
 			var result = reader.Read(filePath);
@@ -144,7 +145,7 @@ Name: Test URL
 ";
 			var filePath = CreateTestYamlFile("malformed.yaml", yamlContent);
 
-			var reader = new YamlActivityReader(_mockFileReader, _mockTextMediaReader, _mockUrlReader);
+			var reader = new YamlActivityReader(_mockFileReader, _mockTextMediaReader, _mockUrlReader, new YamlFileReaderHelper());
 
 			// Act & Assert
 			Assert.Throws<YamlDotNet.Core.YamlException>(() => reader.Read(filePath));
@@ -176,7 +177,7 @@ URL: https://example.com
 			var mockCircularActivityReader = Substitute.For<IActivityReader>();
 			mockCircularActivityReader.Read(Arg.Any<string>()).Returns((Activity?)null);
 
-			var reader = new YamlSectionReader(mockCircularActivityReader);
+			var reader = new YamlSectionReader(mockCircularActivityReader, new YamlFileReaderHelper());
 
 			// Act
 			var result = reader.Read(sectionFilePath);

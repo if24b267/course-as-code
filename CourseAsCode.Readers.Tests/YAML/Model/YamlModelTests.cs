@@ -1,5 +1,6 @@
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.Tests.YAML.Model
@@ -7,6 +8,14 @@ namespace CourseAsCode.Readers.Tests.YAML.Model
 	[TestFixture]
 	public class YamlModelTests : TestBase
 	{
+		private IYamlFileReaderHelper _yamlReader;
+
+		[SetUp]
+		public void Setup()
+		{
+			_yamlReader = new YamlFileReaderHelper();
+		}
+		
 		[Test]
 		public void YamlCourse_DeserializesCorrectly()
 		{
@@ -35,7 +44,7 @@ ShowCompletionConditions: true
 			var filePath = CreateTestYamlFile("course.yaml", yamlContent);
 
 			// Act
-			var result = YamlFileReaderHelper.DeserializeFromFile<YamlCourse>(filePath);
+			var result = _yamlReader.DeserializeFromFile<YamlCourse>(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -75,7 +84,7 @@ Sections:
 			var filePath = CreateTestYamlFile("sections.yaml", yamlContent);
 
 			// Act
-			var result = YamlFileReaderHelper.DeserializeFromFile<YamlSectionsDefinition>(filePath);
+			var result = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -102,7 +111,7 @@ Activities:
 			var filePath = CreateTestYamlFile("section.yaml", yamlContent);
 
 			// Act
-			var result = YamlFileReaderHelper.DeserializeFromFile<YamlSection>(filePath);
+			var result = _yamlReader.DeserializeFromFile<YamlSection>(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -130,7 +139,7 @@ URL: https://example.com
 			var filePath = CreateTestYamlFile("url.yaml", yamlContent);
 
 			// Act
-			var result = YamlFileReaderHelper.DeserializeFromFile<YamlActivity>(filePath);
+			var result = _yamlReader.DeserializeFromFile<YamlActivity>(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -155,7 +164,7 @@ URL: https://example.com
 			var filePath = CreateTestYamlFile("url.yaml", yamlContent);
 
 			// Act
-			var result = YamlFileReaderHelper.DeserializeFromFile<YamlUrl>(filePath);
+			var result = _yamlReader.DeserializeFromFile<YamlUrl>(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -179,7 +188,7 @@ FilePath: files/test.txt
 			var filePath = CreateTestYamlFile("file.yaml", yamlContent);
 
 			// Act
-			var result = YamlFileReaderHelper.DeserializeFromFile<YamlFile>(filePath);
+			var result = _yamlReader.DeserializeFromFile<YamlFile>(filePath);
 
 			// Assert
 			Assert.Multiple(() =>
@@ -205,7 +214,7 @@ Content:
 			var filePath = CreateTestYamlFile("label.yaml", yamlContent);
 
 			// Act
-			var result = YamlFileReaderHelper.DeserializeFromFile<YamlTextMediaArea>(filePath);
+			var result = _yamlReader.DeserializeFromFile<YamlTextMediaArea>(filePath);
 
 			// Assert
 			Assert.Multiple(() =>

@@ -16,7 +16,8 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 		{
 			// Setup a mock activity reader that returns null or a simple activity
 			_mockActivityReader = Substitute.For<IActivityReader>();
-			_reader = new YamlSectionReader(_mockActivityReader);
+			var mockYamlFileReader = Substitute.For<IYamlFileReaderHelper>();
+				_reader = new YamlSectionReader(_mockActivityReader, mockYamlFileReader);
 
 			ValueKeeper.CurrentSectionId = 1;
 		}

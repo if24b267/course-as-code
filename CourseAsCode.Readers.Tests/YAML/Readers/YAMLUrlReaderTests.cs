@@ -1,5 +1,7 @@
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
+using CourseAsCode.Readers.YAML.Model;
 using CourseAsCode.Readers.YAML.Readers;
 
 namespace CourseAsCode.Readers.Tests.YAML.Readers
@@ -12,7 +14,32 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 		[SetUp]
 		public void Setup()
 		{
-			_reader = new YamlUrlReader();
+			var mockYamlFileReader = Substitute.For<IYamlFileReaderHelper>();
+				mockYamlFileReader.DeserializeFromFile<YamlUrl>(Arg.Any<string>())
+					.Returns(callInfo =>
+					{
+						var path = callInfo.Arg<string>();
+						if (!File.Exists(path)) return null;
+						
+						var content = File.ReadAllText(path);
+						if (content.Contains("URL:"))
+						{
+							return new YamlUrl
+							{
+								Name = "Test URL",
+								Description = "URL Description",
+								URL = "https://example.com"
+							};
+						}
+						
+						// Throw exception for invalid files
+						throw new YamlDotNet.Core.YamlException("Required property missing");
+					});
+				
+				mockYamlFileReader.ValidateObject(Arg.Any<object>())
+					.Returns(new List<System.ComponentModel.DataAnnotations.ValidationResult>());
+				
+				_reader = new YamlUrlReader(mockYamlFileReader);
 			ValueKeeper.CurrentActivityId = 1;
 		}
 

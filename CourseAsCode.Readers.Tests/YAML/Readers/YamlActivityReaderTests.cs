@@ -30,7 +30,8 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 				ActivityId = 1
 			});
 
-			_reader = new YamlActivityReader(_mockFileReader, _mockTextMediaAreaReader, _mockUrlReader);
+			var mockYamlFileReader = Substitute.For<IYamlFileReaderHelper>();
+				_reader = new YamlActivityReader(_mockFileReader, _mockTextMediaAreaReader, _mockUrlReader, mockYamlFileReader);
 			ValueKeeper.CurrentActivityId = 1;
 		}
 
