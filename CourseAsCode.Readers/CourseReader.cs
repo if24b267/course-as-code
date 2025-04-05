@@ -4,6 +4,7 @@ using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 using CourseAsCode.Readers.YAML.Readers;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using CourseFormat = CourseAsCode.Readers.Enums.CourseFormat;
 
@@ -45,6 +46,11 @@ public class CourseReader : ICourseReader
 
 	public Course? ReadYaml(string coursePath)
 	{
+		var serviceCollection = new ServiceCollection();
+		ConfigureYamlServices(serviceCollection);
+		var serviceProvider = serviceCollection.BuildServiceProvider();
+		_logger.Debug("Service provider created.");
+
 		_logger.Debug($"Reading YAML course from {coursePath}");
 		ValueKeeper.CoursePath = coursePath;
 
@@ -132,5 +138,10 @@ public class CourseReader : ICourseReader
 		var shortName = $"{uppercaseLetters}{intValue}";
 		_logger.Debug($"Generated Shortname: {shortName}");
 		return shortName;
+	}
+
+	public static void ConfigureYamlServices(IServiceCollection services)
+	{
+
 	}
 }
