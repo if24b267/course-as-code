@@ -10,10 +10,12 @@ public class YamlSectionReader : ISectionReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private readonly IActivityReader _activityReader;
+	private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
 
-	public YamlSectionReader(IActivityReader activityReader)
+	public YamlSectionReader(IActivityReader activityReader, IYamlFileReaderHelper fileReaderHelper)
 	{
 		_activityReader = activityReader;
+		_yamlFileReaderHelper = fileReaderHelper;
 	}
 
 	public Section? Read(string modelObjectPath)
@@ -26,7 +28,7 @@ public class YamlSectionReader : ISectionReader
 		}
 
 		// TODO: this might error
-		var yamlSection = YamlFileReaderHelper.DeserializeFromFile<YamlSection>(modelObjectPath);
+		var yamlSection = _yamlFileReaderHelper.DeserializeFromFile<YamlSection>(modelObjectPath);
 		List<Activity> activities = [];
 
 		if (yamlSection.Activities != null && yamlSection.Activities.Any())

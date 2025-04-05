@@ -8,6 +8,12 @@ namespace CourseAsCode.Readers.YAML.Readers;
 public class YamlFileReader : IFileReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+	private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
+
+	public YamlFileReader(IYamlFileReaderHelper yamlFileReaderHelper)
+	{
+		_yamlFileReaderHelper = yamlFileReaderHelper;
+	}
 
 	public MoodleFile? Read(string modelObjectPath)
 	{
@@ -17,7 +23,7 @@ public class YamlFileReader : IFileReader
 			return null;
 		}
 
-		var yamlFile = YamlFileReaderHelper.DeserializeFromFile<YamlFile>(modelObjectPath);
+		var yamlFile = _yamlFileReaderHelper.DeserializeFromFile<YamlFile>(modelObjectPath);
 
 		var fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), yamlFile.FilePath));
 		yamlFile.FilePath = fullPath;

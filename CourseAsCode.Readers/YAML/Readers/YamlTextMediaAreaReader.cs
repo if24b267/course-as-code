@@ -10,6 +10,17 @@ namespace CourseAsCode.Readers.YAML.Readers;
 public class YamlTextMediaAreaReader : ITextAndMediaAreaReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+	private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
+
+	public YamlTextMediaAreaReader(IYamlFileReaderHelper yamlFileReaderHelper)
+	{
+		_yamlFileReaderHelper = yamlFileReaderHelper;
+	}
+
+	// For backward compatibility
+	public YamlTextMediaAreaReader() : this(new YamlFileReaderHelper())
+	{
+	}
 
 	public TextAndMediaArea? Read(string modelObjectPath)
 	{
@@ -19,7 +30,7 @@ public class YamlTextMediaAreaReader : ITextAndMediaAreaReader
 			return null;
 		}
 
-		var yamlFile = YamlFileReaderHelper.DeserializeFromFile<YamlTextMediaArea>(modelObjectPath);
+		var yamlFile = _yamlFileReaderHelper.DeserializeFromFile<YamlTextMediaArea>(modelObjectPath);
 
 		var finalContent = "";
 
