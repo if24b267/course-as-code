@@ -12,8 +12,10 @@ public class YamlActivityReader : ActivityReader<Activity>
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 	private YamlFileReader _fileReader = new YamlFileReader();
 	private YamlTextMediaAreaReader _textMediaAreaReader = new YamlTextMediaAreaReader();
+	private YAMLUrlReader _urlReader = new YAMLUrlReader();
 	public override Activity? Read(string modelObjectPath)
 	{
+		_logger.Debug($"Reading Activity from {modelObjectPath}");
 		if (!File.Exists(modelObjectPath))
 		{
 			_logger.Error($"File {modelObjectPath} does not exist.");
@@ -33,11 +35,14 @@ public class YamlActivityReader : ActivityReader<Activity>
 		{
 			// TODO: do we maybe want this in a different reader? -> problem: we dont follow the interface structure since we dont want to read the file twice
 			case ActivityType.URL:
-				return ConvertYamlActivityToMoodleUrl(yamlActivity);
+				_logger.Debug($"Reading URL activity from {modelObjectPath}");
+				return _urlReader.Read(modelObjectPath);
 			case ActivityType.FILE:
+				_logger.Debug($"Reading file activity from {modelObjectPath}");
 				return _fileReader.Read(modelObjectPath);
 			case ActivityType.LABEL:
 			case ActivityType.TEXTMEDIAAREA:
+				_logger.Debug($"Reading text media area activity from {modelObjectPath}");
 				return _textMediaAreaReader.Read(modelObjectPath);
 		}
 
@@ -45,6 +50,7 @@ public class YamlActivityReader : ActivityReader<Activity>
 		return null;
 	}
 
+	// TODO: remove this, but first make the defaults work better
 	private URL? ConvertYamlActivityToMoodleUrl(YamlActivity yamlActivity)
 	{
 		// TODO: improve activity reading -> every activity could for example have visible to students set

@@ -12,6 +12,6 @@ public class FileNode
 		Name = name;
 		IsDirectory = isDirectory;
 		Depth = depth;
-		Children = new List<FileNode>();
+		Children = [];
 	}
 }
