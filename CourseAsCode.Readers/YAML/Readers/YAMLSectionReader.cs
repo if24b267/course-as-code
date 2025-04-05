@@ -1,19 +1,24 @@
 ﻿using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
-using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.YAML.Readers;
 
-public class YAMLSectionReader : SectionReader<Section>
+public class YamlSectionReader : ISectionReader
 {
 	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-	// TODO: dependency injection
-	private YamlActivityReader _activityReader = new YamlActivityReader();
+	private readonly IActivityReader _activityReader;
 
-	public override Section? Read(string modelObjectPath)
+	public YamlSectionReader(IActivityReader activityReader)
 	{
+		_activityReader = activityReader;
+	}
+
+	public Section? Read(string modelObjectPath)
+	{
+		_logger.Debug($"Reading {modelObjectPath}");
 		if (!File.Exists(modelObjectPath))
 		{
 			_logger.Error($"File {modelObjectPath} does not exist.");
@@ -28,6 +33,7 @@ public class YAMLSectionReader : SectionReader<Section>
 		{
 			foreach (var yamlSectionActivity in yamlSection.Activities)
 			{
+				_logger.Debug($"Reading activity {yamlSectionActivity.ActivityFilePath}");
 				var tempPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), yamlSectionActivity.ActivityFilePath));
 				if (tempPath == modelObjectPath)
 				{

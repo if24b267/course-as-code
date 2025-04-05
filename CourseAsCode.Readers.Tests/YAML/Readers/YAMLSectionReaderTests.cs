@@ -1,27 +1,22 @@
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Readers;
-using System.Reflection;
 
 namespace CourseAsCode.Readers.Tests.YAML.Readers
 {
 	[TestFixture]
 	public class YAMLSectionReaderTests : TestBase
 	{
-		private YAMLSectionReader _reader;
-		private YamlActivityReader _mockActivityReader;
+		private YamlSectionReader _reader;
+		private IActivityReader _mockActivityReader;
 
 		[SetUp]
 		public void Setup()
 		{
 			// Setup a mock activity reader that returns null or a simple activity
-			_mockActivityReader = Substitute.For<YamlActivityReader>();
-			_reader = new YAMLSectionReader();
-
-			// Use reflection to set the private _activityReader field
-			var field = typeof(YAMLSectionReader).GetField("_activityReader",
-				 BindingFlags.NonPublic | BindingFlags.Instance);
-			field?.SetValue(_reader, _mockActivityReader);
+			_mockActivityReader = Substitute.For<IActivityReader>();
+			_reader = new YamlSectionReader(_mockActivityReader);
 
 			ValueKeeper.CurrentSectionId = 1;
 		}
