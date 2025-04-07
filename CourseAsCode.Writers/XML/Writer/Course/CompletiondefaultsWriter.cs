@@ -34,9 +34,6 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 {
                     writer.WriteStartDocument();
                     writer.WriteStartElement("course_completion_defaults");
-
-                    writer.WriteString("\n");
-
                     writer.WriteEndElement(); // Close </course_completion_defaults>
                     writer.WriteEndDocument();
                 }

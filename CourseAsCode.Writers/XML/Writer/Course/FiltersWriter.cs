@@ -35,11 +35,9 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                     writer.WriteStartElement("filters");
 
                     writer.WriteStartElement("filter_actives");
-                    writer.WriteString(" ");
                     writer.WriteEndElement(); // Close </filter_actives>
 
                     writer.WriteStartElement("filter_configs");
-                    writer.WriteString(" ");
                     writer.WriteEndElement(); // Close </filter_configs>
 
                     writer.WriteEndElement(); // Close </filters>
