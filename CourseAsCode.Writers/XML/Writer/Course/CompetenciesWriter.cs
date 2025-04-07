@@ -36,11 +36,9 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                     writer.WriteStartElement("course_competencies");
 
                     writer.WriteStartElement("competencies");
-                    writer.WriteString("\n  ");
                     writer.WriteEndElement(); // Close </competencies>
 
                     writer.WriteStartElement("user_competencies");
-                    writer.WriteString("\n  ");
                     writer.WriteEndElement(); // Close </user_competencies>
 
                     writer.WriteEndElement(); // Close </course_competencies>

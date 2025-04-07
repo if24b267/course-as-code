@@ -18,7 +18,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Default constructor using default implementations for dependencies
         /// </summary>
-        public CourseWriter() 
+        public CourseWriter()
             : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _courseHelper = CourseHelper.Instance;
@@ -28,7 +28,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Constructor supporting Dependency Injection for Unit Testing
         /// </summary>
-        public CourseWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, 
+        public CourseWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger,
                             ICourseHelper courseHelper, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
@@ -81,16 +81,16 @@ namespace CourseAsCode.Writers.XML.Writer.Course
             {
                 { "shortname", course.ShortName },
                 { "fullname", course.FullName },
-                { "idnumber", course.SensibleDefaults.CourseIdNumber.ToString() ?? "" },
+                { "idnumber", course.SensibleDefaults.CourseIdNumber?.ToString() ?? "" },
                 { "summary", course.Summary ?? " " },
                 { "summaryformat", _helper.EnumIntegerToString(course.SystemDefaults.SummaryFormat) },
                 { "format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format) },
                 { "showgrades", course.SensibleDefaults.ShowGrades ? "1" : "0" },
-                { "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay.ToString() ?? "0" },
+                { "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
                 { "startdate", _helper.DateTimeToUnixTimestamp(course.StartDate) },
                 { "enddate", course.EndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)course.EndDate) : "0" },
                 { "marker", "0" },
-                { "maxbytes", course.SensibleDefaults.MaximumUploadSize.ToString() ?? "0" },
+                { "maxbytes", course.SensibleDefaults.MaximumUploadSize?.ToString() ?? "0" },
                 { "legacyfiles", course.SystemDefaults.UsesLegacyFiles ? "1" : "0" },
                 { "showreports", "0" },
                 { "visible", course.SensibleDefaults.VisibleToStudents ? "1" : "0" },
@@ -168,7 +168,10 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         {
             writer.WriteStartElement("customfields");
 
-            writer.WriteString(course.SystemDefaults.CustomFields ?? "\n  ");
+            if (!string.IsNullOrWhiteSpace(course.SystemDefaults.CustomFields))
+            {
+                writer.WriteString(course.SystemDefaults.CustomFields);
+            }
 
             writer.WriteEndElement(); // Close <customfields>
         }
