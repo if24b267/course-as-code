@@ -5,68 +5,79 @@ using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
 using System.Net.Mail;
+using NLog.Config;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
     [TestFixture]
     public class UsersWriterIntegrationTests
     {
-        private static readonly string XsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Schemas", "users.xsd");
+        private string XsdPath; 
         private Course _dummyCourse;
         private string _outputPath;
 
         [SetUp]
         public void SetUp()
         {
+            // Berechne den Pfad zur Schema-Datei users.xsd relativ zum Testverzeichnis
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            XsdPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "Schemas", "users.xsd"));
+
+            // Berechne den Pfad für das Ausgabe-Verzeichnis
+            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
+
+            // Stelle sicher, dass das Ausgabe-Verzeichnis existiert
+            Directory.CreateDirectory(_outputPath);
+
+            // Initialisiere den Dummy-Kurs
             _dummyCourse = new Course
             {
                 FullName = "Test Course",
                 ShortName = "TC",
                 EnrolledUsers = new List<User>
+        {
+            new User
+            {
+                Username = "testuser",
+                SystemDefaults = new User.SystemDefaultsUser
                 {
-                    new User
-                    {
-                        Username = "testuser",
-                        SystemDefaults = new User.SystemDefaultsUser
-                        {
-                            Id = 1,
-                            ExternalId = 12345,
-                            LastIP = System.Net.IPAddress.Parse("127.0.0.1"),
-                            DescriptionFormat = FormattingFormat.HTML,
-                            IsConfirmed = true,
-                            AcceptedPolicy = true,
-                            IsDeleted = false,
-                            TimeCreated = DateTimeOffset.UtcNow.DateTime,
-                            TimeModified = DateTimeOffset.UtcNow.DateTime
-                        },
-                        EMail = new MailAddress("testuser@example.com"),
-                        FirstName = "Test",
-                        LastName = "User",
-                        City = "Test City",
-                        SensibleDefaults = new User.SensibleDefaultsUser
-                        {
-                            PhoneNumber = "123456789",
-                            MobilePhoneNumber = "987654321",
-                            Department = "Test Department",
-                            Institution = "Test Institution",
-                            Address = "Test Address",
-                            FirstNamePhonetic = "T",
-                            LastNamePhonetic = "U",
-                            MiddleName = "Middle",
-                            AlternateName = "Alt"
-                        },
-                        UserPreferences = new User.UserPreferencesClass
-                        {
-                            PreferredLanguage = Language.English,
-                            EMailDigestType = EMailDigestType.NoDigest,
-                            EMailVisibility = EMailVisibility.VisibleToEveryone,
-                            AutoSubscribeToForums = true,
-                            TrackReadPosts = true
-                        }
-                    }
+                    Id = 1,
+                    ExternalId = 12345,
+                    LastIP = System.Net.IPAddress.Parse("127.0.0.1"),
+                    DescriptionFormat = FormattingFormat.HTML,
+                    IsConfirmed = true,
+                    AcceptedPolicy = true,
+                    IsDeleted = false,
+                    TimeCreated = DateTimeOffset.UtcNow.DateTime,
+                    TimeModified = DateTimeOffset.UtcNow.DateTime
+                },
+                EMail = new MailAddress("testuser@example.com"),
+                FirstName = "Test",
+                LastName = "User",
+                City = "Test City",
+                SensibleDefaults = new User.SensibleDefaultsUser
+                {
+                    PhoneNumber = "123456789",
+                    MobilePhoneNumber = "987654321",
+                    Department = "Test Department",
+                    Institution = "Test Institution",
+                    Address = "Test Address",
+                    FirstNamePhonetic = "T",
+                    LastNamePhonetic = "U",
+                    MiddleName = "Middle",
+                    AlternateName = "Alt"
+                },
+                UserPreferences = new User.UserPreferencesClass
+                {
+                    PreferredLanguage = Language.English,
+                    EMailDigestType = EMailDigestType.NoDigest,
+                    EMailVisibility = EMailVisibility.VisibleToEveryone,
+                    AutoSubscribeToForums = true,
+                    TrackReadPosts = true
                 }
+            }
+        }
             };
-            _outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Documentation", "out", "moodleCourse");
         }
 
         [Test]
