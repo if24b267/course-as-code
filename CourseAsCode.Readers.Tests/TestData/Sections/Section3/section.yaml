@@ -1,0 +1,7 @@
+SectionName: Test Section 3
+Summary: Test section 3 summary
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/url3.yaml
+  - ActivityFilePath: Activities/file3.yaml
+  - ActivityFilePath: Activities/label3.yaml
