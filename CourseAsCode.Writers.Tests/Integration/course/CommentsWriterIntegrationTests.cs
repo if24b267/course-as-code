@@ -16,8 +16,12 @@ namespace CourseAsCode.Writers.Tests.Integration
         [SetUp]
         public void SetUp()
         {
-            XsdPath = PathHelper.GetAbsolutePath("..\\..\\..\\Schemas\\course\\comments.xsd");
-            _outputPath = PathHelper.EnsureDirectoryExists("..\\..\\..\\..\\Documentation\\out\\moodleCourse");
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            XsdPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "Schemas", "course", "comments.xsd"));
+
+            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
+
+            Directory.CreateDirectory(_outputPath);
 
             _dummyCourse = new Course
             {
