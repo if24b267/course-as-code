@@ -157,9 +157,50 @@ Content:
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result, Is.TypeOf<TextAndMediaArea>());
 
-                // Verify TextMediaArea reader was called
-                _mockTextMediaAreaReader.Received(1).Read(filePath);
+				// Verify TextMediaArea reader was called
+				_mockTextMediaAreaReader.Received(1).Read(filePath);
+			});
+		}
+
+        [Test]
+        public void Read_MarkdownFileActivity_ReturnsMoodleFile()
+        {
+            // Arrange
+            var yamlContent = @"
+Type: MARKDOWN
+Name: example
+Description: Markdown example
+FilePath: files/example.md
+";
+            var filePath = CreateTestYamlFile("file3.yaml", yamlContent);
+
+            // Configure mock file reader to return a valid MoodleFile object
+            _mockFileReader.Read(Arg.Any<string>()).Returns(new MoodleFile
+            {
+                Name = "example",
+                Description = "Markdown example",
+                FilePath = "files/example.md",
+                ActivityId = 1
+            });
+
+            // Act
+            var result = _mockFileReader.Read(filePath);
+
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null, "The result should not be null.");
+                Assert.That(result, Is.TypeOf<MoodleFile>(), "The result should be of type MoodleFile.");
+
+                var moodleFile = (MoodleFile)result;
+                Assert.That(moodleFile.Name, Is.EqualTo("example"), "The name should match the YAML file.");
+                Assert.That(moodleFile.Description, Is.EqualTo("Markdown example"), "The description should match the YAML file.");
+                Assert.That(moodleFile.FilePath, Is.EqualTo("files/example.md"), "The file path should match the YAML file.");
+
+                // Verify that the file reader was called
+                _mockFileReader.Received(1).Read(filePath);
             });
         }
+
     }
 }
