@@ -24,7 +24,11 @@ namespace CourseAsCode.Writers.Tests.Integration
                 StartDate = DateTime.UtcNow,
                 EndDate = DateTime.UtcNow.AddMonths(1)
             };
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
+            _outputPath = Path.GetFullPath("..\\..\\..\\..\\Documentation\\out\\moodleCourse\\");
+            if (!Directory.Exists(_outputPath))
+            {
+                Directory.CreateDirectory(_outputPath);
+            }
         }
 
         [Test]
