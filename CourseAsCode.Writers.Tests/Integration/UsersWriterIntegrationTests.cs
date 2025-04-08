@@ -19,10 +19,17 @@ namespace CourseAsCode.Writers.Tests.Integration
         [SetUp]
         public void SetUp()
         {
-            XsdPath = PathHelper.GetAbsolutePath("..\\..\\..\\Schemas\\users.xsd");
+            // Berechne den Pfad zur Schema-Datei users.xsd relativ zum Testverzeichnis
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            XsdPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "Schemas", "users.xsd"));
 
-            _outputPath = PathHelper.EnsureDirectoryExists("..\\..\\..\\..\\Documentation\\out\\moodleCourse");
+            // Berechne den Pfad für das Ausgabe-Verzeichnis
+            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
+            // Stelle sicher, dass das Ausgabe-Verzeichnis existiert
+            Directory.CreateDirectory(_outputPath);
+
+            // Initialisiere den Dummy-Kurs
             _dummyCourse = new Course
             {
                 FullName = "Test Course",
