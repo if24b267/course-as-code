@@ -1,3 +1,4 @@
+using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using NUnit.Framework;
@@ -14,7 +15,11 @@ namespace CourseAsCode.Writers.Tests.Integration
         [SetUp]
         public void SetUp()
         {
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
+            _outputPath = Path.GetFullPath("..\\..\\..\\..\\Documentation\\out\\moodleCourse\\");
+            if (!Directory.Exists(_outputPath))
+            {
+                Directory.CreateDirectory(_outputPath);
+            }
         }
 
         [Test]
@@ -51,7 +56,3 @@ namespace CourseAsCode.Writers.Tests.Integration
         }
     }
 }
-
-
-
-
