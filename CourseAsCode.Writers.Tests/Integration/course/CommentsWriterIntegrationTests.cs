@@ -9,13 +9,16 @@ namespace CourseAsCode.Writers.Tests.Integration
     [TestFixture]
     public class CommentsWriterIntegrationTests
     {
-        private const string XsdPath = "..\\..\\..\\Schemas\\course\\comments.xsd";
+        private string XsdPath;
         private Course _dummyCourse;
         private string _outputPath;
 
         [SetUp]
         public void SetUp()
         {
+            XsdPath = PathHelper.GetAbsolutePath("..\\..\\..\\Schemas\\course\\comments.xsd");
+            _outputPath = PathHelper.EnsureDirectoryExists("..\\..\\..\\..\\Documentation\\out\\moodleCourse");
+
             _dummyCourse = new Course
             {
                 FullName = "Test Course",
@@ -24,7 +27,6 @@ namespace CourseAsCode.Writers.Tests.Integration
                 StartDate = DateTime.UtcNow,
                 EndDate = DateTime.UtcNow.AddMonths(1)
             };
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
         }
 
         [Test]

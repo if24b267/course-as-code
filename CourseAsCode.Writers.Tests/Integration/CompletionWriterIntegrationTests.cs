@@ -9,19 +9,21 @@ namespace CourseAsCode.Writers.Tests.Integration
     [TestFixture]
     public class CompletionWriterIntegrationTests
     {
-        private const string XsdPath = "..\\..\\..\\Schemas\\completion.xsd";
+        private string XsdPath;
         private Course _dummyCourse;
         private string _outputPath;
 
         [SetUp]
         public void SetUp()
         {
+            XsdPath = PathHelper.GetAbsolutePath("..\\..\\..\\Schemas\\completion.xsd");
+            _outputPath = PathHelper.EnsureDirectoryExists("..\\..\\..\\..\\Documentation\\out\\moodleCourse");
+
             _dummyCourse = new Course
             {
                 FullName = "Test Course",
                 ShortName = "TC"
             };
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
         }
 
         [Test]

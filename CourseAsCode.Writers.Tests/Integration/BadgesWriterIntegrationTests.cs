@@ -9,13 +9,15 @@ namespace CourseAsCode.Writers.Tests.Integration
     [TestFixture]
     public class BadgesWriterIntegrationTests
     {
-        private const string XsdPath = "..\\..\\..\\Schemas\\badges.xsd";
+        private string XsdPath;
         private string _outputPath;
 
         [SetUp]
         public void SetUp()
         {
-            _outputPath = Path.GetFullPath("..\\..\\..\\..\\Documentation\\out\\moodleCourse\\");
+            XsdPath = PathHelper.GetAbsolutePath("..\\..\\..\\Schemas\\badges.xsd");
+            _outputPath = PathHelper.EnsureDirectoryExists("..\\..\\..\\..\\Documentation\\out\\moodleCourse");
+
             if (!Directory.Exists(_outputPath))
             {
                 Directory.CreateDirectory(_outputPath);

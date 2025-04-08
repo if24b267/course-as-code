@@ -11,13 +11,20 @@ namespace CourseAsCode.Writers.Tests.Integration
     [TestFixture]
     public class MoodleBackupWriterIntegrationTests
     {
-        private const string XsdPath = "..\\..\\..\\Schemas\\moodleBackup.xsd";
+        private string XsdPath;
         private Course _dummyCourse;
         private string _outputPath;
 
         [SetUp]
         public void SetUp()
         {
+            // Berechne den Pfad zur Schema-Datei moodleBackup.xsd
+            XsdPath = PathHelper.GetAbsolutePath("..\\..\\..\\Schemas\\moodleBackup.xsd");
+
+            // Berechne und stelle sicher, dass das Ausgabe-Verzeichnis existiert
+            _outputPath = PathHelper.EnsureDirectoryExists("..\\..\\..\\..\\Documentation\\out\\moodleCourse");
+
+            // Initialisiere den Dummy-Kurs
             _dummyCourse = new Course
             {
                 FullName = "Test Course",
@@ -50,8 +57,6 @@ namespace CourseAsCode.Writers.Tests.Integration
                     }
                 }
             };
-
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
         }
 
         [Test]
