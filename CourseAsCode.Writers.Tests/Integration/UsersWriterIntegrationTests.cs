@@ -11,7 +11,7 @@ namespace CourseAsCode.Writers.Tests.Integration
     [TestFixture]
     public class UsersWriterIntegrationTests
     {
-        private const string XsdPath = "..\\..\\..\\Schemas\\users.xsd";
+        private static readonly string XsdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Schemas", "users.xsd");
         private Course _dummyCourse;
         private string _outputPath;
 
@@ -66,7 +66,7 @@ namespace CourseAsCode.Writers.Tests.Integration
                     }
                 }
             };
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
+            _outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Documentation", "out", "moodleCourse");
         }
 
         [Test]
