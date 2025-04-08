@@ -11,13 +11,16 @@ namespace CourseAsCode.Writers.Tests.Integration
     [TestFixture]
     public class RoleAssignmentsWriterIntegrationTests
     {
-        private const string XsdPath = "..\\..\\..\\Schemas\\course\\roles.xsd";
+        private string XsdPath;
         private Course _dummyCourse;
         private string _outputPath;
 
         [SetUp]
         public void SetUp()
         {
+            XsdPath = PathHelper.GetAbsolutePath("..\\..\\..\\Schemas\\course\\roles.xsd");
+            _outputPath = PathHelper.EnsureDirectoryExists("..\\..\\..\\..\\Documentation\\out\\moodleCourse");
+
             _dummyCourse = new Course
             {
                 FullName = "Test Course",
@@ -43,7 +46,6 @@ namespace CourseAsCode.Writers.Tests.Integration
                     }
                 }
             };
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
         }
 
         [Test]

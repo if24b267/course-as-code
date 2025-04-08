@@ -10,45 +10,49 @@ namespace CourseAsCode.Writers.Tests.Integration
     [TestFixture]
     public class RolesWriterIntegrationTests
     {
-        private const string XsdPath = "..\\..\\..\\Schemas\\role.xsd";
+        private string XsdPath;
         private Course _dummyCourse;
         private string _outputPath;
 
         [SetUp]
         public void SetUp()
         {
+            XsdPath = PathHelper.GetAbsolutePath("..\\..\\..\\Schemas\\role.xsd");
+
+            _outputPath = PathHelper.EnsureDirectoryExists("..\\..\\..\\..\\Documentation\\out\\moodleCourse");
+
             _dummyCourse = new Course
             {
                 FullName = "Test Course",
                 ShortName = "TC",
                 Roles = new List<Role>
+        {
+            new Role
+            {
+                ShortName = "student",
+                LocalName = "Student",
+                Description = "A student role",
+                Archetype = Archetype.Student,
+                SystemDefaults = new Role.SystemDefaultsRole
                 {
-                    new Role
-                    {
-                        ShortName = "student",
-                        LocalName = "Student",
-                        Description = "A student role",
-                        Archetype = Archetype.Student, 
-                        SystemDefaults = new Role.SystemDefaultsRole
-                        {
-                            RoleId = 1
-                        }
-                    },
-                    new Role
-                    {
-                        ShortName = "teacher",
-                        LocalName = "Teacher",
-                        Description = "A teacher role",
-                        Archetype = Archetype.EditingTeacher, 
-                        SystemDefaults = new Role.SystemDefaultsRole
-                        {
-                            RoleId = 2
-                        }
-                    }
+                    RoleId = 1
                 }
-            };
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
+            },
+            new Role
+            {
+                ShortName = "teacher",
+                LocalName = "Teacher",
+                Description = "A teacher role",
+                Archetype = Archetype.EditingTeacher,
+                SystemDefaults = new Role.SystemDefaultsRole
+                {
+                    RoleId = 2
+                }
+            }
         }
+            };
+        }
+
 
         [Test]
         public void WriteRoles_GeneratesValidXml()
