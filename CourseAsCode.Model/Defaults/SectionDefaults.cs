@@ -10,17 +10,16 @@ public static class SectionDefaults
     public const string? DEFAULT_SECTION_SUMMARY = null;
     public const bool DEFAULT_VISIBLE_TO_STUDENTS = true;
     public static readonly List<Activity> DEFAULT_ACTIVITIES = new List<Activity>();
-    
+
     // Sensible Defaults
-    
+
     // System Defaults
     public const int DEFAULT_SECTION_ID = 1;
     public const string DEFAULT_PATH_TO_SECTION = "sections/section_1";
     public const FormattingFormat DEFAULT_SUMMARY_FORMAT = FormattingFormat.HTML;
     public static readonly DateTime DEFAULT_LAST_MODIFIED = DateTime.Now;
     public static readonly Component? DEFAULT_COMPONENT = null;
-    
-    
+
     /// <summary>
     /// Returns a section object with all properties set to the default values
     /// </summary>
@@ -39,8 +38,8 @@ public static class SectionDefaults
                 PathToSection = DEFAULT_PATH_TO_SECTION,
                 SummaryFormat = DEFAULT_SUMMARY_FORMAT,
                 LastModified = DEFAULT_LAST_MODIFIED,
-                Component = DEFAULT_COMPONENT
-            }
+                Component = DEFAULT_COMPONENT,
+            },
         };
     }
 }

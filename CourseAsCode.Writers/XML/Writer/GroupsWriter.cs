@@ -10,16 +10,18 @@ namespace CourseAsCode.Writers.XML.Writer
         private const string DEFAULT_GROUPS_RELATIVE_PATH = "groups.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public GroupsWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public GroupsWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public GroupsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger) : base(xmlWriterFactory, logger)
+        public GroupsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+            : base(xmlWriterFactory, logger)
         {
         }
 
@@ -51,10 +53,10 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// Writes the `groupcustomfields` section of the groups.xml file
+        /// Writes the `groupcustomfields` section of the groups.xml file.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">Initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">Initialized Moodle Course.</param>
         private void WriteGroupCustomFieldsSection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("groupcustomfields");
@@ -63,10 +65,10 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// Writes the `groupings` section of the groups.xml file
+        /// Writes the `groupings` section of the groups.xml file.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">Initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">Initialized Moodle Course.</param>
         private void WriteGroupingsSection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("groupings");

@@ -27,8 +27,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             FormattingFormat = FormattingFormat.Markdown,
             SystemDefaults = new TextAndMediaArea.SystemDefaultsTextAndMediaArea()
             {
-                ModuleId = 101, 
-                ModuleName = "label"
+                ModuleId = 101,
+                ModuleName = "label",
             },
         };
 
@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             // Act
             _labelWriter.WriteLabel(DEFAULT_DUMMY_OUTPUT_PATH, _dummyLabel);
             string output = _testFactory.StringWriter.ToString();
-            
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(output);
 
@@ -91,7 +91,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             // Act
             _labelWriter.WriteLabel(DEFAULT_DUMMY_OUTPUT_PATH, _dummyLabel);
             string output = _testFactory.StringWriter.ToString();
-            
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(output);
 
@@ -127,7 +127,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             _labelWriter = new LabelWriter(throwingFactory, _testLogger, _fakeGeneralHelper);
 
             // Act & Assert: Verify that an exception is thrown and that an error log is recorded.
-            Assert.Throws<InvalidOperationException>(() => 
+            Assert.Throws<InvalidOperationException>(() =>
                 _labelWriter.WriteLabel(DEFAULT_DUMMY_OUTPUT_PATH, _dummyLabel));
 
             _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s =>

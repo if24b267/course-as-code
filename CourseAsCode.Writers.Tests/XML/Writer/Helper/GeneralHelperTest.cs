@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
@@ -15,7 +15,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         {
             Zero,
             One,
-            Two
+            Two,
         }
 
         [SetUp]
@@ -31,7 +31,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
             var course = new Model.Course
             {
                 ShortName = "TestCourse",
-                SystemDefaults = new Model.Course.SystemDefaultsCourse { Id = 123 }
+                SystemDefaults = new Model.Course.SystemDefaultsCourse { Id = 123 },
             };
 
             // Act
@@ -40,7 +40,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
             // Assert:
             // Expected format: backup-moodle2-course-<courseId>-<shortname>-<yyyyMMdd>-<HHmm>.mbz
             string pattern = $@"^backup-moodle2-course-{course.SystemDefaults.Id}-{course.ShortName}-\d{{8}}-\d{{4}}\.mbz$";
-            Assert.IsTrue(Regex.IsMatch(backupName, pattern), 
+            Assert.IsTrue(
+                Regex.IsMatch(backupName, pattern),
                 $"Backup name '{backupName}' does not match the expected pattern");
         }
 

@@ -1,7 +1,8 @@
 using System.Xml;
-using NLog;
+
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -12,7 +13,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public FiltersWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public FiltersWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 

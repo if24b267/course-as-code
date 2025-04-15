@@ -4,22 +4,22 @@ using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.Tests.YAML
 {
-	[TestFixture]
-	public class ComplexYamlStructureTests : TestBase
-	{
-		private IYamlFileReaderHelper _yamlReaderHelper;
+    [TestFixture]
+    public class ComplexYamlStructureTests : TestBase
+    {
+        private IYamlFileReaderHelper _yamlReaderHelper;
 
-		[SetUp]
-		public void Setup()
-		{
-			_yamlReaderHelper = new YamlFileReaderHelper();
-		}
+        [SetUp]
+        public void Setup()
+        {
+            _yamlReaderHelper = new YamlFileReaderHelper();
+        }
 
-		[Test]
-		public void DeserializeFromContent_DeepNestedStructure_SuccessfullyParses()
-		{
-			// Arrange - a valid but deeply nested structure
-			var yamlContent = @"
+        [Test]
+        public void DeserializeFromContent_DeepNestedStructure_SuccessfullyParses()
+        {
+            // Arrange - a valid but deeply nested structure
+            var yamlContent = @"
 SectionName: Deep Nested Section
 VisibleToStudents: true
 Activities:
@@ -33,27 +33,27 @@ Activities:
   - ActivityFilePath: activity2.yaml
 ";
 
-			// Act & Assert - since YamlSection doesn't have an Extra property, this should be ignored
-			// due to the IgnoreUnmatchedProperties() configuration, but still parse successfully
-			var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
+            // Act & Assert - since YamlSection doesn't have an Extra property, this should be ignored
+            // due to the IgnoreUnmatchedProperties() configuration, but still parse successfully
+            var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
 
-			Assert.Multiple(() =>
-			{
-				Assert.That(result, Is.Not.Null);
-				Assert.That(result.SectionName, Is.EqualTo("Deep Nested Section"));
-				Assert.That(result.VisibleToStudents, Is.True);
-				Assert.That(result.Activities, Has.Count.EqualTo(2));
-				Assert.That(result.Activities[0].ActivityFilePath, Is.EqualTo("activity1.yaml"));
-				Assert.That(result.Activities[1].ActivityFilePath, Is.EqualTo("activity2.yaml"));
-			});
-		}
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.SectionName, Is.EqualTo("Deep Nested Section"));
+                Assert.That(result.VisibleToStudents, Is.True);
+                Assert.That(result.Activities, Has.Count.EqualTo(2));
+                Assert.That(result.Activities[0].ActivityFilePath, Is.EqualTo("activity1.yaml"));
+                Assert.That(result.Activities[1].ActivityFilePath, Is.EqualTo("activity2.yaml"));
+            });
+        }
 
-		[Test]
-		[Ignore("YamlDotNet doesn't properly support this i believe")]
-		public void DeserializeFromContent_AnchorAndAliasUsage_SuccessfullyParses()
-		{
-			// Arrange - using YAML anchors and aliases
-			var yamlContent = @"
+        [Test]
+        [Ignore("YamlDotNet doesn't properly support this i believe")]
+        public void DeserializeFromContent_AnchorAndAliasUsage_SuccessfullyParses()
+        {
+            // Arrange - using YAML anchors and aliases
+            var yamlContent = @"
 defaults: &defaults
   VisibleToStudents: true
   Summary: Default Summary
@@ -65,49 +65,49 @@ Activities:
   - ActivityFilePath: activity2.yaml
 ";
 
-			// Act
-			var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
+            // Act
+            var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
 
-			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(result, Is.Not.Null);
-				Assert.That(result.SectionName, Is.EqualTo("Section with Anchors"));
-				Assert.That(result.VisibleToStudents, Is.True);
-				Assert.That(result.Summary, Is.EqualTo("Default Summary"));
-				Assert.That(result.Activities, Has.Count.EqualTo(2));
-			});
-		}
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.SectionName, Is.EqualTo("Section with Anchors"));
+                Assert.That(result.VisibleToStudents, Is.True);
+                Assert.That(result.Summary, Is.EqualTo("Default Summary"));
+                Assert.That(result.Activities, Has.Count.EqualTo(2));
+            });
+        }
 
-		[Test]
-		public void DeserializeFromContent_ComplexSequenceStructure_SuccessfullyParses()
-		{
-			// Arrange - complex sequence structure
-			var yamlContent = @"
+        [Test]
+        public void DeserializeFromContent_ComplexSequenceStructure_SuccessfullyParses()
+        {
+            // Arrange - complex sequence structure
+            var yamlContent = @"
 Sections:
   - SectionPath: Sections/Section1
   - SectionPath: Sections/Section2
 ";
 
-			// Act
-			var result = _yamlReaderHelper.DeserializeFromContent<YamlSectionsDefinition>(yamlContent);
+            // Act
+            var result = _yamlReaderHelper.DeserializeFromContent<YamlSectionsDefinition>(yamlContent);
 
-			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(result, Is.Not.Null);
-				Assert.That(result.Sections, Has.Count.EqualTo(2));
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Sections, Has.Count.EqualTo(2));
 
-				Assert.That(result.Sections[0].SectionPath, Is.EqualTo("Sections/Section1"));
-				Assert.That(result.Sections[1].SectionPath, Is.EqualTo("Sections/Section2"));
-			});
-		}
+                Assert.That(result.Sections[0].SectionPath, Is.EqualTo("Sections/Section1"));
+                Assert.That(result.Sections[1].SectionPath, Is.EqualTo("Sections/Section2"));
+            });
+        }
 
-		[Test]
-		public void DeserializeFromContent_MultilineStringLiteral_SuccessfullyParses()
-		{
-			// Arrange - multiline string literal style
-			var yamlContent = @"
+        [Test]
+        public void DeserializeFromContent_MultilineStringLiteral_SuccessfullyParses()
+        {
+            // Arrange - multiline string literal style
+            var yamlContent = @"
 SectionName: Section with Multiline Summary
 VisibleToStudents: true
 Summary: |
@@ -120,25 +120,25 @@ Activities:
   - ActivityFilePath: activity1.yaml
 ";
 
-			// Act
-			var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
+            // Act
+            var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
 
-			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(result, Is.Not.Null);
-				Assert.That(result.SectionName, Is.EqualTo("Section with Multiline Summary"));
-				Assert.That(result.Summary, Does.Contain("This is a multiline summary."));
-				Assert.That(result.Summary, Does.Contain("Including indentation."));
-				Assert.That(result.Activities, Has.Count.EqualTo(1));
-			});
-		}
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.SectionName, Is.EqualTo("Section with Multiline Summary"));
+                Assert.That(result.Summary, Does.Contain("This is a multiline summary."));
+                Assert.That(result.Summary, Does.Contain("Including indentation."));
+                Assert.That(result.Activities, Has.Count.EqualTo(1));
+            });
+        }
 
-		[Test]
-		public void DeserializeFromContent_MultilineStringFolded_SuccessfullyParses()
-		{
-			// Arrange - multiline string folded style
-			var yamlContent = @"
+        [Test]
+        public void DeserializeFromContent_MultilineStringFolded_SuccessfullyParses()
+        {
+            // Arrange - multiline string folded style
+            var yamlContent = @"
 SectionName: Section with Folded Summary
 VisibleToStudents: true
 Summary: >
@@ -151,25 +151,26 @@ Activities:
   - ActivityFilePath: activity1.yaml
 ";
 
-			// Act
-			var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
+            // Act
+            var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
 
-			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(result, Is.Not.Null);
-				Assert.That(result.SectionName, Is.EqualTo("Section with Folded Summary"));
-				Assert.That(result.Summary,
-					Does.Contain("This is a multiline summary. Line breaks are converted to spaces."));
-				Assert.That(result.Activities, Has.Count.EqualTo(1));
-			});
-		}
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.SectionName, Is.EqualTo("Section with Folded Summary"));
+                Assert.That(
+                    result.Summary,
+                    Does.Contain("This is a multiline summary. Line breaks are converted to spaces."));
+                Assert.That(result.Activities, Has.Count.EqualTo(1));
+            });
+        }
 
-		[Test]
-		public void DeserializeFromContent_FlowMappingStyle_SuccessfullyParses()
-		{
-			// Arrange - using flow mapping style for activities
-			var yamlContent = @"
+        [Test]
+        public void DeserializeFromContent_FlowMappingStyle_SuccessfullyParses()
+        {
+            // Arrange - using flow mapping style for activities
+            var yamlContent = @"
 SectionName: Section with Flow Style
 VisibleToStudents: true
 Activities: [
@@ -178,25 +179,25 @@ Activities: [
 ]
 ";
 
-			// Act
-			var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
+            // Act
+            var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
 
-			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(result, Is.Not.Null);
-				Assert.That(result.SectionName, Is.EqualTo("Section with Flow Style"));
-				Assert.That(result.Activities, Has.Count.EqualTo(2));
-				Assert.That(result.Activities[0].ActivityFilePath, Is.EqualTo("activity1.yaml"));
-				Assert.That(result.Activities[1].ActivityFilePath, Is.EqualTo("activity2.yaml"));
-			});
-		}
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.SectionName, Is.EqualTo("Section with Flow Style"));
+                Assert.That(result.Activities, Has.Count.EqualTo(2));
+                Assert.That(result.Activities[0].ActivityFilePath, Is.EqualTo("activity1.yaml"));
+                Assert.That(result.Activities[1].ActivityFilePath, Is.EqualTo("activity2.yaml"));
+            });
+        }
 
-		[Test]
-		public void DeserializeFromContent_ComplexEscapedCharacters_SuccessfullyParses()
-		{
-			// Arrange - using various escaped characters
-			var yamlContent = @"
+        [Test]
+        public void DeserializeFromContent_ComplexEscapedCharacters_SuccessfullyParses()
+        {
+            // Arrange - using various escaped characters
+            var yamlContent = @"
 SectionName: ""Section with \""quoted\"" text and \\ backslashes""
 VisibleToStudents: true
 Summary: ""Unicode characters: \u2019 \u2018 and \t tab""
@@ -204,37 +205,37 @@ Activities:
   - ActivityFilePath: activity1.yaml
 ";
 
-			// Act
-			var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
+            // Act
+            var result = _yamlReaderHelper.DeserializeFromContent<YamlSection>(yamlContent);
 
-			// Assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(result, Is.Not.Null);
-				Assert.That(result.SectionName, Is.EqualTo("Section with \"quoted\" text and \\ backslashes"));
-				Assert.That(result.Summary, Does.Contain("Unicode characters:"));
-				Assert.That(result.Activities, Has.Count.EqualTo(1));
-			});
-		}
+            // Assert
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.SectionName, Is.EqualTo("Section with \"quoted\" text and \\ backslashes"));
+                Assert.That(result.Summary, Does.Contain("Unicode characters:"));
+                Assert.That(result.Activities, Has.Count.EqualTo(1));
+            });
+        }
 
-		[Test]
-		[Ignore("Multiline doesnt work")]
-		public void DeserializeFromContent_YamlWithExtremeLargeContent_ThrowsException()
-		{
-			// Create large content - generates a string that's several MB in size
-			var largeStringBuilder = new System.Text.StringBuilder();
-			largeStringBuilder.AppendLine("SectionName: Large Content Test");
-			largeStringBuilder.AppendLine("Summary: |");
+        [Test]
+        [Ignore("Multiline doesnt work")]
+        public void DeserializeFromContent_YamlWithExtremeLargeContent_ThrowsException()
+        {
+            // Create large content - generates a string that's several MB in size
+            var largeStringBuilder = new System.Text.StringBuilder();
+            largeStringBuilder.AppendLine("SectionName: Large Content Test");
+            largeStringBuilder.AppendLine("Summary: |");
 
-			// Add approximately 5MB of content to trigger a memory issue
-			for (int i = 0; i < 500000; i++)
-			{
-				largeStringBuilder.AppendLine($"  Line {i}: {Guid.NewGuid()}");
-			}
+            // Add approximately 5MB of content to trigger a memory issue
+            for (int i = 0; i < 500000; i++)
+            {
+                largeStringBuilder.AppendLine($"  Line {i}: {Guid.NewGuid()}");
+            }
 
-			// Act & Assert - this should throw an exception due to excessive size
-			Assert.Throws<Exception>(() =>
-				_yamlReaderHelper.DeserializeFromContent<YamlSection>(largeStringBuilder.ToString()));
-		}
-	}
+            // Act & Assert - this should throw an exception due to excessive size
+            Assert.Throws<Exception>(() =>
+                _yamlReaderHelper.DeserializeFromContent<YamlSection>(largeStringBuilder.ToString()));
+        }
+    }
 }

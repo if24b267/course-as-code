@@ -10,16 +10,18 @@ namespace CourseAsCode.Writers.XML.Writer
         private const string DEFAULT_GRADEHISTORY_RELATIVE_PATH = "gradehistory.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public GradehistoryWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public GradehistoryWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public GradehistoryWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger) : base(xmlWriterFactory, logger)
+        public GradehistoryWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+            : base(xmlWriterFactory, logger)
         {
         }
 
@@ -50,10 +52,10 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// Writes the `grade_grades` section of the gradehistory.xml file
+        /// Writes the `grade_grades` section of the gradehistory.xml file.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">Initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">Initialized Moodle Course.</param>
         private void WriteGradeGradesSection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("grade_grades");

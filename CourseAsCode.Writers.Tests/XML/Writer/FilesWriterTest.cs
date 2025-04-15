@@ -23,14 +23,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private FilesWriter _filesWriter;
         private Model.Course _dummyCourse;
         private const string DEFAULT_OUTPUT_PATH = "dummyOutput";
-        
+
         [SetUp]
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
             _fileService = Substitute.For<IFileService>();
             _testLogger = Substitute.For<ILogger>();
-            
+
             _fakeFileHelper = Substitute.For<IFileHelper>();
             _fakeFileHelper.GetComponentFromEnum(Arg.Any<Component>()).Returns("course");
             _fakeFileHelper.GetFileAreaFromEnum(Arg.Any<FileArea>()).Returns("content");
@@ -39,7 +39,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
             _fakeGeneralHelper.EnumIntegerToString(Arg.Any<Enum>()).Returns("70");
             _fakeGeneralHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("123456789");
-            
+
             _filesWriter = new FilesWriter(_testFactory, _testLogger, _fakeFileHelper, _fakeGeneralHelper, _fileService); // Inject dependencies
 
             // Create a dummy course with one section
@@ -47,7 +47,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var section = new Section
             {
                 Activities = new List<Activity>(),
-                Name = "TestSection"
+                Name = "TestSection",
             };
             _dummyCourse.Sections = new List<Section> { section };
         }
@@ -69,7 +69,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 doc.LoadXml(output);
             });
         }
-        
+
         [Test]
         public void WriteFiles_RootElementIsFiles()
         {
@@ -86,7 +86,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("files"));
         }
-        
+
         [Test]
         public void WriteFiles_LogsDebugOnSuccess()
         {
@@ -95,7 +95,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
-            
+
             // Assert: Verify that logger.Debug was called with a message containing "files.xml"
             _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("files.xml")));
         }
@@ -108,7 +108,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             {
                 Name = "TestFile",
                 FilePath = "nonexistent.txt",
-                FileName = "nonexistent.txt"
+                FileName = "nonexistent.txt",
             };
             _dummyCourse.Sections[0].Activities.Add(moodleFile);
 
@@ -122,11 +122,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: The produced XML should not contain a <file> element
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             var fileNode = doc.DocumentElement?.SelectSingleNode("file");
             Assert.IsNull(fileNode, "No <file> element should be written if file does not exist");
         }
-        
+
         [Test]
         public void WriteFiles_SkippingNonexistentFile_LogsWarning()
         {
@@ -135,7 +135,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             {
                 Name = "TestFile",
                 FilePath = "nonexistent.txt",
-                FileName = "nonexistent.txt"
+                FileName = "nonexistent.txt",
             };
             _dummyCourse.Sections[0].Activities.Add(moodleFile);
 
@@ -157,26 +157,26 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             {
                 Name = "TestFile",
                 FilePath = "throwOnOpen.txt",
-                FileName = "throwOnOpen.txt"
+                FileName = "throwOnOpen.txt",
             };
             _dummyCourse.Sections[0].Activities.Add(moodleFile);
-            
+
             // Configure IFileService: Exists returns true, but OpenRead throws.
             _fileService.Exists(moodleFile.FilePath).Returns(true);
             _fileService.OpenRead(moodleFile.FilePath).Returns(x => throw new IOException("Simulated OpenRead failure"));
-            
+
             // Act
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: No <file> element is written.
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             var fileNode = doc.DocumentElement?.SelectSingleNode("file");
             Assert.IsNull(fileNode, "No <file> element should be written if opening the file fails");
         }
-        
+
         [Test]
         public void WriteFiles_FileOpenThrows_LogsError()
         {
@@ -185,10 +185,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             {
                 Name = "TestFile",
                 FilePath = "throwOnOpen.txt",
-                FileName = "throwOnOpen.txt"
+                FileName = "throwOnOpen.txt",
             };
             _dummyCourse.Sections[0].Activities.Add(moodleFile);
-            
+
             // Configure IFileService: Exists returns true, but OpenRead throws.
             _fileService.Exists(moodleFile.FilePath).Returns(true);
             _fileService.OpenRead(moodleFile.FilePath).Returns(x => throw new IOException("Simulated OpenRead failure"));
@@ -206,7 +206,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
             _filesWriter = new FilesWriter(throwingFactory, _testLogger, _fakeFileHelper, _fakeGeneralHelper, _fileService); // Inject dependencies
-            
+
             // Act & Assert: An exception should be thrown
             Assert.Throws<InvalidOperationException>(() =>
                 _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH));

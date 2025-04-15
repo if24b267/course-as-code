@@ -4,5 +4,4 @@ namespace CourseAsCode.Readers.Interfaces;
 
 public interface ITextAndMediaAreaReader : IModelObjectReader<TextAndMediaArea>
 {
-
 }

@@ -1,7 +1,8 @@
 ﻿using System.Xml;
-using NLog;
+
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
 {
@@ -10,14 +11,15 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         private const string DEFAULT_COMMENTS_RELATIVE_PATH = "comments.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public ActivityCommentsWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public ActivityCommentsWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
         public ActivityCommentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
             : base(xmlWriterFactory, logger)
@@ -25,9 +27,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         }
 
         /// <summary>
-        /// Writes the comments.xml file required for an activity
+        /// Writes the comments.xml file required for an activity.
         /// </summary>
-        /// <param name="outputPath">The output directory path</param>
+        /// <param name="outputPath">The output directory path.</param>
         public void WriteComments(string outputPath)
         {
             try

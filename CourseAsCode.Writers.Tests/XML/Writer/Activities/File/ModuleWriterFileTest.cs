@@ -1,10 +1,9 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
@@ -51,7 +50,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             _dummyCourse = new Model.Course
             {
                 BackupMetadata = new BackupMetadata { MoodleVersion = MoodleVersion.Moodle450 },
-                Sections = new List<Section>()
+                Sections = new List<Section>(),
             };
 
             _dummySection = new Section
@@ -59,7 +58,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
                 Name = "Test Section",
                 SystemDefaults = new Section.SystemDefaultsSection()
                 {
-                    SectionId = 5
+                    SectionId = 5,
                 },
             };
             _dummyCourse.Sections.Add(_dummySection);
@@ -75,7 +74,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
                 GroupMode = GroupMode.NoGroups,
                 DisplayDescription = true,
                 Language = Language.English,
-                Tags = new List<string> { "filetag1", "filetag2" }
+                Tags = new List<string> { "filetag1", "filetag2" },
             };
         }
 
@@ -134,7 +133,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
 
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: Verify that (some of) the expected child elements are present in the <module> element
             // Full Schema Validation should be done in integration tests
             var moduleElement = doc.DocumentElement;
@@ -143,7 +142,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyFile.SystemDefaults.ModuleName));
             Assert.That(moduleElement?["sectionid"]?.InnerText, Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
             Assert.That(moduleElement?["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
-            
+
             // Inner elements from the mocked helper methods
             Assert.That(moduleElement?["added"]?.InnerText, Is.EqualTo("1234567890"));
             Assert.That(moduleElement?["lang"]?.InnerText, Is.EqualTo("en"));
@@ -181,7 +180,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Activity nonFileActivity = new TextAndMediaArea
             {
                 ActivityId = 20,
-                Name = "Not a File Activity"
+                Name = "Not a File Activity",
             };
 
             // Act & Assert: Passing a non-MoodleFile activity should throw an InvalidCastException.
