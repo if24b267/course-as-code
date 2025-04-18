@@ -99,7 +99,7 @@ public class Quiz : Activity
     
     public class SystemDefaultsQuiz
     {
-        public int ModuleId { get; set; } = 227; // TODO: Check if this is the same for all quizzes or a unique value per quiz
+        public int ModuleId { get; set; } = 227; // TODO: Check if this is the same for all quizzes or a unique value per quiz | Seems to be the same for all quizzes
         public string ModuleName { get; set; } = "quiz";
     }
 }

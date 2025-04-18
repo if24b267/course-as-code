@@ -75,7 +75,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                         { "modulename", urlObject.SystemDefaults.ModuleName },
                         { "sectionid", section.SystemDefaults.SectionId.ToString() },
                         { "sectionnumber", course.Sections.IndexOf(section).ToString() },
-                        { "idnumber", "$@NULL@$" },
+                        { "idnumber", string.Empty },
                         { "added", _generalHelper.DateTimeToUnixTimestamp(urlObject.TimeCreated) },
                         { "score", "0" },
                         { "indent", "0" },
