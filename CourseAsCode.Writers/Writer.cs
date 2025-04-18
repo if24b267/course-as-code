@@ -178,7 +178,11 @@ public class Writer : IWriter
 
         var testSection = new Section
         {
-            SystemDefaults = new Section.SystemDefaultsSection { SectionId = 253 },
+            SystemDefaults = new Section.SystemDefaultsSection
+            {
+                SectionId = 253,
+                PathToSection = "sections/section_3"
+            },
             Name = "Quiz Test Section",
             Activities = new List<Activity> { testQuiz }
         };
