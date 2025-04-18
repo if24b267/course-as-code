@@ -5,7 +5,7 @@ using CourseAsCode.Model.Questions.Helper;
 
 namespace CourseAsCode.Model.Questions.Types;
 
-public class MultipleChoiceQuestion
+public class MultipleChoiceQuestion : Question
 {
     [Description("Shuffle the order of answer choices per attempt")]
     public bool ShuffleAnswers { get; set; } = false;

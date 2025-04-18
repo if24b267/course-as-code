@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Globalization;
+using System.Xml;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Writers.XML.Helper;
@@ -124,8 +125,8 @@ public class QuizWriter : XmlWriterBase
             { "questionsperpage", quiz.NewPageThreshold.ToString() },
             { "navmethod", "free" }, // TODO: make configurable
             { "shuffleanswers", quiz.ShuffleWithinQuestions ? "1" : "0" },
-            { "sumgrades", (quiz.Questions?.Sum(q => q.DefaultMark) ?? 0.0f).ToString("0.00000") }, // TODO: Check if this is correct
-            { "grade", (10.0f).ToString(format:"0.00000") }, // TODO: Find out what this value is for (Maximum grade achievable?)
+            { "sumgrades", (quiz.Questions?.Sum(q => q.DefaultMark) ?? 0.0f).ToString("0.00000", CultureInfo.InvariantCulture) }, // TODO: Check if this is correct
+            { "grade", (10.0f).ToString(format:"0.00000", CultureInfo.InvariantCulture) }, // TODO: Find out what this value is for (Maximum grade achievable?)
             { "timecreated", _generalHelper.DateTimeToUnixTimestamp(quiz.TimeCreated) },
             { "timemodified", _generalHelper.DateTimeToUnixTimestamp(quiz.TimeModified) },
             { "password", quiz.Password ?? string.Empty },
@@ -234,7 +235,7 @@ public class QuizWriter : XmlWriterBase
                     { "page", CalculatePageNumber(slot, quiz.NewPageThreshold).ToString() }, // TODO: Check if this is correct
                     { "displaynumber", "$@NULL@$" },
                     { "requireprevious", "0" },
-                    { "maxmark", question.DefaultMark.ToString(format: "0.0000000") },
+                    { "maxmark", question.DefaultMark.ToString(format: "0.0000000", CultureInfo.InvariantCulture) },
                     { "quizgradeitemid", "$@NULL@$" }
                 };
                 WriteElements(writer, qiElements);
@@ -297,8 +298,8 @@ public class QuizWriter : XmlWriterBase
                 {
                     { "feedbacktext", feedback.FeedbackText },
                     { "feedbacktextformat", _generalHelper.EnumIntegerToString(feedback.OverallFeedbackFormat) },
-                    { "mingrade", feedback.GradeBoundary.ToString(format: "0.00000") },
-                    { "maxgrade", GetNextHigherBoundary(feedback.GradeBoundary, quiz.Feedback).ToString(format: "0.00000") }
+                    { "mingrade", feedback.GradeBoundary.ToString(format: "0.00000", CultureInfo.InvariantCulture) },
+                    { "maxgrade", GetNextHigherBoundary(feedback.GradeBoundary, quiz.Feedback).ToString(format: "0.00000", CultureInfo.InvariantCulture) }
                 };
                 WriteElements(writer, feedbackElements);
 
