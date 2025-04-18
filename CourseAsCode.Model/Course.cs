@@ -28,7 +28,7 @@ namespace CourseAsCode.Model
 		[Description("list of users that are enrolled in the course")]
 		public List<User> EnrolledUsers { get; set; } = CourseDefaults.DEFAULT_ENROLLED_USERS;
 		[Description("All the questions available in this course for quizzes, i.e. the question bank")]
-		public List<Question> Questions { get; init; } = new();
+		public List<Question> Questions { get; set; } = new();
 
 		public BackupMetadata BackupMetadata { get; set; } = new BackupMetadata();
 		public SensibleDefaultsCourse SensibleDefaults { get; set; } = new SensibleDefaultsCourse();
