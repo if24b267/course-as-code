@@ -165,12 +165,45 @@ public class QuizWriter : XmlWriterBase
         
         if (quiz.SafeExamBrowser.RequireSEB == SEBMode.EnabledManualConfig)
         {
-            // TODO: Write SEB settings
+            writer.WriteStartElement("quizaccess_seb_quizsettings");
+
+            var sebElements = new Dictionary<string, string>
+            {
+                { "quizid", quiz.ActivityId.ToString() },
+                { "cmid", "227" }, // TODO: Determine what this value is
+                { "templateid", "0" },
+                { "requiresafeexambrowser", _generalHelper.EnumIntegerToString(quiz.SafeExamBrowser.RequireSEB) },
+                { "showsebtaskbar", quiz.SafeExamBrowser.ShowTaskBar ? "1" : "0" },
+                { "showwificontrol", quiz.SafeExamBrowser.ShowWifiControl ? "1" : "0" },
+                { "showreloadbutton", quiz.SafeExamBrowser.ShowReloadButton ? "1" : "0" },
+                { "showtime", quiz.SafeExamBrowser.ShowTime ? "1" : "0" },
+                { "showkeyboardlayout", quiz.SafeExamBrowser.ShowKeyboardLayout ? "1" : "0" },
+                { "allowuserquitseb", quiz.SafeExamBrowser.EnableQuit ? "1" : "0" },
+                { "quitpassword", quiz.SafeExamBrowser.QuitPassword ?? string.Empty },
+                { "linkquitseb", quiz.SafeExamBrowser.QuitLinkButton ?? string.Empty },
+                { "userconfirmquit", quiz.SafeExamBrowser.ConfirmQuitLink ? "1" : "0" },
+                { "enableaudiocontrol", quiz.SafeExamBrowser.EnableAudioControls ? "1" : "0" },
+                { "muteonstartup", "0" }, // TODO: Determine what this does
+                { "allowspellchecking", quiz.SafeExamBrowser.EnableSpellCheck ? "1" : "0" },
+                { "allowreloadinexam", quiz.SafeExamBrowser.EnableReload ? "1" : "0" },
+                { "activateurlfiltering", quiz.SafeExamBrowser.EnableURLFiltering ? "1" : "0" },
+                { "filterembeddedcontent", quiz.SafeExamBrowser.FilterEmbeddedContent ? "1" : "0" },
+                { "expressionsallowed", JoinOrEmpty(quiz.SafeExamBrowser.AllowedURLs) },
+                { "regexallowed", JoinOrEmpty(quiz.SafeExamBrowser.AllowedURLsRegex) },
+                { "expressionsblocked", JoinOrEmpty(quiz.SafeExamBrowser.BlockedURLs) },
+                { "regexblocked", JoinOrEmpty(quiz.SafeExamBrowser.BlockedURLsRegex) },
+                { "showsebdownloadlink", quiz.SafeExamBrowser.ShowDownloadButton ? "1" : "0" },
+                { "allowedbrowserexamkeys", quiz.SafeExamBrowser.AllowedExamKeys != null ? JoinOrEmpty(quiz.SafeExamBrowser.AllowedExamKeys) : "$@NULL@$" },
+                { "timecreated", _generalHelper.DateTimeToUnixTimestamp(quiz.TimeModified) }
+            };
+            WriteElements(writer, sebElements);
+
+            writer.WriteEndElement(); // </quizaccess_seb_quizsettings>
         }
         
-        writer.WriteEndElement();
+        writer.WriteEndElement(); // </subplugin_quizaccess_seb_quiz>
     }
-
+    
     
     private void WriteGradeItems(XmlWriter writer)
     {
@@ -292,7 +325,7 @@ public class QuizWriter : XmlWriterBase
     /// <param name="itemsPerPage">How many items fit on one page</param>
     /// <returns>The page number (≥1) on which the specified item appears</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="itemNumber"/> is less than 1</exception>
-    private static int CalculatePageNumber(int itemNumber, int itemsPerPage)
+    private int CalculatePageNumber(int itemNumber, int itemsPerPage)
     {
         // If itemsPerPage is 0 (or negative - theoretically invalid), all items are on page 1
         if (itemsPerPage <= 0)
@@ -323,7 +356,7 @@ public class QuizWriter : XmlWriterBase
     /// <para>The smallest grade boundary strictly greater than <paramref name="current"/></para>
     /// <para>or <c>DefaultBoundary</c> if none are found</para>
     /// </returns>
-    private static float GetNextHigherBoundary(float current, IEnumerable<QuizFeedback> all)
+    private float GetNextHigherBoundary(float current, List<QuizFeedback> all)
     {
         const float defaultBoundary = 11f;
 
@@ -343,5 +376,23 @@ public class QuizWriter : XmlWriterBase
         // Otherwise, return the smallest of the higher boundaries
         float nextHigher = higherBoundaries.Min();
         return nextHigher;
+    }
+
+
+    /// <summary>
+    /// Joins the elements of the sequence into a single string with the specified separator, or returns <see cref="String.Empty"/> if the sequence is null or contains no elements
+    /// </summary>
+    /// <param name="items">The sequence of strings to join. May be null</param>
+    /// <param name="separator">The string to use as a separator. If null, defaults to <see cref="Environment.NewLine"/></param>
+    /// <returns>A single concatenated string, or <see cref="String.Empty"/> if <paramref name="items"/> is null or empty.</returns>
+    private string JoinOrEmpty(List<string>? items, string? separator = null)
+    {
+        if (items == null || items.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        var sep = separator ?? Environment.NewLine;
+        return string.Join(sep, items);
     }
 }
