@@ -204,6 +204,20 @@ namespace CourseAsCode.Writers.XML.Writer
 
                         writer.WriteEndElement(); // Closes <activity>
                     }
+
+                    if (activity is Quiz quiz)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", quiz.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", quiz.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", quiz.Name);
+                        writer.WriteElementString("directory", $"activities/quiz_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // Closes <activity>
+                    }
                     
                     LogTrace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
                 }
@@ -355,6 +369,12 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_included", "1");
                         WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_userinfo", "1");
+                    }
+                    
+                    if (activity is Quiz quiz)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"quiz_{activity.ActivityId}", $"quiz_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"quiz_{activity.ActivityId}", $"quiz_{activity.ActivityId}_userinfo", "1");
                     }
 
                     LogTrace($"Added setting for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
