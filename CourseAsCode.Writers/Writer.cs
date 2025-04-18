@@ -180,7 +180,7 @@ public class Writer : IWriter
         {
             SystemDefaults = new Section.SystemDefaultsSection
             {
-                SectionId = 253,
+                SectionId = 3,
                 PathToSection = "sections/section_3"
             },
             Name = "Quiz Test Section",
