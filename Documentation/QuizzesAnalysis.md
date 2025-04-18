@@ -219,9 +219,9 @@ If any of these settings are not set, they are set to `$@NULL@$` in the XML file
 
 ### Require Safe Exam Browser
 
-| Name in Internal Data Model | Data Type      | XML File | Name in Moodle XML     | Data Type (XML) | Description                                                                                                     |
-|-----------------------------|----------------|----------|------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
-| RequireSEB                  | SEBMode (Enum) | quiz.xml | questiondecimalpoints  | int (-1 - 7)    | specifies the number of digits shown after the decimal point when displaying the marks for individual questions |
+| Name in Internal Data Model | Data Type      | XML File | Name in Moodle XML                                     | Data Type (XML) | Description                           |
+|-----------------------------|----------------|----------|--------------------------------------------------------|-----------------|---------------------------------------|
+| RequireSEB                  | SEBMode (Enum) | quiz.xml | `<quizaccess_seb_quizsettings>` tag present if enabled | int (-1 - 7)    | whether SEB is required for this quiz |
 
 #### SEBMode
 

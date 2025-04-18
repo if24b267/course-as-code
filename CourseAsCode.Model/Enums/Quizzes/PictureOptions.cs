@@ -5,9 +5,9 @@ namespace CourseAsCode.Model.Enums.Quizzes;
 public enum PictureOptions
 {
     [Description("no image")]
-    NoImage,
+    NoImage = 0,
     [Description("small image")]
-    SmallImage,
+    SmallImage = 1,
     [Description("large image")]
-    LargeImage
+    LargeImage = 2
 }

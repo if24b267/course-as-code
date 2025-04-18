@@ -65,7 +65,7 @@ public class Quiz : Activity
     [Description("Decimal places to show for overall grades (0‑5)")]
     public int DecimalsToDisplayGrades { get; set; } = QuizDefaults.DEFAULT_DECIMALS_DISPLAY_GRADES;
 
-    [Description("Decimal places to show for question marks (‑1 = ‘same as grades’)")]
+    [Description("Decimal places to show for the marks of an individual question (‑1 = ‘same as grades’)")]
     public int DecimalsToDisplayMarks { get; set; } = QuizDefaults.DEFAULT_DECIMALS_DISPLAY_MARKS;
 
     // ────────────────────────────────────────────────────────────────────────────
@@ -85,4 +85,21 @@ public class Quiz : Activity
 
     [Description("The pool of questions that constitute this quiz")]
     public List<Question> Questions { get; init; } = new();
+    
+    
+    public SensibleDefaultsQuiz SensibleDefaults { get; set; } = new SensibleDefaultsQuiz();
+    public SystemDefaultsQuiz SystemDefaults { get; set; } = new SystemDefaultsQuiz();
+
+	
+    public class SensibleDefaultsQuiz
+    {
+        // TODO
+    }
+
+    
+    public class SystemDefaultsQuiz
+    {
+        public int ModuleId { get; set; } = 227; // TODO: Check if this is the same for all quizzes or a unique value per quiz
+        public string ModuleName { get; set; } = "quiz";
+    }
 }
