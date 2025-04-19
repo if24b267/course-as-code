@@ -19,8 +19,7 @@ namespace CourseAsCode.Writers.XML.Writer
         // Counters for IDs | TODO: Refactor to use a more robust ID generation strategy
         private int _nextCategoryId = 1;
         private int _nextBankEntryId = 1;
-        private int _nextVersionContainerId = 1;
-        private int _nextQuestionInternalId = 1; // Used only when QuestionId is 0
+        private int _nextQuestionId = 1; 
         private int _nextAnswerId = 1;
         private int _nextHintId = 1;
         
@@ -52,6 +51,8 @@ namespace CourseAsCode.Writers.XML.Writer
                     writer.WriteStartDocument();
                     
                     writer.WriteStartElement("question_categories");
+                    
+                    WriteTopCategory(writer, _nextCategoryId++, 381, 50, 135); // tmp
                     
                     // Questions are grouped by category | Each entry for a category contains the entries for all questions belonging to that category
                     foreach (var categoryGrouping in course.Questions.GroupBy(q => q.Category))
@@ -91,13 +92,13 @@ namespace CourseAsCode.Writers.XML.Writer
             var categoryElements = new Dictionary<string, string>
             {
                 { "name", categoryName },
-                { "contextid", "383" }, // TODO: Replace hardcoded value with dynamic context ID
-                { "contextlevel", "70" },  // TODO: Replace hardcoded value with dynamic context level
-                { "contextinstanceid","227" }, // TODO: Replace hardcoded value with dynamic context instance ID
+                { "contextid", "381" }, // TODO: Replace hardcoded value with dynamic context ID
+                { "contextlevel", "50" },  // TODO: Replace hardcoded value with dynamic context level
+                { "contextinstanceid", "135" }, // TODO: Replace hardcoded value with dynamic context instance ID
                 { "info", string.Empty }, // Description of the category, not implemented (yet?)
                 { "infoformat", "0" },
                 { "stamp", GenerateStamp() }, // TODO: Determine how this value is calculated
-                { "parent", "0" },
+                { "parent", "1" }, // TODO: Replace hardcoded value with dynamic parent category ID
                 { "sortorder", "0" },
                 { "idnumber", "$@NULL@$" }
             };
@@ -118,6 +119,8 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteQuestionBankEntry(XmlWriter writer, int categoryId, Question question)
         {
             int bankEntryId = _nextBankEntryId++;
+            question.BankEntryId = bankEntryId; // Store the ID of the question bank entry the question was saved to, so that QuizWriter can reference it later
+            
             writer.WriteStartElement("question_bank_entry");
             writer.WriteAttributeString("id", bankEntryId.ToString());
 
@@ -139,9 +142,11 @@ namespace CourseAsCode.Writers.XML.Writer
         
         private void WriteQuestionVersionContainer(XmlWriter writer, Question question)
         {
-            int versionContainerId = _nextVersionContainerId++;
+            // Store the ID that was assigned to the question, so that QuizWriter can reference it later
+            question.QuestionId = _nextQuestionId++;
+            
             writer.WriteStartElement("question_versions");
-            writer.WriteAttributeString("id", versionContainerId.ToString());
+            writer.WriteAttributeString("id", question.QuestionId.ToString());
 
             WriteElements(writer, new Dictionary<string, string>
             {
@@ -218,7 +223,7 @@ namespace CourseAsCode.Writers.XML.Writer
         {
             writer.WriteStartElement("plugin_qtype_multichoice_question");
 
-            // Answers -------------------------------------------------------------
+            // Answers ------------------------------------------------------------
             writer.WriteStartElement("answers");
             foreach (var answer in multiChoiceQuestion.Answers)
             {
@@ -302,6 +307,7 @@ namespace CourseAsCode.Writers.XML.Writer
             // Format seems to be: IPAddress:Port+UnidentifiedNumber+UUID
             // Example from `question.xml`: 172.21.0.3:8080+250328142456+mQIQma | 25.03.2028 14:24:56 ???
             // Another example: 172.21.0.3:8080+250418132115+UdkSCb | 25.04.2018 13:21:15 ???
+            // FIXME: Don't hardcode the server ip + port
             return $"172.21.0.3:8080+{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}+{Guid.NewGuid():N}";
         }
         
@@ -312,6 +318,25 @@ namespace CourseAsCode.Writers.XML.Writer
             w.WriteStartElement(childContainer);
             w.WriteEndElement(); // childContainer
             w.WriteEndElement(); // plugin
+        }
+        
+        
+        // Test
+        private void WriteTopCategory(XmlWriter writer, int id, int contextId, int contextLevel, int contextInstanceId)
+        {
+            writer.WriteStartElement("question_category");
+            writer.WriteAttributeString("id", id.ToString());
+            WriteElements(writer, new Dictionary<string,string>{
+                { "name", "top" },
+                { "contextid",        contextId.ToString() },
+                { "contextlevel",     contextLevel.ToString() },  // 50 = course, 70 = module
+                { "contextinstanceid",contextInstanceId.ToString() },
+                { "info", "" }, { "infoformat","0" },
+                { "stamp", GenerateStamp() },
+                { "parent","0" }, { "sortorder","0" }, { "idnumber","$@NULL@$" }
+            });
+            writer.WriteStartElement("question_bank_entries"); writer.WriteEndElement();
+            writer.WriteEndElement(); // </question_category>
         }
     }
 }

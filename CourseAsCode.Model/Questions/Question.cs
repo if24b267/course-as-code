@@ -9,7 +9,10 @@ public abstract class Question
     //  Core – shared by all question types
     // ────────────────────────────────────────────────────────────────────────────
     [Description("Unique identifier for the question")]
-    public required int QuestionId { get; set; }
+    public int QuestionId { get; set; }
+    
+    [Description("Unique identifier of the question bank to which the question belongs")]   
+    public int BankEntryId { get; set; }
     
     [Description("Category the question belongs to")]
     public required string Category { get; set; }

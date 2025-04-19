@@ -90,7 +90,6 @@ public class Writer : IWriter
         // Add two dummy questions to the course
         var q1 = new MultipleChoiceQuestion
         {
-            QuestionId          = 57,
             Category            = "Default category",
             QuestionName        = "Shamir’s Theorem",
             QuestionText        = "<p>Which equality does Shamir’s Theorem prove?</p>",
@@ -131,7 +130,6 @@ public class Writer : IWriter
         
         var q2 = new MultipleChoiceQuestion
         {
-            QuestionId          = 83,
             Category            = "Linux basics",
             QuestionName        = "Linux navigation commands",
             QuestionText        = "<p>Select the navigation-related commands.</p>",
@@ -173,7 +171,7 @@ public class Writer : IWriter
             NewPageThreshold        = 0,
             ShowPicture             = PictureOptions.SmallImage,
             Questions               = new() { q1, q2 },
-            Feedback                = new()
+            Feedback                = new(),
         };
 
         var testSection = new Section
@@ -208,18 +206,6 @@ public class Writer : IWriter
             Environment.Exit(1);
         }
         
-        // /course directory
-        _calendarWriter.WriteCalendar(course, outputPath);
-        _commentsWriter.WriteComments(course, outputPath);
-        _competenciesWriter.WriteCompetencies(course, outputPath);
-        _completiondefaultsWriter.WriteCompletionDefaults(course, outputPath);
-        _contentbankWriter.WriteContentbank(course, outputPath);
-        _courseWriter.WriteCourse(course, outputPath);
-        _enrolmentsWriter.WriteEnrolment(course, outputPath);
-        _filtersWriter.WriteFilters(course, outputPath);
-        _inforefWriter.WriteInforef(course, outputPath);
-        _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
-        
         // Root directory
         _badgesWriter.WriteBadges(outputPath);
         _completionWriter.WriteCompletion(course, outputPath);
@@ -234,6 +220,17 @@ public class Writer : IWriter
         _scalesWriter.WriteScales(course, outputPath);
         _usersWriter.WriteUsers(course, outputPath);
         
+        // /course directory
+        _calendarWriter.WriteCalendar(course, outputPath);
+        _commentsWriter.WriteComments(course, outputPath);
+        _competenciesWriter.WriteCompetencies(course, outputPath);
+        _completiondefaultsWriter.WriteCompletionDefaults(course, outputPath);
+        _contentbankWriter.WriteContentbank(course, outputPath);
+        _courseWriter.WriteCourse(course, outputPath);
+        _enrolmentsWriter.WriteEnrolment(course, outputPath);
+        _filtersWriter.WriteFilters(course, outputPath);
+        _inforefWriter.WriteInforef(course, outputPath);
+        _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
         
 
         // -- Write section files -- //

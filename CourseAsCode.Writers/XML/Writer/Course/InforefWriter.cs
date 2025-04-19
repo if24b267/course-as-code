@@ -64,8 +64,24 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                     {
                         WriteOneInforefSection(writer, file, "file");
                     }*/
-
+                    
                     writer.WriteEndElement(); // Close </fileref>
+                    
+                    
+                    // Reference all questions
+                    writer.WriteStartElement("question_categoryref");
+                    
+                    foreach (var question in course.Questions)
+                    {
+                        writer.WriteStartElement("question_category");
+
+                        writer.WriteElementString("id", question.QuestionId.ToString());
+                        // FIXME: This is not correct - the question ID doesn't match the question category ID'
+                        
+                        writer.WriteEndElement(); // Close </question_category>
+                    }
+                    
+                    writer.WriteEndElement(); // Close </question_categoryref>
 
                     writer.WriteEndElement(); // Close </inforef>
                     writer.WriteEndDocument();

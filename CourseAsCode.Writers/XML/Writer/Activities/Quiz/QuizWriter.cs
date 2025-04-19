@@ -78,7 +78,7 @@ public class QuizWriter : XmlWriterBase
         writer.WriteAttributeString("id", quizObject.ActivityId.ToString());
         writer.WriteAttributeString("moduleid", quizObject.SystemDefaults.ModuleId.ToString());
         writer.WriteAttributeString("modulename", quizObject.SystemDefaults.ModuleName);
-        writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(quizObject.Context));
+        writer.WriteAttributeString("contextid", "383"); // _generalHelper.EnumIntegerToString(quizObject.Context)
     }
 
     
@@ -248,7 +248,7 @@ public class QuizWriter : XmlWriterBase
                     { "usingcontextid", "383" }, // Use _generalHelper.EnumIntegerToString(quiz.Context) instead? TODO: Determine if always 383
                     { "component", "mod_quiz" },
                     { "questionarea", "slot" },
-                    { "questionbankentryid", question.QuestionId.ToString() }, // TODO: Seems to differ from the ID of the question
+                    { "questionbankentryid", question.BankEntryId.ToString() },
                     { "version", "$@NULL@$" }
                 });
                 writer.WriteEndElement(); // </question_reference>
