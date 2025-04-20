@@ -14,6 +14,8 @@ public class QuizWriter : XmlWriterBase
 {
     private const string DEFAULT_QUIZ_RELATIVE_PATH = "quiz.xml";
     private readonly IGeneralHelper _generalHelper;
+    
+    private const string DEFAULT_CONTEXT_ID = "383"; // Every value >> 100 seems to be working fine | Needs to be the same as in `QuestionsWriter.cs`
 
     /// <summary>
     /// Default constructor using default implementations for dependencies
@@ -78,7 +80,7 @@ public class QuizWriter : XmlWriterBase
         writer.WriteAttributeString("id", quizObject.ActivityId.ToString());
         writer.WriteAttributeString("moduleid", quizObject.SystemDefaults.ModuleId.ToString());
         writer.WriteAttributeString("modulename", quizObject.SystemDefaults.ModuleName);
-        writer.WriteAttributeString("contextid", "383"); // _generalHelper.EnumIntegerToString(quizObject.Context)
+        writer.WriteAttributeString("contextid", DEFAULT_CONTEXT_ID);
     }
 
     
@@ -245,7 +247,7 @@ public class QuizWriter : XmlWriterBase
                 writer.WriteAttributeString("id", question.QuestionId.ToString());
                 WriteElements(writer, new Dictionary<string, string>
                 {
-                    { "usingcontextid", "383" }, // Use _generalHelper.EnumIntegerToString(quiz.Context) instead? TODO: Determine if always 383
+                    { "usingcontextid", DEFAULT_CONTEXT_ID },
                     { "component", "mod_quiz" },
                     { "questionarea", "slot" },
                     { "questionbankentryid", question.BankEntryId.ToString() },

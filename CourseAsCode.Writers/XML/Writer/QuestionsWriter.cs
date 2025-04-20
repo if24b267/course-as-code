@@ -23,6 +23,10 @@ namespace CourseAsCode.Writers.XML.Writer
         private int _nextAnswerId = 1;
         private int _nextHintId = 1;
         
+        private const string DEFAULT_CONTEXT_ID = "383"; // Every value >> 100 seems to be working fine | Needs to be the same as in `QuizWriter.cs`
+        private const string DEFAULT_CONTEXT_LEVEL = "50"; // 50 = course, 70 = module
+        private const string DEFAULT_CONTEXT_INSTANCE_ID = "135"; // Honestly, no idea what this is for
+        
         
         /// <summary>
         /// Default constructor using default implementations for dependencies
@@ -52,7 +56,7 @@ namespace CourseAsCode.Writers.XML.Writer
                     
                     writer.WriteStartElement("question_categories");
                     
-                    WriteTopCategory(writer, _nextCategoryId++, 381, 50, 135); // tmp
+                    WriteTopCategory(writer, _nextCategoryId++, Int32.Parse(DEFAULT_CONTEXT_ID), Int32.Parse(DEFAULT_CONTEXT_LEVEL), Int32.Parse(DEFAULT_CONTEXT_INSTANCE_ID)); // tmp
                     
                     // Questions are grouped by category | Each entry for a category contains the entries for all questions belonging to that category
                     foreach (var categoryGrouping in course.Questions.GroupBy(q => q.Category))
@@ -92,9 +96,9 @@ namespace CourseAsCode.Writers.XML.Writer
             var categoryElements = new Dictionary<string, string>
             {
                 { "name", categoryName },
-                { "contextid", "381" }, // TODO: Replace hardcoded value with dynamic context ID
-                { "contextlevel", "50" },  // TODO: Replace hardcoded value with dynamic context level
-                { "contextinstanceid", "135" }, // TODO: Replace hardcoded value with dynamic context instance ID
+                { "contextid", DEFAULT_CONTEXT_ID },
+                { "contextlevel", DEFAULT_CONTEXT_LEVEL },
+                { "contextinstanceid", DEFAULT_CONTEXT_INSTANCE_ID },
                 { "info", string.Empty }, // Description of the category, not implemented (yet?)
                 { "infoformat", "0" },
                 { "stamp", GenerateStamp() }, // TODO: Determine how this value is calculated
