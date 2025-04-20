@@ -140,10 +140,10 @@ public class Writer : IWriter
             SingleChoice        = false,
             Answers = new List<Answer>
             {
-                new() { AnswerText = "<p>ls</p>",  AnswerGrade = 0.33f },
-                new() { AnswerText = "<p>cd</p>",  AnswerGrade = 0.33f },
-                new() { AnswerText = "<p>pwd</p>", AnswerGrade = 0.33f },
-                new() { AnswerText = "<p>grep</p>",AnswerGrade = -0.33f }
+                new() { AnswerText = "<p>ls</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 0.33f },
+                new() { AnswerText = "<p>cd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 0.33f },
+                new() { AnswerText = "<p>pwd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 0.33f },
+                new() { AnswerText = "<p>grep</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -0.33f }
             }
         };
 

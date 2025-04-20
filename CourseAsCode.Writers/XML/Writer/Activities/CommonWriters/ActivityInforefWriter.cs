@@ -60,17 +60,16 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                         }
                     }
 
-                    // Reference all questions in the course
+                    // Reference all question categories in the course
                     writer.WriteStartElement("question_categoryref");
                     
-                    foreach (var question in course.Questions)
+                    foreach (var categoryGrouping in course.Questions.GroupBy(q => q.Category))
                     {
                         writer.WriteStartElement("question_category");
+
+                        writer.WriteElementString("id", categoryGrouping.First().CategoryId.ToString());
                         
-                        writer.WriteElementString("id", question.QuestionId.ToString());
-                        // FIXME: This is not correct - the question ID doesn't match the question category ID
-                        
-                        writer.WriteEndElement(); // Close <question_category>
+                        writer.WriteEndElement(); // Close </question_category>
                     }
                     
                     writer.WriteEndElement(); // Close <question_categoryref>

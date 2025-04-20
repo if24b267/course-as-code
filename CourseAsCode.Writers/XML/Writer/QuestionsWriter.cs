@@ -109,6 +109,9 @@ namespace CourseAsCode.Writers.XML.Writer
             {
                 // Write all questions belonging to this category
                 WriteQuestionBankEntry(writer, categoryId, question);
+                
+                // Store the ID of the category the question was saved to, so that other Writers (specifically InfoRefWriter) can reference it later
+                question.CategoryId = categoryId;
             }
             writer.WriteEndElement(); // </question_bank_entries>
 

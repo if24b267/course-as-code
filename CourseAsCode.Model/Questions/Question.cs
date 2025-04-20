@@ -16,6 +16,9 @@ public abstract class Question
     
     [Description("Category the question belongs to")]
     public required string Category { get; set; }
+    
+    [Description("Unique identifier of the category to which the question belongs")]  
+    public int CategoryId { get; set; }
 
     [Description("Name of the question as shown in the question bank")]
     public required string QuestionName { get; set; }
