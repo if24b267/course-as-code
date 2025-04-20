@@ -134,16 +134,16 @@ public class Writer : IWriter
             QuestionName        = "Linux navigation commands",
             QuestionText        = "<p>Select the navigation-related commands.</p>",
             QuestionTextFormat  = FormattingFormat.HTML,
-            DefaultMark         = 2,
+            DefaultMark         = 1,
             ChoiceNumbering     = NumberingFormat.Numeric,
             ShuffleAnswers      = true,
             SingleChoice        = false,
             Answers = new List<Answer>
             {
-                new() { AnswerText = "<p>ls</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 0.33f },
-                new() { AnswerText = "<p>cd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 0.33f },
-                new() { AnswerText = "<p>pwd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 0.33f },
-                new() { AnswerText = "<p>grep</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -0.33f }
+                new() { AnswerText = "<p>ls</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
+                new() { AnswerText = "<p>cd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
+                new() { AnswerText = "<p>pwd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
+                new() { AnswerText = "<p>grep</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 3f }
             }
         };
 
@@ -160,7 +160,7 @@ public class Writer : IWriter
             CloseTime               = null,
             TimeLimit               = 3600,
             TimeExpiryHandling      = TimeExpiryHandle.AutoSubmit,
-            QuestionBehaviour       = QuestionBehaviour.Immediate,
+            QuestionBehaviour       = QuestionBehaviour.Deferred,
             AllowRedosDuringAttempt = true,
             AllowedAttempts         = 2,
             BuildOnPreviousAttempts = true,
