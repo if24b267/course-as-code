@@ -127,8 +127,8 @@ public class QuizWriter : XmlWriterBase
             { "questionsperpage", quiz.NewPageThreshold.ToString() },
             { "navmethod", "free" }, // TODO: make configurable
             { "shuffleanswers", quiz.ShuffleWithinQuestions ? "1" : "0" },
-            { "sumgrades", (quiz.Questions?.Sum(q => q.DefaultMark) ?? 0.0f).ToString("0.00000", CultureInfo.InvariantCulture) }, // TODO: Check if this is correct
-            { "grade", (10.0f).ToString(format:"0.00000", CultureInfo.InvariantCulture) }, // TODO: Find out what this value is for (Maximum grade achievable?)
+            { "sumgrades", (quiz.Questions?.Sum(q => q.DefaultMark) ?? 0.0f).ToString("0.00000", CultureInfo.InvariantCulture) },
+            { "grade", quiz.MaxGrade.ToString(format: "0.00000", CultureInfo.InvariantCulture) },
             { "timecreated", _generalHelper.DateTimeToUnixTimestamp(quiz.TimeCreated) },
             { "timemodified", _generalHelper.DateTimeToUnixTimestamp(quiz.TimeModified) },
             { "password", quiz.Password ?? string.Empty },

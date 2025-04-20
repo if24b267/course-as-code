@@ -147,7 +147,27 @@ public class Writer : IWriter
             }
         };
 
-        course.Questions = new List<Question>() { q1, q2 };
+        var q3 = new SingleChoiceQuestion
+        {
+            Category = "Linux basics",
+            QuestionName = "Linux filesystem",
+            QuestionText = "What does the `/etc` directory in the Linux file system hierarchy typically contain?",
+            QuestionTextFormat = FormattingFormat.Markdown,
+            DefaultMark = 1,
+            ChoiceNumbering = NumberingFormat.AlphabeticLower,
+            ShuffleAnswers = true,
+            SingleChoice = true,
+            Answers = new List<Answer>
+            {
+                new() { AnswerText = "<p>User home directories</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f, AnswerFeedback = "<p>Hahaha, are you stupid?</p>", AnswerFeedbackFormat = FormattingFormat.HTML},
+                new() { AnswerText = "<p>System configuration files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
+                new() { AnswerText = "<p>Essential command binaries</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
+                new() { AnswerText = "<p>Device files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
+                new() { AnswerText = "<p>System log files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f }
+            }
+        };
+
+        course.Questions = new List<Question>() { q1, q2, q3 };
         
         // Add a quiz activity to the course
         var testQuiz = new Quiz
@@ -170,7 +190,7 @@ public class Writer : IWriter
             ShuffleWithinQuestions  = true,
             NewPageThreshold        = 0,
             ShowPicture             = PictureOptions.SmallImage,
-            Questions               = new() { q1, q2 },
+            Questions               = new() { q1, q2, q3 },
             Feedback                = new(),
         };
 

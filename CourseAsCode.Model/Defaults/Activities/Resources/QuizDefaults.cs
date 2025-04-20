@@ -15,6 +15,7 @@ public class QuizDefaults
     public const float DEFAULT_GRADE_TO_PASS = 0.0f;
     public const int DEFAULT_ALLOWED_ATTEMPTS = 0;
     public const GradingMethod DEFAULT_GRADING_METHOD = GradingMethod.HighestGrade;
+    public const float DEFAULT_MAX_GRADE = 10.0f;
     public const int DEFAULT_NEW_PAGE_THRESHOLD = 0;
     public const bool DEFAULT_SHUFFLE_WITHIN_QUESTIONS = false;
     public const QuestionBehaviour DEFAULT_QUESTION_BEHAVIOUR = QuestionBehaviour.Deferred;

@@ -38,6 +38,9 @@ public class Quiz : Activity
     [Description("Method used when several attempts exist")]
     public GradingMethod GradingMethod { get; set; } = QuizDefaults.DEFAULT_GRADING_METHOD;
 
+    [Description("How many points this quiz is worth")]
+    public float MaxGrade { get; set; } = QuizDefaults.DEFAULT_MAX_GRADE;
+
     [Description("Automatically insert page breaks after this many questions – 0 = all questions on one single page")]
     public int NewPageThreshold { get; set; } = QuizDefaults.DEFAULT_NEW_PAGE_THRESHOLD;
 
