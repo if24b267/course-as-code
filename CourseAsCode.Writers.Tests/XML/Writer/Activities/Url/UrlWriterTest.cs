@@ -22,7 +22,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         {
             Name = "Test URL",
             Description = "This is a test URL description",
-            ExternalUrl = "https://example.com"
+            ExternalUrl = "https://example.com",
         };
 
         [SetUp]
@@ -117,7 +117,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             _urlWriter = new UrlWriter(throwingFactory, _testLogger, _fakeGeneralHelper);
 
             // Act & Assert: Verify that an exception is thrown and error log is recorded
-            Assert.Throws<InvalidOperationException>(() => 
+            Assert.Throws<InvalidOperationException>(() =>
                 _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl));
 
             _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&

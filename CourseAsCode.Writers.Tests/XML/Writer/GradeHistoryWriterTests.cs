@@ -97,7 +97,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             string dummyOutputPath = "dummyPath";
 
             // Act & Assert: Verify that an exception is thrown.
-            Assert.Throws<InvalidOperationException>(() => 
+            Assert.Throws<InvalidOperationException>(() =>
                 _gradehistoryWriter.WriteGradehistory(_dummyCourse, dummyOutputPath));
 
             // Verify that logger.Error was called with a message containing "gradehistory.xml"

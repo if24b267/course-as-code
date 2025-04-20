@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Writers.XML.Helper.Interfaces;
 

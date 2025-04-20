@@ -66,7 +66,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var enrolsNode = doc.DocumentElement.SelectSingleNode("enrols");
             Assert.IsNotNull(enrolsNode, "<enrols> element is missing");
         }
-        
+
         [TestCase("1", "manual")]
         [TestCase("2", "guest")]
         [TestCase("3", "self")]
@@ -74,24 +74,24 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         {
             // Arrange: Create a dummy course with enrolment methods and enrolled users
             _dummyCourse = FakeCourseFactory.CreateCourseWithEnrolments();
-            
+
             // Act
             _enrolmentsWriter.WriteEnrolment(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: Verify that the <enrol> element with the expected ID and value exists
             var enrolNode = doc.SelectSingleNode($"/enrolments/enrols/enrol[@id='{id}']") as XmlElement;
             Assert.IsNotNull(enrolNode, $"Enrol section for {expectedValue} Enrolment missing");
-            
+
             // Check a key element inside the section | Full Schema validation should be done in integration tests
             Assert.That(enrolNode.SelectSingleNode("enrol")?.InnerText, Is.EqualTo(expectedValue));
-            
+
             // Verify that the section contains a <user_enrolments> element
             Assert.IsNotNull(enrolNode.SelectSingleNode("user_enrolments"), "User enrolments section missing");
         }
-        
+
         [TestCase("1", "101")]
         [TestCase("2", "102")]
         [TestCase("3", "103")]
@@ -99,19 +99,19 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         {
             // Arrange: Create a dummy course with enrolment methods and enrolled users
             _dummyCourse = FakeCourseFactory.CreateCourseWithEnrolments();
-            
+
             // Act
             _enrolmentsWriter.WriteEnrolment(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             var enrolNode = doc.SelectSingleNode($"/enrolments/enrols/enrol[@id='{id}']") as XmlElement;
-            
+
             // Verify that for each enrolled user, a corresponding <enrolment> element exists
             var userEnrolment = enrolNode?.SelectSingleNode("user_enrolments/enrolment");
             Assert.IsNotNull(userEnrolment, "User enrolment entry missing");
-            
+
             // Check that the <userid> element in the enrolment matches the expected user ID
             var userId = userEnrolment.SelectSingleNode("userid")?.InnerText;
             Assert.That(userId, Is.EqualTo(expectedUserId));
@@ -143,7 +143,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         }
     }
 
-    #region Fake Course Factory
     /// <summary>
     /// Factory for creating a dummy course with enrolment methods and enrolled users
     /// </summary>
@@ -157,7 +156,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var manual = new ManualEnrolment();
             var guest = new GuestEnrolment();
             var self = new SelfEnrolment();
-            
+
             course.EnrolmentMethods = new List<Model.EnrolmentMethod> { manual, guest, self };
 
             course.EnrolledUsers = new List<Model.User>();
@@ -170,9 +169,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 SensibleDefaults = new User.SensibleDefaultsUser()
                 {
                     EnrolmentStartDate = DateTime.Now.AddDays(-2),
-                    EnrolmentEndDate = DateTime.Now.AddDays(10)
+                    EnrolmentEndDate = DateTime.Now.AddDays(10),
                 },
-                EnrolmentMethod = manual
+                EnrolmentMethod = manual,
             };
 
             // User for Guest Enrolment
@@ -183,11 +182,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 SensibleDefaults = new User.SensibleDefaultsUser()
                 {
                     EnrolmentStartDate = DateTime.Now.AddDays(-3),
-                    EnrolmentEndDate = DateTime.Now.AddDays(5)
+                    EnrolmentEndDate = DateTime.Now.AddDays(5),
                 },
-                EnrolmentMethod = guest
+                EnrolmentMethod = guest,
             };
-            
+
             // User for Self Enrolment
             var userSelf = new Model.User
             {
@@ -196,9 +195,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 SensibleDefaults = new User.SensibleDefaultsUser()
                 {
                     EnrolmentStartDate = DateTime.Now.AddDays(-1),
-                    EnrolmentEndDate = DateTime.Now.AddDays(15)
+                    EnrolmentEndDate = DateTime.Now.AddDays(15),
                 },
-                EnrolmentMethod = self
+                EnrolmentMethod = self,
             };
 
             course.EnrolledUsers.Add(userManual);
@@ -208,6 +207,4 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             return course;
         }
     }
-
-    #endregion
 }

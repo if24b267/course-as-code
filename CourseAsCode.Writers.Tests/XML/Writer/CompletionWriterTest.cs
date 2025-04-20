@@ -12,7 +12,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private XmlWriterFactoryTest _testFactory;
         private ILogger _testLogger;
         private CompletionWriter _testCompletionWriter;
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -20,7 +20,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _testLogger = Substitute.For<ILogger>();
             _testCompletionWriter = new CompletionWriter(_testFactory, _testLogger); // Inject dependencies
         }
-        
+
         [Test]
         public void WriteCompletion_GeneratesValidXml()
         {
@@ -39,7 +39,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 doc.LoadXml(output);
             });
         }
-        
+
         [Test]
         public void WriteCompletion_RootElementIsCorrect()
         {
@@ -57,7 +57,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.IsNotNull(doc.DocumentElement);
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("course_completion"));
         }
-        
+
         [Test]
         public void WriteCompletion_LogsDebugOnSuccess()
         {
@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: Verify that logger.Debug is called with a message containing "completion.xml"
             _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("completion.xml")));
         }
-        
+
         [Test]
         public void WriteCompletion_LogsErrorOnException()
         {
@@ -83,7 +83,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act & Assert: An exception should be thrown
             Assert.Throws<InvalidOperationException>(() => _testCompletionWriter.WriteCompletion(dummyCourse, dummyOutputPath));
-            
+
             // Verify that logger.Error is called with a message containing "completion.xml"
             _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("completion.xml")));
         }

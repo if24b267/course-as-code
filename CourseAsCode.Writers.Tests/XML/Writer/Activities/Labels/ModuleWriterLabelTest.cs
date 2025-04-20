@@ -1,10 +1,9 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
@@ -26,7 +25,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
         private Model.Course _dummyCourse;
         private Section _dummySection;
         private TextAndMediaArea _dummyLabel; // Label activity
-
 
         [SetUp]
         public void SetUp()
@@ -53,7 +51,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             _dummyCourse = new Model.Course
             {
                 BackupMetadata = new BackupMetadata { MoodleVersion = MoodleVersion.Moodle450 },
-                Sections = new List<Section>()
+                Sections = new List<Section>(),
             };
 
             _dummySection = new Section
@@ -61,7 +59,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
                 Name = "Test Section",
                 SystemDefaults = new Section.SystemDefaultsSection()
                 {
-                    SectionId = 5
+                    SectionId = 5,
                 },
             };
             _dummyCourse.Sections.Add(_dummySection);
@@ -77,7 +75,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
                 GroupMode = GroupMode.NoGroups,
                 DisplayDescription = true,
                 Language = Language.English,
-                Tags = new List<string> { "tag1", "tag2" }
+                Tags = new List<string> { "tag1", "tag2" },
             };
         }
 
@@ -183,13 +181,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             Activity nonLabelActivity = new URL()
             {
                 Name = "This activity is not a Label",
-                ActivityId = 20
+                ActivityId = 20,
             };
 
             // Act & Assert: Passing a non-label activity should throw an InvalidCastException.
             Assert.Throws<InvalidCastException>(() =>
-                _moduleWriterLabel.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection,
-                    nonLabelActivity));
+                _moduleWriterLabel.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, nonLabelActivity));
         }
 
         [Test]
@@ -209,8 +206,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
         {
             // Arrange: Use a throwing XML writer factory to simulate an exception.
             IXmlWriterFactory throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _moduleWriterLabel = new ModuleWriterLabel(throwingFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper,
-                _fakeLogger);
+            _moduleWriterLabel = new ModuleWriterLabel(throwingFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger);
 
             // Act & Assert: Verify that an exception is thrown and an error is logged
             Assert.Throws<InvalidOperationException>(() =>

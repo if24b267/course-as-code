@@ -3,7 +3,6 @@ using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using NLog;
@@ -85,15 +84,15 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Create a dummy course with one enrolled user
             _dummyCourse = FakeCourseFactory.CreateCourseWithUser();
-            
+
             // Act
             _usersWriter.WriteUsers(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: Verify that a <user> element exists with the expected attribute
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             var userElement = doc.SelectSingleNode($"/users/user[@id='{_dummyCourse.EnrolledUsers[0].SystemDefaults.Id}']") as XmlElement;
             Assert.IsNotNull(userElement, $"User element with id '{_dummyCourse.EnrolledUsers[0].SystemDefaults.Id}' not found");
 
@@ -101,7 +100,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // The expected values come partly from the dummy user and partly from the fake helpers defined in the setup
             Assert.That(userElement["username"]?.InnerText, Is.EqualTo(_dummyCourse.EnrolledUsers[0].Username));
             Assert.That(userElement["email"]?.InnerText, Is.EqualTo(_dummyCourse.EnrolledUsers[0].EMail.ToString()));
-            
+
             // Fields that rely on the helpers
             Assert.That(userElement["country"]?.InnerText, Is.EqualTo("AT"));
             Assert.That(userElement["auth"]?.InnerText, Is.EqualTo("manual"));
@@ -117,11 +116,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Act
             _usersWriter.WriteUsers(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: Verify that for the user, the correct subsections are present
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             var userElement = doc.SelectSingleNode($"/users/user[@id='{_dummyCourse.EnrolledUsers[0].SystemDefaults.Id}']") as XmlElement;
             Assert.IsNotNull(userElement, "User element not found");
 
@@ -157,7 +156,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         }
     }
 
-    #region Fake Course Factory
     /// <summary>
     /// Factory for creating a course with a single user
     /// </summary>
@@ -167,7 +165,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             var course = new Model.Course
             {
-                EnrolledUsers = new List<User>()
+                EnrolledUsers = new List<User>(),
             };
 
             // Create a dummy user
@@ -177,14 +175,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 EMail = new MailAddress("jdoe@example.com"),
                 SystemDefaults = new User.SystemDefaultsUser()
                 {
-                    FirstAccess = DateTime.Now
-                }
+                    FirstAccess = DateTime.Now,
+                },
             };
 
             course.EnrolledUsers.Add(dummyUser);
             return course;
         }
     }
-
-    #endregion
 }

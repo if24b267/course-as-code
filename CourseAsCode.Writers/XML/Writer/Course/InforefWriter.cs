@@ -3,6 +3,7 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using NLog;
+
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 
@@ -15,7 +16,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public InforefWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public InforefWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 

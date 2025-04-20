@@ -4,5 +4,5 @@ namespace CourseAsCode.Readers.AbstractClasses;
 
 public abstract class SectionReader<T> : IModelObjectReader<T>
 {
-	public abstract T? Read(string modelObjectPath);
+    public abstract T? Read(string modelObjectPath);
 }

@@ -2,5 +2,5 @@
 
 public enum CourseFormat
 {
-	YAML
+    YAML,
 }

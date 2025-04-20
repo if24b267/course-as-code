@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
@@ -19,35 +19,36 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
         private readonly IGeneralHelper _generalHelper;
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public ModuleWriterUrl() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public ModuleWriterUrl()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _moodleVersionHelper = MoodleVersionHelper.Instance;
             _generalHelper = GeneralHelper.Instance;
         }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing
+        /// Constructor using Dependency Injection for Unit Testing.
         /// </summary>
-        /// <param name="xmlWriterFactory">Injected XML writer factory</param>
-        /// <param name="logger">Injected logger instance</param>
-        /// <param name="moodleVersionHelper">Injected MoodleVersionHelper instance</param>
-        /// <param name="generalHelper">Injected GeneralHelper instance</param>
-        public ModuleWriterUrl(IXmlWriterFactory xmlWriterFactory, ILogger logger,
-            IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper) : base(xmlWriterFactory, logger)
+        /// <param name="xmlWriterFactory">Injected XML writer factory.</param>
+        /// <param name="logger">Injected logger instance.</param>
+        /// <param name="moodleVersionHelper">Injected MoodleVersionHelper instance.</param>
+        /// <param name="generalHelper">Injected GeneralHelper instance.</param>
+        public ModuleWriterUrl(IXmlWriterFactory xmlWriterFactory, ILogger logger, IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper)
+            : base(xmlWriterFactory, logger)
         {
             _moodleVersionHelper = moodleVersionHelper;
             _generalHelper = generalHelper;
         }
 
         /// <summary>
-        /// Writes the modules.xml file required for a URL activity
+        /// Writes the modules.xml file required for a URL activity.
         /// </summary>
-        /// <param name="outputPath">The directory where module.xml will be saved</param>
-        /// <param name="course">The course model</param>
-        /// <param name="section">The section model</param>
-        /// <param name="activityObject">The activity object to write</param>
+        /// <param name="outputPath">The directory where module.xml will be saved.</param>
+        /// <param name="course">The course model.</param>
+        /// <param name="section">The section model.</param>
+        /// <param name="activityObject">The activity object to write.</param>
         public void WriteModule(string outputPath, Model.Course course, Section section, Activity activityObject)
         {
             try
@@ -66,8 +67,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
 
                     writer.WriteStartElement("module");
                     writer.WriteAttributeString("id", urlObject.SystemDefaults.ModuleId.ToString());
-                    writer.WriteAttributeString("version",
-                        _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
+                    writer.WriteAttributeString("version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
 
                     // Write contents of module tag
                     var elements = new Dictionary<string, string>
@@ -92,10 +92,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                         { "availability", "$@NULL@$" },
                         { "showdescription", urlObject.DisplayDescription ? "1" : "0" },
                         { "downloadcontent", "1" },
-                        { "lang", _generalHelper.GetLanguageFromEnum(urlObject.Language) }
+                        { "lang", _generalHelper.GetLanguageFromEnum(urlObject.Language) },
                     };
                     WriteElements(writer, elements);
-                    
+
                     TagsWriter.WriteTags(writer, urlObject.Tags, outputPath, Logger);
 
                     writer.WriteEndElement(); // Close <module>

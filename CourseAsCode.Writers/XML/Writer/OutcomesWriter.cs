@@ -10,16 +10,18 @@ namespace CourseAsCode.Writers.XML.Writer
         private const string DEFAULT_OUTCOMES_RELATIVE_PATH = "outcomes.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public OutcomesWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public OutcomesWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public OutcomesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger) : base(xmlWriterFactory, logger)
+        public OutcomesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+            : base(xmlWriterFactory, logger)
         {
         }
 
@@ -32,11 +34,11 @@ namespace CourseAsCode.Writers.XML.Writer
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-                    
+
                     writer.WriteStartElement("outcomes_definition");
                     writer.WriteString(" ");
                     writer.WriteEndElement(); // Close <outcomes_definition>
-                    
+
                     writer.WriteEndDocument();
                 }
 

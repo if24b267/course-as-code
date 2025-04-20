@@ -91,7 +91,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var groupingsNode = doc.DocumentElement?.SelectSingleNode("groupings");
             Assert.IsNotNull(groupingsNode, "The <groupings> element is missing");
         }
-        
+
         [Test]
         public void WriteGroups_GroupingsSectionContainsGroupingCustomFields()
         {

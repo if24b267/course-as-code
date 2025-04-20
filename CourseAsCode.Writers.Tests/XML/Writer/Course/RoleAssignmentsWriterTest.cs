@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
@@ -75,25 +75,25 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         {
             // Arrange: Create a dummy course with enrolled users who have been assigned roles
             _dummyCourse = FakeCourseFactory.CreateCourseWithRoleAssignments();
-            
+
             // Act
             _roleAssignmentsWriter.WriteRoleAssignments(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: Verify that for each enrolled user, an <assignment> element is created inside <role_assignments>.
             var assignmentNodes = doc.DocumentElement?.SelectNodes("role_assignments/assignment");
             Assert.IsNotNull(assignmentNodes, "No <assignment> elements found");
             Assert.That(assignmentNodes.Count, Is.EqualTo(_dummyCourse.EnrolledUsers.Count));
         }
-        
+
         [Test]
         public void WriteRoleAssignments_AssignmentElementsContainExpectedValues()
         {
             // Arrange: Create a dummy course with enrolled users who have been assigned roles
             _dummyCourse = FakeCourseFactory.CreateCourseWithRoleAssignments();
-            
+
             // Act
             _roleAssignmentsWriter.WriteRoleAssignments(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
@@ -141,9 +141,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         }
     }
 
-    #region Fake Course Factory
     /// <summary>
-    /// Factory for creating a dummy course with enrolled users who have been assigned roles
+    /// Factory for creating a dummy course with enrolled users who have been assigned roles.
     /// </summary>
     internal static partial class FakeCourseFactory
     {
@@ -151,7 +150,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         {
             var course = new Model.Course
             {
-                EnrolledUsers = new System.Collections.Generic.List<Model.User>()
+                EnrolledUsers = new System.Collections.Generic.List<Model.User>(),
             };
 
             // Create dummy users with assigned roles
@@ -164,9 +163,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                     ShortName = "Test Role 1",
                     SystemDefaults = new Role.SystemDefaultsRole()
                     {
-                        RoleId = 10
-                    }
-                }
+                        RoleId = 10,
+                    },
+                },
             };
 
             var user2 = new Model.User
@@ -178,9 +177,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                     ShortName = "Test Role 2",
                     SystemDefaults = new Role.SystemDefaultsRole()
                     {
-                        RoleId = 20
-                    }
-                }
+                        RoleId = 20,
+                    },
+                },
             };
 
             course.EnrolledUsers.Add(user1);
@@ -188,6 +187,4 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             return course;
         }
     }
-
-    #endregion
 }

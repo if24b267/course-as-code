@@ -46,7 +46,7 @@ public class Writer : IWriter
     private readonly BadgesWriter _badgesWriter = new BadgesWriter();
     private readonly CompletionWriter _completionWriter = new CompletionWriter();
     private readonly SectionWriter _sectionWriter = new SectionWriter();
-    
+
     // -- Activity Writers -- //
     // Common Activity Writers
     private readonly ActivityGradesWriter _activityGradesWriter = new ActivityGradesWriter();
@@ -59,15 +59,15 @@ public class Writer : IWriter
     private readonly ActivityCompetenciesWriter _activityCompetenciesWriter = new ActivityCompetenciesWriter();
     private readonly ActivityCompletionWriter _activityCompletionWriter = new ActivityCompletionWriter();
     private readonly ActivityFiltersWriter _activityFiltersWriter = new ActivityFiltersWriter();
-    
+
     // Text and Media Area (Label) Activity Writers
     private readonly LabelWriter _labelWriter = new LabelWriter();
     private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
-    
+
     // URL Activity Writers
     private readonly UrlWriter _urlWriter = new UrlWriter();
     private readonly ModuleWriterUrl _moduleWriterUrl = new ModuleWriterUrl();
-    
+
     // File Activity Writers
     private readonly FileWriter _fileWriter = new FileWriter();
     private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
@@ -239,7 +239,7 @@ public class Writer : IWriter
         }
 
         // -- Write course files -- //
-        
+
         // Create course directory if it does not exist
         if (!SafeCreateDirectory(Path.Combine(outputPath, "course")))
         {
@@ -287,8 +287,7 @@ public class Writer : IWriter
         // Create inforef.xml for each section
         InforefSectionsWriter inforefSectionsWriter = new InforefSectionsWriter();
         inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
-        
-        
+
         // -- Write activity files -- //
 
         // Ensure there is an activities and a files directory (used by activities that require files)
@@ -296,7 +295,7 @@ public class Writer : IWriter
         {
             Environment.Exit(1);
         }
-        
+
         // Iterate through all sections of the course
         foreach (var section in course.Sections)
         {
@@ -304,9 +303,9 @@ public class Writer : IWriter
             foreach (var activity in section.Activities)
             {
                 _logger.Debug($"Writing activity {activity.ActivityId}: {activity.Name}");
-                
+
                 string? activityPath = string.Empty;
-                
+
                 // Text and Media Area (Label)-specific XML files
                 if (activity is TextAndMediaArea textAndMediaArea)
                 {
@@ -336,7 +335,7 @@ public class Writer : IWriter
                     _logger.Error($"Skipping activity {activity.ActivityId}: {activity.Name} due to directory creation failure");
                     continue;
                 }
-                
+
                 // General activity XML files (common for all activities)
                 _activityCalendarWriter.WriteCalendar(activityPath);
                 _activityCommentsWriter.WriteComments(activityPath);
@@ -350,16 +349,16 @@ public class Writer : IWriter
                 _activityXapistateWriter.WriteState(activityPath);
             }
         }
+
         return true;
     }
-    
-    
+
     /// <summary>
-    /// writes the XML files specific to the File activity
+    /// writes the XML files specific to the File activity.
     /// </summary>
     /// <returns>
-    /// <para> the path to the directory where the files for that activity were written </para>
-    /// <para> null if the directory couldn't be created</para>
+    /// <para> the path to the directory where the files for that activity were written. </para>
+    /// <para> null if the directory couldn't be created.</para>
     /// </returns>
     private string? CreateFileActivity(Course course, string outputPath, Activity activity, MoodleFile moodleFile, Section section)
     {
@@ -372,11 +371,11 @@ public class Writer : IWriter
 
     
     /// <summary>
-    /// writes the XML files specific to the URL activity
+    /// writes the XML files specific to the URL activity.
     /// </summary>
     /// <returns>
-    /// <para> the path to the directory where the files for that activity were written </para>
-    /// <para> null if the directory couldn't be created</para>
+    /// <para> the path to the directory where the files for that activity were written. </para>
+    /// <para> null if the directory couldn't be created.</para>
     /// </returns>
     private string? CreateUrlActivity(Course course, string outputPath, Activity activity, URL urlObject, Section section)
     {
@@ -389,11 +388,11 @@ public class Writer : IWriter
 
 
     /// <summary>
-    /// writes the XML files specific to the Text and Media Area (Label) activity
+    /// writes the XML files specific to the Text and Media Area (Label) activity.
     /// </summary>
     /// <returns>
-    /// <para> the path to the directory where the files for that activity were written </para>
-    /// <para> null if the directory couldn't be created</para>
+    /// <para> the path to the directory where the files for that activity were written. </para>
+    /// <para> null if the directory couldn't be created.</para>
     /// </returns>
     private string? CreateTextAndMediaArea(Course course, string outputPath, Activity activity, TextAndMediaArea textAndMediaArea, Section section)
     {
@@ -423,27 +422,26 @@ public class Writer : IWriter
     
     
     /// <summary>
-    /// Creates an activity directory using the specified prefix and processes it via the given action
+    /// Creates an activity directory using the specified prefix and processes it via the given action.
     /// </summary>
-    /// <param name="outputPath">The base output directory</param>
-    /// <param name="activity">The activity instance</param>
-    /// <param name="prefix">prefix that distinguishes the activity type (e.g., "resource", "url", "label")</param>
-    /// <param name="processActivity">A lambda that performs the writing logic for the activity</param>
-    /// <returns>The path to the created directory, or null if directory creation fails</returns>
+    /// <param name="outputPath">The base output directory.</param>
+    /// <param name="activity">The activity instance.</param>
+    /// <param name="prefix">prefix that distinguishes the activity type (e.g., "resource", "url", "label").</param>
+    /// <param name="processActivity">A lambda that performs the writing logic for the activity.</param>
+    /// <returns>The path to the created directory, or null if directory creation fails.</returns>
     private string? CreateActivity(string outputPath, Activity activity, string prefix, Action<string> processActivity)
     {
         string activityPath = Path.Combine(outputPath, "activities", $"{prefix}_{activity.ActivityId}");
-    
+
         if (!SafeCreateDirectory(activityPath))
         {
             return null;
         }
-    
+
         processActivity(activityPath);
         return activityPath;
     }
-    
-    
+
     private bool SafeCreateDirectory(string path)
     {
         try

@@ -10,14 +10,15 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         private const string DEFAULT_FILTERS_RELATIVE_PATH = "filters.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public ActivityFiltersWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public ActivityFiltersWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
         public ActivityFiltersWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
             : base(xmlWriterFactory, logger)
@@ -25,9 +26,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         }
 
         /// <summary>
-        /// Writes the filters.xml file required for an activity
+        /// Writes the filters.xml file required for an activity.
         /// </summary>
-        /// <param name="outputPath">The output directory path</param>
+        /// <param name="outputPath">The output directory path.</param>
         public void WriteFilters(string outputPath)
         {
             try
@@ -40,11 +41,13 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                     writer.WriteStartElement("filters");
 
                     writer.WriteStartElement("filter_actives");
+
                     // Add whitespace to prevent a self-closing tag
                     writer.WriteWhitespace("\n");
                     writer.WriteEndElement(); // Close <filter_actives>
 
                     writer.WriteStartElement("filter_configs");
+
                     // Add whitespace to prevent a self-closing tag
                     writer.WriteWhitespace("\n");
                     writer.WriteEndElement(); // Close <filter_configs>

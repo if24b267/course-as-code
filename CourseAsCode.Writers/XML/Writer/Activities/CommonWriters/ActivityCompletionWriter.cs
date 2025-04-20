@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NLog;
@@ -10,15 +10,15 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         private const string DEFAULT_COMPLETION_RELATIVE_PATH = "completion.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public ActivityCompletionWriter() 
+        public ActivityCompletionWriter()
             : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
         public ActivityCompletionWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
             : base(xmlWriterFactory, logger)
@@ -26,9 +26,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         }
 
         /// <summary>
-        /// Writes the completion.xml file required for an activity
+        /// Writes the completion.xml file required for an activity.
         /// </summary>
-        /// <param name="outputPath">The output directory path</param>
+        /// <param name="outputPath">The output directory path.</param>
         public void WriteCompletion(string outputPath)
         {
             try
@@ -39,12 +39,13 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                 {
                     writer.WriteStartDocument();
                     writer.WriteStartElement("completions");
-                    
+
                     writer.WriteStartElement("completionviews");
+
                     // Add whitespace to prevent a self-closing tag
                     writer.WriteWhitespace("\n");
                     writer.WriteEndElement(); // Close <completionviews>
-                    
+
                     writer.WriteEndElement(); // Close <completions>
                     writer.WriteEndDocument();
                 }

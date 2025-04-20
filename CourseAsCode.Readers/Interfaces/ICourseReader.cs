@@ -5,5 +5,5 @@ namespace CourseAsCode.Readers.Interfaces;
 
 public interface ICourseReader
 {
-	public Course? Read(string path, CourseFormat format);
+    public Course? Read(string path, CourseFormat format);
 }
