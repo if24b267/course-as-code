@@ -93,11 +93,8 @@ public class QuizWriter : XmlWriterBase
     {
         writer.WriteStartElement("quiz");
         writer.WriteAttributeString("id", quiz.ActivityId.ToString());
-
-        // ──────────────────────────────────────────────────────────────────────
-        // Basic elements – direct mapping from the data model
-        // ──────────────────────────────────────────────────────────────────────
-        var elements = new Dictionary<string, string>
+        
+        var quizElements = new Dictionary<string, string>
         {
             { "name", quiz.Name },
             { "intro", quiz.Description ?? string.Empty },
@@ -114,7 +111,7 @@ public class QuizWriter : XmlWriterBase
             { "grademethod", _generalHelper.EnumIntegerToString(quiz.GradingMethod) },
             { "decimalpoints", quiz.DecimalsToDisplayGrades.ToString() },
             { "questiondecimalpoints", quiz.DecimalsToDisplayMarks.ToString() },
-            // Review options – currently the same mask for all reviewX elements | TODO: Find out how the bit-mask works
+            // Review options – defined by a bitmask, see `QuizzesAnalysis.md` for details
             { "reviewattempt", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewAttempt).ToString() },
             { "reviewcorrectness", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewWhetherCorrect).ToString() },
             { "reviewmaxmarks", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewMarks).ToString() },
@@ -127,7 +124,7 @@ public class QuizWriter : XmlWriterBase
             { "questionsperpage", quiz.NewPageThreshold.ToString() },
             { "navmethod", "free" }, // TODO: make configurable
             { "shuffleanswers", quiz.ShuffleWithinQuestions ? "1" : "0" },
-            { "sumgrades", (quiz.Questions?.Sum(q => q.DefaultMark) ?? 0.0f).ToString("0.00000", CultureInfo.InvariantCulture) },
+            { "sumgrades", quiz.Questions.Sum(q => q.DefaultMark).ToString("0.00000", CultureInfo.InvariantCulture) },
             { "grade", quiz.MaxGrade.ToString(format: "0.00000", CultureInfo.InvariantCulture) },
             { "timecreated", _generalHelper.DateTimeToUnixTimestamp(quiz.TimeCreated) },
             { "timemodified", _generalHelper.DateTimeToUnixTimestamp(quiz.TimeModified) },
@@ -143,12 +140,10 @@ public class QuizWriter : XmlWriterBase
             { "allowofflineattempts", "0" }
         };
 
-        WriteElements(writer, elements);
+        WriteElements(writer, quizElements);
 
-        // ──────────────────────────────────────────────────────────────────────
-        // Complex sub‑structures
-        // ──────────────────────────────────────────────────────────────────────
-        WriteSEBSubPlugin(writer, quiz);
+        // Plugins and substructures
+        WriteSebSubPlugin(writer, quiz);
         WriteGradeItems(writer);
         WriteQuestionInstances(writer, quiz);
         WriteSections(writer, quiz);
@@ -162,7 +157,7 @@ public class QuizWriter : XmlWriterBase
     }
     
     
-    private void WriteSEBSubPlugin(XmlWriter writer, Model.Activities.Resources.Quiz quiz)
+    private void WriteSebSubPlugin(XmlWriter writer, Model.Activities.Resources.Quiz quiz)
     {
         writer.WriteStartElement("subplugin_quizaccess_seb_quiz"); // Empty tag if SEB is not required
         
@@ -222,7 +217,7 @@ public class QuizWriter : XmlWriterBase
     {
         writer.WriteStartElement("question_instances");
 
-        if (quiz.Questions?.Count > 0)
+        if (quiz.Questions.Count > 0)
         {
             int slot = 1; // Ascending slot number (1-based)
             foreach (var question in quiz.Questions)
@@ -257,9 +252,11 @@ public class QuizWriter : XmlWriterBase
 
                 writer.WriteEndElement(); // </question_instance>
                 slot++;
+                
+                LogTrace($"Added question {question.QuestionId}: {question.QuestionName} to Quiz activity {quiz.ActivityId}: {quiz.Name}");
             }
         }
-
+        
         writer.WriteEndElement(); // </question_instances>
     }
 
@@ -300,8 +297,8 @@ public class QuizWriter : XmlWriterBase
                 {
                     { "feedbacktext", feedback.FeedbackText },
                     { "feedbacktextformat", _generalHelper.EnumIntegerToString(feedback.OverallFeedbackFormat) },
-                    { "mingrade", feedback.GradeBoundary.ToString(format: "0.00000", CultureInfo.InvariantCulture) },
-                    { "maxgrade", GetNextHigherBoundary(feedback.GradeBoundary, quiz.Feedback).ToString(format: "0.00000", CultureInfo.InvariantCulture) }
+                    { "mingrade", (quiz.MaxGrade * (feedback.GradeBoundary/100f)).ToString(format: "0.00000", CultureInfo.InvariantCulture) },
+                    { "maxgrade", (quiz.MaxGrade * (GetNextHigherBoundary(feedback.GradeBoundary, quiz.Feedback)/100f)).ToString(format: "0.00000", CultureInfo.InvariantCulture) }
                 };
                 WriteElements(writer, feedbackElements);
 
@@ -361,24 +358,27 @@ public class QuizWriter : XmlWriterBase
     /// </returns>
     private float GetNextHigherBoundary(float current, List<QuizFeedback> all)
     {
-        const float defaultBoundary = 11f;
+        const float defaultBoundary = 100f;
 
         // Extract all grade boundaries from the feedback items
         var boundaries = all.Select(fb => fb.GradeBoundary);
 
         // Filter only those strictly greater than the current boundary
         var higherBoundaries = boundaries
-            .Where(boundary => boundary > current);
+            .Where(boundary => boundary > current)
+            .ToList();
 
         // If there are no higher boundaries, return the default (i.e., the max possible score)
-        if (!higherBoundaries.Any())
+        if (higherBoundaries.Count == 0)
         {
             return defaultBoundary;
         }
 
         // Otherwise, return the smallest of the higher boundaries
         float nextHigher = higherBoundaries.Min();
-        return nextHigher;
+        
+        // Subtract -0.00001 to avoid conflicts with the next lower boundary
+        return nextHigher - 0.0001f;
     }
 
 

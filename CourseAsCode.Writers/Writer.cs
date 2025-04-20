@@ -191,7 +191,27 @@ public class Writer : IWriter
             NewPageThreshold        = 0,
             ShowPicture             = PictureOptions.SmallImage,
             Questions               = new() { q1, q2, q3 },
-            Feedback                = new(),
+            Feedback                = new List<QuizFeedback>()
+            {
+                new QuizFeedback()
+                {
+                    FeedbackText = "<p>You did it!</p>",
+                    GradeBoundary = 100f,
+                    OverallFeedbackFormat = FormattingFormat.HTML
+                },
+                new QuizFeedback()
+                {
+                  FeedbackText  = "<p>Probably should go back to kindergarten</p>",
+                  GradeBoundary = 50f,
+                  OverallFeedbackFormat = FormattingFormat.HTML
+                },
+                new QuizFeedback()
+                {
+                    FeedbackText = "<p>Oh, wow that's just sad</p>",
+                    GradeBoundary = 0f,
+                    OverallFeedbackFormat = FormattingFormat.HTML
+                }
+            }
         };
 
         var testSection = new Section
