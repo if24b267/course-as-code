@@ -375,7 +375,7 @@ namespace CourseAsCode.Writers.XML.Writer
 
 
         /// <summary>
-        /// Writes the top-level question category to the XML file. This is required by Moodle to serve as the parent category for all other question categories
+        /// Writes the top-level question category to the XML file. Moodle requires this to serve as the parent category for all other question categories
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document</param>
         /// <param name="id">The unique identifier of the top-level category</param>
