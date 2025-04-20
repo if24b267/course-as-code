@@ -40,7 +40,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Create dummy questions
             var q1 = new MultipleChoiceQuestion 
-                {
+            {
+                QuestionId          = 1, // Normally set by `QuestionsWriter.cs`, simulate it here
+                BankEntryId         = 1, // Normally set by `QuestionsWriter.cs`, simulate it here
                 Category            = "Default category",
                 QuestionName        = "Shamir’s Theorem",
                 QuestionText        = "<p>Which equality does Shamir’s Theorem prove?</p>",
@@ -81,6 +83,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             
             var q2 = new MultipleChoiceQuestion
             {
+                QuestionId          = 5, // Normally set by `QuestionsWriter.cs`, simulate it here
+                BankEntryId         = 8, // Normally set by `QuestionsWriter.cs`, simulate it here
                 Category            = "Linux basics",
                 QuestionName        = "Linux navigation commands",
                 QuestionText        = "<p>Select the navigation-related commands.</p>",
@@ -100,6 +104,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             var q3 = new SingleChoiceQuestion
             {
+                QuestionId = 8, // Normally set by `QuestionsWriter.cs`, simulate it here
+                BankEntryId = 24, // Normally set by `QuestionsWriter.cs`, simulate it here
                 Category = "Linux basics",
                 QuestionName = "Linux filesystem",
                 QuestionText = "What does the `/etc` directory in the Linux file system hierarchy typically contain?",
@@ -225,6 +231,75 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             var introNode = doc.DocumentElement?.SelectSingleNode("quiz/intro");
             Assert.IsNotNull(introNode, "Missing <intro>");
             Assert.That(introNode.InnerText, Is.EqualTo(_dummyQuiz.Description));
+        }
+
+        [Test]
+        public void WriteQuiz_IncludesQuestionElementsWithCorrectIds()
+        {
+            // Act
+            _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
+            var output = _testFactory.StringWriter.ToString();
+            
+            var doc = new XmlDocument();
+            doc.LoadXml(output);
+            
+            // Assert: The question elements should be <question_instance> with correct id attributes
+            var questionNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance");
+            Assert.IsNotNull(questionNodes, "Missing <question> elements");
+            Assert.That(questionNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
+            
+            // Assert: The IDs of the <question_instance> elements should match the IDs of the questions
+            for (int i = 0; i < questionNodes.Count; i++)
+            {
+                var questionNode = questionNodes[i];
+                Assert.That(questionNode?.Attributes?["id"]?.Value, Is.EqualTo(_dummyQuiz.Questions[i].QuestionId.ToString()));
+            }
+        }
+
+        [Test]
+        public void WriteQuiz_IncludesQuestionReferenceElementsWithCorrectIds()
+        {
+            // Act
+            _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
+            var output = _testFactory.StringWriter.ToString();
+            
+            var doc = new XmlDocument();
+            doc.LoadXml(output);
+            
+            // Assert: The question reference elements should be <question_reference> with correct id attributes
+            var questionRefNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance//question_reference");
+            Assert.IsNotNull(questionRefNodes, "Missing <question_reference> elements");
+            Assert.That(questionRefNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
+            
+            // Assert: The IDs of the <question_reference> elements should match the IDs of the questions
+            for (int i = 0; i < questionRefNodes.Count; i++)
+            {
+                var questionRefNode = questionRefNodes[i];
+                Assert.That(questionRefNode?.Attributes?["id"]?.Value, Is.EqualTo(_dummyQuiz.Questions[i].QuestionId.ToString()));
+            }
+        }
+
+        [Test]
+        public void WriteQuiz_QuestionReferenceReferencesCorrectQuestionBank()
+        {
+            // Act
+            _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
+            var output = _testFactory.StringWriter.ToString();
+            
+            var doc = new XmlDocument();
+            doc.LoadXml(output);
+            
+            // Assert: The <questionbankentryid> elements inside the <question_reference> elements should reference the correct question bank
+            var questionBankRefNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance//question_reference//questionbankentryid");
+            Assert.IsNotNull(questionBankRefNodes, "Missing <questionbankentryid> elements");
+            Assert.That(questionBankRefNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
+            
+            // Assert: The IDs (= value) of the <questionbankentryid> elements should match the QuestionBank IDs stored in the questions
+            for (int i = 0; i < questionBankRefNodes.Count; i++)
+            {
+                var questionBankRefNode = questionBankRefNodes[i];
+                Assert.That(questionBankRefNode?.InnerText, Is.EqualTo(_dummyQuiz.Questions[i].BankEntryId.ToString()));
+            }
         }
 
         [Test]
