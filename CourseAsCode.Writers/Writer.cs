@@ -87,7 +87,7 @@ public class Writer : IWriter
         // TEMPORARY CODE FOR TESTING - REMOVE LATER
         // ---------------------------------------------
         
-        // Add two dummy questions to the course
+        // Add a few dummy questions to the course
         var q1 = new MultipleChoiceQuestion
         {
             Category            = "Default category",
@@ -232,7 +232,7 @@ public class Writer : IWriter
         // ---------------------------------------------
 
         // Ensure sections list is not empty
-        if (course.Sections == null || course.Sections.Count == 0)
+        if (course.Sections.Count == 0)
         {
             _logger.Info("No sections specified by user, adding default section");
             course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };

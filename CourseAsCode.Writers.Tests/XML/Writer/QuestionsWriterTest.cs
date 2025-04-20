@@ -25,7 +25,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         [SetUp]
         public void SetUp()
         {
-            // Arrange: Set up fake XML writer factory and logger
+            // Arrange: Set up fake XML writer factory (to capture XML output) and logger
             _testFactory = new XmlWriterFactoryTest();
             _logger = Substitute.For<ILogger>();
 
