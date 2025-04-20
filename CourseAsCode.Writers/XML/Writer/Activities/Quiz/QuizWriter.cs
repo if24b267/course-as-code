@@ -37,6 +37,7 @@ public class QuizWriter : XmlWriterBase
         _generalHelper = generalHelper;
     }
 
+    
     /// <summary>
     /// Writes the quiz activity to an XML file
     /// </summary>
