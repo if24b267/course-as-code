@@ -74,7 +74,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var competenciesNode = doc.DocumentElement?.SelectSingleNode("competencies");
             Assert.IsNotNull(competenciesNode, "The <competencies> element is missing");
         }
-        
+
         [Test]
         public void WriteCompetencies_ContainsUserCompetenciesSections()
         {
@@ -84,7 +84,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             // Act
             _competenciesWriter.WriteCompetencies(_dummyCourse, dummyOutputPath);
             string output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: Check that the <user_competencies> element exists
             var doc = new XmlDocument();
             doc.LoadXml(output);

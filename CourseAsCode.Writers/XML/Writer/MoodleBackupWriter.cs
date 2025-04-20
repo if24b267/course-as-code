@@ -1,10 +1,10 @@
 using System.Xml;
-using CourseAsCode.Writers.XML.Helper;
-using CourseAsCode.Writers.XML.Static;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Static;
 using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer
@@ -19,9 +19,10 @@ namespace CourseAsCode.Writers.XML.Writer
 
         /// <summary>
         /// Default constructor.
-        /// Initializes helper singletons and passes default XML writer factory and logger to the base class
+        /// Initializes helper singletons and passes default XML writer factory and logger to the base class.
         /// </summary>
-        public MoodleBackupWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public MoodleBackupWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _helper = GeneralHelper.Instance;
             _moodleVersionHelper = MoodleVersionHelper.Instance;
@@ -29,10 +30,9 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public MoodleBackupWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger,
-                                  IGeneralHelper helper, IMoodleVersionHelper moodleVersionHelper, ICourseHelper courseHelper)
+        public MoodleBackupWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper, IMoodleVersionHelper moodleVersionHelper, ICourseHelper courseHelper)
             : base(xmlWriterFactory, logger)
         {
             _helper = helper;
@@ -72,10 +72,10 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// writes the general settings within the information section of moodle_backup.xml
+        /// writes the general settings within the information section of moodle_backup.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteGeneralSettings(XmlWriter writer, Model.Course course)
         {
             var elements = new Dictionary<string, string>
@@ -98,24 +98,24 @@ namespace CourseAsCode.Writers.XML.Writer
                 { "original_course_startdate", _helper.DateTimeToUnixTimestamp(course.StartDate) },
                 { "original_course_enddate", course.EndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)course.EndDate) : "0" },
                 { "original_course_contextid", GeneralDefaults.COURSECONTEXTID.ToString() },
-                { "original_system_contextid", GeneralDefaults.SYSTEMCONTEXTID.ToString() }
+                { "original_system_contextid", GeneralDefaults.SYSTEMCONTEXTID.ToString() },
             };
 
             WriteElements(writer, elements);
         }
 
         /// <summary>
-        /// writes the information section of moodle_backup.xml
+        /// writes the information section of moodle_backup.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteDetails(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("details");
 
             WriteStartElementWithAttributes(writer, "detail", new Dictionary<string, string>
             {
-                { "backup_id", course.BackupMetadata.SystemDefaults.BackupId }
+                { "backup_id", course.BackupMetadata.SystemDefaults.BackupId },
             });
 
             var elements = new Dictionary<string, string>
@@ -125,7 +125,7 @@ namespace CourseAsCode.Writers.XML.Writer
                 { "interactive", "1" },
                 { "mode", "10" },
                 { "execution", "1" },
-                { "executiontime", "0" }
+                { "executiontime", "0" },
             };
 
             WriteElements(writer, elements);
@@ -135,10 +135,10 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// writes the contents section of moodle_backup.xml
+        /// writes the contents section of moodle_backup.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteContents(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("contents");
@@ -190,7 +190,7 @@ namespace CourseAsCode.Writers.XML.Writer
 
                         writer.WriteEndElement(); // Closes <activity>
                     }
-                    
+
                     if (activity is MoodleFile moodleFile)
                     {
                         writer.WriteStartElement("activity");
@@ -204,10 +204,11 @@ namespace CourseAsCode.Writers.XML.Writer
 
                         writer.WriteEndElement(); // Closes <activity>
                     }
-                    
+
                     LogTrace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
                 }
             }
+
             writer.WriteEndElement(); // Closes <activities>
         }
 
@@ -230,17 +231,18 @@ namespace CourseAsCode.Writers.XML.Writer
                 writer.WriteElementString("modname", string.Empty);
 
                 writer.WriteEndElement(); // Closes <section>
-                
+
                 LogTrace($"Added reference for 'Section {section.SystemDefaults.SectionId}: {section.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
             }
+
             writer.WriteEndElement(); // Closes <sections>
         }
 
         /// <summary>
-        /// writes the course subsection of the contents section of moodle_backup.xml
+        /// writes the course subsection of the contents section of moodle_backup.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteCourseSubsection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("course");
@@ -249,7 +251,7 @@ namespace CourseAsCode.Writers.XML.Writer
             {
                 { "courseid", course.SystemDefaults.Id.ToString() },
                 { "title", course.ShortName },
-                { "directory", "course" }
+                { "directory", "course" },
             };
 
             WriteElements(writer, elements);
@@ -258,10 +260,10 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// writes the settings section of moodle_backup.xml
+        /// writes the settings section of moodle_backup.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteSettings(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("settings");
@@ -274,10 +276,10 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// writes the root level settings of the settings section of moodle_backup.xml, corresponds to the general backup settings selected by the user in the Moodle UI
+        /// writes the root level settings of the settings section of moodle_backup.xml, corresponds to the general backup settings selected by the user in the Moodle UI.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteRootLevelSettings(XmlWriter writer, Model.Course course)
         {
             var settings = new Dictionary<string, string>
@@ -302,7 +304,7 @@ namespace CourseAsCode.Writers.XML.Writer
                 { "customfield", course.BackupMetadata.BackupSettings.IncludeCustomFields ? "1" : "0" },
                 { "contentbankcontent", course.BackupMetadata.BackupSettings.IncludeContentBankContent ? "1" : "0" },
                 { "xapistate", course.BackupMetadata.BackupSettings.IncludeUserStateInContent ? "1" : "0" },
-                { "legacyfiles", course.BackupMetadata.BackupSettings.IncludeLegacyCourseFiles ? "1" : "0" }
+                { "legacyfiles", course.BackupMetadata.BackupSettings.IncludeLegacyCourseFiles ? "1" : "0" },
             };
 
             foreach (var setting in settings)
@@ -383,6 +385,7 @@ namespace CourseAsCode.Writers.XML.Writer
             {
                 writer.WriteElementString("section", element);
             }
+
             writer.WriteElementString("name", name);
             writer.WriteElementString("value", value);
 
@@ -390,12 +393,12 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// writes a single setting tag, for use inside the settings section of moodle_backup.xml
+        /// writes a single setting tag, for use inside the settings section of moodle_backup.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="level">value of the level tag inside the setting tag</param>
-        /// <param name="name">value of the name tag inside the setting tag</param>
-        /// <param name="value">value of the value tag inside the setting tag</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="level">value of the level tag inside the setting tag.</param>
+        /// <param name="name">value of the name tag inside the setting tag.</param>
+        /// <param name="value">value of the value tag inside the setting tag.</param>
         private void WriteSingleBackupSettingTag(XmlWriter writer, string level, string name, string value)
         {
             writer.WriteStartElement("setting");

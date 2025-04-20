@@ -2,5 +2,5 @@
 
 public enum TextMediaContentType
 {
-	MARKDOWN
+    MARKDOWN,
 }

@@ -14,20 +14,20 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         private readonly IGeneralHelper _generalHelper;
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public FileWriter() 
+        public FileWriter()
             : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _generalHelper = GeneralHelper.Instance;
         }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing
+        /// Constructor using Dependency Injection for Unit Testing.
         /// </summary>
-        /// <param name="xmlWriterFactory">The XML writer factory to use</param>
-        /// <param name="logger">The logger instance to use</param>
-        /// <param name="generalHelper">The general helper instance to use</param>
+        /// <param name="xmlWriterFactory">The XML writer factory to use.</param>
+        /// <param name="logger">The logger instance to use.</param>
+        /// <param name="generalHelper">The general helper instance to use.</param>
         public FileWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper)
             : base(xmlWriterFactory, logger)
         {
@@ -35,10 +35,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         }
 
         /// <summary>
-        /// writes the file (resource) activity to an XML file
+        /// writes the file (resource) activity to an XML file.
         /// </summary>
-        /// <param name="outputPath">the output path where the resource.xml file will be saved</param>
-        /// <param name="moodleFile">the file to write</param>
+        /// <param name="outputPath">the output path where the resource.xml file will be saved.</param>
+        /// <param name="moodleFile">the file to write.</param>
         public void WriteFile(string outputPath, MoodleFile moodleFile)
         {
             try
@@ -67,10 +67,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         }
 
         /// <summary>
-        /// writes the activity tag and its attributes
+        /// writes the activity tag and its attributes.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="moodleFile">initialized MoodleFile object to write</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="moodleFile">initialized MoodleFile object to write.</param>
         private void WriteActivityAttributes(XmlWriter writer, MoodleFile moodleFile)
         {
             writer.WriteAttributeString("id", moodleFile.ActivityId.ToString());
@@ -80,10 +80,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         }
 
         /// <summary>
-        /// writes the resource element and its child elements
+        /// writes the resource element and its child elements.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="moodleFile">initialized MoodleFile object to write</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="moodleFile">initialized MoodleFile object to write.</param>
         private void WriteResourceTag(XmlWriter writer, MoodleFile moodleFile)
         {
             writer.WriteStartElement("resource");
@@ -102,7 +102,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
                 { "displayoptions", "a:2:{s:10:\"printintro\";i:1;s:8:\"showtype\";i:1;}" }, // TODO: Determine meaning of this value
                 { "filterfiles", "0" }, // TODO: Determine meaning of this value
                 { "revision", "1" }, // TODO: Determine meaning of this value
-                { "timemodified", _generalHelper.DateTimeToUnixTimestamp(moodleFile.TimeModified) }
+                { "timemodified", _generalHelper.DateTimeToUnixTimestamp(moodleFile.TimeModified) },
             };
 
             WriteElements(writer, elements);

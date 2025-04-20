@@ -2,7 +2,7 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using NLog;
 using NSubstitute;
@@ -70,7 +70,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Create a dummy course with one role
             _dummyCourse = FakeCourseFactory.CreateCourseWithRole();
-            
+
             // Act
             _rolesWriter.WriteRoles(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
@@ -78,7 +78,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: Verify that the expected role elements are present and contain the expected content
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             var roleNodes = doc.DocumentElement?.SelectNodes("role");
             Assert.IsNotNull(roleNodes, "No <role> elements found");
             Assert.That(roleNodes.Count, Is.EqualTo(_dummyCourse.Roles.Count));
@@ -127,7 +127,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         }
     }
 
-    #region Fake Course Factory
     /// <summary>
     /// Factory for creating a dummy course with a role
     /// </summary>
@@ -137,7 +136,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             var course = new Model.Course
             {
-                Roles = new List<Role>()
+                Roles = new List<Role>(),
             };
 
             // Create a dummy role
@@ -154,5 +153,4 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             return course;
         }
     }
-    #endregion
 }

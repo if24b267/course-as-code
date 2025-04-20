@@ -2,5 +2,5 @@
 
 public class YamlActivityFilePath
 {
-	public string ActivityFilePath { get; set; }
+    public string ActivityFilePath { get; set; }
 }

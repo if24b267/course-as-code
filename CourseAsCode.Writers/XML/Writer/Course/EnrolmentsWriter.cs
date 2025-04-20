@@ -1,12 +1,13 @@
+using System.Xml;
+
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enrolments;
-using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Static;
-using NLog;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Static;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -19,7 +20,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public EnrolmentsWriter() 
+        public EnrolmentsWriter()
             : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _helper = GeneralHelper.Instance;
@@ -54,10 +55,12 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                         {
                             WriteManualEnrolSection(writer, course);
                         }
+
                         if (enrolmentMethod is GuestEnrolment)
                         {
                             WriteGuestEnrolSection(writer, course);
                         }
+
                         if (enrolmentMethod is SelfEnrolment)
                         {
                             WriteSelfEnrolSection(writer, course);
@@ -80,17 +83,17 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the `enrol` section for the manual enrolment method; to be used within the `enrols` section
+        /// writes the `enrol` section for the manual enrolment method; to be used within the `enrols` section.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteManualEnrolSection(XmlWriter writer, Model.Course course)
         {
             ManualEnrolment manualEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is ManualEnrolment) as ManualEnrolment)!;
 
             WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
             {
-                { "id", "1" }
+                { "id", "1" },
             });
 
             var elements = new Dictionary<string, string>
@@ -108,6 +111,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 { "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
                 { "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
                 { "roleid", manualEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
+
                 // TODO: Find out what all these <customXXX> values mean
                 { "customint1", "1" },
                 { "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
@@ -127,7 +131,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 { "customtext3", "$@NULL@$" },
                 { "customtext4", "$@NULL@$" },
                 { "timecreated", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeCreated) },
-                { "timemodified", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeModified) }
+                { "timemodified", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeModified) },
             };
 
             WriteElements(writer, elements);
@@ -149,17 +153,17 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the `enrol` section for the guest enrolment method; to be used within the `enrols` section
+        /// writes the `enrol` section for the guest enrolment method; to be used within the `enrols` section.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteGuestEnrolSection(XmlWriter writer, Model.Course course)
         {
             GuestEnrolment guestEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is GuestEnrolment) as GuestEnrolment)!;
 
             WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
             {
-                { "id", "2" }
+                { "id", "2" },
             });
 
             var elements = new Dictionary<string, string>
@@ -195,7 +199,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 { "customtext3", "$@NULL@$" },
                 { "customtext4", "$@NULL@$" },
                 { "timecreated", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeCreated) },
-                { "timemodified", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeModified) }
+                { "timemodified", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeModified) },
             };
 
             WriteElements(writer, elements);
@@ -217,17 +221,17 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the `enrol` section for the self enrolment method; to be used within the `enrols` section
+        /// writes the `enrol` section for the self enrolment method; to be used within the `enrols` section.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteSelfEnrolSection(XmlWriter writer, Model.Course course)
         {
             SelfEnrolment selfEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is SelfEnrolment) as SelfEnrolment)!;
 
             WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
             {
-                { "id", "3" }
+                { "id", "3" },
             });
 
             var elements = new Dictionary<string, string>
@@ -263,7 +267,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 { "customtext3", "$@NULL@$" },
                 { "customtext4", "$@NULL@$" },
                 { "timecreated", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeCreated) },
-                { "timemodified", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeModified) }
+                { "timemodified", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeModified) },
             };
 
             WriteElements(writer, elements);
@@ -285,15 +289,15 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// Writes a single `enrolment` section for one specific user; to be used within the `user_enrolments` section for each user enrolled using that method
+        /// Writes a single `enrolment` section for one specific user; to be used within the `user_enrolments` section for each user enrolled using that method.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="user">the user enrolled using the enrolment method as specified in the parent tag</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="user">the user enrolled using the enrolment method as specified in the parent tag.</param>
         private void WriterUserEnrolmentSection(XmlWriter writer, User user)
         {
             WriteStartElementWithAttributes(writer, "enrolment", new Dictionary<string, string>
             {
-                { "id", _enrolmentIdCounter.ToString() }
+                { "id", _enrolmentIdCounter.ToString() },
             });
             _enrolmentIdCounter++;
 
@@ -303,8 +307,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 { "userid", user.SystemDefaults.Id.ToString() },
                 { "timestart", _helper.DateTimeToUnixTimestamp(user.SensibleDefaults.EnrolmentStartDate) },
                 { "timeend", user.SensibleDefaults.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SensibleDefaults.EnrolmentEndDate) : "0" },
-                { "modifierid", GeneralDefaults.DEFAULT_ADMIN_USER_ID.ToString() },
-                { "timemodified", _helper.DateTimeToUnixTimestamp(DateTime.Now) }
+                { "modifierid", GeneralDefaults.DEFAULTADMINUSERID.ToString() },
+                { "timemodified", _helper.DateTimeToUnixTimestamp(DateTime.Now) },
             };
 
             WriteElements(writer, elements);

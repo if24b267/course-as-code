@@ -37,17 +37,17 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var doc = new XmlDocument();
             Assert.DoesNotThrow(() => doc.LoadXml(output));
         }
-        
+
         [Test]
         public void WriteInforef_RootElementIsInforef()
         {
             // Arrange
             string dummyOutputPath = "dummyPath";
-            
+
             // Act
             _inforefWriter.WriteInforef(_dummyCourse, dummyOutputPath);
             string output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: Verify that the root element is "inforef".
             var doc = new XmlDocument();
             doc.LoadXml(output);
@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var userref = doc.DocumentElement.SelectSingleNode("userref");
             Assert.IsNotNull(userref, "Missing <userref> element");
         }
-        
+
         [Test]
         public void WriteInforef_ContainsRoleref()
         {
@@ -88,7 +88,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var roleref = doc.DocumentElement.SelectSingleNode("roleref");
             Assert.IsNotNull(roleref, "Missing <roleref> element");
         }
-        
+
         [Test]
         public void WriteInforef_ContainsFileref()
         {

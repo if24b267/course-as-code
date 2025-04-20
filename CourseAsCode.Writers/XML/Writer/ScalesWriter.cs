@@ -12,14 +12,16 @@ namespace CourseAsCode.Writers.XML.Writer
         /// <summary>
         /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public ScalesWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public ScalesWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
         /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public ScalesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger) : base(xmlWriterFactory, logger)
+        public ScalesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+            : base(xmlWriterFactory, logger)
         {
         }
 

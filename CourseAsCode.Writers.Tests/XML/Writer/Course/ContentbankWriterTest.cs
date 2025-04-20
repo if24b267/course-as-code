@@ -57,7 +57,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("contents"));
         }
-        
+
         [Test]
         public void WriteContentbank_LogsDebugOnSuccess()
         {

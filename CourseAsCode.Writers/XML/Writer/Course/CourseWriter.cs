@@ -1,10 +1,11 @@
 using System.Xml;
+
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Static;
-using NLog;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Static;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -16,9 +17,9 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         private readonly IGeneralHelper _helper;
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public CourseWriter() 
+        public CourseWriter()
             : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _courseHelper = CourseHelper.Instance;
@@ -26,10 +27,9 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public CourseWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, 
-                            ICourseHelper courseHelper, IGeneralHelper helper)
+        public CourseWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, ICourseHelper courseHelper, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
             _courseHelper = courseHelper;
@@ -71,10 +71,10 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes general information about the course; to be used within the course section of course/course.xml
+        /// writes general information about the course; to be used within the course section of course/course.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteGeneralInformationToCourseSection(XmlWriter writer, Model.Course course)
         {
             var elements = new Dictionary<string, string>
@@ -106,17 +106,17 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 { "showcompletionconditions", course.SensibleDefaults.ShowActivityCompletionConditions ? "1" : "0" },
                 { "pdfexportfont", course.SystemDefaults.PdfExportFont ?? "$@NULL@$" },
                 { "enablecompletion", course.SensibleDefaults.EnableCompletionTracking ? "1" : "0" },
-                { "completionnotify", "0" }
+                { "completionnotify", "0" },
             };
 
             WriteElements(writer, elements);
         }
 
         /// <summary>
-        /// writes the category section in course/course.xml
+        /// writes the category section in course/course.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteCategorySection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("category"); // A moodle course can only have a single category assigned to it
@@ -129,10 +129,10 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the tags section in course/course.xml
+        /// writes the tags section in course/course.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteTagsSection(XmlWriter writer, Model.Course course)
         {
             if (course.Tags == null || course.Tags.Count == 0)
@@ -160,10 +160,10 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the custom fields section in course/course.xml
+        /// writes the custom fields section in course/course.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteCustomFieldsSection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("customfields");
@@ -174,10 +174,10 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the course format options section in course/course.xml
+        /// writes the course format options section in course/course.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="course">initialized Moodle Course.</param>
         private void WriteCourseFormatOptionsSection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("courseformatoptions");

@@ -14,39 +14,41 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
     public class ModuleWriterLabel : XmlWriterBase, IActivityModuleWriter
     {
         private const string DEFAULT_MODULE_RELATIVE_PATH = "module.xml";
-        
+
         private readonly IMoodleVersionHelper _moodleVersionHelper;
         private readonly IGeneralHelper _generalHelper;
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public ModuleWriterLabel() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public ModuleWriterLabel()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _moodleVersionHelper = MoodleVersionHelper.Instance;
             _generalHelper = GeneralHelper.Instance;
         }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing
+        /// Constructor using Dependency Injection for Unit Testing.
         /// </summary>
-        /// <param name="xmlWriterFactory">Injected XML writer factory</param>
-        /// <param name="moodleVersionHelper">Injected MoodleVersionHelper instance</param>
-        /// <param name="generalHelper">Injected GeneralHelper instance</param>
-        /// <param name="logger">Injected logger instance</param>
-        public ModuleWriterLabel(IXmlWriterFactory xmlWriterFactory, IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper, ILogger logger) : base(xmlWriterFactory, logger)
+        /// <param name="xmlWriterFactory">Injected XML writer factory.</param>
+        /// <param name="moodleVersionHelper">Injected MoodleVersionHelper instance.</param>
+        /// <param name="generalHelper">Injected GeneralHelper instance.</param>
+        /// <param name="logger">Injected logger instance.</param>
+        public ModuleWriterLabel(IXmlWriterFactory xmlWriterFactory, IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper, ILogger logger)
+            : base(xmlWriterFactory, logger)
         {
             _moodleVersionHelper = moodleVersionHelper;
             _generalHelper = generalHelper;
         }
 
         /// <summary>
-        /// Writes the module.xml file for a label activity
+        /// Writes the module.xml file for a label activity.
         /// </summary>
-        /// <param name="outputPath">The directory where module.xml will be saved</param>
-        /// <param name="course">The course model</param>
-        /// <param name="section">The section model</param>
-        /// <param name="activityObject">The activity object to write</param>
+        /// <param name="outputPath">The directory where module.xml will be saved.</param>
+        /// <param name="course">The course model.</param>
+        /// <param name="section">The section model.</param>
+        /// <param name="activityObject">The activity object to write.</param>
         public void WriteModule(string outputPath, Model.Course course, Section section, Activity activityObject)
         {
             try
@@ -56,7 +58,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
                 {
                     throw new InvalidCastException("The provided activity is not of type Label");
                 }
-                
+
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MODULE_RELATIVE_PATH));
 
                 using (XmlWriter writer = CreateXmlWriter(filePath))
@@ -66,7 +68,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
 
                     writer.WriteAttributeString("id", labelObject.SystemDefaults.ModuleId.ToString());
                     writer.WriteAttributeString("version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
-                    
+
                     WriteGeneralInformationToModules(writer, outputPath, course, section, labelObject);
 
                     writer.WriteEndElement(); // Close <module>
@@ -83,9 +85,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         }
 
         /// <summary>
-        /// Writes the general information elements into the module tag
+        /// Writes the general information elements into the module tag.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
         private void WriteGeneralInformationToModules(XmlWriter writer, string outputPath, Model.Course course, Section section, TextAndMediaArea labelObject)
         {
             var elements = new Dictionary<string, string>
@@ -110,10 +112,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
                 { "availability", "$@NULL@$" },
                 { "showdescription", labelObject.DisplayDescription ? "1" : "0" },
                 { "downloadcontent", "1" },
-                { "lang", _generalHelper.GetLanguageFromEnum(labelObject.Language) }
+                { "lang", _generalHelper.GetLanguageFromEnum(labelObject.Language) },
             };
             WriteElements(writer, elements);
-            
+
             TagsWriter.WriteTags(writer, labelObject.Tags, outputPath, Logger);
         }
     }

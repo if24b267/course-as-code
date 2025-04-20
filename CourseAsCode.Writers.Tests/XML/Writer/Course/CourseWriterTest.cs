@@ -1,7 +1,6 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Static;
 using CourseAsCode.Writers.XML.Writer.Course;
@@ -66,7 +65,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             // Act
             _courseWriter.WriteCourse(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
@@ -212,9 +211,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         }
     }
 
-    #region Fake Course Factory
     /// <summary>
-    /// A factory class that creates a dummy course with necessary details for testing
+    /// A factory class that creates a dummy course with necessary details for testing.
     /// </summary>
     internal static partial class FakeCourseFactory
     {
@@ -229,12 +227,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 },
                 ShortName = "COURSE101",
                 FullName = "Sample Course 101",
-                Tags = new List<string> { "education", "sample" }
+                Tags = new List<string> { "education", "sample" },
             };
 
             return course;
         }
     }
-
-    #endregion
 }

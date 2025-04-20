@@ -10,14 +10,15 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         private const string DEFAULT_CALENDAR_RELATIVE_PATH = "course/calendar.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public CalendarWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public CalendarWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
         public CalendarWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
             : base(xmlWriterFactory, logger)

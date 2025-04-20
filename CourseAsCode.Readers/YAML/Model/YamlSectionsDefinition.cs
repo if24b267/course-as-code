@@ -2,5 +2,5 @@
 
 public class YamlSectionsDefinition
 {
-	public List<YamlSectionPath> Sections { get; set; }
+    public List<YamlSectionPath> Sections { get; set; }
 }
