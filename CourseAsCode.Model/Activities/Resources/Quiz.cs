@@ -56,8 +56,17 @@ public class Quiz : Activity
     [Description("Each new attempt starts with the previous attempt’s answers pre‑filled")]
     public bool BuildOnPreviousAttempts { get; set; } = QuizDefaults.DEFAULT_BUILD_ON_PREVIOUS_ATTEMPTS;
     
-    [Description("Raw review options bit‑mask as used by Moodle (see QuizzesAnalysis.md)")]
-    public int ReviewOptions { get; set; } = QuizDefaults.DEFAULT_REVIEW_OPTIONS;
+    [Description("Review options available to the student during the attempt; only applicable to some question behaviours like InteractiveMultipleTries")]
+    public ReviewOptionsQuiz ReviewOptionsDuringAttempt { get; set; } = new ReviewOptionsQuiz();
+    
+    [Description("Review options available to the student immediately after they clicked on 'Submit all and finish'")]
+    public ReviewOptionsQuiz ReviewOptionsImmediatelyAfterAttempt { get; set; } = new ReviewOptionsQuiz();
+    
+    [Description("Review options available to the student two minutes after they clicked on 'Submit all and finish'")]
+    public ReviewOptionsQuiz ReviewOptionsAfterAttempt{ get; set; } = new ReviewOptionsQuiz();
+    
+    [Description("Review options available to the student after the quiz was closed | If the quiz doesn't have a close date, this state is never reached")]
+    public ReviewOptionsQuiz ReviewOptionsQuizClosed { get; set; } = new ReviewOptionsQuiz();
 
     // ────────────────────────────────────────────────────────────────────────────
     // Presentation
@@ -104,5 +113,29 @@ public class Quiz : Activity
     {
         public int ModuleId { get; set; } = 227; // TODO: Check if this is the same for all quizzes or a unique value per quiz | Seems to be the same for all quizzes
         public string ModuleName { get; set; } = "quiz";
+    }
+
+
+    /// <summary>
+    /// saves which review-options are enabled
+    /// </summary>
+    public class ReviewOptionsQuiz
+    {
+        [Description("whether the student can review the attempt at all")]
+        public bool AllowReviewAttempt { get; set; } = QuizDefaults.DEFAULT_ALLOW_REVIEW_ATTEMPT;
+        [Description("whether the student can see if he answered the question \"correct\", \"partially correct\" or \"incorrect\"")]
+        public bool AllowReviewWhetherCorrect { get; set; } = QuizDefaults.DEFAULT_ALLOW_REVIEW_WHETHER_CORRECT;
+        [Description("whether the student can see the maximum mark he could have achieved for each question")]
+        public bool AllowReviewMaximumMarks { get; set; } = QuizDefaults.DEFAULT_ALLOW_REVIEW_MAX_MARKS;
+        [Description("whether the student can see the mark obtained for each question and the overall attempt score - only available if MaximumMarks is true")]
+        public bool AllowReviewMarks { get; set; } = QuizDefaults.DEFAULT_ALLOW_REVIEW_MARKS;
+        [Description("whether the student can see feedback that depends on what response the student gave")]
+        public bool AllowReviewSpecificFeedback { get; set; } = QuizDefaults.DEFAULT_ALLOW_REVIEW_SPECIFIC_FEEDBACK;
+        [Description("whether the student can see general feedback, displayed to all students regardless of their answer. E.g. a fully worked answer and a link to more information")]
+        public bool AllowReviewGeneralFeedback { get; set; } = QuizDefaults.DEFAULT_ALLOW_REVIEW_GENERAL_FEEDBACK;
+        [Description(" whether the student can see what would have been the correct answer(s)")]
+        public bool AllowReviewRightAnswer { get; set; } = QuizDefaults.DEFAULT_ALLOW_REVIEW_RIGHT_ANSWER;
+        [Description("whether the student can see the feedback given at the end of the attempt, depending on the student's total mark")]
+        public bool AllowReviewOverallFeedback { get; set; } = QuizDefaults.DEFAULT_ALLOW_REVIEW_OVERALL_FEEDBACK;
     }
 }

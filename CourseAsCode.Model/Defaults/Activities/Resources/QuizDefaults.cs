@@ -21,7 +21,16 @@ public class QuizDefaults
     public const QuestionBehaviour DEFAULT_QUESTION_BEHAVIOUR = QuestionBehaviour.Deferred;
     public const bool DEFAULT_ALLOW_REDOS_DURING_ATTEMPT = false;
     public const bool DEFAULT_BUILD_ON_PREVIOUS_ATTEMPTS = false;
-    public const int DEFAULT_REVIEW_OPTIONS = 0;
+
+    // Review options
+    public const bool DEFAULT_ALLOW_REVIEW_ATTEMPT = true;
+    public const bool DEFAULT_ALLOW_REVIEW_WHETHER_CORRECT = true;
+    public const bool DEFAULT_ALLOW_REVIEW_MAX_MARKS = true;
+    public const bool DEFAULT_ALLOW_REVIEW_MARKS = true;
+    public const bool DEFAULT_ALLOW_REVIEW_SPECIFIC_FEEDBACK = true;
+    public const bool DEFAULT_ALLOW_REVIEW_GENERAL_FEEDBACK = true;
+    public const bool DEFAULT_ALLOW_REVIEW_RIGHT_ANSWER = true;
+    public const bool DEFAULT_ALLOW_REVIEW_OVERALL_FEEDBACK = true;
 
     // Presentation
     public const PictureOptions DEFAULT_SHOW_PICTURE = PictureOptions.NoImage;

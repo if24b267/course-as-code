@@ -115,14 +115,14 @@ public class QuizWriter : XmlWriterBase
             { "decimalpoints", quiz.DecimalsToDisplayGrades.ToString() },
             { "questiondecimalpoints", quiz.DecimalsToDisplayMarks.ToString() },
             // Review options – currently the same mask for all reviewX elements | TODO: Find out how the bit-mask works
-            { "reviewattempt", quiz.ReviewOptions.ToString() },
-            { "reviewcorrectness", quiz.ReviewOptions.ToString() },
-            { "reviewmaxmarks", quiz.ReviewOptions.ToString() },
-            { "reviewmarks", quiz.ReviewOptions.ToString() },
-            { "reviewspecificfeedback", quiz.ReviewOptions.ToString() },
-            { "reviewgeneralfeedback", quiz.ReviewOptions.ToString() },
-            { "reviewrightanswer", quiz.ReviewOptions.ToString() },
-            { "reviewoverallfeedback", quiz.ReviewOptions.ToString() },
+            { "reviewattempt", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewAttempt).ToString() },
+            { "reviewcorrectness", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewWhetherCorrect).ToString() },
+            { "reviewmaxmarks", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewMarks).ToString() },
+            { "reviewmarks", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewMarks).ToString() },
+            { "reviewspecificfeedback", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewSpecificFeedback).ToString() },
+            { "reviewgeneralfeedback", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewGeneralFeedback).ToString() },
+            { "reviewrightanswer", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewRightAnswer).ToString() },
+            { "reviewoverallfeedback", CalculateReviewOptionsBitmask(quiz.ReviewOptionsDuringAttempt, quiz.ReviewOptionsImmediatelyAfterAttempt, quiz.ReviewOptionsAfterAttempt, quiz.ReviewOptionsQuizClosed, r => r.AllowReviewOverallFeedback).ToString() },
             // End review options
             { "questionsperpage", quiz.NewPageThreshold.ToString() },
             { "navmethod", "free" }, // TODO: make configurable
@@ -397,5 +397,30 @@ public class QuizWriter : XmlWriterBase
 
         var sep = separator ?? Environment.NewLine;
         return string.Join(sep, items);
+    }
+
+
+    /// <summary>
+    /// Calculates the Moodle review‑option bitmask for one parameter (e.g. “attempt”, “whethercorrect”, etc.).
+    /// </summary>
+    /// <param name="during">the ReviewOptionsQuiz for DuringAttempt</param>
+    /// <param name="immediately">the ReviewOptionsQuiz for ImmediatelyAfterAttempt</param>
+    /// <param name="after">the ReviewOptionsQuiz for AfterAttempt</param>
+    /// <param name="closed">the ReviewOptionsQuiz for QuizClosed</param>
+    /// <param name="flagSelector">pick the bool (e.g. r=>r.AllowReviewMarks)</param>
+    /// <returns>sum of 2^16, 2^12, 2^8, 2^4 where each bit is set if that period is enabled</returns>
+    private int CalculateReviewOptionsBitmask(   
+        Model.Activities.Resources.Quiz.ReviewOptionsQuiz during,
+        Model.Activities.Resources.Quiz.ReviewOptionsQuiz immediately,
+        Model.Activities.Resources.Quiz.ReviewOptionsQuiz after,
+        Model.Activities.Resources.Quiz.ReviewOptionsQuiz closed,
+        Func<Model.Activities.Resources.Quiz.ReviewOptionsQuiz, bool> flagSelector)
+    {
+        int mask = 0;
+        if (flagSelector(closed))      mask |= 1 << 4;   // QuizClosed  → 2^4   = 16
+        if (flagSelector(after))       mask |= 1 << 8;   // AfterAttempt → 2^8   = 256
+        if (flagSelector(immediately)) mask |= 1 << 12;  // ImmediatelyAfter → 2^12 = 4096
+        if (flagSelector(during))      mask |= 1 << 16;  // DuringAttempt → 2^16 = 65536
+        return mask;
     }
 }
