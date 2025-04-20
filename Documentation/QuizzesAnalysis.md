@@ -148,18 +148,14 @@ This setting is only applicable to question behaviours where it is possible to f
 ## Review Options
 These options control what information students can see when they review a quiz attempt or look at the quiz reports.
 
-Corresponding tags are `reviewattempt`, `reviewcorrectness`, `reviewmaxmarks`, `reviewmarks`, `reviewspecificfeedback`, `reviewgeneralfeedback`, `reviewrightanswer` and `reviewoverallfeedback`.  
-Information seems to be stored in a numeric code, similar to file permissions in Unix.
+In the backup XML each of the eight review‑options (parameters) gets its own tag (e.g. <reviewattempt>…</reviewattempt>), and the number inside is a bitmask calculated like this:
 
-`4368` -> parameter enabled at all times  
-`272` -> parameter enabled for AfterAttempt and QuizClosed  
-`4112` -> parameter enabled for ImmediatelyAfter and QuizClosed  
-`4096` -> parameter enabled only for ImmediatelyAfter  
-`4368` -> parameter enabled for ImmediatelyAfter, AfterAttempt and QuizClosed  
-`0` -> parameter disabled for all states  
-
-//I'm not sure if these values are even consistent  
-// TODO: Further research needed
+```pseudocode
+Parameter enabled for QuizClosed: 2^4 -> 16 || 0               +
+Parameter enabled for AfterAttempt: 2^8 -> 256 || 0            +
+Parameter enabled for ImmediatelyAfter: 2^12 -> 4096 || 0      +
+Parameter enabled for DuringAttempt: 2^16 -> 65536 || 0
+```
 
 ### Time
 | Value in Internal Data Model | Value in Moodle XML | Description                                                                                                                          |
@@ -181,7 +177,7 @@ each of these values is a boolean
 | SpecificFeedback               |                     | whether the student can see feedback that depends on what response the student gave                                                                                        |
 | GeneralFeedback                |                     | whether the student can see general feedback, displayed to all students regardless of their answer. E.g. a fully worked answer and a link to more information              |
 | RightAnswer                    |                     | whether the student can see what would have been the correct answer(s)                                                                                                     |
-| OverallFeedback                |                     | whether the sudent can see the feedback given at the end of the attempt, depending on the sutdent's total mark                                                             |
+| OverallFeedback                |                     | whether the student can see the feedback given at the end of the attempt, depending on the student's total mark                                                            |
 
 
 ## ShowPicture
@@ -219,9 +215,9 @@ If any of these settings are not set, they are set to `$@NULL@$` in the XML file
 
 ### Require Safe Exam Browser
 
-| Name in Internal Data Model | Data Type      | XML File | Name in Moodle XML     | Data Type (XML) | Description                                                                                                     |
-|-----------------------------|----------------|----------|------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
-| RequireSEB                  | SEBMode (Enum) | quiz.xml | questiondecimalpoints  | int (-1 - 7)    | specifies the number of digits shown after the decimal point when displaying the marks for individual questions |
+| Name in Internal Data Model | Data Type      | XML File | Name in Moodle XML                                     | Data Type (XML) | Description                           |
+|-----------------------------|----------------|----------|--------------------------------------------------------|-----------------|---------------------------------------|
+| RequireSEB                  | SEBMode (Enum) | quiz.xml | `<quizaccess_seb_quizsettings>` tag present if enabled | int (-1 - 7)    | whether SEB is required for this quiz |
 
 #### SEBMode
 
