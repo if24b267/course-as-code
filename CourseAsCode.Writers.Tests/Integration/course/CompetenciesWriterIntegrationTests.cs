@@ -19,7 +19,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
             XsdPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "Schemas", "course", "competencies.xsd"));
 
-            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
+            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse", "course"));
 
             Directory.CreateDirectory(_outputPath);
 

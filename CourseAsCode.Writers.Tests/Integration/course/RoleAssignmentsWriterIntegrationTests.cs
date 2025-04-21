@@ -22,7 +22,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
             XsdPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "Schemas", "course", "roles.xsd"));
 
-            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse", "course"));
+            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
 
@@ -63,7 +63,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             writer.WriteRoleAssignments(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/roles.xml", XsdPath);
+            ValidateXml($"{_outputPath}/course/roles.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)
