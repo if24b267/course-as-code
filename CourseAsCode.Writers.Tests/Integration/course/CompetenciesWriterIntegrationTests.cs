@@ -19,7 +19,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
             XsdPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "Schemas", "course", "competencies.xsd"));
 
-            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse", "course"));
+            _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
 
@@ -31,7 +31,6 @@ namespace CourseAsCode.Writers.Tests.Integration
                 StartDate = DateTime.UtcNow,
                 EndDate = DateTime.UtcNow.AddMonths(1)
             };
-            _outputPath = "..\\..\\..\\..\\Documentation\\out\\moodleCourse\\";
         }
 
         [Test]
