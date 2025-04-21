@@ -39,11 +39,18 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Arrange
             var writer = new ContentbankWriter();
 
+            // Sicherstellen, dass das Verzeichnis existiert
+            var contentbankDirectory = Path.Combine(_outputPath, "course");
+            if (!Directory.Exists(contentbankDirectory))
+            {
+                Directory.CreateDirectory(contentbankDirectory);
+            }
+
             // Act
             writer.WriteContentbank(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/contentbank.xml", XsdPath);
+            ValidateXml($"{contentbankDirectory}/contentbank.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)

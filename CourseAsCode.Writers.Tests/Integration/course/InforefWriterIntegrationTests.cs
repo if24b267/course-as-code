@@ -59,11 +59,18 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Arrange
             var writer = new InforefWriter();
 
+            // Sicherstellen, dass das Verzeichnis existiert
+            var inforefDirectory = Path.Combine(_outputPath, "course");
+            if (!Directory.Exists(inforefDirectory))
+            {
+                Directory.CreateDirectory(inforefDirectory);
+            }
+
             // Act
             writer.WriteInforef(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}\\course\\inforef.xml", XsdPath);
+            ValidateXml($"{inforefDirectory}/inforef.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)
