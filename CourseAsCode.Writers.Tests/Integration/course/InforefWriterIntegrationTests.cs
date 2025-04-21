@@ -63,7 +63,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             writer.WriteInforef(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/inforef.xml", XsdPath);
+            ValidateXml($"{_outputPath}\\course\\inforef.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)
