@@ -73,11 +73,18 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Arrange
             var writer = new CourseWriter();
 
+            // Sicherstellen, dass das Verzeichnis existiert
+            var courseDirectory = Path.Combine(_outputPath, "course");
+            if (!Directory.Exists(courseDirectory))
+            {
+                Directory.CreateDirectory(courseDirectory);
+            }
+
             // Act
             writer.WriteCourse(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/course.xml", XsdPath);
+            ValidateXml($"{courseDirectory}/course.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)

@@ -39,11 +39,18 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Arrange
             var writer = new CompetenciesWriter();
 
+            // Sicherstellen, dass das Verzeichnis existiert
+            var competenciesDirectory = Path.Combine(_outputPath, "course");
+            if (!Directory.Exists(competenciesDirectory))
+            {
+                Directory.CreateDirectory(competenciesDirectory);
+            }
+
             // Act
             writer.WriteCompetencies(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/competencies.xml", XsdPath);
+            ValidateXml($"{competenciesDirectory}/competencies.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)

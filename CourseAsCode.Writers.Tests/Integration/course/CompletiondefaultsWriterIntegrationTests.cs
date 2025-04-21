@@ -39,11 +39,18 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Arrange
             var writer = new CompletiondefaultsWriter();
 
+            // Sicherstellen, dass das Verzeichnis existiert
+            var completionDefaultsDirectory = Path.Combine(_outputPath, "course");
+            if (!Directory.Exists(completionDefaultsDirectory))
+            {
+                Directory.CreateDirectory(completionDefaultsDirectory);
+            }
+
             // Act
             writer.WriteCompletionDefaults(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/completiondefaults.xml", XsdPath);
+            ValidateXml($"{completionDefaultsDirectory}/completiondefaults.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)

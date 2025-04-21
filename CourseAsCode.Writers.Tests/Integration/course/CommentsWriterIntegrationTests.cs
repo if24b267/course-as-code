@@ -39,11 +39,18 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Arrange
             var writer = new CommentsWriter();
 
+            // Sicherstellen, dass das Verzeichnis existiert
+            var commentsDirectory = Path.Combine(_outputPath, "course");
+            if (!Directory.Exists(commentsDirectory))
+            {
+                Directory.CreateDirectory(commentsDirectory);
+            }
+
             // Act
             writer.WriteComments(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/comments.xml", XsdPath);
+            ValidateXml($"{commentsDirectory}/comments.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)

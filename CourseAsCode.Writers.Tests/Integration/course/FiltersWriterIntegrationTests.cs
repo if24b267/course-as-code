@@ -37,11 +37,18 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Arrange
             var writer = new FiltersWriter();
 
+            // Sicherstellen, dass das Verzeichnis existiert
+            var filtersDirectory = Path.Combine(_outputPath, "course");
+            if (!Directory.Exists(filtersDirectory))
+            {
+                Directory.CreateDirectory(filtersDirectory);
+            }
+
             // Act
             writer.WriteFilters(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/filters.xml", XsdPath);
+            ValidateXml($"{filtersDirectory}/filters.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)

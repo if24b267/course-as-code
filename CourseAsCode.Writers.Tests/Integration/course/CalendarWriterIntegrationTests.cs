@@ -43,11 +43,18 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Arrange
             var writer = new CalendarWriter();
 
+            // Sicherstellen, dass das Verzeichnis existiert
+            var calendarDirectory = Path.Combine(_outputPath, "course");
+            if (!Directory.Exists(calendarDirectory))
+            {
+                Directory.CreateDirectory(calendarDirectory);
+            }
+
             // Act
             writer.WriteCalendar(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/calendar.xml", XsdPath);
+            ValidateXml($"{calendarDirectory}/calendar.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)
