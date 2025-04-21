@@ -63,7 +63,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             writer.WriteRoleAssignments(_dummyCourse, _outputPath);
 
             // Assert
-            ValidateXml($"{_outputPath}/course/roles.xml", XsdPath);
+            ValidateXml($"{_outputPath}\\course\\roles.xml", XsdPath);
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)
