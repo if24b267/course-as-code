@@ -66,23 +66,22 @@ namespace CourseAsCode.Writers.XML.Writer
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-                    
+
+                    // Write the root element
                     writer.WriteStartElement("question_categories");
-                    
-                    // Moodle requires a top-level category, which is the parent of all other categories
+
+                    // Write the top-level category
                     WriteTopCategory(writer, DEFAULT_TOP_CATEGORY_ID, DEFAULT_CONTEXT_ID, DEFAULT_CONTEXT_LEVEL, DEFAULT_CONTEXT_INSTANCE_ID);
-                    
-                    // Questions are grouped by category | Each entry for a category contains the entries for all questions belonging to that category
-                    foreach (var categoryGrouping in course.Questions.GroupBy(q => q.Category))
+
+                    // Group questions by category and write each category
+                    var groupedQuestions = course.Questions.GroupBy(q => q.Category);
+                    foreach (var categoryGroup in groupedQuestions)
                     {
                         int categoryId = _nextCategoryId++;
-                        WriteQuestionCategory(writer, categoryId, categoryGrouping.Key, categoryGrouping.ToList());
-                        
-                        LogTrace($"Created question category {categoryId}: '{categoryGrouping.Key}' with {categoryGrouping.Count()} questions");
+                        WriteQuestionCategory(writer, categoryId, categoryGroup.Key, categoryGroup.ToList());
                     }
-                    
-                    writer.WriteEndElement(); // </question_categories>
-                    
+
+                    writer.WriteEndElement(); // Close <question_categories>
                     writer.WriteEndDocument();
                 }
 
@@ -93,9 +92,9 @@ namespace CourseAsCode.Writers.XML.Writer
                 LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_QUESTIONS_RELATIVE_PATH}");
                 throw;
             }
-        } 
-        
-  
+        }
+
+
         /// <summary>
         /// Writes the `question_category` element of questions.xml
         /// </summary>
@@ -233,7 +232,7 @@ namespace CourseAsCode.Writers.XML.Writer
                     break;
                 // Implement additional question types here
                 default:
-                    LogWarn($"Unsupported question type {question.GetType().Name} – skipping plugin block");
+                    LogWarn($"Unsupported question type {question.GetType().Name} � skipping plugin block");
                     break;
             }
 
