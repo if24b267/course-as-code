@@ -66,10 +66,22 @@ namespace CourseAsCode.Writers.XML.Writer
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-                    
+
+                    // Write the root element
                     writer.WriteStartElement("question_categories");
+
+                    // Write the top-level category
+                    WriteTopCategory(writer, DEFAULT_TOP_CATEGORY_ID, DEFAULT_CONTEXT_ID, DEFAULT_CONTEXT_LEVEL, DEFAULT_CONTEXT_INSTANCE_ID);
+
+                    // Group questions by category and write each category
+                    var groupedQuestions = course.Questions.GroupBy(q => q.Category);
+                    foreach (var categoryGroup in groupedQuestions)
+                    {
+                        int categoryId = _nextCategoryId++;
+                        WriteQuestionCategory(writer, categoryId, categoryGroup.Key, categoryGroup.ToList());
+                    }
+
                     writer.WriteEndElement(); // Close <question_categories>
-                    
                     writer.WriteEndDocument();
                 }
 
@@ -80,9 +92,9 @@ namespace CourseAsCode.Writers.XML.Writer
                 LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_QUESTIONS_RELATIVE_PATH}");
                 throw;
             }
-        } 
-        
-  
+        }
+
+
         /// <summary>
         /// Writes the `question_category` element of questions.xml
         /// </summary>
