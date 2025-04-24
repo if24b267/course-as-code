@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model;
+using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
@@ -9,6 +9,7 @@ using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
@@ -63,6 +64,10 @@ public class Writer : IWriter
     // Text and Media Area (Label) Activity Writers
     private readonly LabelWriter _labelWriter = new LabelWriter();
     private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
+
+    // Assignment Activity Writers
+    private readonly AssignmentWriter _assignmentWriter = new AssignmentWriter();
+    private readonly ModuleWriterAssignment _moduleWriterAssignment = new ModuleWriterAssignment();
 
     // URL Activity Writers
     private readonly UrlWriter _urlWriter = new UrlWriter();
@@ -312,6 +317,12 @@ public class Writer : IWriter
                     activityPath = CreateTextAndMediaArea(course, outputPath, activity, textAndMediaArea, section);
                 }
 
+                // Assignment-specific XML files
+                if (activity is Assignment assignment)
+                {
+                    activityPath = CreateAssignmentActivity(course, outputPath, activity, assignment, section);
+                }
+
                 // URL-specific XML files
                 if (activity is URL urlObject)
                 {
@@ -403,6 +414,21 @@ public class Writer : IWriter
         });
     }
 
+    /// <summary>
+    /// writes the XML files specific to the Assignment activity.
+    /// </summary>
+    /// <returns>
+    /// <para> the path to the directory where the files for that activity were written. </para>
+    /// <para> null if the directory couldn't be created.</para>
+    /// </returns>
+    private string? CreateAssignmentActivity(Course course, string outputPath, Activity activity, Assignment assignment, Section section)
+    {
+        return CreateActivity(outputPath, activity, "assignment", activityPath =>
+        {
+            _assignmentWriter.WriteAssignment(activityPath, assignment);
+            _moduleWriterAssignment.WriteModule(activityPath, course, section, assignment);
+        });
+    }
 
     /// <summary>
     /// writes the XML files specific to the Quiz activity
