@@ -36,6 +36,7 @@ namespace CourseAsCode.Writers.XML.Writer
                     writer.WriteStartDocument();
 
                     writer.WriteStartElement("outcomes_definition");
+                    writer.WriteString(" ");
                     writer.WriteEndElement(); // Close <outcomes_definition>
 
                     writer.WriteEndDocument();

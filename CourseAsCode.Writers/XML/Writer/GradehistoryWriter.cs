@@ -59,6 +59,7 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteGradeGradesSection(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("grade_grades");
+            writer.WriteString(" ");
             writer.WriteEndElement(); // Close <grade_grades>
         }
     }

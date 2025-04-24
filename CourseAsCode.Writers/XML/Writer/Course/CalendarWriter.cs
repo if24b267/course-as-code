@@ -36,6 +36,9 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                     writer.WriteStartDocument();
                     writer.WriteStartElement("events");
 
+                    // Add whitespace to prevent self-closing tag
+                    writer.WriteString("\n");
+
                     writer.WriteEndElement(); // Close <events>
                     writer.WriteEndDocument();
                 }

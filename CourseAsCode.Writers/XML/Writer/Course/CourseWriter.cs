@@ -81,16 +81,16 @@ namespace CourseAsCode.Writers.XML.Writer.Course
             {
                 { "shortname", course.ShortName },
                 { "fullname", course.FullName },
-                { "idnumber", course.SensibleDefaults.CourseIdNumber?.ToString() ?? "" },
+                { "idnumber", course.SensibleDefaults.CourseIdNumber.ToString() ?? "" },
                 { "summary", course.Summary ?? " " },
                 { "summaryformat", _helper.EnumIntegerToString(course.SystemDefaults.SummaryFormat) },
                 { "format", _courseHelper.GetCourseFormatFromEnum(course.SensibleDefaults.Format) },
                 { "showgrades", course.SensibleDefaults.ShowGrades ? "1" : "0" },
-                { "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay?.ToString() ?? "0" },
+                { "newsitems", course.SensibleDefaults.NumberOfAnnouncementsToDisplay.ToString() ?? "0" },
                 { "startdate", _helper.DateTimeToUnixTimestamp(course.StartDate) },
                 { "enddate", course.EndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)course.EndDate) : "0" },
                 { "marker", "0" },
-                { "maxbytes", course.SensibleDefaults.MaximumUploadSize?.ToString() ?? "0" },
+                { "maxbytes", course.SensibleDefaults.MaximumUploadSize.ToString() ?? "0" },
                 { "legacyfiles", course.SystemDefaults.UsesLegacyFiles ? "1" : "0" },
                 { "showreports", "0" },
                 { "visible", course.SensibleDefaults.VisibleToStudents ? "1" : "0" },
@@ -168,10 +168,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         {
             writer.WriteStartElement("customfields");
 
-            if (!string.IsNullOrWhiteSpace(course.SystemDefaults.CustomFields))
-            {
-                writer.WriteString(course.SystemDefaults.CustomFields);
-            }
+            writer.WriteString(course.SystemDefaults.CustomFields ?? "\n  ");
 
             writer.WriteEndElement(); // Close <customfields>
         }

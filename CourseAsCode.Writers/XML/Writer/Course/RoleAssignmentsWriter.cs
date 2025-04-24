@@ -52,6 +52,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
 
                     // Role overrides
                     writer.WriteStartElement("role_overrides");
+                    writer.WriteString(" ");
                     writer.WriteEndElement(); // Close </role_overrides>
 
                     // Role assignments
