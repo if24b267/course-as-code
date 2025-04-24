@@ -87,11 +87,114 @@ public class Writer : IWriter
     {
         _logger.Debug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
         _logger.Info($"The course will be saved at {outputPath}");
-        
+
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - REMOVE LATER
         // ---------------------------------------------
-        
+
+        // Add a dummy assignment activity to the course
+        var testAssignment = new Assignment
+        {
+            ActivityId = 10,
+            Name = "Sample Assignment",
+            Intro = "This is a sample assignment for testing purposes.",
+            AlwaysShowDescription = true,
+            SubmissionDrafts = true,
+            SendNotifications = true,
+            SendLateNotifications = false,
+            SendStudentNotifications = true,
+            DueDate = DateTime.UtcNow.AddDays(7), // 7 days in the future
+            CutoffDate = DateTime.UtcNow.AddDays(10), // 10 days in the future
+            GradingDueDate = DateTime.UtcNow.AddDays(14), // 14 days in the future
+            AllowSubmissionsFromDate = DateTime.UtcNow, // Submissions allowed from now
+            Grade = 100,
+            CompletionSubmit = true,
+            RequireSubmissionStatement = false,
+            TeamSubmission = false,
+            RequireAllTeamMembersSubmit = false,
+            TeamSubmissionGroupingId = 0,
+            BlindMarking = false,
+            HideGrader = false,
+            RevealIdentities = true,
+            AttemptReopenMethod = "manual",
+            MaxAttempts = 3,
+            MarkingWorkflow = true,
+            MarkingAllocation = false,
+            MarkingAnonymous = false,
+            PreventSubmissionNotInGroup = false,
+            Submissions = new List<AssignmentSubmission>
+    {
+        new AssignmentSubmission
+        {
+            SubmissionId = 1,
+            UserId = 101,
+            TimeCreated = DateTime.UtcNow.AddDays(-1), // Created yesterday
+            TimeModified = DateTime.UtcNow, // Modified today
+            TimeStarted = DateTime.UtcNow.AddDays(-2).ToString("o"), // Started 2 days ago
+            Status = "submitted",
+            GroupId = 0,
+            AttemptNumber = 1,
+            IsLatest = true
+        },
+        new AssignmentSubmission
+        {
+            SubmissionId = 2,
+            UserId = 102,
+            TimeCreated = DateTime.UtcNow.AddDays(-3), // Created 3 days ago
+            TimeModified = null, // Not modified yet
+            TimeStarted = null, // Not started yet
+            Status = "draft",
+            GroupId = 0,
+            AttemptNumber = 0,
+            IsLatest = false
+        }
+    },
+            PluginConfigs = new List<PluginConfig>
+    {
+        new PluginConfig
+        {
+            ConfigId = 1,
+            PluginName = "assignsubmission_file",
+            Subtype = "file",
+            Name = "maxfilesubmissions",
+            Value = "5"
+        },
+        new PluginConfig
+        {
+            ConfigId = 2,
+            PluginName = "assignsubmission_onlinetext",
+            Subtype = "onlinetext",
+            Name = "wordlimit",
+            Value = "1000"
+        }
+    },
+            Overrides = new List<AssignmentOverride>
+    {
+        new AssignmentOverride
+        {
+            OverrideId = 1,
+            UserId = 101,
+            DueDate = DateTime.UtcNow.AddDays(8), // User has 1 extra day
+            CutoffDate = DateTime.UtcNow.AddDays(11) // User has 1 extra day
+        }
+    }
+        };
+
+        // Add the assignment to a section
+        var assignmentSection = new Section
+        {
+            SystemDefaults = new Section.SystemDefaultsSection
+            {
+                SectionId = 4,
+                PathToSection = "sections/section_4"
+            },
+            Name = "Assignment Test Section",
+            Activities = new List<Activity> { testAssignment }
+        };
+
+        course.Sections.Add(assignmentSection);
+
+
         // Add a few dummy questions to the course
         var q1 = new MultipleChoiceQuestion
         {
@@ -323,6 +426,7 @@ public class Writer : IWriter
                     activityPath = CreateAssignmentActivity(course, outputPath, activity, assignment, section);
                 }
 
+
                 // URL-specific XML files
                 if (activity is URL urlObject)
                 {
@@ -423,7 +527,7 @@ public class Writer : IWriter
     /// </returns>
     private string? CreateAssignmentActivity(Course course, string outputPath, Activity activity, Assignment assignment, Section section)
     {
-        return CreateActivity(outputPath, activity, "assignment", activityPath =>
+        return CreateActivity(outputPath, activity, "assign", activityPath =>
         {
             _assignmentWriter.WriteAssignment(activityPath, assignment);
             _moduleWriterAssignment.WriteModule(activityPath, course, section, assignment);

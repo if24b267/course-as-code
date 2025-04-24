@@ -198,12 +198,12 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
                 writer.WriteAttributeString("id", pluginConfig.ConfigId.ToString());
 
                 var pluginConfigElements = new Dictionary<string, string>
-                {
-                    { "plugin", pluginConfig.PluginName },
-                    { "subtype", pluginConfig.Subtype },
-                    { "name", pluginConfig.Name },
-                    { "value", pluginConfig.Value }
-                };
+        {
+            { "plugin", pluginConfig.PluginName },
+            { "subtype", pluginConfig.Subtype },
+            { "name", pluginConfig.Name },
+            { "value", pluginConfig.Value }
+        };
 
                 WriteElements(writer, pluginConfigElements);
 
@@ -213,11 +213,26 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
             writer.WriteEndElement(); // </plugin_configs>
         }
 
+
         private void WriteOverrides(XmlWriter writer, Model.Activities.Resources.Assignment assignment)
         {
             writer.WriteStartElement("overrides");
-            // Add logic for overrides if needed
-            writer.WriteEndElement();
+
+            foreach (var overrideItem in assignment.Overrides)
+            {
+                writer.WriteStartElement("override");
+                writer.WriteAttributeString("id", overrideItem.OverrideId.ToString());
+                writer.WriteAttributeString("userid", overrideItem.UserId.ToString());
+                writer.WriteAttributeString("duedate", overrideItem.DueDate.HasValue
+                    ? _generalHelper.DateTimeToUnixTimestamp(overrideItem.DueDate.Value)
+                    : "0");
+                writer.WriteAttributeString("cutoffdate", overrideItem.CutoffDate.HasValue
+                    ? _generalHelper.DateTimeToUnixTimestamp(overrideItem.CutoffDate.Value)
+                    : "0");
+                writer.WriteEndElement(); // </override>
+            }
+
+            writer.WriteEndElement(); // </overrides>
         }
 
         private void WriteEmptyContainer(XmlWriter writer, string elementName)

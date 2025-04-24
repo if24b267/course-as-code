@@ -53,10 +53,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
         {
             try
             {
-                // Cast the activityObject to TextAndMediaArea/Label
-                if (activityObject is not TextAndMediaArea labelObject)
+                // Cast the activityObject to Assignment
+                if (activityObject is not Model.Activities.Resources.Assignment assignmentObject)
                 {
-                    throw new InvalidCastException("The provided activity is not of type Label");
+                    throw new InvalidCastException("The provided activity is not of type Assignment");
                 }
 
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_MODULE_RELATIVE_PATH));
@@ -66,10 +66,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
                     writer.WriteStartDocument();
                     writer.WriteStartElement("module");
 
-                    writer.WriteAttributeString("id", labelObject.SystemDefaults.ModuleId.ToString());
+                    writer.WriteAttributeString("id", assignmentObject.ActivityId.ToString());
                     writer.WriteAttributeString("version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
 
-                    WriteGeneralInformationToModules(writer, outputPath, course, section, labelObject);
+                    WriteGeneralInformationToModules(writer, outputPath, course, section, assignmentObject);
 
                     writer.WriteEndElement(); // Close <module>
                     writer.WriteEndDocument();
@@ -88,35 +88,36 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
         /// Writes the general information elements into the module tag.
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        private void WriteGeneralInformationToModules(XmlWriter writer, string outputPath, Model.Course course, Section section, TextAndMediaArea labelObject)
+        private void WriteGeneralInformationToModules(XmlWriter writer, string outputPath, Model.Course course, Section section, Model.Activities.Resources.Assignment assignmentObject)
         {
             var elements = new Dictionary<string, string>
             {
-                { "modulename", labelObject.SystemDefaults.ModuleName },
+                { "modulename", "assign" },
                 { "sectionid", section.SystemDefaults.SectionId.ToString() },
                 { "sectionnumber", course.Sections.IndexOf(section).ToString() },
                 { "idnumber", "$@NULL@$" },
-                { "added", _generalHelper.DateTimeToUnixTimestamp(labelObject.TimeCreated) },
+                { "added", _generalHelper.DateTimeToUnixTimestamp(assignmentObject.TimeCreated) },
                 { "score", "0" },
                 { "indent", "0" },
-                { "visible", labelObject.VisibleToStudents ? "1" : "0" },
-                { "visibleoncoursepage", labelObject.VisibleToStudents ? "1" : "0" }, // TODO: Determine difference between these 3 visibility attributes
-                { "visibleold", labelObject.VisibleToStudents ? "1" : "0" },
-                { "groupmode", _generalHelper.EnumIntegerToString(labelObject.GroupMode) },
-                { "groupingid", "0" },
-                { "completion", "0" },
+                { "visible", assignmentObject.VisibleToStudents ? "1" : "0" },
+                { "visibleoncoursepage", assignmentObject.VisibleToStudents ? "1" : "0" },
+                { "visibleold", assignmentObject.VisibleToStudents ? "1" : "0" },
+                { "groupmode", _generalHelper.EnumIntegerToString(assignmentObject.GroupMode) },
+                { "groupingid", assignmentObject.TeamSubmissionGroupingId.ToString() },
+                { "completion", assignmentObject.CompletionSubmit ? "1" : "0" },
                 { "completiongradeitemnumber", "$@NULL@$" },
                 { "completionpassgrade", "0" },
                 { "completionview", "0" },
                 { "completionexpected", "0" },
                 { "availability", "$@NULL@$" },
-                { "showdescription", labelObject.DisplayDescription ? "1" : "0" },
+                { "showdescription", assignmentObject.DisplayDescription ? "1" : "0" },
                 { "downloadcontent", "1" },
-                { "lang", _generalHelper.GetLanguageFromEnum(labelObject.Language) },
+                { "lang", _generalHelper.GetLanguageFromEnum(assignmentObject.Language) },
             };
             WriteElements(writer, elements);
 
-            TagsWriter.WriteTags(writer, labelObject.Tags, outputPath, Logger);
+            TagsWriter.WriteTags(writer, assignmentObject.Tags, outputPath, Logger);
         }
+
     }
 }
