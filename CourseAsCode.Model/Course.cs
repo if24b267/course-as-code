@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-
+using System.ComponentModel;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Questions;
 
 namespace CourseAsCode.Model
 {
@@ -27,6 +27,8 @@ namespace CourseAsCode.Model
         public List<EnrolmentMethod> EnrolmentMethods { get; set; } = CourseDefaults.DEFAULT_ENROLMENT_METHODS;
         [Description("list of users that are enrolled in the course")]
         public List<User> EnrolledUsers { get; set; } = CourseDefaults.DEFAULT_ENROLLED_USERS;
+        [Description("All the questions available in this course for quizzes, i.e. the question bank")]
+        public List<Question> Questions { get; set; } = new();
 
         public BackupMetadata BackupMetadata { get; set; } = new BackupMetadata();
         public SensibleDefaultsCourse SensibleDefaults { get; set; } = new SensibleDefaultsCourse();
