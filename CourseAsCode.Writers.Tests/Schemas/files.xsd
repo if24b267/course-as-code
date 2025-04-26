@@ -1,0 +1,35 @@
+﻿<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="files">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="file" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="contenthash" type="xs:string"/>
+							<xs:element name="contextid" type="xs:int"/>
+							<xs:element name="component" type="xs:string"/>
+							<xs:element name="filearea" type="xs:string"/>
+							<xs:element name="itemid" type="xs:int"/>
+							<xs:element name="filepath" type="xs:string"/>
+							<xs:element name="filename" type="xs:string"/>
+							<xs:element name="userid" type="xs:int" minOccurs="0"/>
+							<xs:element name="filesize" type="xs:int"/>
+							<xs:element name="mimetype" type="xs:string" minOccurs="0"/>
+							<xs:element name="status" type="xs:int"/>
+							<xs:element name="timecreated" type="xs:int"/>
+							<xs:element name="timemodified" type="xs:int"/>
+							<xs:element name="source" type="xs:string" minOccurs="0"/>
+							<xs:element name="author" type="xs:string" minOccurs="0"/>
+							<xs:element name="license" type="xs:string" minOccurs="0"/>
+							<xs:element name="sortorder" type="xs:int"/>
+							<xs:element name="repositorytype" type="xs:string" minOccurs="0"/>
+							<xs:element name="repositoryid" type="xs:string" minOccurs="0"/>
+							<xs:element name="reference" type="xs:string" minOccurs="0"/>
+						</xs:sequence>
+						<xs:attribute name="id" type="xs:int" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

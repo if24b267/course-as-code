@@ -59,7 +59,7 @@ public class Writer : IWriter
     private readonly ActivityCompetenciesWriter _activityCompetenciesWriter = new ActivityCompetenciesWriter();
     private readonly ActivityCompletionWriter _activityCompletionWriter = new ActivityCompletionWriter();
     private readonly ActivityFiltersWriter _activityFiltersWriter = new ActivityFiltersWriter();
-    
+
     // Text and Media Area (Label) Activity Writers
     private readonly LabelWriter _labelWriter = new LabelWriter();
     private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
@@ -73,7 +73,7 @@ public class Writer : IWriter
     private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
     
     // Quiz Activity Writers
-    private readonly ModuleWriterQuiz _moduleWriterQuiz = new ();
+    private readonly ModuleWriterQuiz _moduleWriterQuiz = new ModuleWriterQuiz();
     private readonly QuizWriter _quizWriter = new QuizWriter();
 
     private readonly Logger _logger = LogManager.GetCurrentClassLogger();

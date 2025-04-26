@@ -1,0 +1,37 @@
+﻿<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="module">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="modulename" type="xs:string"/>
+				<xs:element name="sectionid" type="xs:int"/>
+				<xs:element name="sectionnumber" type="xs:int"/>
+				<xs:element name="idnumber" type="xs:string"/>
+				<xs:element name="added" type="xs:int"/>
+				<xs:element name="score" type="xs:int"/>
+				<xs:element name="indent" type="xs:int"/>
+				<xs:element name="visible" type="xs:int"/>
+				<xs:element name="visibleoncoursepage" type="xs:int"/>
+				<xs:element name="visibleold" type="xs:int"/>
+				<xs:element name="groupmode" type="xs:int"/>
+				<xs:element name="groupingid" type="xs:int"/>
+				<xs:element name="completion" type="xs:int"/>
+				<xs:element name="completiongradeitemnumber" type="xs:string"/>
+				<xs:element name="completionpassgrade" type="xs:int"/>
+				<xs:element name="completionview" type="xs:int"/>
+				<xs:element name="completionexpected" type="xs:int"/>
+				<xs:element name="availability" type="xs:string"/>
+				<xs:element name="showdescription" type="xs:int"/>
+				<xs:element name="downloadcontent" type="xs:int"/>
+				<xs:element name="lang" type="xs:string"/>
+				<xs:element name="tags">
+					<xs:complexType>
+						<xs:sequence>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:int" use="required"/>
+			<xs:attribute name="version" type="xs:int" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
