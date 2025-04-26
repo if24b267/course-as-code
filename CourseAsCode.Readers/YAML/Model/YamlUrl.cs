@@ -4,11 +4,11 @@ namespace CourseAsCode.Readers.YAML.Model;
 
 public class YamlUrl
 {
-	[Required]
-	public string Name { get; set; }
+    [Required]
+    public string Name { get; set; }
 
-	[Required]
-	public string URL { get; set; }
+    [Required]
+    public string URL { get; set; }
 
-	public string? Description { get; set; }
+    public string? Description { get; set; }
 }

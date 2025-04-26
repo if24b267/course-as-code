@@ -2,9 +2,9 @@
 
 public enum ActivityType
 {
-	URL,
-	LABEL,
-	TEXTMEDIAAREA,
-	QUIZ,
-	FILE
+    URL,
+    LABEL,
+    TEXTMEDIAAREA,
+    QUIZ,
+    FILE,
 }

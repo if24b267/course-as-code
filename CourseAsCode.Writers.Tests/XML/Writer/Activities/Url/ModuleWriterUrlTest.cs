@@ -5,7 +5,6 @@ using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using NLog;
@@ -22,7 +21,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         private IGeneralHelper _fakeGeneralHelper;
         private ModuleWriterUrl _moduleWriterUrl;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
-        
+
         private Model.Course _dummyCourse;
         private Section _dummySection;
         private URL _dummyUrl;
@@ -51,7 +50,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             _dummyCourse = new Model.Course
             {
                 BackupMetadata = new BackupMetadata { MoodleVersion = MoodleVersion.Moodle450 },
-                Sections = new List<Section>()
+                Sections = new List<Section>(),
             };
 
             _dummySection = new Section
@@ -59,7 +58,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
                 Name = "Test Section",
                 SystemDefaults = new Section.SystemDefaultsSection()
                 {
-                    SectionId = 5
+                    SectionId = 5,
                 },
             };
             _dummyCourse.Sections.Add(_dummySection);
@@ -76,7 +75,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
                 GroupMode = GroupMode.NoGroups,
                 DisplayDescription = true,
                 Language = Language.English,
-                Tags = new List<string> { "tag1", "tag2" }
+                Tags = new List<string> { "tag1", "tag2" },
             };
         }
 
@@ -94,7 +93,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
                 doc.LoadXml(output);
             });
         }
-        
+
         [Test]
         public void WriteModule_RootElementIsModule()
         {
@@ -125,7 +124,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             Assert.That(moduleElement?.GetAttribute("id"), Is.EqualTo(_dummyUrl.SystemDefaults.ModuleId.ToString()));
             Assert.That(moduleElement?.GetAttribute("version"), Is.EqualTo("2024100700"));
         }
-        
+
         [Test]
         public void WriteModule_ModuleElementHasExpectedChildElements()
         {
@@ -144,7 +143,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyUrl.SystemDefaults.ModuleName));
             Assert.That(moduleElement["sectionid"]?.InnerText, Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
             Assert.That(moduleElement?["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
-            
+
             // Inner elements from the mocked helper methods
             Assert.That(moduleElement["added"]?.InnerText, Is.EqualTo("1234567890"));
             Assert.That(moduleElement["lang"]?.InnerText, Is.EqualTo("en"));
@@ -182,7 +181,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             Activity nonUrlActivity = new TextAndMediaArea()
             {
                 Name = "This activity is not an URL",
-                ActivityId = 20
+                ActivityId = 20,
             };
 
             // Act & Assert: Verify that passing a non-URL activity throws an InvalidCastException.
@@ -207,11 +206,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             // Arrange: Use a throwing XML writer factory to simulate an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
             _moduleWriterUrl = new ModuleWriterUrl(throwingFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper);
-            
+
             // Act & Assert: Verify that an exception is thrown and an error is logged
             Assert.Throws<InvalidOperationException>(() =>
                 _moduleWriterUrl.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyUrl));
-            
+
             _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
                                                                                    s.Contains("module.xml")));
         }

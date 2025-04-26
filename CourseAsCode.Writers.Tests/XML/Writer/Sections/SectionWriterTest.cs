@@ -16,12 +16,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
         private IFileService _fakeFileService;
         private SectionWriter _sectionWriter;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
-        
+
         // Dummy section
         private Section _dummySection = new Section
         {
             Name = "Test Section",
-            Summary = "This is a test section"
+            Summary = "This is a test section",
         };
 
         [SetUp]
@@ -55,7 +55,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
                 doc.LoadXml(output);
             });
         }
-        
+
         [Test]
         public void WriteSections_ContainsSectionElementWithExpectedAttributes()
         {
@@ -65,7 +65,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             // Act: Write sections
             _sectionWriter.WriteSections(DEFAULT_DUMMY_OUTPUT_PATH, sections);
             string output = _testFactory.StringWriter.ToString();
-            
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(output);
 
@@ -75,7 +75,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             Assert.That(sectionElement.Name, Is.EqualTo("section"));
             Assert.That(sectionElement.GetAttribute("id"), Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
         }
-        
+
         [Test]
         public void WriteSections_SectionElementContainsExpectedElements()
         {
@@ -85,7 +85,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             // Act: Write sections
             _sectionWriter.WriteSections(DEFAULT_DUMMY_OUTPUT_PATH, sections);
             string output = _testFactory.StringWriter.ToString();
-            
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(output);
 
@@ -96,7 +96,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             Assert.That(sectionElement?.SelectSingleNode("name")?.InnerText, Is.EqualTo(_dummySection.Name));
             Assert.That(sectionElement?.SelectSingleNode("summary")?.InnerText, Is.EqualTo(_dummySection.Summary));
         }
-        
+
         [Test]
         public void WriteSections_LogsDebugOnSuccess()
         {
@@ -125,7 +125,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             // and this section should be skipped (i.e. no XML file is created).
             Assert.DoesNotThrow(() => _sectionWriter.WriteSections(DEFAULT_DUMMY_OUTPUT_PATH, sections));
             string output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: Verify that the output is empty because the section was skipped
             Assert.IsEmpty(output, "Output should be empty because the section was skipped.");
 

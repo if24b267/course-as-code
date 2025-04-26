@@ -1,10 +1,11 @@
 ﻿using System.Xml;
-using NLog;
+
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
 {
@@ -13,15 +14,15 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         private const string DEFAULT_INFOREF_RELATIVE_PATH = "inforef.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public ActivityInforefWriter() 
+        public ActivityInforefWriter()
             : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
         public ActivityInforefWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
             : base(xmlWriterFactory, logger)
@@ -29,16 +30,16 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         }
 
         /// <summary>
-        /// Writes the inforef.xml file required for an activity
+        /// Writes the inforef.xml file required for an activity.
         /// </summary>
-        /// <param name="course">The course model containing sections and activities</param>
-        /// <param name="outputPath">The output directory path</param>
+        /// <param name="course">The course model containing sections and activities.</param>
+        /// <param name="outputPath">The output directory path.</param>
         public void WriteInforefLabel(Model.Course course, string outputPath)
         {
             try
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_INFOREF_RELATIVE_PATH));
-                
+
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
@@ -63,7 +64,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                     writer.WriteEndElement(); // Close <inforef>
                     writer.WriteEndDocument();
                 }
-                
+
                 LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_INFOREF_RELATIVE_PATH}");
             }
             catch (Exception e)

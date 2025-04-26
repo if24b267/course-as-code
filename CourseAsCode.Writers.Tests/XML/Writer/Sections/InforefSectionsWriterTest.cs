@@ -17,12 +17,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
         private InforefSectionsWriter _inforefSectionsWriter;
         private List<Section> _sections = new List<Section>();
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
-        
+
         // Dummy section
         private Section _dummySection = new Section
         {
             Name = "Test Section",
-            Summary = "This is a test section"
+            Summary = "This is a test section",
         };
 
         [SetUp]
@@ -44,7 +44,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
         {
             // Arrange: Create a list of sections
             _sections = new List<Section> { _dummySection };
-            
+
             // Act
             _inforefSectionsWriter.WriteInforefSections(DEFAULT_DUMMY_OUTPUT_PATH, _sections);
             string output = _testFactory.StringWriter.ToString();
@@ -56,17 +56,17 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
                 doc.LoadXml(output);
             });
         }
-        
+
         [Test]
         public void WriteInforefSections_ContainsRequiredElements()
         {
             // Arrange: Create a list of sections
             _sections = new List<Section> { _dummySection };
-            
+
             // Act
             _inforefSectionsWriter.WriteInforefSections(DEFAULT_DUMMY_OUTPUT_PATH, _sections);
             string output = _testFactory.StringWriter.ToString();
-            
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(output);
 
@@ -74,16 +74,16 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             Assert.IsNotNull(xmlDoc.DocumentElement, "The XML document should have a root element");
             Assert.That(xmlDoc.DocumentElement.Name, Is.EqualTo("inforef"));
         }
-        
+
         [Test]
         public void WriteInforefSections_LogsDebugOnSuccess()
         {
             // Arrange: Create a list of sections
             _sections = new List<Section> { _dummySection };
-            
+
             // Act
             _inforefSectionsWriter.WriteInforefSections(DEFAULT_DUMMY_OUTPUT_PATH, _sections);
-            
+
             // Assert: Verify that a debug log was recorded
             _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains($"section_{_dummySection.SystemDefaults.SectionId}/inforef.xml")));
         }
@@ -95,7 +95,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             _fakeFileService
                 .When(fs => fs.CreateDirectory(Arg.Any<string>()))
                 .Do(x => { throw new InvalidOperationException("Test directory failure"); });
-            
+
             // Create a list of sections
             _sections = new List<Section> { _dummySection };
 

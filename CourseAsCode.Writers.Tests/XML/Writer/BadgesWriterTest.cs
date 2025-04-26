@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer;
 using NLog;
@@ -12,7 +12,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private XmlWriterFactoryTest _testFactory;
         private ILogger _testLogger;
         BadgesWriter _testBadgesWriter;
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -20,8 +20,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _testLogger = Substitute.For<ILogger>();
             _testBadgesWriter = new BadgesWriter(_testFactory, _testLogger); // Use DI to inject the test factory and logger
         }
-        
-        
+
         [Test]
         public void WriteBadges_GeneratesValidXml()
         {
@@ -76,12 +75,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Arrange
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
             _testBadgesWriter = new BadgesWriter(throwingFactory, _testLogger);
-            
+
             string dummyOutputPath = "dummyPath";
 
             // Act & Assert: An exception should be thrown
             Assert.Throws<InvalidOperationException>(() => _testBadgesWriter.WriteBadges(dummyOutputPath));
-            
+
             // Verify that logger.Error is called with a message containing "badges.xml"
             _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("badges.xml")));
         }

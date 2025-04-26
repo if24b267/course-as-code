@@ -14,29 +14,31 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
         private readonly IGeneralHelper _generalHelper;
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public UrlWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public UrlWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _generalHelper = GeneralHelper.Instance;
         }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing
+        /// Constructor using Dependency Injection for Unit Testing.
         /// </summary>
-        /// <param name="xmlWriterFactory">Injected XML writer factory</param>
-        /// <param name="logger">Injected logger instance</param>
-        /// <param name="generalHelper">Injected general helper</param>
-        public UrlWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper) : base(xmlWriterFactory, logger)
+        /// <param name="xmlWriterFactory">Injected XML writer factory.</param>
+        /// <param name="logger">Injected logger instance.</param>
+        /// <param name="generalHelper">Injected general helper.</param>
+        public UrlWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper)
+            : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper;
         }
 
         /// <summary>
-        /// Writes the url activity to an XML file
+        /// Writes the url activity to an XML file.
         /// </summary>
-        /// <param name="outputPath">the output path where the url.xml file will be saved</param>
-        /// <param name="urlObject">the URL activity to write</param>
+        /// <param name="outputPath">the output path where the url.xml file will be saved.</param>
+        /// <param name="urlObject">the URL activity to write.</param>
         public void WriteUrl(string outputPath, URL urlObject)
         {
             try
@@ -65,10 +67,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
         }
 
         /// <summary>
-        /// writes the activity tag and its attributes
+        /// writes the activity tag and its attributes.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="urlObject">initialized URL object to write</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="urlObject">initialized URL object to write.</param>
         private void WriteActivityAttributes(XmlWriter writer, URL urlObject)
         {
             writer.WriteAttributeString("id", urlObject.ActivityId.ToString());
@@ -78,10 +80,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
         }
 
         /// <summary>
-        /// Writes the url element and its child elements
+        /// Writes the url element and its child elements.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="urlObject">The URL object to write</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="urlObject">The URL object to write.</param>
         private void WriteUrlTag(XmlWriter writer, URL urlObject)
         {
             writer.WriteStartElement("url");
@@ -97,7 +99,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                 { "display", "0" }, // TODO: Determine meaning of this value
                 { "displayoptions", "a:1:{s:10:\"printintro\";i:1;}" }, // TODO: Determine meaning of this value
                 { "parameters", "a:0:{}" }, // TODO: Determine meaning of this value
-                { "timemodified", _generalHelper.DateTimeToUnixTimestamp(urlObject.TimeModified).ToString() }
+                { "timemodified", _generalHelper.DateTimeToUnixTimestamp(urlObject.TimeModified).ToString() },
             };
 
             WriteElements(writer, elements);

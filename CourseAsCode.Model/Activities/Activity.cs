@@ -1,6 +1,6 @@
-﻿using CourseAsCode.Model.Defaults.Activities;
-using CourseAsCode.Model.Enums;
 using System.ComponentModel;
+using CourseAsCode.Model.Defaults.Activities;
+using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Activities
 {
@@ -27,11 +27,10 @@ namespace CourseAsCode.Model.Activities
         public int? CustomId { get; set; } = ActivityDefaults.DEFAULT_CUSTOM_ID;
         [Description("if set, the activity will be displayed in this language despite the user's preferences")]
         public Language? Language { get; set; } = ActivityDefaults.DEFAULT_LANGUAGE;
-        
+
         [Description("the section to which this activity belongs")]
         public Section? Section { get; set; }
-        
-        
+
         // Theoretically belonging to SystemDefaults
         [Description("a context in Moodle defines the \"space\" or \"level\" where specific roles, permissions, or settings apply. Contexts are hierarchical, meaning they form a tree-like structure, with permissions inheriting downwards unless overridden")]
         public Context Context { get; set; } = ActivityDefaults.DEFAULT_CONTEXT;

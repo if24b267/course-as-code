@@ -1,7 +1,6 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using NLog;
@@ -41,9 +40,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _fakeCourseHelper.GetCourseFormatFromEnum(Arg.Any<CourseFormat>()).Returns("topics");
 
             // Instantiate the MoodleBackupWriter with injected dependencies
-            _moodleBackupWriter = new MoodleBackupWriter(_testFactory, _testLogger,
-                _fakeGeneralHelper, _fakeMoodleVersionHelper, _fakeCourseHelper);
-            
+            _moodleBackupWriter = new MoodleBackupWriter(_testFactory, _testLogger, _fakeGeneralHelper, _fakeMoodleVersionHelper, _fakeCourseHelper);
+
             // Create a dummy course
             _dummyCourse = new Model.Course();
         }
@@ -113,8 +111,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _moodleBackupWriter = new MoodleBackupWriter(throwingFactory, _testLogger,
-                _fakeGeneralHelper, _fakeMoodleVersionHelper, _fakeCourseHelper);
+            _moodleBackupWriter = new MoodleBackupWriter(throwingFactory, _testLogger, _fakeGeneralHelper, _fakeMoodleVersionHelper, _fakeCourseHelper);
 
             // Act & Assert: Verify that an exception is thrown
             Assert.Throws<InvalidOperationException>(() =>
