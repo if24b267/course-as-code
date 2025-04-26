@@ -59,7 +59,7 @@ public class Writer : IWriter
     private readonly ActivityCompetenciesWriter _activityCompetenciesWriter = new ActivityCompetenciesWriter();
     private readonly ActivityCompletionWriter _activityCompletionWriter = new ActivityCompletionWriter();
     private readonly ActivityFiltersWriter _activityFiltersWriter = new ActivityFiltersWriter();
-
+    
     // Text and Media Area (Label) Activity Writers
     private readonly LabelWriter _labelWriter = new LabelWriter();
     private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
@@ -73,9 +73,9 @@ public class Writer : IWriter
     private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
     
     // Quiz Activity Writers
-    private readonly ModuleWriterQuiz _moduleWriterQuiz = new ModuleWriterQuiz();
+    private readonly ModuleWriterQuiz _moduleWriterQuiz = new ();
     private readonly QuizWriter _quizWriter = new QuizWriter();
-    
+
     private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
     public bool WriteCourse(Course course, string outputPath)
@@ -245,7 +245,7 @@ public class Writer : IWriter
         {
             Environment.Exit(1);
         }
-        
+
         // Root directory
         _badgesWriter.WriteBadges(outputPath);
         _completionWriter.WriteCompletion(course, outputPath);
@@ -272,7 +272,6 @@ public class Writer : IWriter
         _inforefWriter.WriteInforef(course, outputPath);
         _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
         
-
         // -- Write section files -- //
 
         // Create sections directory if it does not exist
@@ -328,7 +327,7 @@ public class Writer : IWriter
                 {
                     activityPath = CreateQuizActivity(course, outputPath, activity, quiz, section);
                 }
-                
+
                 // Skip if activityPath is null (i.e. directory creation failed)
                 if (activityPath == null)
                 {
@@ -369,7 +368,6 @@ public class Writer : IWriter
         });
     }
 
-    
     /// <summary>
     /// writes the XML files specific to the URL activity.
     /// </summary>
@@ -385,7 +383,6 @@ public class Writer : IWriter
             _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
         });
     }
-
 
     /// <summary>
     /// writes the XML files specific to the Text and Media Area (Label) activity.
@@ -403,7 +400,6 @@ public class Writer : IWriter
         });
     }
 
-
     /// <summary>
     /// writes the XML files specific to the Quiz activity
     /// </summary>
@@ -419,7 +415,6 @@ public class Writer : IWriter
             _moduleWriterQuiz.WriteModule(activityPath, course, section, quiz);
         });
     }
-    
     
     /// <summary>
     /// Creates an activity directory using the specified prefix and processes it via the given action.

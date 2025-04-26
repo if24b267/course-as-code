@@ -66,7 +66,7 @@ namespace CourseAsCode.Writers.XML.Writer
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-                    
+
                     writer.WriteStartElement("question_categories");
                     
                     // Moodle requires a top-level category, which is the parent of all other categories

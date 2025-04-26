@@ -1,8 +1,6 @@
-﻿using System.ComponentModel;
-
+using System.ComponentModel;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
-using System.ComponentModel;
 using CourseAsCode.Model.Questions;
 
 namespace CourseAsCode.Model
@@ -15,22 +13,22 @@ namespace CourseAsCode.Model
         public DateTime StartDate { get; set; } = CourseDefaults.DEFAULT_START_DATE;
         public DateTime? EndDate { get; set; } = CourseDefaults.DEFAULT_END_DATE;
 
-		[Description("which group mode to use as default in the course")]
-		public GroupMode GroupMode { get; set; } = CourseDefaults.DEFAULT_GROUP_MODE;
-		[Description("if set, the course will be displayed in this language despite the user's preferences")]
-		public Language? CourseLanguage { get; set; } = CourseDefaults.DEFAULT_COURSE_LANGUAGE;
-		[Description("list of tags that are used to describe the course")]
-		public List<string>? Tags { get; set; } = CourseDefaults.DEFAULT_TAGS;
-		[Description("ordered list of sections in the course")]
-		public List<Section> Sections { get; set; } = CourseDefaults.DEFAULT_SECTIONS;
-		[Description("list of roles that are available in the course")]
-		public List<Role> Roles { get; set; } = CourseDefaults.DEFAULT_ROLES;
-		[Description("list of enrolment methods that are activated for this course")]
-		public List<EnrolmentMethod> EnrolmentMethods { get; set; } = CourseDefaults.DEFAULT_ENROLMENT_METHODS;
-		[Description("list of users that are enrolled in the course")]
-		public List<User> EnrolledUsers { get; set; } = CourseDefaults.DEFAULT_ENROLLED_USERS;
-		[Description("All the questions available in this course for quizzes, i.e. the question bank")]
-		public List<Question> Questions { get; set; } = new();
+        [Description("which group mode to use as default in the course")]
+        public GroupMode GroupMode { get; set; } = CourseDefaults.DEFAULT_GROUP_MODE;
+        [Description("if set, the course will be displayed in this language despite the user's preferences")]
+        public Language? CourseLanguage { get; set; } = CourseDefaults.DEFAULT_COURSE_LANGUAGE;
+        [Description("list of tags that are used to describe the course")]
+        public List<string>? Tags { get; set; } = CourseDefaults.DEFAULT_TAGS;
+        [Description("ordered list of sections in the course")]
+        public List<Section> Sections { get; set; } = CourseDefaults.DEFAULT_SECTIONS;
+        [Description("list of roles that are available in the course")]
+        public List<Role> Roles { get; set; } = CourseDefaults.DEFAULT_ROLES;
+        [Description("list of enrolment methods that are activated for this course")]
+        public List<EnrolmentMethod> EnrolmentMethods { get; set; } = CourseDefaults.DEFAULT_ENROLMENT_METHODS;
+        [Description("list of users that are enrolled in the course")]
+        public List<User> EnrolledUsers { get; set; } = CourseDefaults.DEFAULT_ENROLLED_USERS;
+        [Description("All the questions available in this course for quizzes, i.e. the question bank")]
+        public List<Question> Questions { get; set; } = new();
 
         public BackupMetadata BackupMetadata { get; set; } = new BackupMetadata();
         public SensibleDefaultsCourse SensibleDefaults { get; set; } = new SensibleDefaultsCourse();
