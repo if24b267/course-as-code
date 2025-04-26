@@ -10,6 +10,7 @@ using CourseAsCode.Readers.YAML.Readers;
 using Microsoft.Extensions.DependencyInjection;
 
 using CourseFormat = CourseAsCode.Readers.Enums.CourseFormat;
+using IQuizReader = CourseAsCode.Readers.Interfaces.IQuizReader;
 
 namespace CourseAsCode.Readers;
 
@@ -79,7 +80,7 @@ public class CourseReader : ICourseReader
         var yamlSectionsDefinition = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 
         List<Section> sections = [];
-        List<Question> questions = [];
+        ValueKeeper.Questions = [];
         ValueKeeper.CurrentActivityId = 1;
         ValueKeeper.CurrentSectionId = 1;
 
@@ -87,7 +88,7 @@ public class CourseReader : ICourseReader
         {
             var questionPath = Path.GetFullPath(Path.Combine(coursePath, questionListPath));
             var moodleQuestionList = _questionReader.Read(questionPath);
-            questions.AddRange(moodleQuestionList);
+            ValueKeeper.Questions.AddRange(moodleQuestionList);
         }
 
         foreach (var section in yamlSectionsDefinition.Sections)
@@ -166,6 +167,7 @@ public class CourseReader : ICourseReader
 
         // Register readers with interfaces
         services.AddSingleton<IFileReader, YamlFileReader>();
+        services.AddSingleton<IQuizReader, YamlQuizReader>();
         services.AddSingleton<ITextAndMediaAreaReader, YamlTextMediaAreaReader>();
         services.AddSingleton<IUrlReader, YamlUrlReader>();
         services.AddSingleton<IActivityReader, YamlActivityReader>();
