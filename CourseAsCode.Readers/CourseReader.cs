@@ -2,7 +2,6 @@ using System.Text.Json;
 
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Questions;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;

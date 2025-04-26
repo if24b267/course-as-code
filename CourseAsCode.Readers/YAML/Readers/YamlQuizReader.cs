@@ -31,7 +31,7 @@ namespace CourseAsCode.Readers.YAML.Readers
 
         private Quiz ConvertYamlQuizToMoodleQuiz(YamlQuiz yamlQuiz)
         {
-            List <Question> questions = GetQuestionsFromValueKeeperByIdList(yamlQuiz.QuestionIds);
+            List<Question> questions = GetQuestionsFromValueKeeperByIdList(yamlQuiz.QuestionIds);
             return new Quiz()
             {
                 ActivityId = ValueKeeper.CurrentActivityId,
