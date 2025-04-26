@@ -1,0 +1,30 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="question_categories">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="question_category" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="name" type="xs:string" />
+                            <xs:element name="contextid" type="xs:integer" />
+                            <xs:element name="contextlevel" type="xs:integer" />
+                            <xs:element name="contextinstanceid" type="xs:integer" />
+                            <xs:element name="info" type="xs:string" minOccurs="0" />
+                            <xs:element name="infoformat" type="xs:integer" />
+                            <xs:element name="stamp" type="xs:string" />
+                            <xs:element name="parent" type="xs:integer" />
+                            <xs:element name="sortorder" type="xs:integer" />
+                            <xs:element name="idnumber" type="xs:string" />
+                            <xs:element name="question_bank_entries" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:integer" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

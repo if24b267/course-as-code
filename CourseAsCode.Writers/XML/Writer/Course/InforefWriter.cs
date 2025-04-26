@@ -109,7 +109,6 @@ namespace CourseAsCode.Writers.XML.Writer.Course
             }
         }
 
-        
         /// <summary>
         /// writes the part of the `inforef` section for the corresponding object type.
         /// </summary>
@@ -120,6 +119,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         {
             writer.WriteStartElement(type);
 
+            // Write the ID directly
             writer.WriteElementString("id", id.ToString());
 
             writer.WriteEndElement(); // Close </type>
