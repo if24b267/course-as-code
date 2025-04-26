@@ -2,10 +2,9 @@ using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
-using NLog;
-
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -110,9 +109,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
             }
         }
 
-
         /// <summary>
-        /// writes the part of the `inforef` section for the corresponding object type
+        /// writes the part of the `inforef` section for the corresponding object type.
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document</param>
         /// <param name="id">id of the object to be referenced</param>

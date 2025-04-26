@@ -1,11 +1,10 @@
-﻿using System.Xml;
-using NLog;
-
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
 {
@@ -42,7 +41,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
             try
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_INFOREF_RELATIVE_PATH));
-                
+
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
