@@ -10,15 +10,15 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         private const string DEFAULT_GRADES_RELATIVE_PATH = "grades.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public ActivityGradesWriter() 
+        public ActivityGradesWriter()
             : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
         public ActivityGradesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
             : base(xmlWriterFactory, logger)
@@ -26,9 +26,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         }
 
         /// <summary>
-        /// Writes the grades.xml file required for an activity
+        /// Writes the grades.xml file required for an activity.
         /// </summary>
-        /// <param name="outputPath">The output directory path</param>
+        /// <param name="outputPath">The output directory path.</param>
         public void WriteGrade(string outputPath)
         {
             try

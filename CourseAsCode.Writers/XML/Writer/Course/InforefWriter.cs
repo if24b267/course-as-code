@@ -1,7 +1,8 @@
 using System.Xml;
-using NLog;
+
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -12,7 +13,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public InforefWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public InforefWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
@@ -81,11 +83,11 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the part of the `inforef` section for the corresponding object type
+        /// writes the part of the `inforef` section for the corresponding object type.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="instance">instance of the object to be referenced</param>
-        /// <param name="type">type of the object to be referenced</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="instance">instance of the object to be referenced.</param>
+        /// <param name="type">type of the object to be referenced.</param>
         private void WriteOneInforefSection(XmlWriter writer, dynamic instance, string type)
         {
             writer.WriteStartElement(type);

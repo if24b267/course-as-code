@@ -1,11 +1,12 @@
 using System.Xml;
+
 using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Static;
-using NLog;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Static;
+using NLog;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -19,7 +20,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public RoleAssignmentsWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public RoleAssignmentsWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
@@ -33,9 +35,9 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the information on which role is assigned to which user | course/roles.xml
+        /// writes the information on which role is assigned to which user | course/roles.xml.
         /// </summary>
-        /// <param name="course">initialized Moodle Course</param>
+        /// <param name="course">initialized Moodle Course.</param>
         /// <param name="outputPath"></param>
         public void WriteRoleAssignments(Model.Course course, string outputPath)
         {
@@ -78,16 +80,16 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         }
 
         /// <summary>
-        /// writes the assignment of one specific user to one specific role; to be used inside the `roles` tag within course/roles.xml
+        /// writes the assignment of one specific user to one specific role; to be used inside the `roles` tag within course/roles.xml.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="user">User for whom the entry is to be created</param>
-        /// <param name="assignmentId">Unique ID for this specific assignment</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="user">User for whom the entry is to be created.</param>
+        /// <param name="assignmentId">Unique ID for this specific assignment.</param>
         private void WriteSingleRoleAssignment(XmlWriter writer, User user, int assignmentId)
         {
             WriteStartElementWithAttributes(writer, "assignment", new Dictionary<string, string>
             {
-                { "id", assignmentId.ToString() }
+                { "id", assignmentId.ToString() },
             });
 
             var elements = new Dictionary<string, string>
@@ -95,10 +97,10 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 { "roleid", user.Role.SystemDefaults.RoleId.ToString() },
                 { "userid", user.SystemDefaults.Id.ToString() },
                 { "timemodified", _helper.DateTimeToUnixTimestamp(user.SystemDefaults.RoleChange) },
-                { "modifierid", GeneralDefaults.DEFAULT_ADMIN_USER_ID.ToString() },
+                { "modifierid", GeneralDefaults.DEFAULTADMINUSERID.ToString() },
                 { "component", "" }, // TODO: Determine function of this field
                 { "itemid", "0" },   // TODO: Determine function of this field
-                { "sortorder", "0" } // TODO: Determine function of this field
+                { "sortorder", "0" }, // TODO: Determine function of this field
             };
 
             WriteElements(writer, elements);

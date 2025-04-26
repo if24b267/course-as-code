@@ -10,16 +10,18 @@ namespace CourseAsCode.Writers.XML.Writer
         private const string DEFAULT_QUESTIONS_RELATIVE_PATH = "questions.xml";
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public QuestionsWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public QuestionsWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing
+        /// Constructor supporting Dependency Injection for Unit Testing.
         /// </summary>
-        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger) : base(xmlWriterFactory, logger)
+        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+            : base(xmlWriterFactory, logger)
         {
         }
 
@@ -32,11 +34,11 @@ namespace CourseAsCode.Writers.XML.Writer
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-                    
+
                     writer.WriteStartElement("question_categories");
                     writer.WriteString(" ");
                     writer.WriteEndElement(); // Close <question_categories>
-                    
+
                     writer.WriteEndDocument();
                 }
 

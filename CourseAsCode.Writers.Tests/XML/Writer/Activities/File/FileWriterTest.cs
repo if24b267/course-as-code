@@ -1,11 +1,12 @@
-﻿using System.Xml;
-using NLog;
-using NSubstitute;
+using System.Xml;
+
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Writer.Activities.File;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Writer.Activities.File;
+using NLog;
+using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
 {
@@ -30,7 +31,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             SystemDefaults = new MoodleFile.SystemDefaultsFile()
             {
                 ModuleId = 202,
-                ModuleName = "resource"
+                ModuleName = "resource",
             },
         };
 
@@ -73,7 +74,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             // Act
             _fileWriter.WriteFile(DEFAULT_DUMMY_OUTPUT_PATH, _dummyFile);
             string output = _testFactory.StringWriter.ToString();
-            
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(output);
 
@@ -86,14 +87,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Assert.That(root.GetAttribute("modulename"), Is.EqualTo(_dummyFile.SystemDefaults.ModuleName));
             Assert.That(root.GetAttribute("contextid"), Is.EqualTo("4")); // from mocked EnumIntegerToString
         }
-        
+
         [Test]
         public void WriteFile_ContainsResourceElement()
         {
             // Act
             _fileWriter.WriteFile(DEFAULT_DUMMY_OUTPUT_PATH, _dummyFile);
             string output = _testFactory.StringWriter.ToString();
-    
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(output);
 
@@ -109,11 +110,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             // Act
             _fileWriter.WriteFile(DEFAULT_DUMMY_OUTPUT_PATH, _dummyFile);
             string output = _testFactory.StringWriter.ToString();
-    
+
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(output);
             var resourceElement = xmlDoc.DocumentElement?.SelectSingleNode("resource") as XmlElement;
-    
+
             // Check some of the child elements of <resource> for expected content
             // Full Schema Validation should be done in integration tests
             Assert.That(resourceElement?["name"]?.InnerText, Is.EqualTo(_dummyFile.FileName));

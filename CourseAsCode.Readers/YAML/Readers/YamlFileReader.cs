@@ -7,46 +7,46 @@ namespace CourseAsCode.Readers.YAML.Readers;
 
 public class YamlFileReader : IFileReader
 {
-	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-	private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
+    private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+    private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
 
-	public YamlFileReader(IYamlFileReaderHelper yamlFileReaderHelper)
-	{
-		_yamlFileReaderHelper = yamlFileReaderHelper;
-	}
+    public YamlFileReader(IYamlFileReaderHelper yamlFileReaderHelper)
+    {
+        _yamlFileReaderHelper = yamlFileReaderHelper;
+    }
 
-	public MoodleFile? Read(string modelObjectPath)
-	{
-		if (!File.Exists(modelObjectPath))
-		{
-			_logger.Error($"File {modelObjectPath} does not exist.");
-			return null;
-		}
+    public MoodleFile? Read(string modelObjectPath)
+    {
+        if (!File.Exists(modelObjectPath))
+        {
+            _logger.Error($"File {modelObjectPath} does not exist.");
+            return null;
+        }
 
-		var yamlFile = _yamlFileReaderHelper.DeserializeFromFile<YamlFile>(modelObjectPath);
+        var yamlFile = _yamlFileReaderHelper.DeserializeFromFile<YamlFile>(modelObjectPath);
 
-		var fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), yamlFile.FilePath));
-		yamlFile.FilePath = fullPath;
+        var fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), yamlFile.FilePath));
+        yamlFile.FilePath = fullPath;
 
-		if (!File.Exists(yamlFile.FilePath))
-		{
-			_logger.Error($"File {yamlFile.FilePath} does not exist.");
-			return null;
-		}
+        if (!File.Exists(yamlFile.FilePath))
+        {
+            _logger.Error($"File {yamlFile.FilePath} does not exist.");
+            return null;
+        }
 
-		var moodleFile = ConvertYamlFileToMoodleFile(yamlFile);
-		return moodleFile;
-	}
+        var moodleFile = ConvertYamlFileToMoodleFile(yamlFile);
+        return moodleFile;
+    }
 
-	private MoodleFile ConvertYamlFileToMoodleFile(YamlFile yamlFile)
-	{
-		return new MoodleFile()
-		{
-			ActivityId = ValueKeeper.CurrentActivityId,
-			Name = yamlFile.Name,
-			Description = yamlFile.Description,
-			FilePath = yamlFile.FilePath,
-			FileName = Path.GetFileName(yamlFile.FilePath)
-		};
-	}
+    private MoodleFile ConvertYamlFileToMoodleFile(YamlFile yamlFile)
+    {
+        return new MoodleFile()
+        {
+            ActivityId = ValueKeeper.CurrentActivityId,
+            Name = yamlFile.Name,
+            Description = yamlFile.Description,
+            FilePath = yamlFile.FilePath,
+            FileName = Path.GetFileName(yamlFile.FilePath),
+        };
+    }
 }

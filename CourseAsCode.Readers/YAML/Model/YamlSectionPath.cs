@@ -2,5 +2,5 @@
 
 public class YamlSectionPath
 {
-	public string SectionPath { get; set; }
+    public string SectionPath { get; set; }
 }

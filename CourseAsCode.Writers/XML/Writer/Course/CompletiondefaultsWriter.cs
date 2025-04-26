@@ -12,7 +12,8 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <summary>
         /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public CompletiondefaultsWriter() : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        public CompletiondefaultsWriter()
+            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
         }
 

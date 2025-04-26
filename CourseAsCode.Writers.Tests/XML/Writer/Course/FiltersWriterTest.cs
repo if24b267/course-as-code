@@ -74,7 +74,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var filterActives = doc.DocumentElement?.SelectSingleNode("filter_actives");
             Assert.IsNotNull(filterActives, "The <filter_actives> element is missing");
         }
-        
+
         [Test]
         public void WriteFilters_ContainsFilterConfigs()
         {
@@ -84,7 +84,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             // Act
             _filtersWriter.WriteFilters(_dummyCourse, dummyOutputPath);
             string output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: Verify that the <filter_configs> element exists
             var doc = new XmlDocument();
             doc.LoadXml(output);

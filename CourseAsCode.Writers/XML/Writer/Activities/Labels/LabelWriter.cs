@@ -14,20 +14,20 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         private readonly IGeneralHelper _generalHelper;
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies
+        /// Default constructor using default implementations for dependencies.
         /// </summary>
-        public LabelWriter() 
+        public LabelWriter()
             : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
         {
             _generalHelper = GeneralHelper.Instance;
         }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing
+        /// Constructor using Dependency Injection for Unit Testing.
         /// </summary>
-        /// <param name="xmlWriterFactory">Injected XML writer factory</param>
-        /// <param name="logger">Injected logger</param>
-        /// <param name="generalHelper">Injected general helper</param>
+        /// <param name="xmlWriterFactory">Injected XML writer factory.</param>
+        /// <param name="logger">Injected logger.</param>
+        /// <param name="generalHelper">Injected general helper.</param>
         public LabelWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper)
             : base(xmlWriterFactory, logger)
         {
@@ -35,10 +35,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         }
 
         /// <summary>
-        /// Writes the label activity to an XML file
+        /// Writes the label activity to an XML file.
         /// </summary>
-        /// <param name="outputPath">The output path where the label XML file will be saved</param>
-        /// <param name="activity">The TextAndMediaArea activity to write</param>
+        /// <param name="outputPath">The output path where the label XML file will be saved.</param>
+        /// <param name="activity">The TextAndMediaArea activity to write.</param>
         public void WriteLabel(string outputPath, TextAndMediaArea activity)
         {
             try
@@ -67,10 +67,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         }
 
         /// <summary>
-        /// Writes the attributes of the activity element
+        /// Writes the attributes of the activity element.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="activity">The TextAndMediaArea activity to write</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="activity">The TextAndMediaArea activity to write.</param>
         private void WriteActivityAttributes(XmlWriter writer, TextAndMediaArea activity)
         {
             writer.WriteAttributeString("id", activity.ActivityId.ToString());
@@ -80,10 +80,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         }
 
         /// <summary>
-        /// Writes the label element and its child elements
+        /// Writes the label element and its child elements.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="activity">The TextAndMediaArea activity to write</param>
+        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        /// <param name="activity">The TextAndMediaArea activity to write.</param>
         private void WriteLabelElement(XmlWriter writer, TextAndMediaArea activity)
         {
             writer.WriteStartElement("label");

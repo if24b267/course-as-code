@@ -49,7 +49,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: Verify that the XML root element is "gradebook"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("gradebook"));
         }
@@ -64,7 +64,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: Check that the required child elements exist in the gradebook XML
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             var attributesNode = doc.DocumentElement?.SelectSingleNode("attributes");
             var gradeCategoriesNode = doc.DocumentElement?.SelectSingleNode("grade_categories");
             var gradeItemsNode = doc.DocumentElement?.SelectSingleNode("grade_items");
@@ -96,7 +96,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _gradebookWriter = new GradebookWriter(throwingFactory, _testLogger);
 
             // Act & Assert: Verify that an exception is thrown
-            Assert.Throws<InvalidOperationException>(() => 
+            Assert.Throws<InvalidOperationException>(() =>
                 _gradebookWriter.WriteGradebook(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert: Verify that an error log was recorded with a message containing "gradebook.xml"

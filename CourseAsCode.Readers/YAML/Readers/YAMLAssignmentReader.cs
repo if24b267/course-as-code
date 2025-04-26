@@ -5,8 +5,8 @@ namespace CourseAsCode.Readers.YAML.Readers;
 
 public class YamlAssignmentReader : IAssignmentReader
 {
-	public Activity Read(string modelObjectPath)
-	{
-		throw new NotImplementedException();
-	}
+    public Activity Read(string modelObjectPath)
+    {
+        throw new NotImplementedException();
+    }
 }

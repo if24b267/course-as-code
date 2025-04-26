@@ -4,7 +4,7 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 namespace CourseAsCode.Writers.XML.Logic;
 
 /// <summary>
-/// Default implementation of the IXmlWriterFactory Interface that creates an XmlWriter using XmlWriter.Create
+/// Default implementation of the IXmlWriterFactory Interface that creates an XmlWriter using XmlWriter.Create.
 /// </summary>
 public class DefaultXmlWriterFactory : IXmlWriterFactory
 {

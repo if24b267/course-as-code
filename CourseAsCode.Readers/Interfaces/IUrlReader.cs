@@ -4,5 +4,4 @@ namespace CourseAsCode.Readers.Interfaces;
 
 public interface IUrlReader : IModelObjectReader<URL>
 {
-
 }
