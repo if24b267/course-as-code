@@ -83,11 +83,14 @@ public class CourseReader : ICourseReader
         ValueKeeper.CurrentActivityId = 1;
         ValueKeeper.CurrentSectionId = 1;
 
-        foreach (var questionListPath in yamlYamlCourse.QuestionListPaths)
+        if (yamlYamlCourse.QuestionListPaths != null)
         {
-            var questionPath = Path.GetFullPath(Path.Combine(coursePath, questionListPath));
-            var moodleQuestionList = _questionReader.Read(questionPath);
-            ValueKeeper.Questions.AddRange(moodleQuestionList);
+            foreach (var questionListPath in yamlYamlCourse.QuestionListPaths)
+            {
+                var questionPath = Path.GetFullPath(Path.Combine(coursePath, questionListPath));
+                var moodleQuestionList = _questionReader.Read(questionPath);
+                ValueKeeper.Questions.AddRange(moodleQuestionList);
+            }
         }
 
         foreach (var section in yamlSectionsDefinition.Sections)
