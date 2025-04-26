@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Questions;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
@@ -20,17 +21,19 @@ public class CourseReader : ICourseReader
     private readonly ISectionReader _sectionReader;
     private readonly IServiceProvider _serviceProvider;
     private readonly IYamlFileReaderHelper _yamlReader;
+    private readonly IQuestionReader _questionReader;
 
-    public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader)
+    public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader, IQuestionReader questionReader)
     {
         _sectionReader = sectionReader;
         _serviceProvider = serviceProvider;
         _yamlReader = yamlReader;
+        _questionReader = questionReader;
     }
 
     // For backward compatibility
     public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
-        : this(sectionReader, serviceProvider, new YamlFileReaderHelper())
+        : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()))
     {
     }
 
@@ -71,12 +74,21 @@ public class CourseReader : ICourseReader
             throw new FileNotFoundException("Course is missing a config.yaml or sections.yaml file.");
         }
 
+
         var yamlYamlCourse = _yamlReader.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
         var yamlSectionsDefinition = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 
         List<Section> sections = [];
+        List<Question> questions = [];
         ValueKeeper.CurrentActivityId = 1;
         ValueKeeper.CurrentSectionId = 1;
+
+        foreach (var questionListPath in yamlYamlCourse.QuestionListPaths)
+        {
+            var questionPath = Path.GetFullPath(Path.Combine(coursePath, questionListPath));
+            var moodleQuestionList = _questionReader.Read(questionPath);
+            questions.AddRange(moodleQuestionList);
+        }
 
         foreach (var section in yamlSectionsDefinition.Sections)
         {
@@ -158,6 +170,7 @@ public class CourseReader : ICourseReader
         services.AddSingleton<IUrlReader, YamlUrlReader>();
         services.AddSingleton<IActivityReader, YamlActivityReader>();
         services.AddSingleton<ISectionReader, YamlSectionReader>();
+        services.AddSingleton<IQuestionReader, YamlQuestionReader>();
         services.AddSingleton<ICourseReader, CourseReader>();
     }
 }

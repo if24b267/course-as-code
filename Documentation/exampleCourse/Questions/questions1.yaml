@@ -1,0 +1,51 @@
+#TODO: maybe change this to json or another format?
+Questions:
+  - QuestionName: Capital of France
+    Category: Geography
+    QuestionId: 1
+    ShuffleAnswers: true
+    QuestionText: What is the capital of France?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Answers:
+      - AnswerText: Paris
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct!
+      - AnswerText: London
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect!
+      - AnswerText: Berlin
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect!
+      - AnswerText: Madrid
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect!
+  - QuestionName: Capital of Austria
+    Category: Geography
+    QuestionId: 2
+    QuestionText: What is the capital of Austria?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Answers:
+      - AnswerText: Vienna
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct!
+      - AnswerText: Europe
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect!
+      - AnswerText: Berlin
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect!
+      - AnswerText: Madrid
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect!
