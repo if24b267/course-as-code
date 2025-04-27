@@ -14,13 +14,15 @@ public class YamlActivityReader : IActivityReader
     private readonly ITextAndMediaAreaReader _textMediaAreaReader;
     private readonly IUrlReader _urlReader;
     private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
+    private readonly IQuizReader _quizReader;
 
-    public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper)
+    public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader)
     {
         _fileReader = fileReader;
         _textMediaAreaReader = textMediaAreaReader;
         _urlReader = urlReader;
         _yamlFileReaderHelper = yamlFileReaderHelper;
+        _quizReader = quizReader;
     }
 
     public Activity? Read(string modelObjectPath)
@@ -54,6 +56,10 @@ public class YamlActivityReader : IActivityReader
             case ActivityType.TEXTMEDIAAREA:
                 _logger.Debug($"Reading text media area activity from {modelObjectPath}");
                 return _textMediaAreaReader.Read(modelObjectPath);
+            case ActivityType.QUIZ:
+                _logger.Debug($"Reading quiz activity from {modelObjectPath}");
+                return _quizReader.Read(modelObjectPath);
+
         }
 
         return null;
