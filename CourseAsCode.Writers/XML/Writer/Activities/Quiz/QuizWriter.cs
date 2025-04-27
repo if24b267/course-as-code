@@ -272,7 +272,7 @@ public class QuizWriter : XmlWriterBase
         {
             { "firstslot", "1" },
             { "heading", string.Empty },
-            { "shufflequestions", "0" }
+            { "shufflequestions", quiz.ShuffleQuestions ? "1" : "0" },
         });
 
         writer.WriteEndElement(); // </section>

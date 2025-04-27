@@ -44,6 +44,9 @@ public class Quiz : Activity
     [Description("Automatically insert page breaks after this many questions – 0 = all questions on one single page")]
     public int NewPageThreshold { get; set; } = QuizDefaults.DEFAULT_NEW_PAGE_THRESHOLD;
 
+    [Description("Shuffle the order of questions in the quiz")]
+    public bool ShuffleQuestions { get; set; } = QuizDefaults.DEFAULT_SHUFFLE_QUESTIONS;
+
     [Description("Shuffle the parts making up questions (must also be enabled per‑question)")]
     public bool ShuffleWithinQuestions { get; set; } = QuizDefaults.DEFAULT_SHUFFLE_WITHIN_QUESTIONS;
 

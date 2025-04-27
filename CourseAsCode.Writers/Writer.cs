@@ -484,7 +484,6 @@ public class Writer : IWriter
         });
     }
 
-    
     /// <summary>
     /// writes the XML files specific to the URL activity.
     /// </summary>
@@ -500,7 +499,6 @@ public class Writer : IWriter
             _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
         });
     }
-
 
     /// <summary>
     /// writes the XML files specific to the Text and Media Area (Label) activity.

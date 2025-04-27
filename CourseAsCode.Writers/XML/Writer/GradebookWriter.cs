@@ -66,7 +66,6 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteAttributes(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("attributes");
-            writer.WriteString("");
             writer.WriteEndElement(); // Close <attributes>
         }
 
@@ -158,7 +157,6 @@ namespace CourseAsCode.Writers.XML.Writer
             WriteElements(writer, elements);
 
             writer.WriteStartElement("grade_grades");
-            writer.WriteString("");
             writer.WriteEndElement(); // Close <grade_grades>
 
             writer.WriteEndElement(); // Close <grade_item>
@@ -173,7 +171,6 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteGradeLetters(XmlWriter writer, Model.Course course)
         {
             writer.WriteStartElement("grade_letters");
-            writer.WriteString("");
             writer.WriteEndElement(); // Close grade_letters
         }
 

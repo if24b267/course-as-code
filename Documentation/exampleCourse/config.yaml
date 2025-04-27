@@ -21,3 +21,7 @@ EnableCompletionTracking: true
 
 GroupMode: 1
 ForceGroupMode: false
+
+QuestionListPaths:
+  - ./Questions/questions1.yaml
+  - ./Questions/questions2.yaml
