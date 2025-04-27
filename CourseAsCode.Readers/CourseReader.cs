@@ -126,6 +126,7 @@ public class CourseReader : ICourseReader
             GroupMode = yamlYamlCourse.GroupMode,
             CourseLanguage = courseLanguage,
             Sections = sections,
+            Questions = ValueKeeper.Questions,
 
             // TODO: maybe add a helper class where you can get the default SensibleDefaults class
             SensibleDefaults = new Course.SensibleDefaultsCourse

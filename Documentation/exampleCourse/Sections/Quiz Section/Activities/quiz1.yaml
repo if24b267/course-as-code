@@ -10,7 +10,7 @@ AllowedAttempts: 1
 GradeToPass: 2
 BuildOnPreviousAttempt: false
 GradingMethod: HighestGrade
-QuestionBehaviour: Deferred
+QuestionBehaviour: InteractiveMultipleTries
 ShuffleQuestions: true
 AllowRedosDuringAttempt: false
 Password: password

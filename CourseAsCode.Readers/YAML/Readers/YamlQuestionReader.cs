@@ -66,6 +66,8 @@ namespace CourseAsCode.Readers.YAML.Readers
             question.DefaultMark = yamlQuestion.DefaultMark;
             question.QuestionReady = yamlQuestion.QuestionReady;
             question.Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers);
+            question.HintPenalty = yamlQuestion.HintPenalty;
+            question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
             return question;
         }
 
@@ -84,7 +86,26 @@ namespace CourseAsCode.Readers.YAML.Readers
             question.DefaultMark = yamlQuestion.DefaultMark;
             question.QuestionReady = yamlQuestion.QuestionReady;
             question.Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers);
+            question.HintPenalty = yamlQuestion.HintPenalty;
+            question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
             return question;
+        }
+
+        private List<Hint> ConvertYamlHintListToMoodleHintList(List<YamlHint> yamlHints)
+        {
+            List<Hint> hints = new List<Hint>();
+            foreach (YamlHint yamlHint in yamlHints)
+            {
+                hints.Add(new Hint()
+                {
+                    ClearIncorrectResponses = yamlHint.ClearIncorrectResponses,
+                    HintText = yamlHint.HintText,
+                    HintTextFormat = yamlHint.HintTextFormat,
+                    ShowNumberOfCorrectAnswers = yamlHint.ShowNumberOfCorrectAnswers,
+                });
+            }
+
+            return hints;
         }
 
         private List<Answer> GetMoodleAnswersFromYamlAnswers(List<YamlQuestionAnswer> yamlAnswers)

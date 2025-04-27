@@ -6,6 +6,11 @@ Questions:
     QuestionTextFormat: MARKDOWN
     DefaultMark: 1
     QuestionType: MULTIPLECHOICE
+    Hints:
+      - HintText: This is a hint.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: true
     Answers:
       - AnswerText: Wahr
         AnswerTextFormat: MARKDOWN

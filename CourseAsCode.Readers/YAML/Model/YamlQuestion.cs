@@ -15,5 +15,7 @@ namespace CourseAsCode.Readers.YAML.Model
         public float DefaultMark { get; set; } = 1.0f;
         public QuestionType QuestionType { get; set; }
         public List<YamlQuestionAnswer> Answers { get; set; }
+        public float HintPenalty { get; set; } = 0.1f;
+        public List<YamlHint>? Hints { get; set; }
     }
 }
