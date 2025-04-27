@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions;

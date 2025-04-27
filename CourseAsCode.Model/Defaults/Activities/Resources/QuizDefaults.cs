@@ -1,4 +1,4 @@
-using CourseAsCode.Model.Enums.Quizzes;
+﻿using CourseAsCode.Model.Enums.Quizzes;
 
 namespace CourseAsCode.Model.Defaults.Activities.Resources;
 

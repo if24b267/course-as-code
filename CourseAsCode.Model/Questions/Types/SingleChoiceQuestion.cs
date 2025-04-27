@@ -1,4 +1,4 @@
-namespace CourseAsCode.Model.Questions.Types;
+﻿namespace CourseAsCode.Model.Questions.Types;
 
 public class SingleChoiceQuestion : MultipleChoiceQuestion
 {
