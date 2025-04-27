@@ -109,6 +109,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
             }
         }
 
+        
         /// <summary>
         /// writes the part of the `inforef` section for the corresponding object type.
         /// </summary>
