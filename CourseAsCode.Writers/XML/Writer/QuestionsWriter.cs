@@ -177,7 +177,7 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteQuestionVersionContainer(XmlWriter writer, Question question)
         {
             // Store the ID that was assigned to the question, so that QuizWriter can reference it later
-            question.QuestionId = _nextQuestionId++;
+            // question.QuestionId = _nextQuestionId++;
             
             writer.WriteStartElement("question_versions");
             writer.WriteAttributeString("id", question.QuestionId.ToString());

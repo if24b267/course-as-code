@@ -26,4 +26,5 @@ public class YamlCourse
     public string ForcedLanguage { get; set; }
     public bool ShowActivityDates { get; set; }
     public bool ShowCompletionConditions { get; set; }
+    public List<string> QuestionListPaths { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model;
+using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
@@ -82,7 +82,8 @@ public class Writer : IWriter
     {
         _logger.Debug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
         _logger.Info($"The course will be saved at {outputPath}");
-        
+
+        /*
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - REMOVE LATER
         // ---------------------------------------------
@@ -230,6 +231,7 @@ public class Writer : IWriter
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - END
         // ---------------------------------------------
+        */
 
         // Ensure sections list is not empty
         if (course.Sections.Count == 0)
