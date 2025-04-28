@@ -8,7 +8,7 @@ namespace CourseAsCode.Model.Activities
     {
         [Description("name of the activity (quiz, file, etc.) as it will be displayed to the user")]
         public required string Name { get; set; } = ActivityDefaults.DEFAULT_NAME;
-        public string? Description { get; set; } = ActivityDefaults.DEFAULT_DESCRIPTION;
+        public string? Description { get; set; } = "test";
         [Description("the format in which the Activity Description is stored")]
         public FormattingFormat DescriptionFormat { get; set; } = ActivityDefaults.DEFAULT_FORMATTING_FORMAT;
         [Description("which group mode to use for the activity")]

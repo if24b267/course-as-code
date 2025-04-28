@@ -43,7 +43,7 @@ namespace CourseAsCode.Writers.XML.Writer
                     writer.WriteStartElement("course_completion");
 
                     // Add whitespace to prevent a self-closing tag
-                    writer.WriteWhitespace("\n");
+                    //writer.WriteWhitespace("\n");
 
                     writer.WriteEndElement(); // Close </course_completion>
                     writer.WriteEndDocument();

@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model;
+using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
@@ -9,6 +9,7 @@ using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
@@ -64,6 +65,10 @@ public class Writer : IWriter
     private readonly LabelWriter _labelWriter = new LabelWriter();
     private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
 
+    // Assignment Activity Writers
+    private readonly AssignmentWriter _assignmentWriter = new AssignmentWriter();
+    private readonly ModuleWriterAssignment _moduleWriterAssignment = new ModuleWriterAssignment();
+
     // URL Activity Writers
     private readonly UrlWriter _urlWriter = new UrlWriter();
     private readonly ModuleWriterUrl _moduleWriterUrl = new ModuleWriterUrl();
@@ -82,150 +87,119 @@ public class Writer : IWriter
     {
         _logger.Debug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
         _logger.Info($"The course will be saved at {outputPath}");
-        
+
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - REMOVE LATER
         // ---------------------------------------------
-        
-        // Add a few dummy questions to the course
-        var q1 = new MultipleChoiceQuestion
+
+        // Add a dummy assignment activity to the course
+        var testAssignment = new Assignment
         {
-            Category            = "Default category",
-            QuestionName        = "Shamir’s Theorem",
-            QuestionText        = "<p>Which equality does Shamir’s Theorem prove?</p>",
-            QuestionTextFormat  = FormattingFormat.HTML,
-            DefaultMark         = 1,
-            HintPenalty         = 0.3333333f,
-            ChoiceNumbering     = NumberingFormat.AlphabeticLower,
-            ShuffleAnswers      = true,
-            SingleChoice        = true,
-            Answers = new List<Answer>
-            {
-                new()
-                {
-                    AnswerText  = "<p>IP = NP</p>",
-                    AnswerTextFormat = FormattingFormat.HTML,
-                    AnswerGrade = 0,
-                    AnswerFeedback =
-                        "<p>Just seeing an NP somewhere doesn’t make it right.</p>",
-                    AnswerFeedbackFormat = FormattingFormat.HTML
-                },
-                new()
-                {
-                    AnswerText  = "<p>IP = PSPACE</p>",
-                    AnswerTextFormat = FormattingFormat.HTML,
-                    AnswerGrade = 1
-                }
-            },
-            Hints = new List<Hint>
-            {
-                new()
-                {
-                    HintText =
-                        "<p>Recall that IP refers to interactive proofs …</p>",
-                    HintTextFormat = FormattingFormat.HTML
-                }
-            }
-        };
-        
-        var q2 = new MultipleChoiceQuestion
+            ActivityId = 10,
+            Name = "Sample Assignment",
+            Intro = "This is a sample assignment for testing purposes.",
+            AlwaysShowDescription = true,
+            SubmissionDrafts = true,
+            SendNotifications = true,
+            SendLateNotifications = false,
+            SendStudentNotifications = true,
+            DueDate = DateTime.UtcNow.AddDays(7), // 7 days in the future
+            CutoffDate = DateTime.UtcNow.AddDays(10), // 10 days in the future
+            GradingDueDate = DateTime.UtcNow.AddDays(14), // 14 days in the future
+            AllowSubmissionsFromDate = DateTime.UtcNow, // Submissions allowed from now
+            Grade = 100,
+            CompletionSubmit = true,
+            RequireSubmissionStatement = false,
+            TeamSubmission = false,
+            RequireAllTeamMembersSubmit = false,
+            TeamSubmissionGroupingId = 0,
+            BlindMarking = false,
+            HideGrader = false,
+            RevealIdentities = true,
+            AttemptReopenMethod = "manual",
+            MaxAttempts = 3,
+            MarkingWorkflow = true,
+            MarkingAllocation = false,
+            MarkingAnonymous = false,
+            PreventSubmissionNotInGroup = false,
+            Submissions = new List<AssignmentSubmission>
+    {
+        new AssignmentSubmission
         {
-            Category            = "Linux basics",
-            QuestionName        = "Linux navigation commands",
-            QuestionText        = "<p>Select the navigation-related commands.</p>",
-            QuestionTextFormat  = FormattingFormat.HTML,
-            DefaultMark         = 1,
-            ChoiceNumbering     = NumberingFormat.Numeric,
-            ShuffleAnswers      = true,
-            SingleChoice        = false,
-            Answers = new List<Answer>
-            {
-                new() { AnswerText = "<p>ls</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
-                new() { AnswerText = "<p>cd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
-                new() { AnswerText = "<p>pwd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
-                new() { AnswerText = "<p>grep</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 3f }
-            }
+            SubmissionId = 1,
+            UserId = 101,
+            TimeCreated = DateTime.UtcNow.AddDays(-1), // Created yesterday
+            TimeModified = DateTime.UtcNow, // Modified today
+            TimeStarted = DateTime.UtcNow.AddDays(-2).ToString("o"), // Started 2 days ago
+            Status = "submitted",
+            GroupId = 0,
+            AttemptNumber = 1,
+            IsLatest = true
+        },
+        new AssignmentSubmission
+        {
+            SubmissionId = 2,
+            UserId = 102,
+            TimeCreated = DateTime.UtcNow.AddDays(-3), // Created 3 days ago
+            TimeModified = null, // Not modified yet
+            TimeStarted = null, // Not started yet
+            Status = "draft",
+            GroupId = 0,
+            AttemptNumber = 0,
+            IsLatest = false
+        }
+    },
+            PluginConfigs = new List<PluginConfig>
+    {
+        new PluginConfig
+        {
+            ConfigId = 1,
+            PluginName = "assignsubmission_file",
+            Subtype = "file",
+            Name = "maxfilesubmissions",
+            Value = "5"
+        },
+        new PluginConfig
+        {
+            ConfigId = 2,
+            PluginName = "assignsubmission_onlinetext",
+            Subtype = "onlinetext",
+            Name = "wordlimit",
+            Value = "1000"
+        }
+    },
+            Overrides = new List<AssignmentOverride>
+    {
+        new AssignmentOverride
+        {
+            OverrideId = 1,
+            UserId = 101,
+            DueDate = DateTime.UtcNow.AddDays(8), // User has 1 extra day
+            CutoffDate = DateTime.UtcNow.AddDays(11) // User has 1 extra day
+        }
+    }
         };
 
-        var q3 = new SingleChoiceQuestion
-        {
-            Category = "Linux basics",
-            QuestionName = "Linux filesystem",
-            QuestionText = "What does the `/etc` directory in the Linux file system hierarchy typically contain?",
-            QuestionTextFormat = FormattingFormat.Markdown,
-            DefaultMark = 1,
-            ChoiceNumbering = NumberingFormat.AlphabeticLower,
-            ShuffleAnswers = true,
-            SingleChoice = true,
-            Answers = new List<Answer>
-            {
-                new() { AnswerText = "<p>User home directories</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f, AnswerFeedback = "<p>Hahaha, are you stupid?</p>", AnswerFeedbackFormat = FormattingFormat.HTML},
-                new() { AnswerText = "<p>System configuration files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
-                new() { AnswerText = "<p>Essential command binaries</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
-                new() { AnswerText = "<p>Device files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
-                new() { AnswerText = "<p>System log files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f }
-            }
-        };
-
-        course.Questions = new List<Question>() { q1, q2, q3 };
-        
-        // Add a quiz activity to the course
-        var testQuiz = new Quiz
-        {
-            ActivityId              = 5,
-            Name                    = "Sample Quiz",
-            Description             = "<p>This quiz is generated by Course‑as‑Code.</p>",
-            DescriptionFormat       = FormattingFormat.HTML,
-            OpenTime                = null,
-            CloseTime               = null,
-            TimeLimit               = 3600,
-            TimeExpiryHandling      = TimeExpiryHandle.AutoSubmit,
-            QuestionBehaviour       = QuestionBehaviour.Deferred,
-            AllowRedosDuringAttempt = true,
-            AllowedAttempts         = 2,
-            BuildOnPreviousAttempts = true,
-            GradingMethod           = GradingMethod.LastAttempt,
-            DecimalsToDisplayGrades = 2,
-            DecimalsToDisplayMarks  = -1,
-            ShuffleWithinQuestions  = true,
-            NewPageThreshold        = 0,
-            ShowPicture             = PictureOptions.SmallImage,
-            Questions               = new() { q1, q2, q3 },
-            Feedback                = new List<QuizFeedback>()
-            {
-                new QuizFeedback()
-                {
-                    FeedbackText = "<p>You did it!</p>",
-                    GradeBoundary = 100f,
-                    OverallFeedbackFormat = FormattingFormat.HTML
-                },
-                new QuizFeedback()
-                {
-                  FeedbackText  = "<p>Probably should go back to kindergarten</p>",
-                  GradeBoundary = 50f,
-                  OverallFeedbackFormat = FormattingFormat.HTML
-                },
-                new QuizFeedback()
-                {
-                    FeedbackText = "<p>Oh, wow that's just sad</p>",
-                    GradeBoundary = 0f,
-                    OverallFeedbackFormat = FormattingFormat.HTML
-                }
-            }
-        };
-
-        var testSection = new Section
+        // Add the assignment to a section
+        var assignmentSection = new Section
         {
             SystemDefaults = new Section.SystemDefaultsSection
             {
-                SectionId = 3,
-                PathToSection = "sections/section_3"
+                SectionId = 4,
+                PathToSection = "sections/section_4"
             },
-            Name = "Quiz Test Section",
-            Activities = new List<Activity> { testQuiz }
+            Name = "Assignment Test Section",
+            Activities = new List<Activity> { testAssignment }
         };
+
+        course.Sections.Add(assignmentSection);
+
+
+      
         
-        course.Sections.Add(testSection);
+       
+
+        
         
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - END
@@ -312,6 +286,13 @@ public class Writer : IWriter
                     activityPath = CreateTextAndMediaArea(course, outputPath, activity, textAndMediaArea, section);
                 }
 
+                // Assignment-specific XML files
+                if (activity is Assignment assignment)
+                {
+                    activityPath = CreateAssignmentActivity(course, outputPath, activity, assignment, section);
+                }
+
+
                 // URL-specific XML files
                 if (activity is URL urlObject)
                 {
@@ -369,7 +350,6 @@ public class Writer : IWriter
         });
     }
 
-    
     /// <summary>
     /// writes the XML files specific to the URL activity.
     /// </summary>
@@ -385,7 +365,6 @@ public class Writer : IWriter
             _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
         });
     }
-
 
     /// <summary>
     /// writes the XML files specific to the Text and Media Area (Label) activity.
@@ -403,6 +382,21 @@ public class Writer : IWriter
         });
     }
 
+    /// <summary>
+    /// writes the XML files specific to the Assignment activity.
+    /// </summary>
+    /// <returns>
+    /// <para> the path to the directory where the files for that activity were written. </para>
+    /// <para> null if the directory couldn't be created.</para>
+    /// </returns>
+    private string? CreateAssignmentActivity(Course course, string outputPath, Activity activity, Assignment assignment, Section section)
+    {
+        return CreateActivity(outputPath, activity, "assign", activityPath =>
+        {
+            _assignmentWriter.WriteAssignment(activityPath, assignment);
+            _moduleWriterAssignment.WriteModule(activityPath, course, section, assignment);
+        });
+    }
 
     /// <summary>
     /// writes the XML files specific to the Quiz activity

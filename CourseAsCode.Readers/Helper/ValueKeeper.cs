@@ -1,3 +1,5 @@
+using CourseAsCode.Model.Questions;
+
 namespace CourseAsCode.Readers.Helper;
 
 // TODO: change this so values are being dependency injected
@@ -10,4 +12,6 @@ public static class ValueKeeper
 
     // currently only being counted up from 1
     public static int CurrentSectionId { get; set; }
+
+    public static List<Question> Questions { get; set; }
 }

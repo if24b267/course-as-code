@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
-
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
-using System.ComponentModel;
 using CourseAsCode.Model.Questions;
+using System.ComponentModel;
 
 namespace CourseAsCode.Model
 {
