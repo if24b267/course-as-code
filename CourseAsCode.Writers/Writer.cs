@@ -194,13 +194,51 @@ public class Writer : IWriter
 
         course.Sections.Add(assignmentSection);
 
-
-      
+        /*
+        // Add a few dummy questions to the course
+        var q1 = new MultipleChoiceQuestion
+        {
+            Category            = "Default category",
+            QuestionName        = "Shamir’s Theorem",
+            QuestionText        = "<p>Which equality does Shamir’s Theorem prove?</p>",
+            QuestionTextFormat  = FormattingFormat.HTML,
+            DefaultMark         = 1,
+            HintPenalty         = 0.3333333f,
+            ChoiceNumbering     = NumberingFormat.AlphabeticLower,
+            ShuffleAnswers      = true,
+            SingleChoice        = true,
+            Answers = new List<Answer>
+            {
+                new()
+                {
+                    AnswerText  = "<p>IP = NP</p>",
+                    AnswerTextFormat = FormattingFormat.HTML,
+                    AnswerGrade = 0,
+                    AnswerFeedback =
+                        "<p>Just seeing an NP somewhere doesn’t make it right.</p>",
+                    AnswerFeedbackFormat = FormattingFormat.HTML
+                },
+                new()
+                {
+                    AnswerText  = "<p>IP = PSPACE</p>",
+                    AnswerTextFormat = FormattingFormat.HTML,
+                    AnswerGrade = 1
+                }
+            },
+            Hints = new List<Hint>
+            {
+                new()
+                {
+                    HintText =
+                        "<p>Recall that IP refers to interactive proofs …</p>",
+                    HintTextFormat = FormattingFormat.HTML
+                }
+            }
+        };
         
        
-
-        
-        
+        course.Sections.Add(testSection);
+        */
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - END
         // ---------------------------------------------
