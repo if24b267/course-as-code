@@ -1,5 +1,5 @@
 Type: LABEL
 Name: Test Label 1
 Content:
-  - Type: MARKDOWN
+  - Type: Markdown
     ContentFilePath: This is a test label
