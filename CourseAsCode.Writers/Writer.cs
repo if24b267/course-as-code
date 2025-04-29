@@ -194,7 +194,7 @@ public class Writer : IWriter
 
         course.Sections.Add(assignmentSection);
 
-
+        /*
         // Add a few dummy questions to the course
         var q1 = new MultipleChoiceQuestion
         {
@@ -334,7 +334,7 @@ public class Writer : IWriter
         };
         
         course.Sections.Add(testSection);
-        
+        */
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - END
         // ---------------------------------------------
