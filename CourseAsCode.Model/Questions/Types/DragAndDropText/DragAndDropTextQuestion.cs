@@ -7,7 +7,7 @@ namespace CourseAsCode.Model.Questions.Types.DragAndDropText
     public class DragAndDropTextQuestion : Question
     {
         [Description("list of the possible choices for the cloze text")]
-        public required List<TextChoice> Answers { get; init; } = new();
+        public required List<TextChoice> Answers { get; set; } = new();
 
         [Description("whether the possible choices for the cloze text are shuffled")]
         public bool ShuffleAnswers { get; set; }
