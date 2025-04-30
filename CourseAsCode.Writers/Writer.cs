@@ -237,6 +237,46 @@ public class Writer : IWriter
             },
         };
 
+        var q2 = new DropdownQuestion()
+        {
+            QuestionId = 13,
+            Category = "Programming Languages",
+            QuestionName = "Programming Paradigms",
+            QuestionText = "<p>Select the primary programming paradigm associated with each language.</p>",
+            QuestionTextFormat = FormattingFormat.HTML,
+            DefaultMark = 1,
+            HintPenalty = 0.25f,
+            Answers = new List<DropdownSubQuestion>
+            {
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>Haskell</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Functional",
+                },
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>Java</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Object-Oriented",
+                    WrongAnswers = new List<string> { "Functional" },
+                },
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>C</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Procedural",
+                },
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>Prolog</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Logic Programming",
+                    WrongAnswers = new List<string> { "Markdown Language" },
+                },
+            },
+        };
+
         // Create new quiz activity and add it to the course
         var testQuiz = new Quiz
         {
@@ -258,7 +298,7 @@ public class Writer : IWriter
             ShuffleWithinQuestions  = true,
             NewPageThreshold        = 0,
             ShowPicture             = PictureOptions.SmallImage,
-            Questions               = new() { q1 },
+            Questions               = new() { q1, q2 },
             Feedback                = new List<QuizFeedback>()
             {
                 new QuizFeedback()
@@ -295,6 +335,7 @@ public class Writer : IWriter
 
         course.Sections.Add(testSection);
         course.Questions.Add(q1);
+        course.Questions.Add(q2);
 
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - END
