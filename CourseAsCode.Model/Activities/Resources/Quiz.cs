@@ -8,6 +8,8 @@ namespace CourseAsCode.Model.Activities.Resources;
 
 public class Quiz : Activity
 {
+    private static Random _rnd = new Random();
+
     // ────────────────────────────────────────────────────────────────────────────
     // Timing
     // ────────────────────────────────────────────────────────────────────────────
@@ -58,16 +60,16 @@ public class Quiz : Activity
 
     [Description("Each new attempt starts with the previous attempt’s answers pre‑filled")]
     public bool BuildOnPreviousAttempts { get; set; } = QuizDefaults.DEFAULT_BUILD_ON_PREVIOUS_ATTEMPTS;
-    
+
     [Description("Review options available to the student during the attempt; only applicable to some question behaviours like InteractiveMultipleTries")]
     public ReviewOptionsQuiz ReviewOptionsDuringAttempt { get; set; } = new ReviewOptionsQuiz();
-    
+
     [Description("Review options available to the student immediately after they clicked on 'Submit all and finish'")]
     public ReviewOptionsQuiz ReviewOptionsImmediatelyAfterAttempt { get; set; } = new ReviewOptionsQuiz();
-    
+
     [Description("Review options available to the student two minutes after they clicked on 'Submit all and finish'")]
     public ReviewOptionsQuiz ReviewOptionsAfterAttempt{ get; set; } = new ReviewOptionsQuiz();
-    
+
     [Description("Review options available to the student after the quiz was closed | If the quiz doesn't have a close date, this state is never reached")]
     public ReviewOptionsQuiz ReviewOptionsQuizClosed { get; set; } = new ReviewOptionsQuiz();
 
@@ -100,21 +102,21 @@ public class Quiz : Activity
 
     [Description("The pool of questions that constitute this quiz")]
     public List<Question> Questions { get; init; } = new();
-    
-    
+
+
     public SensibleDefaultsQuiz SensibleDefaults { get; set; } = new SensibleDefaultsQuiz();
     public SystemDefaultsQuiz SystemDefaults { get; set; } = new SystemDefaultsQuiz();
 
-	
+
     public class SensibleDefaultsQuiz
     {
         // TODO
     }
 
-    
+
     public class SystemDefaultsQuiz
     {
-        public int ModuleId { get; set; } = 227; // TODO: Check if this is the same for all quizzes or a unique value per quiz | Seems to be the same for all quizzes
+        public int ModuleId { get; set; } = _rnd.Next(1, 1000);
         public string ModuleName { get; set; } = "quiz";
     }
 

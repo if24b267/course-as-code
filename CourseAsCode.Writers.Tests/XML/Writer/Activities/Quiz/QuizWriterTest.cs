@@ -52,7 +52,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                 ChoiceNumbering     = NumberingFormat.AlphabeticLower,
                 ShuffleAnswers      = true,
                 SingleChoice        = true,
-                Answers = new List<Answer>
+                Answers = new List<MultiChoiceAnswer>
                 {
                     new()
                     {
@@ -93,7 +93,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                 ChoiceNumbering     = NumberingFormat.Numeric,
                 ShuffleAnswers      = true,
                 SingleChoice        = false,
-                Answers = new List<Answer>
+                Answers = new List<MultiChoiceAnswer>
                 {
                     new() { AnswerText = "<p>ls</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
                     new() { AnswerText = "<p>cd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
@@ -114,7 +114,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                 ChoiceNumbering = NumberingFormat.AlphabeticLower,
                 ShuffleAnswers = true,
                 SingleChoice = true,
-                Answers = new List<Answer>
+                Answers = new List<MultiChoiceAnswer>
                 {
                     new() { AnswerText = "<p>User home directories</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f, AnswerFeedback = "<p>Hahaha, are you stupid?</p>", AnswerFeedbackFormat = FormattingFormat.HTML},
                     new() { AnswerText = "<p>System configuration files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },

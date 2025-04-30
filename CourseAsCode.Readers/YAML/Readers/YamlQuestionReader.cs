@@ -108,14 +108,14 @@ namespace CourseAsCode.Readers.YAML.Readers
             return hints;
         }
 
-        private List<Answer> GetMoodleAnswersFromYamlAnswers(List<YamlQuestionAnswer> yamlAnswers)
+        private List<MultiChoiceAnswer> GetMoodleAnswersFromYamlAnswers(List<YamlQuestionAnswer> yamlAnswers)
         {
             return yamlAnswers.Select(yamlAnswer => ConvertYamlAnswerToMoodleAnswer(yamlAnswer)).ToList();
         }
 
-        private Answer ConvertYamlAnswerToMoodleAnswer(YamlQuestionAnswer questionAnswer)
+        private MultiChoiceAnswer ConvertYamlAnswerToMoodleAnswer(YamlQuestionAnswer questionAnswer)
         {
-            return new Answer()
+            return new MultiChoiceAnswer()
             {
                 AnswerText = questionAnswer.AnswerText,
                 AnswerTextFormat = questionAnswer.AnswerTextFormat,

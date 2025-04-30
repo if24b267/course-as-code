@@ -20,7 +20,7 @@ public class MultipleChoiceQuestion : Question
     public bool SingleChoice { get; set; }
 
     [Description("List of possible answer choices")]
-    public List<Answer> Answers { get; set; } = new();
+    public List<MultiChoiceAnswer> Answers { get; set; } = new();
 
     // Specific feedbacks
     public string? CorrectResponseFeedback { get; set; }
