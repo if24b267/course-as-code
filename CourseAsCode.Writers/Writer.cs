@@ -2,11 +2,6 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Enums.Quizzes;
-using CourseAsCode.Model.Questions;
-using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
@@ -76,11 +71,11 @@ public class Writer : IWriter
     // File Activity Writers
     private readonly FileWriter _fileWriter = new FileWriter();
     private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
-    
+
     // Quiz Activity Writers
     private readonly ModuleWriterQuiz _moduleWriterQuiz = new ModuleWriterQuiz();
     private readonly QuizWriter _quizWriter = new QuizWriter();
-    
+
     private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
     public bool WriteCourse(Course course, string outputPath)
@@ -235,8 +230,8 @@ public class Writer : IWriter
                 }
             }
         };
-        
-       
+
+
         course.Sections.Add(testSection);
         */
         // ---------------------------------------------
@@ -257,7 +252,7 @@ public class Writer : IWriter
         {
             Environment.Exit(1);
         }
-        
+
         // Root directory
         _badgesWriter.WriteBadges(outputPath);
         _completionWriter.WriteCompletion(course, outputPath);
@@ -271,7 +266,7 @@ public class Writer : IWriter
         _rolesWriter.WriteRoles(course, outputPath);
         _scalesWriter.WriteScales(course, outputPath);
         _usersWriter.WriteUsers(course, outputPath);
-        
+
         // /course directory
         _calendarWriter.WriteCalendar(course, outputPath);
         _commentsWriter.WriteComments(course, outputPath);
@@ -283,7 +278,7 @@ public class Writer : IWriter
         _filtersWriter.WriteFilters(course, outputPath);
         _inforefWriter.WriteInforef(course, outputPath);
         _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
-        
+
 
         // -- Write section files -- //
 
@@ -347,7 +342,7 @@ public class Writer : IWriter
                 {
                     activityPath = CreateQuizActivity(course, outputPath, activity, quiz, section);
                 }
-                
+
                 // Skip if activityPath is null (i.e. directory creation failed)
                 if (activityPath == null)
                 {
@@ -451,8 +446,8 @@ public class Writer : IWriter
             _moduleWriterQuiz.WriteModule(activityPath, course, section, quiz);
         });
     }
-    
-    
+
+
     /// <summary>
     /// Creates an activity directory using the specified prefix and processes it via the given action.
     /// </summary>

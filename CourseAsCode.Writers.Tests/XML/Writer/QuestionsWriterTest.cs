@@ -39,7 +39,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Create a dummy course with three questions across two categories
             _course = new Model.Course();
-            
+
             var q1 = new MultipleChoiceQuestion
             {
                 QuestionId = 1,
@@ -52,15 +52,15 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 ChoiceNumbering = NumberingFormat.Numeric,
                 ShuffleAnswers = false,
                 SingleChoice = true,
-                Answers = new List<Answer>
+                Answers = new List<MultiChoiceAnswer>
                 {
-                    new Answer
+                    new MultiChoiceAnswer
                     {
                         AnswerText = "<p>A1</p>",
                         AnswerTextFormat = FormattingFormat.HTML,
                         AnswerGrade = 1f,
                     },
-                    new Answer
+                    new MultiChoiceAnswer
                     {
                         AnswerText = "<p>A2</p>",
                         AnswerTextFormat = FormattingFormat.HTML,
@@ -83,9 +83,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 ChoiceNumbering = NumberingFormat.Numeric,
                 ShuffleAnswers = true,
                 SingleChoice = false,
-                Answers = new List<Answer>
+                Answers = new List<MultiChoiceAnswer>
                 {
-                    new Answer
+                    new MultiChoiceAnswer
                     {
                         AnswerText = "<p>B1</p>",
                         AnswerTextFormat = FormattingFormat.HTML,
@@ -93,7 +93,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                         AnswerFeedback = "<p>Good</p>",
                         AnswerFeedbackFormat = FormattingFormat.HTML
                     },
-                    new Answer
+                    new MultiChoiceAnswer
                     {
                         AnswerText = "<p>B2</p>",
                         AnswerTextFormat = FormattingFormat.HTML,
@@ -116,9 +116,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 ChoiceNumbering = NumberingFormat.AlphabeticLower,
                 ShuffleAnswers = false,
                 SingleChoice = true,
-                Answers = new List<Answer>
+                Answers = new List<MultiChoiceAnswer>
                 {
-                    new Answer
+                    new MultiChoiceAnswer
                     {
                         AnswerText = "<p>C1</p>",
                         AnswerTextFormat = FormattingFormat.HTML,
@@ -129,7 +129,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 },
                 Hints = null
             };
-            
+
             _course.Questions = new List<Question> { q1, q2, q3 };
         }
 
@@ -158,18 +158,18 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: The root element of the XML should be "question_categories"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("question_categories"));
         }
-        
+
         [Test]
         public void WriteQuestions_CreatesCorrectNumberOfCategories()
         {
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
             string output = _testFactory.StringWriter.ToString();
-    
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
@@ -178,14 +178,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var categoryNodes = doc.SelectNodes("//question_category");
             Assert.That(categoryNodes?.Count, Is.EqualTo(expectedCategories));
         }
-        
+
         [Test]
         public void WriteQuestions_CreatesCorrectNumberOfBankEntries()
         {
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
             var output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
@@ -193,7 +193,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var entryNodes = doc.SelectNodes("//question_bank_entry");
             Assert.That(entryNodes?.Count, Is.EqualTo(_course.Questions.Count));
         }
-        
+
         [Test]
         [Ignore("Changed the implementation to not auto increment - this test needs to be updated")]
         public void WriteQuestions_SetsIdsOnQuestionObjects()
@@ -203,7 +203,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Category, Question and QuestionBankEntry IDs are set correctly for the three question instances
             var questions = _course.Questions;
-            
+
             // First grouping "CatA" gets ID = DEFAULT_TOP_CATEGORY_ID+1 = 2
             Assert.That(questions[0].CategoryId, Is.EqualTo(2));
             // Next grouping "CatB" gets ID = 3
@@ -220,16 +220,16 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questions[1].QuestionId, Is.EqualTo(2));
             Assert.That(questions[2].QuestionId, Is.EqualTo(3));
         }
-        
+
         [Test]
         public void WriteQuestions_WritesAnswerElementsCorrectly()
         {
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(_testFactory.StringWriter.ToString());
-            
+
             // Assert: The <answer> elements should be written correctly
 
             // Question 1 should have two <answer> nodes under its <question> element
@@ -257,7 +257,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert
             _logger.Received().Debug(Arg.Is<string>(s => s.Contains("questions.xml")));
         }
-        
+
         [Test]
         public void WriteQuestions_LogsErrorOnException()
         {
