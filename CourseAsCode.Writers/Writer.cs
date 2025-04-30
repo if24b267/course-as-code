@@ -5,6 +5,7 @@ using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
@@ -277,12 +278,151 @@ public class Writer : IWriter
             },
         };
 
+        var q3 = new DragAndDropTextQuestion()
+        {
+            QuestionId = 14,
+            Category = "Computer Science Basics",
+            QuestionName = "Computer Science Basics Q1",
+            QuestionText = "<p>The [[1]] is a type of system software that manages [[5]] and software resources, and provides common services for computer programs</p>",
+            QuestionTextFormat = FormattingFormat.HTML,
+            DefaultMark = 1,
+            HintPenalty = 0.25f,
+            Answers = new List<TextChoice>
+            {
+                new TextChoice()
+                {
+                    ID = 1,
+                    Value = "Operating System",
+                    ValueFormat = FormattingFormat.HTML,
+                    Category = "A",
+                },
+                new TextChoice()
+                {
+                    ID = 2,
+                    Value = "Compiler",
+                    ValueFormat = FormattingFormat.HTML,
+                    Category = "A",
+                },
+                new TextChoice()
+                {
+                    ID = 3,
+                    Value = "Microsoft Word",
+                    ValueFormat = FormattingFormat.HTML,
+                    Category = "A",
+                },
+                new TextChoice()
+                {
+                    ID = 4,
+                    Value = "Printer",
+                    ValueFormat = FormattingFormat.HTML,
+                    Category = "A",
+                },
+                new TextChoice()
+                {
+                    ID = 5,
+                    Value = "Hardware",
+                    ValueFormat = FormattingFormat.HTML,
+                    Category = "B",
+                },
+                new TextChoice()
+                {
+                    ID = 6,
+                    Value = "Internet",
+                    ValueFormat = FormattingFormat.HTML,
+                    Category = "B",
+                },
+                new TextChoice()
+                {
+                    ID = 7,
+                    Value = "Printing",
+                    ValueFormat = FormattingFormat.HTML,
+                    Category = "B",
+                },
+            },
+        };
+
+
+        var q4 = new DragAndDropTextQuestion()
+        {
+            QuestionId = 15,
+            Category = "Linux Basics",
+            QuestionName = "Linux File Permissions Q1",
+            QuestionText = "In Linux, file permissions are controlled by three sets of access rights: [[3]], [[4]], and [[5]]. To view the permissions of a file, you can use the [[1]] command. Permissions are typically displayed as a string like `rwxr-xr--`, where each letter represents a different [[6]].",
+            QuestionTextFormat = FormattingFormat.Markdown,
+            DefaultMark = 1,
+            HintPenalty = 0.25f,
+            Answers = new List<TextChoice>
+            {
+                new TextChoice()
+                {
+                    ID = 1,
+                    Value = "ls -l",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 2,
+                    Value = "chmod",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 3,
+                    Value = "owner",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 4,
+                    Value = "group",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 5,
+                    Value = "other",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 6,
+                    Value = "permission",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 7,
+                    Value = "cd",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 8,
+                    Value = "shutdown",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 9,
+                    Value = "cat",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+                new TextChoice()
+                {
+                    ID = 10,
+                    Value = "nano",
+                    ValueFormat = FormattingFormat.HTML,
+                },
+            },
+        };
+
+
         // Create new quiz activity and add it to the course
         var testQuiz = new Quiz
         {
             ActivityId              = 6,
-            Name                    = "Sample Quiz",
-            Description             = "<p>This quiz is generated by Course‑as‑Code.</p>",
+            Name                    = "New Question Types quiz",
+            Description             = "<p>This quiz is hardcoded and was generated by Course‑as‑Code</p>",
             DescriptionFormat       = FormattingFormat.HTML,
             OpenTime                = null,
             CloseTime               = null,
@@ -298,7 +438,7 @@ public class Writer : IWriter
             ShuffleWithinQuestions  = true,
             NewPageThreshold        = 0,
             ShowPicture             = PictureOptions.SmallImage,
-            Questions               = new() { q1, q2 },
+            Questions               = new() { q1, q2, q3, q4 },
             Feedback                = new List<QuizFeedback>()
             {
                 new QuizFeedback()
@@ -336,6 +476,8 @@ public class Writer : IWriter
         course.Sections.Add(testSection);
         course.Questions.Add(q1);
         course.Questions.Add(q2);
+        course.Questions.Add(q3);
+        course.Questions.Add(q4);
 
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - END
