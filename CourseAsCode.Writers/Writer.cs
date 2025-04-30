@@ -4,9 +4,8 @@ using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
-using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
@@ -76,11 +75,11 @@ public class Writer : IWriter
     // File Activity Writers
     private readonly FileWriter _fileWriter = new FileWriter();
     private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
-    
+
     // Quiz Activity Writers
     private readonly ModuleWriterQuiz _moduleWriterQuiz = new ModuleWriterQuiz();
     private readonly QuizWriter _quizWriter = new QuizWriter();
-    
+
     private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
     public bool WriteCourse(Course course, string outputPath)
@@ -194,51 +193,150 @@ public class Writer : IWriter
 
         course.Sections.Add(assignmentSection);
 
-        /*
-        // Add a few dummy questions to the course
-        var q1 = new MultipleChoiceQuestion
+        // -------------------------------------------------
+        // QUIZ TESTING - REMOVE LATER
+        // -------------------------------------------------
+
+        // Add a dummy dropdown question to the course
+        var q1 = new DropdownQuestion()
         {
-            Category            = "Default category",
-            QuestionName        = "Shamir’s Theorem",
-            QuestionText        = "<p>Which equality does Shamir’s Theorem prove?</p>",
-            QuestionTextFormat  = FormattingFormat.HTML,
-            DefaultMark         = 1,
-            HintPenalty         = 0.3333333f,
-            ChoiceNumbering     = NumberingFormat.AlphabeticLower,
-            ShuffleAnswers      = true,
-            SingleChoice        = true,
-            Answers = new List<Answer>
+            QuestionId = 12,
+            Category = "Geography",
+            QuestionName = "Democracies around the world",
+            QuestionText = "<p>Please select the correct form of government for the given countries</p>",
+            QuestionTextFormat = FormattingFormat.HTML,
+            DefaultMark = 1,
+            HintPenalty = 0.3333333f,
+            Answers = new List<DropdownSubQuestion>
             {
-                new()
+                new DropdownSubQuestion
                 {
-                    AnswerText  = "<p>IP = NP</p>",
-                    AnswerTextFormat = FormattingFormat.HTML,
-                    AnswerGrade = 0,
-                    AnswerFeedback =
-                        "<p>Just seeing an NP somewhere doesn’t make it right.</p>",
-                    AnswerFeedbackFormat = FormattingFormat.HTML
+                    QuestionText = "<p>Russia</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Electoral Autocracy",
                 },
-                new()
+                new DropdownSubQuestion
                 {
-                    AnswerText  = "<p>IP = PSPACE</p>",
-                    AnswerTextFormat = FormattingFormat.HTML,
-                    AnswerGrade = 1
-                }
+                    QuestionText = "<p>Canada</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Parliamentary Democracy",
+                },
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>USA</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Illiberal Democracy",
+                    WrongAnswers = new List<string> { "Federal Democracy", "Constitutional Democracy" },
+                },
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>China</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "One-Party Dictatorship",
+                },
             },
-            Hints = new List<Hint>
-            {
-                new()
-                {
-                    HintText =
-                        "<p>Recall that IP refers to interactive proofs …</p>",
-                    HintTextFormat = FormattingFormat.HTML
-                }
-            }
         };
-        
-       
+
+        var q2 = new DropdownQuestion()
+        {
+            QuestionId = 13,
+            Category = "Programming Languages",
+            QuestionName = "Programming Paradigms",
+            QuestionText = "<p>Select the primary programming paradigm associated with each language.</p>",
+            QuestionTextFormat = FormattingFormat.HTML,
+            DefaultMark = 1,
+            HintPenalty = 0.25f,
+            Answers = new List<DropdownSubQuestion>
+            {
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>Haskell</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Functional",
+                },
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>Java</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Object-Oriented",
+                    WrongAnswers = new List<string> { "Functional" },
+                },
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>C</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Procedural",
+                },
+                new DropdownSubQuestion
+                {
+                    QuestionText = "<p>Prolog</p>",
+                    QuestionTextFormat = FormattingFormat.HTML,
+                    CorrectAnswer = "Logic Programming",
+                    WrongAnswers = new List<string> { "Markdown Language" },
+                },
+            },
+        };
+
+        // Create new quiz activity and add it to the course
+        var testQuiz = new Quiz
+        {
+            ActivityId              = 6,
+            Name                    = "Sample Quiz",
+            Description             = "<p>This quiz is generated by Course‑as‑Code.</p>",
+            DescriptionFormat       = FormattingFormat.HTML,
+            OpenTime                = null,
+            CloseTime               = null,
+            TimeLimit               = 3600,
+            TimeExpiryHandling      = TimeExpiryHandle.AutoSubmit,
+            QuestionBehaviour       = QuestionBehaviour.Deferred,
+            AllowRedosDuringAttempt = true,
+            AllowedAttempts         = 2,
+            BuildOnPreviousAttempts = true,
+            GradingMethod           = GradingMethod.LastAttempt,
+            DecimalsToDisplayGrades = 2,
+            DecimalsToDisplayMarks  = -1,
+            ShuffleWithinQuestions  = true,
+            NewPageThreshold        = 0,
+            ShowPicture             = PictureOptions.SmallImage,
+            Questions               = new() { q1, q2 },
+            Feedback                = new List<QuizFeedback>()
+            {
+                new QuizFeedback()
+                {
+                    FeedbackText = "<p>You did it!</p>",
+                    GradeBoundary = 100f,
+                    OverallFeedbackFormat = FormattingFormat.HTML,
+                },
+                new QuizFeedback()
+                {
+                    FeedbackText  = "<p>Probably should go back to kindergarten</p>",
+                    GradeBoundary = 50f,
+                    OverallFeedbackFormat = FormattingFormat.HTML,
+                },
+                new QuizFeedback()
+                {
+                    FeedbackText = "<p>Oh, wow that's just sad</p>",
+                    GradeBoundary = 0f,
+                    OverallFeedbackFormat = FormattingFormat.HTML,
+                },
+            },
+        };
+
+        var testSection = new Section
+        {
+            SystemDefaults = new Section.SystemDefaultsSection
+            {
+                SectionId = 5,
+                PathToSection = "sections/section_5",
+            },
+            Name = "Quiz Test Section",
+            Activities = new List<Activity> { testQuiz },
+        };
+
         course.Sections.Add(testSection);
-        */
+        course.Questions.Add(q1);
+        course.Questions.Add(q2);
+
         // ---------------------------------------------
         // TEMPORARY CODE FOR TESTING - END
         // ---------------------------------------------
@@ -257,7 +355,7 @@ public class Writer : IWriter
         {
             Environment.Exit(1);
         }
-        
+
         // Root directory
         _badgesWriter.WriteBadges(outputPath);
         _completionWriter.WriteCompletion(course, outputPath);
@@ -271,7 +369,7 @@ public class Writer : IWriter
         _rolesWriter.WriteRoles(course, outputPath);
         _scalesWriter.WriteScales(course, outputPath);
         _usersWriter.WriteUsers(course, outputPath);
-        
+
         // /course directory
         _calendarWriter.WriteCalendar(course, outputPath);
         _commentsWriter.WriteComments(course, outputPath);
@@ -283,7 +381,7 @@ public class Writer : IWriter
         _filtersWriter.WriteFilters(course, outputPath);
         _inforefWriter.WriteInforef(course, outputPath);
         _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
-        
+
 
         // -- Write section files -- //
 
@@ -347,7 +445,7 @@ public class Writer : IWriter
                 {
                     activityPath = CreateQuizActivity(course, outputPath, activity, quiz, section);
                 }
-                
+
                 // Skip if activityPath is null (i.e. directory creation failed)
                 if (activityPath == null)
                 {
@@ -451,8 +549,8 @@ public class Writer : IWriter
             _moduleWriterQuiz.WriteModule(activityPath, course, section, quiz);
         });
     }
-    
-    
+
+
     /// <summary>
     /// Creates an activity directory using the specified prefix and processes it via the given action.
     /// </summary>

@@ -7,14 +7,14 @@ namespace CourseAsCode.Readers.YAML.Readers
     public class YamlQuestionAnswerReader : IQuestionAnswerReader
     {
 
-        public Answer? Read(string modelObjectPath)
+        public MultiChoiceAnswer? Read(string modelObjectPath)
         {
             throw new NotImplementedException();
         }
 
-        private Answer ConvertYamlFileToMoodleFile(YamlQuestionAnswer questionAnswer)
+        private MultiChoiceAnswer ConvertYamlFileToMoodleFile(YamlQuestionAnswer questionAnswer)
         {
-            return new Answer()
+            return new MultiChoiceAnswer()
             {
                 AnswerText = questionAnswer.AnswerText,
                 AnswerTextFormat = questionAnswer.AnswerTextFormat,

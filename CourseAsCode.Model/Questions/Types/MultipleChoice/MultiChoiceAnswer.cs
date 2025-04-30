@@ -3,7 +3,7 @@ using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Questions.Helper;
 
-public class Answer
+public class MultiChoiceAnswer
 {
     [Description("Text shown for the answer choice")]
     public required string AnswerText { get; init; }
