@@ -7,7 +7,7 @@ using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
@@ -16,9 +16,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
     public class ModuleWriterFileTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _fakeLogger;
+        private ILogger<ModuleWriterFile> _fakeLogger;
         private IMoodleVersionHelper _fakeMoodleVersionHelper;
         private IGeneralHelper _fakeGeneralHelper;
+        private ITagsWriter _fakeTagsWriter;
         private ModuleWriterFile _moduleWriterFile;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
@@ -31,7 +32,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
         {
             // Set up the fake XML writer factory and logger substitute
             _testFactory = new XmlWriterFactoryTest();
-            _fakeLogger = Substitute.For<ILogger>();
+            _fakeLogger = Substitute.For<ILogger<ModuleWriterFile>>();
+            _fakeTagsWriter = Substitute.For<ITagsWriter>();
 
             // Create substitutes for helper dependencies
             _fakeMoodleVersionHelper = Substitute.For<IMoodleVersionHelper>();
@@ -44,7 +46,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             _fakeGeneralHelper.GetLanguageFromEnum(Arg.Any<Language>()).Returns("en");
 
             // Instantiate the ModuleWriterFile using Dependency Injection
-            _moduleWriterFile = new ModuleWriterFile(_testFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger);
+            _moduleWriterFile = new ModuleWriterFile(_testFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger, _fakeTagsWriter);
 
             // Create a dummy course with backup metadata and one section.
             _dummyCourse = new Model.Course
@@ -149,31 +151,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
         }
 
         [Test]
-        public void WriteModule_WritesTagsSectionCorrectly()
-        {
-            // Act
-            _moduleWriterFile.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyFile);
-            string output = _testFactory.StringWriter.ToString();
-
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-
-            // Assert: Verify that a <tags> element exists and contains the expected number <tag> elements
-            var tagsElement = doc.DocumentElement?.SelectSingleNode("tags") as XmlElement;
-            Assert.IsNotNull(tagsElement, "The <tags> element is missing");
-
-            var tagNodes = tagsElement.SelectNodes("tag");
-            Assert.IsNotNull(tagNodes, "No <tag> elements found despite having tags");
-            Assert.That(tagNodes.Count, Is.EqualTo(_dummyFile.Tags!.Count));
-
-            // Check details of the first tag
-            var firstTag = tagNodes[0] as XmlElement;
-            Assert.That(firstTag?.GetAttribute("id"), Is.EqualTo("0"));
-            Assert.That(firstTag?["name"]?.InnerText, Is.EqualTo("filetag1"));
-            Assert.That(firstTag?["rawname"]?.InnerText, Is.EqualTo("filetag1"));
-        }
-
-        [Test]
         public void WriteModule_ThrowsInvalidCastException_ForNonFileActivity()
         {
             // Arrange: Create a dummy activity that is not a MoodleFile.
@@ -195,9 +172,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             _moduleWriterFile.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyFile);
 
             // Assert: Verify that a debug log was recorded containing "module.xml"
-            _fakeLogger.Received().Debug(Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("module.xml")));
+            _fakeLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("module.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -205,15 +185,18 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
         {
             // Arrange: Use a throwing XML writer factory to simulate an exception.
             IXmlWriterFactory throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _moduleWriterFile = new ModuleWriterFile(throwingFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger);
+            _moduleWriterFile = new ModuleWriterFile(throwingFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger, _fakeTagsWriter);
 
             // Act & Assert: Verify that an exception is thrown and an error is logged
             Assert.Throws<InvalidOperationException>(() =>
                 _moduleWriterFile.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyFile));
 
-            _fakeLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("module.xml")));
+            _fakeLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("module.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

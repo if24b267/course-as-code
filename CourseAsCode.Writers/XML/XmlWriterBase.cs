@@ -1,7 +1,7 @@
 using System.Xml;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML
 {
@@ -11,27 +11,22 @@ namespace CourseAsCode.Writers.XML
     public abstract class XmlWriterBase
     {
         protected readonly ILogger Logger;
-        private readonly IXmlWriterFactory xmlWriterFactory;
+        private readonly IXmlWriterFactory _xmlWriterFactory;
+
 
         /// <summary>
-        /// Default constructor, initializing the logger and the XmlWriterFactory with default implementations.
+        /// Initializes a new instance of the XmlWriterBase class with the specified
+        /// XML writer factory and logger provided via Dependency Injection.
         /// </summary>
-        protected XmlWriterBase()
-        {
-            xmlWriterFactory = new DefaultXmlWriterFactory();
-            Logger = LogManager.GetCurrentClassLogger();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the XmlWriterBase class with the specified XML writer factory and logger.
-        /// </summary>
-        /// <param name="xmlWriterFactory">Factory used to create XmlWriter instances.</param>
-        /// <param name="logger">Logger used for logging messages.</param>
+        /// <param name="xmlWriterFactory">Factory used to create XmlWriter instances</param>
+        /// <param name="logger">Logger used for logging messages</param>
+        /// <exception cref="ArgumentNullException">Thrown if xmlWriterFactory or logger is null.</exception>
         protected XmlWriterBase(IXmlWriterFactory xmlWriterFactory, ILogger logger)
         {
-            this.xmlWriterFactory = xmlWriterFactory;
-            Logger = logger;
+            _xmlWriterFactory = xmlWriterFactory ?? throw new ArgumentNullException(nameof(xmlWriterFactory));
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
 
         /// <summary>
         /// The settings used for creating XmlWriter instances.
@@ -78,91 +73,100 @@ namespace CourseAsCode.Writers.XML
         /// <returns>An XmlWriter instance initialized with the current settings.</returns>
         protected XmlWriter CreateXmlWriter(string filePath)
         {
-            return xmlWriterFactory.Create(filePath, Settings);
+            return _xmlWriterFactory.Create(filePath, Settings);
         }
 
         /// <summary>
         /// Logs a trace-level message using the configured logger.
         /// </summary>
         /// <param name="message">The trace message to log.</param>
-        protected void LogTrace(string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogTrace(string message, params object?[] args)
         {
-            Logger.Trace(message);
+            Logger.LogTrace(message, args);
         }
 
         /// <summary>
         /// Logs an informational message using the configured logger.
         /// </summary>
         /// <param name="message">The informational message to log.</param>
-        protected void LogInfo(string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogInfo(string message, params object?[] args)
         {
-            Logger.Info(message);
+            Logger.LogInformation(message, args);
         }
 
         /// <summary>
         /// Logs a warning-level message using the configured logger.
         /// </summary>
         /// <param name="message">The warning message to log.</param>
-        protected void LogWarn(string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogWarn(string message, params object?[] args)
         {
-            Logger.Warn(message);
+            Logger.LogWarning(message, args); // Note: LogWarning
         }
 
         /// <summary>
-        /// Logs a warning-level message along with an associated exception using the configured logger.
+        /// Logs a warning-level message along with an associated exception.
         /// </summary>
         /// <param name="ex">The exception associated with the warning.</param>
         /// <param name="message">The warning message to log.</param>
-        protected void LogWarn(Exception ex, string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogWarn(Exception? ex, string message, params object?[] args)
         {
-            Logger.Warn(ex, message);
+            Logger.LogWarning(ex, message, args); // Note: LogWarning
         }
 
         /// <summary>
-        /// Logs an error-level message along with an associated exception using the configured logger.
+        /// Logs an error-level message along with an associated exception.
         /// </summary>
         /// <param name="ex">The exception associated with the error.</param>
         /// <param name="message">The error message to log.</param>
-        protected void LogError(Exception ex, string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogError(Exception? ex, string message, params object?[] args)
         {
-            Logger.Error(ex, message);
+            Logger.LogError(ex, message, args);
         }
 
         /// <summary>
         /// Logs an error-level message using the configured logger.
         /// </summary>
         /// <param name="message">The error message to log.</param>
-        protected void LogError(string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogError(string message, params object?[] args)
         {
-            Logger.Error(message);
+            Logger.LogError(message, args);
         }
 
         /// <summary>
         /// Logs a fatal-level message using the configured logger.
         /// </summary>
         /// <param name="message">The fatal error message to log.</param>
-        protected void LogFatal(string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogFatal(string message, params object?[] args)
         {
-            Logger.Fatal(message);
+            Logger.LogCritical(message, args);
         }
 
         /// <summary>
-        /// Logs a fatal-level message along with an associated exception using the configured logger.
+        /// Logs a fatal-level message along with an associated exception.
         /// </summary>
         /// <param name="ex">The exception associated with the fatal error.</param>
         /// <param name="message">The fatal error message to log.</param>
-        protected void LogFatal(Exception ex, string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogFatal(Exception? ex, string message, params object?[] args)
         {
-            Logger.Fatal(ex, message);
+            Logger.LogCritical(ex, message, args);
         }
 
         /// <summary>
         /// Logs a debug-level message using the configured logger.
         /// </summary>
         /// <param name="message">The debug message to log.</param>
-        protected void LogDebug(string message)
+        /// <param name="args">Optional arguments for string formatting.</param>
+        protected void LogDebug(string message, params object?[] args)
         {
-            Logger.Debug(message);
+            Logger.LogDebug(message, args);
         }
     }
 }

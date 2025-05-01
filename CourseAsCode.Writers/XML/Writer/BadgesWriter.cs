@@ -1,6 +1,6 @@
 using System.Xml;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer
 {
@@ -8,23 +8,17 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_BADGES_RELATIVE_PATH = "badges.xml";
 
-        /// <summary>
-        /// Default constructor, providing default implementations for the XmlWriterFactory and logger.
-        /// </summary>
-        public BadgesWriter()
-        {
-            // Calls the default constructor of the base class, which initializes the logger and the XmlWriterFactory with default implementations
-        }
 
         /// <summary>
-        /// Initializes a new instance of the BadgesWriter class with the specified XML writer factory and logger.
+        /// Creates a new instance of the BadgesWriter class
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory used to create XmlWriter instances.</param>
-        /// <param name="logger">Logger used for logging messages.</param>
-        public BadgesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to BadgesWriter</param>
+        public BadgesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<BadgesWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
+
 
         /// <summary>
         /// Writes the badges XML file to the specified output path.

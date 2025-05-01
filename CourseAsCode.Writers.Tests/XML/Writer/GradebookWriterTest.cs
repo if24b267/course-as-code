@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
@@ -10,7 +10,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class GradebookWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<GradebookWriter> _testLogger;
         private GradebookWriter _gradebookWriter;
         private Model.Course _dummyCourse;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
@@ -19,7 +19,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<GradebookWriter>>();
             _gradebookWriter = new GradebookWriter(_testFactory, _testLogger);
             _dummyCourse = new Model.Course();
         }
@@ -85,7 +85,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _gradebookWriter.WriteGradebook(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert: Verify that a debug log was recorded containing the gradebook file name
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("gradebook.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("gradebook.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -100,7 +105,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _gradebookWriter.WriteGradebook(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert: Verify that an error log was recorded with a message containing "gradebook.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("gradebook.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("gradebook.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

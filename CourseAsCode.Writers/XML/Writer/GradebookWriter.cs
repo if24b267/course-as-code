@@ -1,6 +1,6 @@
 using System.Xml;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer
 {
@@ -12,21 +12,17 @@ namespace CourseAsCode.Writers.XML.Writer
         private int _gradeItemIdCounter = 1;
         private int _gradeSettingIdCounter = 1;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public GradebookWriter()
-            : base(new DefaultXmlWriterFactory(), NLog.LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the GradebookWriter class
         /// </summary>
-        public GradebookWriter(IXmlWriterFactory xmlWriterFactory, NLog.ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to GradebookWriter</param>
+        public GradebookWriter(IXmlWriterFactory xmlWriterFactory, ILogger<GradebookWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
+
 
         public void WriteGradebook(Model.Course course, string outputPath)
         {

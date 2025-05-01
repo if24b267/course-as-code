@@ -1,11 +1,9 @@
 using System.Xml;
 
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 using User = CourseAsCode.Model.User;
@@ -19,24 +17,20 @@ namespace CourseAsCode.Writers.XML.Writer
         private readonly IGeneralHelper _helper;
         private readonly IUserHelper _userHelper;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public UsersWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _helper = GeneralHelper.Instance;
-            _userHelper = new UserHelper();
-        }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing.
+        /// Creates a new instance of the UsersWriter class
         /// </summary>
-        public UsersWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper, IUserHelper userHelper)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to UsersWriter</param>
+        /// <param name="helper">General Helper providing various helper methods</param>
+        /// <param name="userHelper">Helper method providing specific helper methods focused on user management</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public UsersWriter(IXmlWriterFactory xmlWriterFactory, ILogger<UsersWriter> logger, IGeneralHelper helper, IUserHelper userHelper)
             : base(xmlWriterFactory, logger)
         {
-            _helper = helper;
-            _userHelper = userHelper;
+            _helper = helper ?? throw new ArgumentNullException(nameof(helper));
+            _userHelper = userHelper ?? throw new ArgumentNullException(nameof(userHelper));
         }
 
         public void WriteUsers(Model.Course course, string outputPath)

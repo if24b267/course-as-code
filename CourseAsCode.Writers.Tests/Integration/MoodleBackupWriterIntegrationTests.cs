@@ -1,10 +1,15 @@
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
-using CourseAsCode.Writers.XML.Writer;
+
 using CourseAsCode.Model;
-using System;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -15,6 +20,13 @@ namespace CourseAsCode.Writers.Tests.Integration
         private Course _dummyCourse;
         private string _outputPath;
 
+        // Dependencies needed for MoodleBackupWriter
+        private IXmlWriterFactory _xmlWriterFactory;
+        private ILogger<MoodleBackupWriter> _logger;
+        private IGeneralHelper _generalHelper;
+        private IMoodleVersionHelper _moodleVersionHelper;
+        private ICourseHelper _courseHelper;
+
         [SetUp]
         public void SetUp()
         {
@@ -24,6 +36,14 @@ namespace CourseAsCode.Writers.Tests.Integration
             _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
+
+            // --- Initialize Dependencies ---
+            // Use real implementations for integration testing
+            _xmlWriterFactory = new DefaultXmlWriterFactory();
+            _logger = NullLogger<MoodleBackupWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelper = GeneralHelper.Instance; // Assuming GeneralHelper is a Singleton
+            _moodleVersionHelper = new MoodleVersionHelper();
+            _courseHelper = new CourseHelper();
 
             _dummyCourse = new Course
             {
@@ -63,7 +83,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteMoodleBackup_GeneratesValidXml()
         {
             // Arrange
-            var writer = new MoodleBackupWriter();
+            var writer = new MoodleBackupWriter(_xmlWriterFactory, _logger, _generalHelper, _moodleVersionHelper, _courseHelper);
 
             // Act
             writer.WriteMoodleBackup(_dummyCourse, _outputPath);

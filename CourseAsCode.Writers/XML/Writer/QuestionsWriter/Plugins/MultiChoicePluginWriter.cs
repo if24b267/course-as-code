@@ -6,16 +6,22 @@ using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
 {
     public class MultiChoicePluginWriter : XmlWriterBase, IQuestionPluginWriter
     {
-        public MultiChoicePluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <summary>
+        /// Creates a new instance of the MultiChoicePluginWriter class
+        /// </summary>
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to MultiChoicePluginWriter</param>
+        public MultiChoicePluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<MultiChoicePluginWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
+
 
         /// <summary>
         /// Writes the `plugin_qtype_multichoice_question` element of questions.xml that is used for multiple choice questions

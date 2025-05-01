@@ -3,10 +3,9 @@ using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -17,22 +16,20 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         // Helper singleton
         private readonly IGeneralHelper _helper = GeneralHelper.Instance;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public RoleAssignmentsWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="RoleAssignmentsWriter"/> class
         /// </summary>
-        public RoleAssignmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="RoleAssignmentsWriter"/></param>
+        /// <param name="helper">General Helper providing various helper methods</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public RoleAssignmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<RoleAssignmentsWriter> logger, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
-            _helper = helper;
+            _helper = helper ?? throw new ArgumentNullException(nameof(helper));
         }
+
 
         /// <summary>
         /// writes the information on which role is assigned to which user | course/roles.xml.

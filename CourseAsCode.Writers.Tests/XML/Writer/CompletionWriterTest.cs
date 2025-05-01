@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
@@ -10,14 +10,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class CompletionWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<CompletionWriter> _testLogger;
         private CompletionWriter _testCompletionWriter;
 
         [SetUp]
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<CompletionWriter>>();
             _testCompletionWriter = new CompletionWriter(_testFactory, _testLogger); // Inject dependencies
         }
 
@@ -69,7 +69,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _testCompletionWriter.WriteCompletion(dummyCourse, dummyOutputPath);
 
             // Assert: Verify that logger.Debug is called with a message containing "completion.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("completion.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("completion.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -85,7 +90,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.Throws<InvalidOperationException>(() => _testCompletionWriter.WriteCompletion(dummyCourse, dummyOutputPath));
 
             // Verify that logger.Error is called with a message containing "completion.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("completion.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("completion.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

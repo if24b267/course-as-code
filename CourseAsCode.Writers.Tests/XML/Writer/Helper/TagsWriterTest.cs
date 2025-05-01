@@ -1,6 +1,7 @@
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper;
-using NLog;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
@@ -8,32 +9,39 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
     [TestFixture]
     public class TagsWriterTests
     {
-        private ILogger _testLogger;
+        private ILogger<TagsWriter> _testLogger;
+        private ITagsWriter _tagsWriter;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath/dummyfile.xml";
 
         [SetUp]
         public void SetUp()
         {
-            _testLogger = Substitute.For<ILogger>();
+            // Create a substitute for the logger
+            _testLogger = Substitute.For<ILogger<TagsWriter>>();
+            // Instantiate TagsWriter with the mock logger
+            _tagsWriter = new TagsWriter(_testLogger);
         }
 
+
         /// <summary>
-        /// Helper method to execute TagsWriter.WriteTags and capture its XML output.
+        /// Helper method to execute TagsWriter.WriteTags and capture its XML output
         /// </summary>
-        /// <param name="tags">The list of tags to pass in.</param>
-        /// <returns>XML output as a string.</returns>
+        /// <param name="tags">The list of tags to pass in</param>
+        /// <returns>XML output as a string</returns>
         private string WriteTagsAndGetOutput(List<string>? tags)
         {
+            // Use StringWriter to capture XML output in memory
             using (var stringWriter = new StringWriter())
             {
                 using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter))
                 {
-                    TagsWriter.WriteTags(xmlWriter, tags, DEFAULT_DUMMY_OUTPUT_PATH, _testLogger);
+                    _tagsWriter.WriteTags(xmlWriter, tags, DEFAULT_DUMMY_OUTPUT_PATH);
                 }
 
                 return stringWriter.ToString();
             }
         }
+
 
         [Test]
         public void WriteTags_NullTags_GeneratesValidXml()
@@ -157,8 +165,19 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
             string output = WriteTagsAndGetOutput(tags);
 
             // Assert: Ensure that logger.Trace is called for each tag with the expected message.
-            _testLogger.Received(1).Trace(Arg.Is<string>(msg => msg.Contains("Tag1") && msg.Contains(expectedFileName)));
-            _testLogger.Received(1).Trace(Arg.Is<string>(msg => msg.Contains("Tag2") && msg.Contains(expectedFileName)));
+            _testLogger.Received().Log(
+                LogLevel.Trace,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("Tag1") && o.ToString().Contains(expectedFileName)),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
+
+            _testLogger.Received().Log(
+                LogLevel.Trace,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("Tag2") && o.ToString().Contains(expectedFileName)),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

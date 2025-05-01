@@ -2,12 +2,10 @@ using System.Xml;
 
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enrolments;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -17,23 +15,20 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         private int _enrolmentIdCounter = 1; // used to assign ascending IDs to each enrolment
         private readonly IGeneralHelper _helper;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public EnrolmentsWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _helper = GeneralHelper.Instance;
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="EnrolmentsWriter"/> class
         /// </summary>
-        public EnrolmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="EnrolmentsWriter"/></param>
+        /// <param name="helper">General Helper providing various helper methods</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public EnrolmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<EnrolmentsWriter> logger, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
-            _helper = helper;
+            _helper = helper ?? throw new ArgumentNullException(nameof(helper));
         }
+
 
         public void WriteEnrolment(Model.Course course, string outputPath)
         {

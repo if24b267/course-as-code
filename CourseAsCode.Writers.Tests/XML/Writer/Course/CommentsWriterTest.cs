@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Course;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Course
@@ -10,7 +10,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
     public class CommentsWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<CommentsWriter> _testLogger;
         private CommentsWriter _commentsWriter;
         private Model.Course _dummyCourse;
 
@@ -18,7 +18,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<CommentsWriter>>();
             _commentsWriter = new CommentsWriter(_testFactory, _testLogger);
             _dummyCourse = new Model.Course();
         }
@@ -68,7 +68,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             _commentsWriter.WriteComments(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "course/comments.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("course/comments.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/comments.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -84,7 +89,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 _commentsWriter.WriteComments(_dummyCourse, dummyOutputPath));
 
             // Assert: Verify that logger.Error was called with a message containing "course/comments.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("course/comments.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/comments.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

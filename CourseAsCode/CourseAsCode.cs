@@ -3,9 +3,14 @@ using CourseAsCode.Readers;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Writers;
+using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Writer.Course;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using NLog;
+using NLog.Extensions.Logging;
 
 namespace CourseAsCode
 {
@@ -105,14 +110,23 @@ namespace CourseAsCode
 
             // Setup dependency injection
             var serviceCollection = new ServiceCollection();
-            CourseReader.ConfigureYamlServices(serviceCollection);
-            var serviceProvider = serviceCollection.BuildServiceProvider();
 
+            serviceCollection.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                loggingBuilder.AddNLog();
+            });
+
+            CourseReader.ConfigureYamlServices(serviceCollection);
+            Writer.ConfigureXmlServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
             var courseReader = serviceProvider.GetRequiredService<ICourseReader>();
             var course = courseReader.Read(inputPath, courseFormat);
-            var writer = new Writer();
+
+            var courseWriter = serviceProvider.GetRequiredService<IWriter>();
             var courseOutputPath = Path.GetFullPath(Path.Combine(outputPath, "moodleCourse"));
-            var success = writer.WriteCourse(course, courseOutputPath);
+            var success = courseWriter.WriteCourse(course, courseOutputPath);
 
             if (!success)
             {

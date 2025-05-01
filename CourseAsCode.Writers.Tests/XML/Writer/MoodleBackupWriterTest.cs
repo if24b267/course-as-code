@@ -3,7 +3,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
@@ -12,7 +12,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class MoodleBackupWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<MoodleBackupWriter> _testLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private IMoodleVersionHelper _fakeMoodleVersionHelper;
         private ICourseHelper _fakeCourseHelper;
@@ -25,7 +25,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Set up the fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<MoodleBackupWriter>>();
 
             // Use NSubstitute to create fake helper implementations
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -103,7 +103,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _moodleBackupWriter.WriteMoodleBackup(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert that a debug log is recorded containing "moodle_backup.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("moodle_backup.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("moodle_backup.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -118,7 +123,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _moodleBackupWriter.WriteMoodleBackup(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert that an error log was recorded containing "moodle_backup.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("moodle_backup.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("moodle_backup.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

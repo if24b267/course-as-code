@@ -3,6 +3,10 @@ using System.Xml.Schema;
 using NUnit.Framework;
 using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Model;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -13,6 +17,10 @@ namespace CourseAsCode.Writers.Tests.Integration
         private Course _dummyCourse;
         private string _outputPath;
 
+        // Dependencies needed for CompetenciesWriter
+        private IXmlWriterFactory _xmlWriterFactory;
+        private ILogger<CompetenciesWriter> _logger;
+
         [SetUp]
         public void SetUp()
         {
@@ -22,6 +30,11 @@ namespace CourseAsCode.Writers.Tests.Integration
             _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
+
+            // --- Initialize Dependencies ---
+            // Use real implementations for integration testing
+            _xmlWriterFactory = new DefaultXmlWriterFactory();
+            _logger = NullLogger<CompetenciesWriter>.Instance; // Use NullLogger to avoid log output during tests
 
             _dummyCourse = new Course
             {
@@ -37,7 +50,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteCompetencies_GeneratesValidXml()
         {
             // Arrange
-            var writer = new CompetenciesWriter();
+            var writer = new CompetenciesWriter(_xmlWriterFactory, _logger);
 
             // Sicherstellen, dass das Verzeichnis existiert
             var competenciesDirectory = Path.Combine(_outputPath, "course");

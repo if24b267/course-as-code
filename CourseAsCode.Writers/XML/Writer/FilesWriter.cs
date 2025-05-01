@@ -4,12 +4,10 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer
 {
@@ -20,27 +18,24 @@ namespace CourseAsCode.Writers.XML.Writer
         private readonly IGeneralHelper _generalHelper;
         private readonly IFileService _fileService;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public FilesWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _fileHelper = FileHelper.Instance;
-            _generalHelper = GeneralHelper.Instance;
-            _fileService = new FileService();
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the FilesWriter class
         /// </summary>
-        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IFileHelper fileHelper, IGeneralHelper generalHelper, IFileService fileService)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to FilesWriter</param>
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <param name="fileHelper">Helper method providing specific helper methods focused on file management</param>
+        /// <param name="fileService">Service that handles operations on the file system</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<FilesWriter> logger, IFileHelper fileHelper, IGeneralHelper generalHelper, IFileService fileService)
             : base(xmlWriterFactory, logger)
         {
-            _fileHelper = fileHelper;
-            _generalHelper = generalHelper;
-            _fileService = fileService;
+            _fileHelper = fileHelper ?? throw new ArgumentNullException(nameof(fileHelper));
+            _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
+
 
         public void WriteFiles(Model.Course course, string outputPath)
         {

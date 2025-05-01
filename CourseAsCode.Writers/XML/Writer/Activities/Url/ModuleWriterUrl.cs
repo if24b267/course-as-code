@@ -2,12 +2,10 @@ using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Url
 {
@@ -17,30 +15,26 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
 
         private readonly IMoodleVersionHelper _moodleVersionHelper;
         private readonly IGeneralHelper _generalHelper;
+        private readonly ITagsWriter _tagsWriter;
+
 
         /// <summary>
-        /// Default constructor using default implementations for dependencies.
+        /// Creates a new instance of the <see cref="ModuleWriterUrl"/> class
         /// </summary>
-        public ModuleWriterUrl()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _moodleVersionHelper = MoodleVersionHelper.Instance;
-            _generalHelper = GeneralHelper.Instance;
-        }
-
-        /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing.
-        /// </summary>
-        /// <param name="xmlWriterFactory">Injected XML writer factory.</param>
-        /// <param name="logger">Injected logger instance.</param>
-        /// <param name="moodleVersionHelper">Injected MoodleVersionHelper instance.</param>
-        /// <param name="generalHelper">Injected GeneralHelper instance.</param>
-        public ModuleWriterUrl(IXmlWriterFactory xmlWriterFactory, ILogger logger, IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="ModuleWriterUrl"/></param>
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <param name="moodleVersionHelper">Helper method providing specific helper methods focused on Moodle version management</param>
+        /// <param name="tagsWriter">Helper method providing specific helper methods focused on tag management</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public ModuleWriterUrl(IXmlWriterFactory xmlWriterFactory, ILogger<ModuleWriterUrl> logger, IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper, ITagsWriter tagsWriter)
             : base(xmlWriterFactory, logger)
         {
-            _moodleVersionHelper = moodleVersionHelper;
-            _generalHelper = generalHelper;
+            _moodleVersionHelper = moodleVersionHelper ?? throw new ArgumentNullException(nameof(moodleVersionHelper));
+            _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _tagsWriter = tagsWriter ?? throw new ArgumentNullException(nameof(tagsWriter));
         }
+
 
         /// <summary>
         /// Writes the modules.xml file required for a URL activity.
@@ -96,7 +90,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                     };
                     WriteElements(writer, elements);
 
-                    TagsWriter.WriteTags(writer, urlObject.Tags, outputPath, Logger);
+                    _tagsWriter.WriteTags(writer, urlObject.Tags, outputPath);
 
                     writer.WriteEndElement(); // Close <module>
                     writer.WriteEndDocument();

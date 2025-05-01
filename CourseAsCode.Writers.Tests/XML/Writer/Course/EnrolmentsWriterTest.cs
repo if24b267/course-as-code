@@ -4,7 +4,7 @@ using CourseAsCode.Model.Enrolments;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Course;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Course
@@ -13,7 +13,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
     public class EnrolmentsWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<EnrolmentsWriter> _testLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private EnrolmentsWriter _enrolmentsWriter;
         private Model.Course _dummyCourse;
@@ -24,7 +24,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         {
             // Set up the fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<EnrolmentsWriter>>();
 
             // Create a substitute for the general helper
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -124,7 +124,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             _enrolmentsWriter.WriteEnrolment(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert: Verify that a debug log was recorded containing the enrolments file name
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("course/enrolments.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/enrolments.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -139,7 +144,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 _enrolmentsWriter.WriteEnrolment(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert: Verify that an error log was recorded containing "course/enrolments.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("course/enrolments.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/enrolments.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 

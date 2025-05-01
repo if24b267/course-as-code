@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
@@ -10,14 +10,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
     public class ActivityFiltersWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<ActivityFiltersWriter> _testLogger;
         private ActivityFiltersWriter _activityFiltersWriter;
 
         [SetUp]
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<ActivityFiltersWriter>>();
             _activityFiltersWriter = new ActivityFiltersWriter(_testFactory, _testLogger);
         }
 
@@ -100,7 +100,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             _activityFiltersWriter.WriteFilters(dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "dummyPath/filters.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("dummyPath/filters.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("dummyPath/filters.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -116,7 +121,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
                 _activityFiltersWriter.WriteFilters(dummyOutputPath));
 
             // Assert: Verify that logger.Error was called with a message containing "dummyPath/filters.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/filters.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("dummyPath/filters.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

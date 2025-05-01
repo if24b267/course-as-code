@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
@@ -10,7 +10,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class GroupsWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<GroupsWriter> _testLogger;
         private GroupsWriter _groupsWriter;
         private Model.Course _dummyCourse;
 
@@ -18,7 +18,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<GroupsWriter>>();
             _groupsWriter = new GroupsWriter(_testFactory, _testLogger); // Inject the fake factory and logger
             _dummyCourse = new Model.Course();
         }
@@ -120,7 +120,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _groupsWriter.WriteGroups(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "groups.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("groups.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("groups.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -136,7 +141,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _groupsWriter.WriteGroups(_dummyCourse, dummyOutputPath));
 
             // Verify that logger.Error was called with a message containing "groups.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("groups.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("groups.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }
