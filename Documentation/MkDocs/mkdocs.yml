@@ -1,0 +1,62 @@
+site_name: Course as Code
+site_url: https://davimalu.github.io/course-as-code/
+repo_url: https://github.com/Davimalu/course-as-code
+repo_name: davimalu/course-as-code
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.tabs
+    - navigation.expand
+    - search.suggest
+    - navigation.footer
+    - toc.follow
+    - content.code.copy # Enable code copy button
+    - content.code.annotate # Enable code annotations
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+plugins:
+  - plantuml:
+      puml_url: https://www.plantuml.com/plantuml/
+      theme: 
+        light: catppuccin/latte-white
+        dark: catppuccin/frappe
+  - search:
+
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: Architecture/Overview.md
+      - Reader: Architecture/Reader.md
+      - Internal Data Model: Architecture/InternalDataModel.md
+      - Writer: Architecture/Writer.md
+  - Moodle Backup File (.mbz):
+      - General: MoodleBackupFile/General.md
+      - Structure: MoodleBackupFile/Structure.md
+      - Activites:
+        - Quiz: MoodleBackupFile/Activities/Quiz.md
