@@ -59,6 +59,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
                 if (writer is MultiChoicePluginWriter)
                 {
                     _pluginWriters[typeof(MultipleChoiceQuestion)] = writer;
+                    _pluginWriters[typeof(SingleChoiceQuestion)] = writer;
                 }
                 else if (writer is DropdownPluginWriter)
                 {
