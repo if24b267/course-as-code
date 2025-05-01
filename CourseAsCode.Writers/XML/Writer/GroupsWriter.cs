@@ -1,7 +1,7 @@
 using System.Xml;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer
 {
@@ -9,22 +9,18 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_GROUPS_RELATIVE_PATH = "groups.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public GroupsWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the GroupsWriter class
         /// </summary>
-        public GroupsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to GroupsWriter</param>
+        public GroupsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<GroupsWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
 
+        
         public void WriteGroups(Model.Course course, string outputPath)
         {
             try

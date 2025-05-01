@@ -1,7 +1,6 @@
 using System.Xml;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer
 {
@@ -9,23 +8,17 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_COMPLETION_RELATIVE_PATH = "completion.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public CompletionWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Initializes a new instance of the CompletionWriter class with the specified XML writer factory and logger.
+        /// Creates a new instance of the CompletionWriter class
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory used to create XmlWriter instances.</param>
-        /// <param name="logger">Logger used for logging messages.</param>
-        public CompletionWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to CompletionWriter</param>
+        public CompletionWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CompletionWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
+
 
         /// <summary>
         /// Stores the information about which users have completed the course; NOT IMPLEMENTED (yet?).

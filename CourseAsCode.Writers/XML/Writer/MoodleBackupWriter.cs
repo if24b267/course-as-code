@@ -1,11 +1,9 @@
 using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer
 {
@@ -17,29 +15,25 @@ namespace CourseAsCode.Writers.XML.Writer
         private readonly IMoodleVersionHelper _moodleVersionHelper;
         private readonly ICourseHelper _courseHelper;
 
-        /// <summary>
-        /// Default constructor.
-        /// Initializes helper singletons and passes default XML writer factory and logger to the base class.
-        /// </summary>
-        public MoodleBackupWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _helper = GeneralHelper.Instance;
-            _moodleVersionHelper = MoodleVersionHelper.Instance;
-            _courseHelper = CourseHelper.Instance;
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the MoodleBackupWriter class
         /// </summary>
-        public MoodleBackupWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper, IMoodleVersionHelper moodleVersionHelper, ICourseHelper courseHelper)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to MoodleBackupWriter</param>
+        /// <param name="helper">General Helper providing various helper methods</param>
+        /// <param name="moodleVersionHelper">Helper method providing specific helper methods focused on Moodle version management</param>
+        /// <param name="courseHelper">Helper method providing specific helper methods focused on course management</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public MoodleBackupWriter(IXmlWriterFactory xmlWriterFactory, ILogger<MoodleBackupWriter> logger, IGeneralHelper helper, IMoodleVersionHelper moodleVersionHelper, ICourseHelper courseHelper)
             : base(xmlWriterFactory, logger)
         {
-            _helper = helper;
-            _moodleVersionHelper = moodleVersionHelper;
-            _courseHelper = courseHelper;
+            _helper = helper ?? throw new ArgumentNullException(nameof(helper));
+            _moodleVersionHelper = moodleVersionHelper ?? throw new ArgumentNullException(nameof(moodleVersionHelper));
+            _courseHelper = courseHelper ?? throw new ArgumentNullException(nameof(courseHelper));
         }
 
+        
         public void WriteMoodleBackup(Model.Course course, string outputPath)
         {
             try
@@ -386,7 +380,7 @@ namespace CourseAsCode.Writers.XML.Writer
                         WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_included", "1");
                         WriteSingleBackupSettingTag(writer, "activity", $"resource_{activity.ActivityId}", $"resource_{activity.ActivityId}_userinfo", "1");
                     }
-                    
+
                     if (activity is Quiz quiz)
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"quiz_{activity.ActivityId}", $"quiz_{activity.ActivityId}_included", "1");

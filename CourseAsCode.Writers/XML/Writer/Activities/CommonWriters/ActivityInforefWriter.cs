@@ -1,10 +1,8 @@
 using System.Xml;
-using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
 {
@@ -12,24 +10,18 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
     {
         private const string DEFAULT_INFOREF_RELATIVE_PATH = "inforef.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public ActivityInforefWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
-        
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="ActivityInforefWriter"/> class
         /// </summary>
-        public ActivityInforefWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="ActivityInforefWriter"/></param>
+        public ActivityInforefWriter(IXmlWriterFactory xmlWriterFactory, ILogger<ActivityInforefWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
 
-        
+
         /// <summary>
         /// Writes the inforef.xml file required for an activity.
         /// </summary>
@@ -47,7 +39,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                     writer.WriteStartDocument();
                     writer.WriteStartElement("inforef");
 
-                    
+
                     // For the MoodleFile activity, reference the file
                     if (activityInstace is MoodleFile moodleFile)
                     {
@@ -55,26 +47,26 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                         WriteOneInforefSection(writer, moodleFile.ActivityId, "file");
                         writer.WriteEndElement(); // Close </fileref>
                     }
-                    
-                    
+
+
                     // For the Quiz activity, reference the question categories
                     if (activityInstace is Model.Activities.Resources.Quiz quiz)
                     {
                         writer.WriteStartElement("question_categoryref");
-                    
+
                         foreach (var categoryGrouping in quiz.Questions.GroupBy(q => q.Category))
                         {
                             writer.WriteStartElement("question_category");
 
                             writer.WriteElementString("id", categoryGrouping.First().CategoryId.ToString());
-                        
+
                             writer.WriteEndElement(); // Close </question_category>
                         }
-                    
+
                         writer.WriteEndElement(); // Close <question_categoryref>
                     }
 
-                    
+
                     writer.WriteEndElement(); // Close <inforef>
                     writer.WriteEndDocument();
                 }
@@ -87,8 +79,8 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                 throw;
             }
         }
-        
-        
+
+
         /// <summary>
         /// writes the part of the `inforef` section for the corresponding object type
         /// </summary>

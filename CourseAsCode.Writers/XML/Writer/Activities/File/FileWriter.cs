@@ -1,10 +1,8 @@
 using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.File
 {
@@ -13,26 +11,20 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         private const string DEFAULT_FILE_RELATIVE_PATH = "resource.xml";
         private readonly IGeneralHelper _generalHelper;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public FileWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _generalHelper = GeneralHelper.Instance;
-        }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="FileWriter"/> class
         /// </summary>
-        /// <param name="xmlWriterFactory">The XML writer factory to use.</param>
-        /// <param name="logger">The logger instance to use.</param>
-        /// <param name="generalHelper">The general helper instance to use.</param>
-        public FileWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="FileWriter"/></param>
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public FileWriter(IXmlWriterFactory xmlWriterFactory, ILogger<FileWriter> logger, IGeneralHelper generalHelper)
             : base(xmlWriterFactory, logger)
         {
-            _generalHelper = generalHelper;
+            _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
         }
+
 
         /// <summary>
         /// writes the file (resource) activity to an XML file.

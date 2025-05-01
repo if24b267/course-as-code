@@ -1,7 +1,6 @@
 ﻿using System.Xml;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
 {
@@ -9,21 +8,17 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
     {
         private const string DEFAULT_FILTERS_RELATIVE_PATH = "filters.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public ActivityFiltersWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="ActivityFiltersWriter"/> class
         /// </summary>
-        public ActivityFiltersWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="ActivityFiltersWriter"/></param>
+        public ActivityFiltersWriter(IXmlWriterFactory xmlWriterFactory, ILogger<ActivityFiltersWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
+
 
         /// <summary>
         /// Writes the filters.xml file required for an activity.

@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using System.Xml;
+﻿using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
@@ -7,7 +6,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
@@ -16,9 +15,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
     public class ModuleWriterUrlTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<ModuleWriterUrl> _testLogger;
         private IMoodleVersionHelper _fakeMoodleVersionHelper;
         private IGeneralHelper _fakeGeneralHelper;
+        private ITagsWriter _fakeTagsWriter;
         private ModuleWriterUrl _moduleWriterUrl;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
@@ -31,7 +31,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         {
             // Set up the fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<ModuleWriterUrl>>();
+            _fakeTagsWriter = Substitute.For<ITagsWriter>();
 
             // Create substitutes for helper dependencies
             _fakeMoodleVersionHelper = Substitute.For<IMoodleVersionHelper>();
@@ -44,7 +45,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             _fakeGeneralHelper.GetLanguageFromEnum(Arg.Any<Language>()).Returns("en");
 
             // Instantiate the ModuleWriterUrl with injected dependencies
-            _moduleWriterUrl = new ModuleWriterUrl(_testFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper);
+            _moduleWriterUrl = new ModuleWriterUrl(_testFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeTagsWriter);
 
             // Create a dummy course with backup metadata and one section
             _dummyCourse = new Model.Course
@@ -150,31 +151,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         }
 
         [Test]
-        public void WriteModule_WritesTagsSectionCorrectly()
-        {
-            // Act
-            _moduleWriterUrl.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyUrl);
-            string output = _testFactory.StringWriter.ToString();
-
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-
-            // Assert: Verify that a <tags> element exists and contains the expected number of <tag> elements
-            var tagsElement = doc.DocumentElement?.SelectSingleNode("tags") as XmlElement;
-            Assert.IsNotNull(tagsElement, "The <tags> element is missing");
-
-            var tagNodes = tagsElement.SelectNodes("tag");
-            Assert.IsNotNull(tagNodes, "No <tag> elements found despite having tags");
-            Assert.That(tagNodes.Count, Is.EqualTo(_dummyUrl.Tags!.Count));
-
-            // Check details of the first tag
-            var firstTag = tagNodes[0] as XmlElement;
-            Assert.That(firstTag?.GetAttribute("id"), Is.EqualTo("0"));
-            Assert.That(firstTag["name"]?.InnerText, Is.EqualTo("tag1"));
-            Assert.That(firstTag["rawname"]?.InnerText, Is.EqualTo("tag1"));
-        }
-
-        [Test]
         public void WriteModule_ThrowsInvalidCastException_ForNonUrlActivity()
         {
             // Arrange: Create a dummy activity that is not a URL.
@@ -196,8 +172,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             _moduleWriterUrl.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyUrl);
 
             // Assert: Verify that a debug log was recorded containing "module.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                                                               s.Contains("module.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("module.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -205,14 +185,18 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         {
             // Arrange: Use a throwing XML writer factory to simulate an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _moduleWriterUrl = new ModuleWriterUrl(throwingFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper);
+            _moduleWriterUrl = new ModuleWriterUrl(throwingFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeTagsWriter);
 
             // Act & Assert: Verify that an exception is thrown and an error is logged
             Assert.Throws<InvalidOperationException>(() =>
                 _moduleWriterUrl.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyUrl));
 
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                                                                                   s.Contains("module.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("module.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

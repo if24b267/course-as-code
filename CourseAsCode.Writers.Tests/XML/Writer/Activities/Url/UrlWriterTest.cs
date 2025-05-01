@@ -3,7 +3,7 @@ using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
@@ -12,7 +12,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
     public class UrlWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<UrlWriter> _testLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private UrlWriter _urlWriter;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
@@ -30,7 +30,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         {
             // Set up the fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<UrlWriter>>();
 
             // Create a substitute for the general helper and configure its methods
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -105,8 +105,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl);
 
             // Assert: Verify that a debug log was recorded
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                                                               s.Contains("url.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("url.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -120,8 +124,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             Assert.Throws<InvalidOperationException>(() =>
                 _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl));
 
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                                                                                     s.Contains("url.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("url.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

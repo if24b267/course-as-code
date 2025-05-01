@@ -4,7 +4,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
@@ -13,7 +13,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
     public class LabelWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<LabelWriter> _testLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private LabelWriter _labelWriter;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
@@ -39,7 +39,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             _testFactory = new XmlWriterFactoryTest();
 
             // Set up a substitute logger
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<LabelWriter>>();
 
             // Create a substitute for the general helper and configure its methods
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -114,9 +114,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             _labelWriter.WriteLabel(DEFAULT_DUMMY_OUTPUT_PATH, _dummyLabel);
 
             // Assert: Verify that a debug log was recorded.
-            _testLogger.Received().Debug(Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("label.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("label.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -130,9 +133,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             Assert.Throws<InvalidOperationException>(() =>
                 _labelWriter.WriteLabel(DEFAULT_DUMMY_OUTPUT_PATH, _dummyLabel));
 
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("label.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("label.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

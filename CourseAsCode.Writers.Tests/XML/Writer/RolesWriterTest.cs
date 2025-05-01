@@ -4,7 +4,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
@@ -13,7 +13,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class RolesWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<RolesWriter> _testLogger;
         private IRolesHelper _fakeRolesHelper;
         private RolesWriter _rolesWriter;
         private Model.Course _dummyCourse;
@@ -24,7 +24,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Set up fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<RolesWriter>>();
 
             // Create a substitute for the roles helper and configure to return a predictable value
             _fakeRolesHelper = Substitute.For<IRolesHelper>();
@@ -108,7 +108,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _rolesWriter.WriteRoles(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert: Verify that a debug log was recorded containing "roles.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("roles.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("roles.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -123,7 +128,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _rolesWriter.WriteRoles(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert: Verify that an error log was recorded containing "roles.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("roles.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("roles.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 

@@ -1,8 +1,12 @@
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
-using CourseAsCode.Writers.XML.Writer;
+
 using CourseAsCode.Model;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -13,6 +17,10 @@ namespace CourseAsCode.Writers.Tests.Integration
         private Course _dummyCourse;
         private string _outputPath;
 
+        // Dependencies needed for CompletionWriter
+        private IXmlWriterFactory _xmlWriterFactory;
+        private ILogger<CompletionWriter> _logger;
+
         [SetUp]
         public void SetUp()
         {
@@ -22,6 +30,11 @@ namespace CourseAsCode.Writers.Tests.Integration
             _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
+
+            // --- Initialize Dependencies ---
+            // Use real implementations for integration testing
+            _xmlWriterFactory = new DefaultXmlWriterFactory();
+            _logger = NullLogger<CompletionWriter>.Instance; // Use NullLogger to avoid log output during tests
 
             _dummyCourse = new Course
             {
@@ -34,7 +47,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteCompletion_GeneratesValidXml()
         {
             // Arrange
-            var writer = new CompletionWriter();
+            var writer = new CompletionWriter(_xmlWriterFactory, _logger);
 
             // Act
             writer.WriteCompletion(_dummyCourse, _outputPath);

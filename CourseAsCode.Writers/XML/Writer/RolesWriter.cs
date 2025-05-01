@@ -1,12 +1,9 @@
 using System.Xml;
 
 using CourseAsCode.Model;
-using CourseAsCode.Model.Enums;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer
 {
@@ -16,24 +13,20 @@ namespace CourseAsCode.Writers.XML.Writer
 
         private readonly IRolesHelper _rolesHelper;
 
-        /// <summary>
-        /// Default constructor.
-        /// Initializes with default implementations for dependencies.
-        /// </summary>
-        public RolesWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _rolesHelper = new RolesHelper();
-        }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing.
+        /// Creates a new instance of the RolesWriter class
         /// </summary>
-        public RolesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IRolesHelper rolesHelper)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to RolesWriter</param>
+        /// <param name="rolesHelper">Helper method providing specific helper methods focused on role management</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public RolesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<RolesWriter> logger, IRolesHelper rolesHelper)
             : base(xmlWriterFactory, logger)
         {
-            _rolesHelper = rolesHelper;
+            _rolesHelper = rolesHelper ?? throw new ArgumentNullException(nameof(rolesHelper));
         }
+
 
         public void WriteRoles(Model.Course course, string outputPath)
         {

@@ -3,11 +3,10 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
@@ -16,9 +15,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
     public class ModuleWriterQuizTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _fakeLogger;
+        private ILogger<ModuleWriterQuiz> _fakeLogger;
         private IMoodleVersionHelper _fakeMoodleVersionHelper;
         private IGeneralHelper _fakeGeneralHelper;
+        private ITagsWriter _fakeTagsWriter;
         private ModuleWriterQuiz _moduleWriterQuiz;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
@@ -31,7 +31,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
         {
             // Set up the fake XML writer factory (for capturing the XML output) and logger substitute
             _testFactory = new XmlWriterFactoryTest();
-            _fakeLogger = Substitute.For<ILogger>();
+            _fakeLogger = Substitute.For<ILogger<ModuleWriterQuiz>>();
+            _fakeTagsWriter = Substitute.For<ITagsWriter>();
 
             // Create substitutes for helper dependencies
             _fakeMoodleVersionHelper = Substitute.For<IMoodleVersionHelper>();
@@ -44,7 +45,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             _fakeGeneralHelper.GetLanguageFromEnum(Arg.Any<Language>()).Returns("en");
 
             // Instantiate the ModuleWriterQuiz using the fake dependencies
-            _moduleWriterQuiz = new ModuleWriterQuiz(_testFactory, _fakeLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper);
+            _moduleWriterQuiz = new ModuleWriterQuiz(_testFactory, _fakeLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeTagsWriter);
 
             // Create a dummy course with backup metadata and one section
             _dummyCourse = new Model.Course
@@ -52,7 +53,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                 BackupMetadata = new BackupMetadata { MoodleVersion = MoodleVersion.Moodle450 },
                 Sections = new List<Section>()
             };
-            
+
             _dummySection = new Section
             {
                 Name = "Test Section",
@@ -84,7 +85,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act
             _moduleWriterQuiz.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyQuiz);
             var output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: Loading the XML should not throw an exception (i.e. XML is well-formed)
             Assert.DoesNotThrow(() =>
             {
@@ -99,7 +100,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act
             _moduleWriterQuiz.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyQuiz);
             var output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
@@ -114,7 +115,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act
             _moduleWriterQuiz.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyQuiz);
             var output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var moduleEl = doc.DocumentElement!;
@@ -130,10 +131,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act
             _moduleWriterQuiz.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyQuiz);
             var output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: Verify that (some of) the expected child elements are present in the <module> element
             // Full Schema Validation should be done in integration tests
             var moduleElement = doc.DocumentElement!;
@@ -142,35 +143,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             Assert.That(moduleElement["modulename"]?.InnerText,  Is.EqualTo(_dummyQuiz.SystemDefaults.ModuleName));
             Assert.That(moduleElement["sectionid"]?.InnerText,   Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
             Assert.That(moduleElement["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
-            
+
             // Inner elements from the mocked helper methods
             Assert.That(moduleElement["added"]?.InnerText, Is.EqualTo("1234567890"));
             Assert.That(moduleElement["lang"]?.InnerText, Is.EqualTo("en"));
-        }
-
-        [Test]
-        public void WriteModule_WritesTagsSectionCorrectly()
-        {
-            // Act
-            _moduleWriterQuiz.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyQuiz);
-            var output = _testFactory.StringWriter.ToString();
-            
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-
-            // Assert: Verify that a <tags> element exists and contains the expected number <tag> elements
-            var tagsElement = doc.DocumentElement?.SelectSingleNode("tags") as XmlElement;
-            Assert.IsNotNull(tagsElement, "The <tags> element is missing");
-
-            var tagNodes = tagsElement.SelectNodes("tag");
-            Assert.IsNotNull(tagNodes, "No <tag> elements found despite having tags");
-            Assert.That(tagNodes.Count, Is.EqualTo(_dummyQuiz.Tags!.Count));
-
-            // first tag should match "alpha"
-            var firstTag = tagNodes[0] as XmlElement;
-            Assert.That(firstTag?.GetAttribute("id"), Is.EqualTo("0"));
-            Assert.That(firstTag["name"]?.InnerText, Is.EqualTo("alpha"));
-            Assert.That(firstTag["rawname"]?.InnerText, Is.EqualTo("alpha"));
         }
 
         [Test]
@@ -193,12 +169,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
         {
             // Act
             _moduleWriterQuiz.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyQuiz);
-            
+
             // Assert: Verify that the logger was called with the expected message
-            _fakeLogger.Received().Debug(
-                Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH))
-                                  && s.Contains("module.xml"))
-            );
+            _fakeLogger.Received().Log(
+                    LogLevel.Debug,
+                    Arg.Any<EventId>(),
+                    Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("module.xml")),
+                    null,
+                    Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -206,16 +184,18 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
         {
             // Arrange: Use a throwing XML writer factory to simulate an exception
             IXmlWriterFactory throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _moduleWriterQuiz = new ModuleWriterQuiz(throwingFactory, _fakeLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper);
+            _moduleWriterQuiz = new ModuleWriterQuiz(throwingFactory, _fakeLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeTagsWriter);
 
             // Act & Assert: Verify that an exception is thrown and the logger is called with the expected message
             Assert.Throws<InvalidOperationException>(() =>
-                _moduleWriterQuiz.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyQuiz)
-            );
-            
-            _fakeLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s =>
-                    s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                    s.Contains("module.xml")));
+                _moduleWriterQuiz.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyQuiz));
+
+            _fakeLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("module.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

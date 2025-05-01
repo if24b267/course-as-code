@@ -1,8 +1,7 @@
 ﻿using System.Xml;
 
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
 {
@@ -10,21 +9,17 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
     {
         private const string DEFAULT_XAPISTATE_RELATIVE_PATH = "xapistate.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public ActivityXapistateWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="ActivityXapistateWriter"/> class
         /// </summary>
-        public ActivityXapistateWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="ActivityXapistateWriter"/></param>
+        public ActivityXapistateWriter(IXmlWriterFactory xmlWriterFactory, ILogger<ActivityXapistateWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
+
 
         /// <summary>
         /// Writes the xapistate.xml file required for an activity.
