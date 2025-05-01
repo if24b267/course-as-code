@@ -34,8 +34,5 @@ Backup -up-> Writer: writes
 @enduml
 ```
 
-![Simple Representation of the Architecture of Course as Code](./assets/ArchitectureVisualization.png)
-TODO: Translate image into english
-
 ## Running the application
 TODO: Add instructions for running the application
