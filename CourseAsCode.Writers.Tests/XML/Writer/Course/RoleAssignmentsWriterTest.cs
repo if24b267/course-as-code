@@ -3,7 +3,7 @@ using CourseAsCode.Model;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Course;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Course
@@ -12,7 +12,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
     public class RoleAssignmentsWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<RoleAssignmentsWriter> _testLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private RoleAssignmentsWriter _roleAssignmentsWriter;
         private Model.Course _dummyCourse;
@@ -23,7 +23,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         {
             // Set up the fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<RoleAssignmentsWriter>>();
 
             // Create a substitute for the general helper
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -122,7 +122,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             _roleAssignmentsWriter.WriteRoleAssignments(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert: Verify that a debug log was recorded containing the role assignments file path.
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("course/roles.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("course/roles.xml")));
         }
 
         [Test]
@@ -137,7 +137,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 _roleAssignmentsWriter.WriteRoleAssignments(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert: Verify that an error log was recorded containing "course/roles.xml".
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("course/roles.xml")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("course/roles.xml")));
         }
     }
 

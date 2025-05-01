@@ -5,7 +5,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
@@ -15,7 +15,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class UsersWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<UsersWriter> _testLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private IUserHelper _fakeUserHelper;
         private UsersWriter _usersWriter;
@@ -27,7 +27,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Set up the fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<UsersWriter>>();
 
             // Create substitutes for the helper dependencies
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -137,7 +137,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _usersWriter.WriteUsers(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert: Verify that a debug log was recorded containing "users.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("users.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"users.xml")));
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _usersWriter.WriteUsers(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert: Verify that an error log was recorded containing "users.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("users.xml")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("users.xml")));
         }
     }
 

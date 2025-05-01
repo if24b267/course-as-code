@@ -7,7 +7,7 @@ using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
@@ -17,7 +17,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     {
         private XmlWriterFactoryTest _testFactory;
         private IFileService _fileService;
-        private ILogger _testLogger;
+        private ILogger<FilesWriter> _testLogger;
         private IFileHelper _fakeFileHelper;
         private IGeneralHelper _fakeGeneralHelper;
         private FilesWriter _filesWriter;
@@ -29,7 +29,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
             _fileService = Substitute.For<IFileService>();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<FilesWriter>>();
 
             _fakeFileHelper = Substitute.For<IFileHelper>();
             _fakeFileHelper.GetComponentFromEnum(Arg.Any<Component>()).Returns("course");
@@ -97,7 +97,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
 
             // Assert: Verify that logger.Debug was called with a message containing "files.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("files.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("files.xml")));
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
 
             // Assert: Verify that a warning is logged
-            _testLogger.Received().Warn(Arg.Is<string>(s => s.Contains("nonexistent.txt")));
+            _testLogger.Received().LogWarning(Arg.Is<string>(s => s.Contains("nonexistent.txt")));
         }
 
         [Test]
@@ -197,7 +197,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
 
             // Assert: Verify that an error is logged
-            _testLogger.Received().Error(Arg.Any<IOException>(), Arg.Is<string>(s => s.Contains("throwOnOpen.txt")));
+            _testLogger.Received().LogError(Arg.Any<IOException>(), Arg.Is<string>(s => s.Contains("throwOnOpen.txt")));
         }
 
         [Test]
@@ -212,7 +212,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH));
 
             // Assert: Verify that logger.Error was called with a message containing "files.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("files.xml")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("files.xml")));
         }
     }
 }

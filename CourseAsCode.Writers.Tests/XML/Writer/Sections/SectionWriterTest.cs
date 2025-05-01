@@ -3,7 +3,7 @@ using CourseAsCode.Model;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Sections;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
@@ -12,7 +12,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
     public class SectionWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<SectionWriter> _testLogger;
         private IFileService _fakeFileService;
         private SectionWriter _sectionWriter;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
@@ -29,7 +29,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
         {
             // Use the fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<SectionWriter>>();
 
             // Create a substitute for the IFileService
             _fakeFileService = Substitute.For<IFileService>();
@@ -107,7 +107,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             _sectionWriter.WriteSections(DEFAULT_DUMMY_OUTPUT_PATH, sections);
 
             // Verify that a debug log was recorded for successful creation
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains($"section_{_dummySection.SystemDefaults.SectionId}/section.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"section_{_dummySection.SystemDefaults.SectionId}/section.xml")));
         }
 
         [Test]
@@ -130,8 +130,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             Assert.IsEmpty(output, "Output should be empty because the section was skipped.");
 
             // Verify that error logs were recorded
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("Error creating directory for section")));
-            _testLogger.Received().Error(Arg.Is<string>(s => s.Contains("Skipping section")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("Error creating directory for section")));
+            _testLogger.Received().LogError(Arg.Is<string>(s => s.Contains("Skipping section")));
         }
     }
 }

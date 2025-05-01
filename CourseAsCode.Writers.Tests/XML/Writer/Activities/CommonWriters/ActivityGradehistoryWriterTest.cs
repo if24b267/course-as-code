@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
@@ -10,7 +10,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
     public class ActivityGradehistoryWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<ActivityGradehistoryWriter> _testLogger;
         private ActivityGradehistoryWriter _activityGradehistoryWriter;
         private Model.Course _dummyCourse;
 
@@ -18,7 +18,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<ActivityGradehistoryWriter>>();
             _activityGradehistoryWriter = new ActivityGradehistoryWriter(_testFactory, _testLogger);
             _dummyCourse = new Model.Course();
         }
@@ -85,7 +85,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             _activityGradehistoryWriter.WriteGradeHistory(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "dummyPath/grade_history.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("dummyPath/grade_history.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("dummyPath/grade_history.xml")));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
                 _activityGradehistoryWriter.WriteGradeHistory(_dummyCourse, dummyOutputPath));
 
             // Assert: Verify that logger.Error was called with a message containing "dummyPath/grade_history.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/grade_history.xml")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/grade_history.xml")));
         }
     }
 }

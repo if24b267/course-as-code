@@ -1,10 +1,8 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Url
 {
@@ -13,26 +11,20 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
         private const string DEFAULT_URL_RELATIVE_PATH = "url.xml";
         private readonly IGeneralHelper _generalHelper;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public UrlWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _generalHelper = GeneralHelper.Instance;
-        }
 
         /// <summary>
-        /// Constructor using Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="UrlWriter"/> class
         /// </summary>
-        /// <param name="xmlWriterFactory">Injected XML writer factory.</param>
-        /// <param name="logger">Injected logger instance.</param>
-        /// <param name="generalHelper">Injected general helper.</param>
-        public UrlWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="UrlWriter"/></param>
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public UrlWriter(IXmlWriterFactory xmlWriterFactory, ILogger<UrlWriter> logger, IGeneralHelper generalHelper)
             : base(xmlWriterFactory, logger)
         {
-            _generalHelper = generalHelper;
+            _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
         }
+
 
         /// <summary>
         /// Writes the url activity to an XML file.

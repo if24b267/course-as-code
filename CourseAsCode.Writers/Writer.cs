@@ -5,12 +5,13 @@ using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
@@ -23,87 +24,185 @@ using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Writer.Sections;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
 namespace CourseAsCode.Writers
 {
     public class Writer : IWriter
     {
-        public Writer()
-        {
-            // TODO: Use a Dependency Injection framework to inject these dependencies | for all other writers as well
-            var xmlWriterFactory = new DefaultXmlWriterFactory();
-
-            var pluginWriters = new List<IQuestionPluginWriter>();
-
-            // Register all plugin writers
-            pluginWriters.Add(new DragDropTextPluginWriter(xmlWriterFactory, LogManager.GetCurrentClassLogger()));
-            pluginWriters.Add(new DropdownPluginWriter(xmlWriterFactory, LogManager.GetCurrentClassLogger()));
-            pluginWriters.Add(new MultiChoicePluginWriter(xmlWriterFactory, LogManager.GetCurrentClassLogger()));
-
-            // Initialize the QuestionsWriter with the plugin writers
-            _questionsWriter = new QuestionsWriter(xmlWriterFactory, LogManager.GetCurrentClassLogger(), GeneralHelper.Instance, new SequentialIdGenerator(), pluginWriters);
-        }
-
         // -- General Writers -- //
-        private readonly CalendarWriter _calendarWriter = new CalendarWriter();
-        private readonly CommentsWriter _commentsWriter = new CommentsWriter();
-        private readonly CompetenciesWriter _competenciesWriter = new CompetenciesWriter();
-        private readonly CompletiondefaultsWriter _completiondefaultsWriter = new CompletiondefaultsWriter();
-        private readonly ContentbankWriter _contentbankWriter = new ContentbankWriter();
-        private readonly CourseWriter _courseWriter = new CourseWriter();
-        private readonly FilesWriter _filesWriter = new FilesWriter();
-        private readonly GradehistoryWriter _gradehistoryWriter = new GradehistoryWriter();
-        private readonly GradebookWriter _gradebookWriter = new GradebookWriter();
-        private readonly GroupsWriter _groupsWriter = new GroupsWriter();
-        private readonly MoodleBackupWriter _moodleBackupWriter = new MoodleBackupWriter();
-        private readonly OutcomesWriter _outcomesWriter = new OutcomesWriter();
+        private readonly CalendarWriter _calendarWriter;
+        private readonly CommentsWriter _commentsWriter;
+        private readonly CompetenciesWriter _competenciesWriter;
+        private readonly CompletiondefaultsWriter _completiondefaultsWriter;
+        private readonly ContentbankWriter _contentbankWriter;
+        private readonly CourseWriter _courseWriter;
+        private readonly FilesWriter _filesWriter;
+        private readonly GradehistoryWriter _gradehistoryWriter;
+        private readonly GradebookWriter _gradebookWriter;
+        private readonly GroupsWriter _groupsWriter;
+        private readonly MoodleBackupWriter _moodleBackupWriter;
+        private readonly OutcomesWriter _outcomesWriter;
         private readonly QuestionsWriter _questionsWriter;
-        private readonly RolesWriter _rolesWriter = new RolesWriter();
-        private readonly ScalesWriter _scalesWriter = new ScalesWriter();
-        private readonly UsersWriter _usersWriter = new UsersWriter();
-        private readonly EnrolmentsWriter _enrolmentsWriter = new EnrolmentsWriter();
-        private readonly FiltersWriter _filtersWriter = new FiltersWriter();
-        private readonly InforefWriter _inforefWriter = new InforefWriter();
-        private readonly RoleAssignmentsWriter _roleAssignmentsWriter = new RoleAssignmentsWriter();
-        private readonly BadgesWriter _badgesWriter = new BadgesWriter();
-        private readonly CompletionWriter _completionWriter = new CompletionWriter();
-        private readonly SectionWriter _sectionWriter = new SectionWriter();
+        private readonly RolesWriter _rolesWriter;
+        private readonly ScalesWriter _scalesWriter;
+        private readonly UsersWriter _usersWriter;
+        private readonly EnrolmentsWriter _enrolmentsWriter;
+        private readonly FiltersWriter _filtersWriter;
+        private readonly InforefWriter _inforefWriter;
+        private readonly RoleAssignmentsWriter _roleAssignmentsWriter;
+        private readonly BadgesWriter _badgesWriter;
+        private readonly CompletionWriter _completionWriter;
+        private readonly SectionWriter _sectionWriter;
+        private readonly InforefSectionsWriter _inforefSectionsWriter;
 
         // -- Activity Writers -- //
         // Common Activity Writers
-        private readonly ActivityGradesWriter _activityGradesWriter = new ActivityGradesWriter();
-        private readonly ActivityGradehistoryWriter _activityGradehistoryWriter = new ActivityGradehistoryWriter();
-        private readonly ActivityInforefWriter _activityInforefWriter = new ActivityInforefWriter();
-        private readonly ActivityRolesWriter _activityRolesWriter = new ActivityRolesWriter();
-        private readonly ActivityXapistateWriter _activityXapistateWriter = new ActivityXapistateWriter();
-        private readonly ActivityCalendarWriter _activityCalendarWriter = new ActivityCalendarWriter();
-        private readonly ActivityCommentsWriter _activityCommentsWriter = new ActivityCommentsWriter();
-        private readonly ActivityCompetenciesWriter _activityCompetenciesWriter = new ActivityCompetenciesWriter();
-        private readonly ActivityCompletionWriter _activityCompletionWriter = new ActivityCompletionWriter();
-        private readonly ActivityFiltersWriter _activityFiltersWriter = new ActivityFiltersWriter();
+        private readonly ActivityGradesWriter _activityGradesWriter;
+        private readonly ActivityGradehistoryWriter _activityGradehistoryWriter;
+        private readonly ActivityInforefWriter _activityInforefWriter;
+        private readonly ActivityRolesWriter _activityRolesWriter;
+        private readonly ActivityXapistateWriter _activityXapistateWriter;
+        private readonly ActivityCalendarWriter _activityCalendarWriter;
+        private readonly ActivityCommentsWriter _activityCommentsWriter;
+        private readonly ActivityCompetenciesWriter _activityCompetenciesWriter;
+        private readonly ActivityCompletionWriter _activityCompletionWriter;
+        private readonly ActivityFiltersWriter _activityFiltersWriter;
 
         // Text and Media Area (Label) Activity Writers
-        private readonly LabelWriter _labelWriter = new LabelWriter();
-        private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
+        private readonly LabelWriter _labelWriter;
+        private readonly ModuleWriterLabel _moduleWriterLabel;
 
         // Assignment Activity Writers
-        private readonly AssignmentWriter _assignmentWriter = new AssignmentWriter();
-        private readonly ModuleWriterAssignment _moduleWriterAssignment = new ModuleWriterAssignment();
+        private readonly AssignmentWriter _assignmentWriter;
+        private readonly ModuleWriterAssignment _moduleWriterAssignment;
 
         // URL Activity Writers
-        private readonly UrlWriter _urlWriter = new UrlWriter();
-        private readonly ModuleWriterUrl _moduleWriterUrl = new ModuleWriterUrl();
+        private readonly UrlWriter _urlWriter;
+        private readonly ModuleWriterUrl _moduleWriterUrl;
 
         // File Activity Writers
-        private readonly FileWriter _fileWriter = new FileWriter();
-        private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
+        private readonly FileWriter _fileWriter;
+        private readonly ModuleWriterFile _moduleWriterFile;
 
         // Quiz Activity Writers
-        private readonly ModuleWriterQuiz _moduleWriterQuiz = new ModuleWriterQuiz();
-        private readonly QuizWriter _quizWriter = new QuizWriter();
+        private readonly ModuleWriterQuiz _moduleWriterQuiz;
+        private readonly QuizWriter _quizWriter;
 
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        // -- Additional Dependencies -- //
+        private readonly Logger _logger;
+
+        public Writer(
+            CalendarWriter calendarWriter,
+            CommentsWriter commentsWriter,
+            CompetenciesWriter competenciesWriter,
+            CompletiondefaultsWriter completiondefaultsWriter,
+            ContentbankWriter contentbankWriter,
+            CourseWriter courseWriter,
+            FilesWriter filesWriter,
+            GradehistoryWriter gradehistoryWriter,
+            GradebookWriter gradebookWriter,
+            GroupsWriter groupsWriter,
+            MoodleBackupWriter moodleBackupWriter,
+            OutcomesWriter outcomesWriter,
+            QuestionsWriter questionsWriter,
+            RolesWriter rolesWriter,
+            ScalesWriter scalesWriter,
+            UsersWriter usersWriter,
+            EnrolmentsWriter enrolmentsWriter,
+            FiltersWriter filtersWriter,
+            InforefWriter inforefWriter,
+            RoleAssignmentsWriter roleAssignmentsWriter,
+            BadgesWriter badgesWriter,
+            CompletionWriter completionWriter,
+            SectionWriter sectionWriter,
+            InforefSectionsWriter inforefSectionsWriter,
+            ActivityGradesWriter activityGradesWriter,
+            ActivityGradehistoryWriter activityGradehistoryWriter,
+            ActivityInforefWriter activityInforefWriter,
+            ActivityRolesWriter activityRolesWriter,
+            ActivityXapistateWriter activityXapistateWriter,
+            ActivityCalendarWriter activityCalendarWriter,
+            ActivityCommentsWriter activityCommentsWriter,
+            ActivityCompetenciesWriter activityCompetenciesWriter,
+            ActivityCompletionWriter activityCompletionWriter,
+            ActivityFiltersWriter activityFiltersWriter,
+            LabelWriter labelWriter,
+            ModuleWriterLabel moduleWriterLabel,
+            AssignmentWriter assignmentWriter,
+            ModuleWriterAssignment moduleWriterAssignment,
+            UrlWriter urlWriter,
+            ModuleWriterUrl moduleWriterUrl,
+            FileWriter fileWriter,
+            ModuleWriterFile moduleWriterFile,
+            ModuleWriterQuiz moduleWriterQuiz,
+            QuizWriter quizWriter,
+            Logger logger)
+        {
+            // -- General Writers Assignment -- //
+            _calendarWriter = calendarWriter ?? throw new ArgumentNullException(nameof(calendarWriter));
+            _commentsWriter = commentsWriter ?? throw new ArgumentNullException(nameof(commentsWriter));
+            _competenciesWriter = competenciesWriter ?? throw new ArgumentNullException(nameof(competenciesWriter));
+            _completiondefaultsWriter = completiondefaultsWriter ?? throw new ArgumentNullException(nameof(completiondefaultsWriter));
+            _contentbankWriter = contentbankWriter ?? throw new ArgumentNullException(nameof(contentbankWriter));
+            _courseWriter = courseWriter ?? throw new ArgumentNullException(nameof(courseWriter));
+            _filesWriter = filesWriter ?? throw new ArgumentNullException(nameof(filesWriter));
+            _gradehistoryWriter = gradehistoryWriter ?? throw new ArgumentNullException(nameof(gradehistoryWriter));
+            _gradebookWriter = gradebookWriter ?? throw new ArgumentNullException(nameof(gradebookWriter));
+            _groupsWriter = groupsWriter ?? throw new ArgumentNullException(nameof(groupsWriter));
+            _moodleBackupWriter = moodleBackupWriter ?? throw new ArgumentNullException(nameof(moodleBackupWriter));
+            _outcomesWriter = outcomesWriter ?? throw new ArgumentNullException(nameof(outcomesWriter));
+            _questionsWriter = questionsWriter ?? throw new ArgumentNullException(nameof(questionsWriter));
+            _rolesWriter = rolesWriter ?? throw new ArgumentNullException(nameof(rolesWriter));
+            _scalesWriter = scalesWriter ?? throw new ArgumentNullException(nameof(scalesWriter));
+            _usersWriter = usersWriter ?? throw new ArgumentNullException(nameof(usersWriter));
+            _enrolmentsWriter = enrolmentsWriter ?? throw new ArgumentNullException(nameof(enrolmentsWriter));
+            _filtersWriter = filtersWriter ?? throw new ArgumentNullException(nameof(filtersWriter));
+            _inforefWriter = inforefWriter ?? throw new ArgumentNullException(nameof(inforefWriter));
+            _roleAssignmentsWriter = roleAssignmentsWriter ?? throw new ArgumentNullException(nameof(roleAssignmentsWriter));
+            _badgesWriter = badgesWriter ?? throw new ArgumentNullException(nameof(badgesWriter));
+            _completionWriter = completionWriter ?? throw new ArgumentNullException(nameof(completionWriter));
+            _sectionWriter = sectionWriter ?? throw new ArgumentNullException(nameof(sectionWriter));
+            _inforefSectionsWriter = inforefSectionsWriter ?? throw new ArgumentNullException(nameof(inforefSectionsWriter));
+
+            // -- Activity Writers Assignment -- //
+            // Common Activity Writers
+            _activityGradesWriter = activityGradesWriter ?? throw new ArgumentNullException(nameof(activityGradesWriter));
+            _activityGradehistoryWriter = activityGradehistoryWriter ?? throw new ArgumentNullException(nameof(activityGradehistoryWriter));
+            _activityInforefWriter = activityInforefWriter ?? throw new ArgumentNullException(nameof(activityInforefWriter));
+            _activityRolesWriter = activityRolesWriter ?? throw new ArgumentNullException(nameof(activityRolesWriter));
+            _activityXapistateWriter = activityXapistateWriter ?? throw new ArgumentNullException(nameof(activityXapistateWriter));
+            _activityCalendarWriter = activityCalendarWriter ?? throw new ArgumentNullException(nameof(activityCalendarWriter));
+            _activityCommentsWriter = activityCommentsWriter ?? throw new ArgumentNullException(nameof(activityCommentsWriter));
+            _activityCompetenciesWriter = activityCompetenciesWriter ?? throw new ArgumentNullException(nameof(activityCompetenciesWriter));
+            _activityCompletionWriter = activityCompletionWriter ?? throw new ArgumentNullException(nameof(activityCompletionWriter));
+            _activityFiltersWriter = activityFiltersWriter ?? throw new ArgumentNullException(nameof(activityFiltersWriter));
+
+            // Text and Media Area (Label) Activity Writers
+            _labelWriter = labelWriter ?? throw new ArgumentNullException(nameof(labelWriter));
+            _moduleWriterLabel = moduleWriterLabel ?? throw new ArgumentNullException(nameof(moduleWriterLabel));
+
+            // Assignment Activity Writers
+            _assignmentWriter = assignmentWriter ?? throw new ArgumentNullException(nameof(assignmentWriter));
+            _moduleWriterAssignment = moduleWriterAssignment ?? throw new ArgumentNullException(nameof(moduleWriterAssignment));
+
+            // URL Activity Writers
+            _urlWriter = urlWriter ?? throw new ArgumentNullException(nameof(urlWriter));
+            _moduleWriterUrl = moduleWriterUrl ?? throw new ArgumentNullException(nameof(moduleWriterUrl));
+
+            // File Activity Writers
+            _fileWriter = fileWriter ?? throw new ArgumentNullException(nameof(fileWriter));
+            _moduleWriterFile = moduleWriterFile ?? throw new ArgumentNullException(nameof(moduleWriterFile));
+
+            // Quiz Activity Writers
+            _moduleWriterQuiz = moduleWriterQuiz ?? throw new ArgumentNullException(nameof(moduleWriterQuiz));
+            _quizWriter = quizWriter ?? throw new ArgumentNullException(nameof(quizWriter));
+
+            // -- Additional Dependencies Assignment -- //
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
 
         public bool WriteCourse(Course course, string outputPath)
         {
@@ -559,8 +658,7 @@ namespace CourseAsCode.Writers
             _sectionWriter.WriteSections(outputPath, course.Sections);
 
             // Create inforef.xml for each section
-            InforefSectionsWriter inforefSectionsWriter = new InforefSectionsWriter();
-            inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
+            _inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
 
             // -- Write activity files -- //
 
@@ -748,6 +846,69 @@ namespace CourseAsCode.Writers
                 _logger.Fatal($"Could not create directory {path}: {e.Message}");
                 return false;
             }
+        }
+
+
+        public static void ConfigureXmlServices(IServiceCollection services)
+        {
+            services.AddSingleton<IXmlWriterFactory, DefaultXmlWriterFactory>();
+            services.AddSingleton<IGeneralHelper>(GeneralHelper.Instance);
+            services.AddSingleton<ISequentialIdGenerator, SequentialIdGenerator>();
+
+            // Plugins for the QuestionWriter
+            services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
+            services.AddSingleton<IQuestionPluginWriter, DropdownPluginWriter>();
+            services.AddSingleton<IQuestionPluginWriter, MultiChoicePluginWriter>();
+
+            // Register QuestionsWriter (depends on the plugins registered above)
+            services.AddSingleton<QuestionsWriter>();
+
+            // Register all other writers
+            services.AddSingleton<CalendarWriter>();
+            services.AddSingleton<CommentsWriter>();
+            services.AddSingleton<CompetenciesWriter>();
+            services.AddSingleton<CompletiondefaultsWriter>();
+            services.AddSingleton<ContentbankWriter>();
+            services.AddSingleton<CourseWriter>();
+            services.AddSingleton<FilesWriter>();
+            services.AddSingleton<GradehistoryWriter>();
+            services.AddSingleton<GradebookWriter>();
+            services.AddSingleton<GroupsWriter>();
+            services.AddSingleton<MoodleBackupWriter>();
+            services.AddSingleton<OutcomesWriter>();
+            services.AddSingleton<RolesWriter>();
+            services.AddSingleton<ScalesWriter>();
+            services.AddSingleton<UsersWriter>();
+            services.AddSingleton<EnrolmentsWriter>();
+            services.AddSingleton<FiltersWriter>();
+            services.AddSingleton<InforefWriter>();
+            services.AddSingleton<RoleAssignmentsWriter>();
+            services.AddSingleton<BadgesWriter>();
+            services.AddSingleton<CompletionWriter>();
+            services.AddSingleton<SectionWriter>();
+            services.AddSingleton<ActivityGradesWriter>();
+            services.AddSingleton<ActivityGradehistoryWriter>();
+            services.AddSingleton<ActivityInforefWriter>();
+            services.AddSingleton<ActivityRolesWriter>();
+            services.AddSingleton<ActivityXapistateWriter>();
+            services.AddSingleton<ActivityCalendarWriter>();
+            services.AddSingleton<ActivityCommentsWriter>();
+            services.AddSingleton<ActivityCompetenciesWriter>();
+            services.AddSingleton<ActivityCompletionWriter>();
+            services.AddSingleton<ActivityFiltersWriter>();
+            services.AddSingleton<LabelWriter>();
+            services.AddSingleton<ModuleWriterLabel>();
+            services.AddSingleton<AssignmentWriter>();
+            services.AddSingleton<ModuleWriterAssignment>();
+            services.AddSingleton<UrlWriter>();
+            services.AddSingleton<ModuleWriterUrl>();
+            services.AddSingleton<FileWriter>();
+            services.AddSingleton<ModuleWriterFile>();
+            services.AddSingleton<ModuleWriterQuiz>();
+            services.AddSingleton<QuizWriter>();
+            services.AddSingleton<ITagsWriter, TagsWriter>();
+
+            services.AddSingleton<IWriter, Writer>();
         }
     }
 }

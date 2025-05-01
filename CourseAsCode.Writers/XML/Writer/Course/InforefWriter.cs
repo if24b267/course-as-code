@@ -2,9 +2,8 @@ using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -12,18 +11,13 @@ namespace CourseAsCode.Writers.XML.Writer.Course
     {
         private const string DEFAULT_INFOREF_RELATIVE_PATH = "course/inforef.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public InforefWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="InforefWriter"/> class
         /// </summary>
-        public InforefWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="InforefWriter"/></param>
+        public InforefWriter(IXmlWriterFactory xmlWriterFactory, ILogger<InforefWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
@@ -46,7 +40,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
 
                     writer.WriteStartElement("inforef");
 
-                    
+
                     // Reference all enrolled users
                     writer.WriteStartElement("userref");
 
@@ -57,7 +51,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
 
                     writer.WriteEndElement(); // Close </userref>
 
-                    
+
                     // Reference all roles
                     writer.WriteStartElement("roleref");
 
@@ -68,10 +62,10 @@ namespace CourseAsCode.Writers.XML.Writer.Course
 
                     writer.WriteEndElement(); // Close </roleref>
 
-                    
+
                     // Reference all files
                     writer.WriteStartElement("fileref");
-                    
+
                     foreach (Section section in course.Sections)
                     {
                         foreach (Activity activity in section.Activities)
@@ -82,18 +76,18 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                             }
                         }
                     }
-                    
+
                     writer.WriteEndElement(); // Close </fileref>
-                    
-                    
+
+
                     // Reference all question categories in the course
                     writer.WriteStartElement("question_categoryref");
-                    
+
                     foreach (var categoryGrouping in course.Questions.GroupBy(q => q.Category))
                     {
                         WriteOneInforefSection(writer, categoryGrouping.First().CategoryId, "question_category");
                     }
-                    
+
                     writer.WriteEndElement(); // Close </question_categoryref>
 
                     writer.WriteEndElement(); // Close </inforef>
@@ -109,7 +103,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
             }
         }
 
-        
+
         /// <summary>
         /// writes the part of the `inforef` section for the corresponding object type.
         /// </summary>

@@ -1,7 +1,7 @@
 using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
@@ -10,14 +10,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class BadgesWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<BadgesWriter> _testLogger;
         BadgesWriter _testBadgesWriter;
 
         [SetUp]
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<BadgesWriter>>();
             _testBadgesWriter = new BadgesWriter(_testFactory, _testLogger); // Use DI to inject the test factory and logger
         }
 
@@ -66,7 +66,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _testBadgesWriter.WriteBadges(dummyOutputPath);
 
             // Assert: Verify that logger.Debug is called with a message containing "badges.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("badges.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("badges.xml")));
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.Throws<InvalidOperationException>(() => _testBadgesWriter.WriteBadges(dummyOutputPath));
 
             // Verify that logger.Error is called with a message containing "badges.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("badges.xml")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("badges.xml")));
         }
     }
 }

@@ -1,8 +1,12 @@
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
-using CourseAsCode.Writers.XML.Writer;
+
 using CourseAsCode.Model;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -12,6 +16,10 @@ namespace CourseAsCode.Writers.Tests.Integration
         private string XsdPath;
         private Course _dummyCourse;
         private string _outputPath;
+
+        // Dependencies needed for GradehistoryWriter
+        private IXmlWriterFactory _xmlWriterFactory;
+        private ILogger<GradehistoryWriter> _logger;
 
         [SetUp]
         public void SetUp()
@@ -23,7 +31,12 @@ namespace CourseAsCode.Writers.Tests.Integration
 
             Directory.CreateDirectory(_outputPath);
 
-            _dummyCourse = new Course
+            // --- Initialize Dependencies ---
+            // Use real implementations for integration testing
+            _xmlWriterFactory = new DefaultXmlWriterFactory();
+            _logger = NullLogger<GradehistoryWriter>.Instance; // Use NullLogger to avoid log output during tests
+
+            _dummyCourse = new Model.Course
             {
                 FullName = "Test Course",
                 ShortName = "TC"
@@ -34,7 +47,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteGradehistory_GeneratesValidXml()
         {
             // Arrange
-            var writer = new GradehistoryWriter();
+            var writer = new GradehistoryWriter(_xmlWriterFactory, _logger);
 
             // Act
             writer.WriteGradehistory(_dummyCourse, _outputPath);

@@ -1,8 +1,11 @@
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
+
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using CourseAsCode.Model;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -10,8 +13,12 @@ namespace CourseAsCode.Writers.Tests.Integration
     public class ScalesWriterIntegrationTests
     {
         private string XsdPath;
-        private Course _dummyCourse;
+        private Model.Course _dummyCourse;
         private string _outputPath;
+
+        // Dependencies needed for ScalesWriter
+        private IXmlWriterFactory _xmlWriterFactory;
+        private ILogger<ScalesWriter> _logger;
 
         [SetUp]
         public void SetUp()
@@ -22,7 +29,13 @@ namespace CourseAsCode.Writers.Tests.Integration
             _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
-            _dummyCourse = new Course
+
+            // --- Initialize Dependencies ---
+            // Use real implementations for integration testing
+            _xmlWriterFactory = new DefaultXmlWriterFactory();
+            _logger = NullLogger<ScalesWriter>.Instance; // Use NullLogger to avoid log output during tests
+
+            _dummyCourse = new Model.Course
             {
                 FullName = "Test Course",
                 ShortName = "TC"
@@ -33,7 +46,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteScales_GeneratesValidXml()
         {
             // Arrange
-            var writer = new ScalesWriter();
+            var writer = new ScalesWriter(_xmlWriterFactory, _logger);
 
             // Act
             writer.WriteScales(_dummyCourse, _outputPath);

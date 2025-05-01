@@ -1,15 +1,17 @@
 using System.Xml;
+
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
-using QuizModel = CourseAsCode.Model.Activities.Resources.Quiz;
+using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
-using CourseAsCode.Writers.Tests.Fakes;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
+
+using QuizModel = CourseAsCode.Model.Activities.Resources.Quiz;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 {
@@ -17,7 +19,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
     public class QuizWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _logger;
+        private ILogger<QuizWriter> _logger;
         private IGeneralHelper _generalHelper;
         private QuizWriter _quizWriter;
         private QuizModel _dummyQuiz;
@@ -30,7 +32,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             _testFactory = new XmlWriterFactoryTest();
 
             // Mock the logger and general helper dependencies and configure them to return consistent values
-            _logger = Substitute.For<ILogger>();
+            _logger = Substitute.For<ILogger<QuizWriter>>();
             _generalHelper = Substitute.For<IGeneralHelper>();
             _generalHelper.EnumIntegerToString(Arg.Any<Enum>()).Returns("0");
             _generalHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("1234567890");
@@ -39,7 +41,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             _quizWriter = new QuizWriter(_testFactory, _logger, _generalHelper);
 
             // Create dummy questions
-            var q1 = new MultipleChoiceQuestion 
+            var q1 = new MultipleChoiceQuestion
             {
                 QuestionId          = 1, // Normally set by `QuestionsWriter.cs`, simulate it here
                 BankEntryId         = 1, // Normally set by `QuestionsWriter.cs`, simulate it here
@@ -79,8 +81,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                         HintTextFormat = FormattingFormat.HTML
                     }
                 }
-            }; 
-            
+            };
+
             var q2 = new MultipleChoiceQuestion
             {
                 QuestionId          = 5, // Normally set by `QuestionsWriter.cs`, simulate it here
@@ -123,7 +125,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                     new() { AnswerText = "<p>System log files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f }
                 }
             };
-            
+
             // Create a dummy quiz with three questions across two categories and three feedbacks
             _dummyQuiz = new QuizModel
             {
@@ -168,7 +170,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act
             _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
             string output = _testFactory.StringWriter.ToString();
-            
+
             // Assert: Loading the XML should not throw an exception (well-formed XML)
             Assert.DoesNotThrow(() =>
             {
@@ -186,7 +188,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: The root element is <activity> with correct attributes
             var root = doc.DocumentElement;
             Assert.IsNotNull(root, "The XML document should have a root element");
@@ -206,7 +208,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: The quiz element should be <quiz> with correct id attribute
             var quizNode = doc.DocumentElement?.SelectSingleNode("quiz");
             Assert.IsNotNull(quizNode, "Missing <quiz> element");
@@ -239,15 +241,15 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act
             _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
             var output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: The question elements should be <question_instance> with correct id attributes
             var questionNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance");
             Assert.IsNotNull(questionNodes, "Missing <question> elements");
             Assert.That(questionNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
-            
+
             // Assert: The IDs of the <question_instance> elements should match the IDs of the questions
             for (int i = 0; i < questionNodes.Count; i++)
             {
@@ -262,15 +264,15 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act
             _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
             var output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: The question reference elements should be <question_reference> with correct id attributes
             var questionRefNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance//question_reference");
             Assert.IsNotNull(questionRefNodes, "Missing <question_reference> elements");
             Assert.That(questionRefNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
-            
+
             // Assert: The IDs of the <question_reference> elements should match the IDs of the questions
             for (int i = 0; i < questionRefNodes.Count; i++)
             {
@@ -285,15 +287,15 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act
             _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
             var output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: The <questionbankentryid> elements inside the <question_reference> elements should reference the correct question bank
             var questionBankRefNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance//question_reference//questionbankentryid");
             Assert.IsNotNull(questionBankRefNodes, "Missing <questionbankentryid> elements");
             Assert.That(questionBankRefNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
-            
+
             // Assert: The IDs (= value) of the <questionbankentryid> elements should match the QuestionBank IDs stored in the questions
             for (int i = 0; i < questionBankRefNodes.Count; i++)
             {
@@ -315,7 +317,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: timeopen and timeclose should be set to 0
             var openNode  = doc.DocumentElement?.SelectSingleNode("quiz/timeopen");
             var closeNode = doc.DocumentElement?.SelectSingleNode("quiz/timeclose");
@@ -330,18 +332,18 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Arrange
             _dummyQuiz.OpenTime = new DateTime(2025, 4, 20, 9, 0, 0);
             _dummyQuiz.CloseTime = new DateTime(2025, 4, 20, 9, 30, 0);
-            
+
             // Act
             _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
             var output = _testFactory.StringWriter.ToString();
-            
+
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            
+
             // Assert: timeopen and timeclose should be set to the correct Unix timestamp
             var openNode  = doc.DocumentElement?.SelectSingleNode("quiz/timeopen");
             var closeNode = doc.DocumentElement?.SelectSingleNode("quiz/timeclose");
-            
+
             Assert.That(openNode?.InnerText, Is.EqualTo("1234567890"),  "timeopen should be set to 1234567890"); // from mocked DateTimeToUnixTimestamp
             Assert.That(closeNode?.InnerText, Is.EqualTo("1234567890"), "timeclose should be set to 1234567890"); // from mocked DateTimeToUnixTimestamp
         }
@@ -351,9 +353,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
         {
             // Act
             _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
-            
+
             // Assert: The logger should have been called with a debug message
-            _logger.Received().Debug(Arg.Is<string>(msg => msg.Contains("quiz.xml")));
+            _logger.Received().LogDebug(Arg.Is<string>(msg => msg.Contains("quiz.xml")));
         }
 
         [Test]
@@ -365,7 +367,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             // Act and assert: The logger should have been called with an error message and the exception should be rethrown
             Assert.Throws<InvalidOperationException>(() => writer.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz));
             _logger.Received()
-                   .Error(Arg.Any<Exception>(), Arg.Is<string>(msg => msg.Contains("quiz.xml")));
+                   .LogError(Arg.Any<Exception>(), Arg.Is<string>(msg => msg.Contains("quiz.xml")));
         }
     }
 }

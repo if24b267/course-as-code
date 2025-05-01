@@ -1,11 +1,9 @@
 using System.Xml;
 
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -16,25 +14,22 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         private readonly ICourseHelper _courseHelper;
         private readonly IGeneralHelper _helper;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public CourseWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _courseHelper = CourseHelper.Instance;
-            _helper = GeneralHelper.Instance;
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="CourseWriter"/> class
         /// </summary>
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="CourseWriter"/></param>
+        /// <param name="courseHelper">Helper method providing specific helper methods focused on course management</param>
+        /// <param name="helper">General Helper providing various helper methods</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
         public CourseWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, ICourseHelper courseHelper, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
-            _courseHelper = courseHelper;
-            _helper = helper;
+            _courseHelper = courseHelper ?? throw new ArgumentNullException(nameof(courseHelper));
+            _helper = helper ?? throw new ArgumentNullException(nameof(helper));
         }
+
 
         public void WriteCourse(Model.Course course, string outputPath)
         {

@@ -1,7 +1,6 @@
 using System.Xml;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -9,21 +8,17 @@ namespace CourseAsCode.Writers.XML.Writer.Course
     {
         private const string DEFAULT_COMPETENCIES_RELATIVE_PATH = "course/competencies.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public CompetenciesWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="CompetenciesWriter"/> class
         /// </summary>
-        public CompetenciesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="CompetenciesWriter"/></param>
+        public CompetenciesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CompetenciesWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
+
 
         public void WriteCompetencies(Model.Course course, string outputPath)
         {

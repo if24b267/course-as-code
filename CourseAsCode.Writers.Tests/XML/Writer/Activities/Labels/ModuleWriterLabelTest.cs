@@ -7,7 +7,7 @@ using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
@@ -16,9 +16,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
     public class ModuleWriterLabelTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _fakeLogger;
+        private ILogger<ModuleWriterLabel> _fakeLogger;
         private IMoodleVersionHelper _fakeMoodleVersionHelper;
         private IGeneralHelper _fakeGeneralHelper;
+        private ITagsWriter _fakeTagsWriter;
         private ModuleWriterLabel _moduleWriterLabel;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
@@ -31,7 +32,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
         {
             // Set up the fake XML writer factory and logger substitute.
             _testFactory = new XmlWriterFactoryTest();
-            _fakeLogger = Substitute.For<ILogger>();
+            _fakeLogger = Substitute.For<ILogger<ModuleWriterLabel>>();
+            _fakeTagsWriter = Substitute.For<ITagsWriter>();
 
             // Create substitutes for helper dependencies.
             _fakeMoodleVersionHelper = Substitute.For<IMoodleVersionHelper>();
@@ -45,7 +47,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
 
             // Instantiate the ModuleWriterLabel using Dependency Injection.
             _moduleWriterLabel =
-                new ModuleWriterLabel(_testFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger);
+                new ModuleWriterLabel(_testFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger, _fakeTagsWriter);
 
             // Create a dummy course with backup metadata and one section.
             _dummyCourse = new Model.Course
@@ -196,7 +198,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             _moduleWriterLabel.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyLabel);
 
             // Assert: Verify that a debug log was recorded containing "module.xml".
-            _fakeLogger.Received().Debug(Arg.Is<string>(s =>
+            _fakeLogger.Received().LogDebug(Arg.Is<string>(s =>
                 s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
                 s.Contains("module.xml")));
         }
@@ -206,13 +208,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
         {
             // Arrange: Use a throwing XML writer factory to simulate an exception.
             IXmlWriterFactory throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _moduleWriterLabel = new ModuleWriterLabel(throwingFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger);
+            _moduleWriterLabel = new ModuleWriterLabel(throwingFactory, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeLogger, _fakeTagsWriter);
 
             // Act & Assert: Verify that an exception is thrown and an error is logged
             Assert.Throws<InvalidOperationException>(() =>
                 _moduleWriterLabel.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyLabel));
 
-            _fakeLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s =>
+            _fakeLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s =>
                 s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
                 s.Contains("module.xml")));
         }

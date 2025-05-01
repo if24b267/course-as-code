@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
@@ -10,14 +10,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
     public class ActivityRolesWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<ActivityRolesWriter> _testLogger;
         private ActivityRolesWriter _activityRolesWriter;
 
         [SetUp]
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // Create a fake XML writer factory that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<ActivityRolesWriter>>();
             _activityRolesWriter = new ActivityRolesWriter(_testFactory, _testLogger);
         }
 
@@ -100,7 +100,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             _activityRolesWriter.WriteRoles(dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "dummyPath/roles.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("dummyPath/roles.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("dummyPath/roles.xml")));
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
                 _activityRolesWriter.WriteRoles(dummyOutputPath));
 
             // Assert: Verify that logger.Error was called with a message containing "dummyPath/roles.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/roles.xml")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/roles.xml")));
         }
     }
 }

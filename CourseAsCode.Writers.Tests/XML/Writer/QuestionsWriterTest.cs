@@ -11,7 +11,7 @@ using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
@@ -20,9 +20,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class QuestionsWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _logger;
+        private ILogger<QuestionsWriter> _questionsLogger;
+        private ILogger<MultiChoicePluginWriter> _multiChoiceLogger;
+        private ILogger<DropdownPluginWriter> _dropdownLogger;
+        private ILogger<DragDropTextPluginWriter> _dragDropTextLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private ISequentialIdGenerator _fakeIdGenerator;
+        private ITagsWriter _fakeTagsWriter;
         private QuestionsWriter _questionsWriter;
         private Model.Course _course;
 
@@ -40,7 +44,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Set up fake XML writer factory (to capture XML output) and logger
             _testFactory = new XmlWriterFactoryTest();
-            _logger = Substitute.For<ILogger>();
+            _questionsLogger = Substitute.For<ILogger<QuestionsWriter>>();
+            _multiChoiceLogger = Substitute.For<ILogger<MultiChoicePluginWriter>>();
+            _dropdownLogger = Substitute.For<ILogger<DropdownPluginWriter>>();
+            _dragDropTextLogger = Substitute.For<ILogger<DragDropTextPluginWriter>>();
 
             // Fake general helper with predictable outputs
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -62,11 +69,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _fakeIdGenerator.GetNextAnswerId().Returns(_ => answerIdCounter++);
             _fakeIdGenerator.GetNextHintId().Returns(_ => hintIdCounter++);
 
+            // Setup fake tags writer
+            _fakeTagsWriter = Substitute.For<ITagsWriter>();
+
             // Create instances of the plugin writer strategies
-            // Pass the logger as they inherit from XmlWriterBase which requires it
-            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _logger);
-            var dropdownWriter = new DropdownPluginWriter(_testFactory, _logger);
-            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _logger);
+            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _multiChoiceLogger);
+            var dropdownWriter = new DropdownPluginWriter(_testFactory, _dropdownLogger);
+            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _dragDropTextLogger);
             var pluginWriters = new List<IQuestionPluginWriter>
             {
                 multiChoiceWriter,
@@ -75,7 +84,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             };
 
             // Instantiate QuestionsWriter with dependencies
-            _questionsWriter = new QuestionsWriter(_testFactory, _logger, _fakeGeneralHelper, _fakeIdGenerator, pluginWriters);
+            _questionsWriter = new QuestionsWriter(_testFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, pluginWriters);
 
             // Create a dummy course - questions will be added per test
             _course = new Model.Course
@@ -600,7 +609,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert
-            _logger.Received().Debug(Arg.Is<string>(s => s.Contains("questions.xml")));
+            _questionsLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"questions.xml")));
         }
 
         [Test]
@@ -608,7 +617,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _questionsWriter = new QuestionsWriter(throwingFactory, _logger, _fakeGeneralHelper, _fakeIdGenerator, new List<IQuestionPluginWriter>());
+            _questionsWriter = new QuestionsWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, new List<IQuestionPluginWriter>());
             _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act & Assert: Verify that an exception is thrown
@@ -616,7 +625,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Verify that an error log was recorded containing "questions.xml"
-            _logger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("questions.xml")));
+            _questionsLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("questions.xml")));
         }
 
 

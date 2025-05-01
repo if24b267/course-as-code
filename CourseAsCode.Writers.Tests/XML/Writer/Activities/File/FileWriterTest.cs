@@ -5,7 +5,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
@@ -14,7 +14,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
     public class FileWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<FileWriter> _testLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private FileWriter _fileWriter;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
@@ -42,7 +42,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             _testFactory = new XmlWriterFactoryTest();
 
             // Set up a substitute logger.
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<FileWriter>>();
 
             // Create a substitute for the general helper and configure its methods
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -129,7 +129,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             _fileWriter.WriteFile(DEFAULT_DUMMY_OUTPUT_PATH, _dummyFile);
 
             // Assert: Verify that a debug log was recorded indicating the file creation.
-            _testLogger.Received().Debug(Arg.Is<string>(s =>
+            _testLogger.Received().LogDebug(Arg.Is<string>(s =>
                 s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
                 s.Contains("resource.xml")));
         }
@@ -145,7 +145,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Assert.Throws<InvalidOperationException>(() =>
                 _fileWriter.WriteFile(DEFAULT_DUMMY_OUTPUT_PATH, _dummyFile));
 
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s =>
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s =>
                 s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
                 s.Contains("resource.xml")));
         }

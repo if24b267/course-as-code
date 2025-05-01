@@ -1,7 +1,15 @@
 using System.Xml;
 using System.Xml.Schema;
 using CourseAsCode.Model;
+using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -12,6 +20,19 @@ namespace CourseAsCode.Writers.Tests.Integration
         private Course _dummyCourse;
         private string _outputPath;
 
+        // Dependencies needed for QuestionsWriter
+        private IXmlWriterFactory _xmlWriterFactory;
+        private ILogger<QuestionsWriter> _logger;
+        private ILogger<TagsWriter> _tagsLogger;
+        private ILogger<MultiChoicePluginWriter> _multiChoicePluginWriterLogger;
+        private ILogger<DragDropTextPluginWriter> _dragDropTextPluginWriterLogger;
+        private ILogger<DropdownPluginWriter> _dropdownPluginWriterLogger;
+        private IGeneralHelper _generalHelper;
+        private ISequentialIdGenerator _sequentialIdGenerator;
+        private ITagsWriter _tagsWriter;
+        private readonly List<IQuestionPluginWriter> _pluginWriters;
+
+
         [SetUp]
         public void SetUp()
         {
@@ -21,6 +42,23 @@ namespace CourseAsCode.Writers.Tests.Integration
             _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
+
+            // --- Initialize Dependencies ---
+            // Use real implementations for integration testing
+            _xmlWriterFactory = new DefaultXmlWriterFactory();
+            _logger = NullLogger<QuestionsWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _tagsLogger = NullLogger<TagsWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _multiChoicePluginWriterLogger = NullLogger<MultiChoicePluginWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _dropdownPluginWriterLogger = NullLogger<DropdownPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _dragDropTextPluginWriterLogger = NullLogger<DragDropTextPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelper = GeneralHelper.Instance;
+            _sequentialIdGenerator = new SequentialIdGenerator();
+            _tagsWriter = new TagsWriter(_tagsLogger);
+
+            // PluginWriters
+            _pluginWriters.Add(new DragDropTextPluginWriter(_xmlWriterFactory, _dragDropTextPluginWriterLogger));
+            _pluginWriters.Add(new MultiChoicePluginWriter(_xmlWriterFactory, _multiChoicePluginWriterLogger));
+            _pluginWriters.Add(new DropdownPluginWriter(_xmlWriterFactory, _dropdownPluginWriterLogger));
 
             _dummyCourse = new Course
             {
@@ -33,16 +71,14 @@ namespace CourseAsCode.Writers.Tests.Integration
         [Ignore("Needs to be refactored due to QuestionsWriter now requiring certain dependencies")]
         public void WriteQuestions_GeneratesValidXml()
         {
-            /*
             // Arrange
-            var writer = new QuestionsWriter();
+            var writer = new QuestionsWriter(_xmlWriterFactory, _logger, _generalHelper, _sequentialIdGenerator, _tagsWriter, _pluginWriters);
 
             // Act
             writer.WriteQuestions(_dummyCourse, _outputPath);
 
             // Assert
             ValidateXml($"{_outputPath}/questions.xml", _xsdPath);
-            */
         }
 
         private void ValidateXml(string xmlPath, string xsdPath)

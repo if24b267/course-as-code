@@ -1,10 +1,14 @@
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
-using CourseAsCode.Writers.XML.Writer.Course;
+
 using CourseAsCode.Model;
-using CourseAsCode.Model.Enums;
-using System.Collections.Generic;
+using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer.Course;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -14,6 +18,11 @@ namespace CourseAsCode.Writers.Tests.Integration
         private string XsdPath;
         private Course _dummyCourse;
         private string _outputPath;
+
+        // Dependencies needed for RoleAssignmentsWriter
+        private IXmlWriterFactory _xmlWriterFactory;
+        private ILogger<RoleAssignmentsWriter> _logger;
+        private IGeneralHelper _generalHelper;
 
         [SetUp]
         public void SetUp()
@@ -25,6 +34,12 @@ namespace CourseAsCode.Writers.Tests.Integration
             _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
+
+            // --- Initialize Dependencies ---
+            // Use real implementations for integration testing
+            _xmlWriterFactory = new DefaultXmlWriterFactory();
+            _logger = NullLogger<RoleAssignmentsWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelper = new GeneralHelper();
 
             _dummyCourse = new Course
             {
@@ -57,7 +72,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteRoleAssignments_GeneratesValidXml()
         {
             // Arrange
-            var writer = new RoleAssignmentsWriter();
+            var writer = new RoleAssignmentsWriter(_xmlWriterFactory, _logger, _generalHelper);
 
             // Sicherstellen, dass das Verzeichnis existiert
             var rolesDirectory = Path.Combine(_outputPath, "course");

@@ -1,10 +1,15 @@
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
-using CourseAsCode.Writers.XML.Writer.Course;
+
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
-using System.Collections.Generic;
+using CourseAsCode.Writers.XML.Helper;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer.Course;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -15,15 +20,28 @@ namespace CourseAsCode.Writers.Tests.Integration
         private Course _dummyCourse;
         private string _outputPath;
 
+        // Dependencies needed for CourseWriter
+        private IXmlWriterFactory _xmlWriterFactory;
+        private ILogger<CourseWriter> _logger;
+        private IGeneralHelper _generalHelper;
+        private ICourseHelper _courseHelper;
+
         [SetUp]
         public void SetUp()
-        { 
+        {
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
             XsdPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "Schemas", "course", "course.xsd"));
 
             _outputPath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "Documentation", "out", "moodleCourse"));
 
             Directory.CreateDirectory(_outputPath);
+
+            // --- Initialize Dependencies ---
+            // Use real implementations for integration testing
+            _xmlWriterFactory = new DefaultXmlWriterFactory();
+            _logger = NullLogger<CourseWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelper = new GeneralHelper();
+            _courseHelper = new CourseHelper();
 
             _dummyCourse = new Course
             {
@@ -71,7 +89,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteCourse_GeneratesValidXml()
         {
             // Arrange
-            var writer = new CourseWriter();
+            var writer = new CourseWriter(_xmlWriterFactory, _logger, _courseHelper, _generalHelper);
 
             // Sicherstellen, dass das Verzeichnis existiert
             var courseDirectory = Path.Combine(_outputPath, "course");

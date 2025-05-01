@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using System.Xml;
+﻿using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
@@ -7,7 +6,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
@@ -16,9 +15,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
     public class ModuleWriterUrlTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<ModuleWriterUrl> _testLogger;
         private IMoodleVersionHelper _fakeMoodleVersionHelper;
         private IGeneralHelper _fakeGeneralHelper;
+        private ITagsWriter _fakeTagsWriter;
         private ModuleWriterUrl _moduleWriterUrl;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
@@ -31,7 +31,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         {
             // Set up the fake XML writer factory and logger
             _testFactory = new XmlWriterFactoryTest();
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<ModuleWriterUrl>>();
+            _fakeTagsWriter = Substitute.For<ITagsWriter>();
 
             // Create substitutes for helper dependencies
             _fakeMoodleVersionHelper = Substitute.For<IMoodleVersionHelper>();
@@ -44,7 +45,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             _fakeGeneralHelper.GetLanguageFromEnum(Arg.Any<Language>()).Returns("en");
 
             // Instantiate the ModuleWriterUrl with injected dependencies
-            _moduleWriterUrl = new ModuleWriterUrl(_testFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper);
+            _moduleWriterUrl = new ModuleWriterUrl(_testFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeTagsWriter);
 
             // Create a dummy course with backup metadata and one section
             _dummyCourse = new Model.Course
@@ -196,7 +197,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             _moduleWriterUrl.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyUrl);
 
             // Assert: Verify that a debug log was recorded containing "module.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
                                                                s.Contains("module.xml")));
         }
 
@@ -205,13 +206,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         {
             // Arrange: Use a throwing XML writer factory to simulate an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _moduleWriterUrl = new ModuleWriterUrl(throwingFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper);
+            _moduleWriterUrl = new ModuleWriterUrl(throwingFactory, _testLogger, _fakeMoodleVersionHelper, _fakeGeneralHelper, _fakeTagsWriter);
 
             // Act & Assert: Verify that an exception is thrown and an error is logged
             Assert.Throws<InvalidOperationException>(() =>
                 _moduleWriterUrl.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyUrl));
 
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
                                                                                    s.Contains("module.xml")));
         }
     }

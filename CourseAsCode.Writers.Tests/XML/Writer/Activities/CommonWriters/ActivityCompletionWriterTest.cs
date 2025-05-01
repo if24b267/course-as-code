@@ -1,7 +1,8 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using NLog;
+using CourseAsCode.Writers.XML.Writer.Course;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
@@ -10,14 +11,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
     public class ActivityCompletionWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<ActivityCompletionWriter> _testLogger;
         private ActivityCompletionWriter _activityCompletionWriter;
 
         [SetUp]
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<ActivityCompletionWriter>>();
             _activityCompletionWriter = new ActivityCompletionWriter(_testFactory, _testLogger);
         }
 
@@ -83,7 +84,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             _activityCompletionWriter.WriteCompletion(dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "dummyPath/completion.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("dummyPath/completion.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("dummyPath/completion.xml")));
         }
 
         [Test]
@@ -99,7 +100,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
                 _activityCompletionWriter.WriteCompletion(dummyOutputPath));
 
             // Assert: Verify that logger.Error was called with a message containing "dummyPath/completion.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/completion.xml")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/completion.xml")));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using NLog;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
@@ -10,14 +10,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
     public class ActivityGradesWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger _testLogger;
+        private ILogger<ActivityGradesWriter> _testLogger;
         private ActivityGradesWriter _activityGradesWriter;
 
         [SetUp]
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger>();
+            _testLogger = Substitute.For<ILogger<ActivityGradesWriter>>();
             _activityGradesWriter = new ActivityGradesWriter(_testFactory, _testLogger);
         }
 
@@ -100,7 +100,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             _activityGradesWriter.WriteGrade(dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "dummyPath/grades.xml"
-            _testLogger.Received().Debug(Arg.Is<string>(s => s.Contains("dummyPath/grades.xml")));
+            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("dummyPath/grades.xml")));
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
                 _activityGradesWriter.WriteGrade(dummyOutputPath));
 
             // Assert: Verify that logger.Error was called with a message containing "dummyPath/grades.xml"
-            _testLogger.Received().Error(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/grades.xml")));
+            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("dummyPath/grades.xml")));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Sections
 {
@@ -11,23 +11,20 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
     {
         private readonly IFileService _fileService;
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public InforefSectionsWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _fileService = new FileService();
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the InforefSectionsWriter class
         /// </summary>
-        public InforefSectionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IFileService fileService)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to InforefSectionsWriter</param>
+        /// <param name="fileService">Service that handles operations on the file system</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public InforefSectionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<InforefSectionsWriter> logger, IFileService fileService)
             : base(xmlWriterFactory, logger)
         {
-            _fileService = fileService;
+            _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
+
 
         public void WriteInforefSections(string outputPath, List<Section> sections)
         {

@@ -7,11 +7,10 @@ using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
 {
@@ -31,19 +30,28 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
 
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
+        private readonly ITagsWriter _tagsWriter;
         private readonly Dictionary<Type, IQuestionPluginWriter> _pluginWriters;
 
 
         /// <summary>
-        /// Constructor supporting Dependency Injection
+        /// Creates a new instance of the QuestionsWriter class
         /// </summary>
-        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IEnumerable<IQuestionPluginWriter> pluginWriters)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to QuestionsWriter</param>
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <param name="sequentialIdGenerator">Helper for generating sequential IDs for various entities</param>
+        /// <param name="tagsWriter">Helper method providing specific helper methods focused on tag management</param>
+        /// <param name="pluginWriters">Collection of plugin writers for different question types</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<QuestionsWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, ITagsWriter tagsWriter, IEnumerable<IQuestionPluginWriter> pluginWriters)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
+            _tagsWriter = tagsWriter ?? throw new ArgumentNullException(nameof(tagsWriter));
 
-            // Build the lookup dictionary for plugin writers
+            // Build the lookup dictionary for plugin writers | TODO: Refactor this to use a more sophisticated method
             _pluginWriters = new Dictionary<Type, IQuestionPluginWriter>();
 
             foreach (var writer in pluginWriters ?? throw new ArgumentNullException(nameof(pluginWriters)))
@@ -64,7 +72,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
                 // Add other mappings here
                 else
                 {
-                    Logger.Warn($"Unknown plugin writer type encountered during registration: {writer.GetType().FullName}");
+                    LogWarn($"Unknown plugin writer type encountered during registration: {writer.GetType().FullName}");
                 }
             }
         }
@@ -259,7 +267,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
             WriteHints(writer, question);
 
             // Tags
-            TagsWriter.WriteTags(writer, question.Tags, "tags", Logger);
+            _tagsWriter.WriteTags(writer, question.Tags, "tags");
 
             writer.WriteEndElement(); // </question>
         }

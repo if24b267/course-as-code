@@ -1,7 +1,6 @@
 using System.Xml;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer
 {
@@ -9,18 +8,13 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_SCALES_RELATIVE_PATH = "scales.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public ScalesWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the ScalesWriter class
         /// </summary>
-        public ScalesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to ScalesWriter</param>
+        public ScalesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<ScalesWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }

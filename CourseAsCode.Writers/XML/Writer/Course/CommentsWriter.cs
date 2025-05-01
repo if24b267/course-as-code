@@ -1,7 +1,6 @@
 using System.Xml;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Course
 {
@@ -9,13 +8,17 @@ namespace CourseAsCode.Writers.XML.Writer.Course
     {
         private const string DEFAULT_COMMENTS_RELATIVE_PATH = "course/comments.xml";
 
+
         /// <summary>
-        /// Default constructor using default implementations for dependencies.
+        /// Creates a new instance of the <see cref="CommentsWriter"/> class
         /// </summary>
-        public CommentsWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="CommentsWriter"/></param>
+        public CommentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CalendarWriter> logger)
+            : base(xmlWriterFactory, logger)
         {
         }
+
 
         /// <summary>
         /// Constructor supporting Dependency Injection for Unit Testing.

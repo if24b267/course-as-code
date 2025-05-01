@@ -1,8 +1,7 @@
 ﻿using System.Xml;
 
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
 {
@@ -10,21 +9,17 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
     {
         private const string DEFAULT_ROLES_RELATIVE_PATH = "roles.xml";
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public ActivityRolesWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-        }
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Creates a new instance of the <see cref="ActivityRolesWriter"/> class
         /// </summary>
-        public ActivityRolesWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger)
+        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="logger">Logger instance specific to <see cref="RolesWriter"/></param>
+        public ActivityRolesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<ActivityRolesWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
+
 
         /// <summary>
         /// Writes the roles.xml file required for an activity.
