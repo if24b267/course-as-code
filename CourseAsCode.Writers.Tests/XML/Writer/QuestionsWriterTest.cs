@@ -8,7 +8,9 @@ using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using NLog;
 using NSubstitute;
 
@@ -20,8 +22,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private XmlWriterFactoryTest _testFactory;
         private ILogger _logger;
         private IGeneralHelper _fakeGeneralHelper;
+        private ISequentialIdGenerator _fakeIdGenerator;
         private QuestionsWriter _questionsWriter;
         private Model.Course _course;
+
+        private const string MOCKED_MOODLE_AUTOFORMAT = "0";
+        private const string MOCKED_HTML_FORMAT = "1";
+        private const string MOCKED_PLAINTEXT_FORMAT = "2";
+        private const string MOCKED_MARKDOWN_FORMAT = "4";
 
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
         private const string DEFAULT_FORMAT_MAPPED = "1";
@@ -36,11 +44,38 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Fake general helper with predictable outputs
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
-            _fakeGeneralHelper.EnumIntegerToString(Arg.Any<FormattingFormat>()).Returns(DEFAULT_FORMAT_MAPPED); // Default to HTML format "1"
+            _fakeGeneralHelper.EnumIntegerToString(FormattingFormat.HTML).Returns(MOCKED_HTML_FORMAT);
+            _fakeGeneralHelper.EnumIntegerToString(FormattingFormat.Markdown).Returns(MOCKED_MARKDOWN_FORMAT);
+            _fakeGeneralHelper.EnumIntegerToString(FormattingFormat.PlainText).Returns(MOCKED_PLAINTEXT_FORMAT);
+            _fakeGeneralHelper.EnumIntegerToString(FormattingFormat.MoodleAutoFormat).Returns(MOCKED_MOODLE_AUTOFORMAT);
+            _fakeGeneralHelper.EnumIntegerToString(Arg.Any<FormattingFormat>()).Returns(MOCKED_HTML_FORMAT); // Fallback
             _fakeGeneralHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns(DEFAULT_TIMESTAMP);
 
+            // Setup fake ID generator to return predictable sequential IDs for testing
+            int categoryIdCounter = 2; // Start from 2 to avoid conflict with the top category
+            int bankEntryIdCounter = 1;
+            int answerIdCounter = 1;
+            int hintIdCounter = 1;
+            _fakeIdGenerator = Substitute.For<ISequentialIdGenerator>();
+            _fakeIdGenerator.GetNextCategoryId().Returns(_ => categoryIdCounter++);
+            _fakeIdGenerator.GetNextBankEntryId().Returns(_ => bankEntryIdCounter++);
+            _fakeIdGenerator.GetNextAnswerId().Returns(_ => answerIdCounter++);
+            _fakeIdGenerator.GetNextHintId().Returns(_ => hintIdCounter++);
+
+            // Create instances of the plugin writer strategies
+            // Pass the logger as they inherit from XmlWriterBase which requires it
+            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _logger);
+            var dropdownWriter = new DropdownPluginWriter(_testFactory, _logger);
+            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _logger);
+            var pluginWriters = new List<IQuestionPluginWriter>
+            {
+                multiChoiceWriter,
+                dropdownWriter,
+                dragDropTextWriter,
+            };
+
             // Instantiate QuestionsWriter with dependencies
-            _questionsWriter = new QuestionsWriter(_testFactory, _logger, _fakeGeneralHelper);
+            _questionsWriter = new QuestionsWriter(_testFactory, _logger, _fakeGeneralHelper, _fakeIdGenerator, pluginWriters);
 
             // Create a dummy course - questions will be added per test
             _course = new Model.Course
@@ -573,7 +608,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _questionsWriter = new QuestionsWriter(throwingFactory, _logger, _fakeGeneralHelper);
+            _questionsWriter = new QuestionsWriter(throwingFactory, _logger, _fakeGeneralHelper, _fakeIdGenerator, new List<IQuestionPluginWriter>());
             _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act & Assert: Verify that an exception is thrown
