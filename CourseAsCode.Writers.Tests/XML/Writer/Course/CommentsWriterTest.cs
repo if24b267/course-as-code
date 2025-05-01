@@ -68,7 +68,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             _commentsWriter.WriteComments(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "course/comments.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("course/comments.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/comments.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -84,7 +89,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 _commentsWriter.WriteComments(_dummyCourse, dummyOutputPath));
 
             // Assert: Verify that logger.Error was called with a message containing "course/comments.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("course/comments.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/comments.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

@@ -102,7 +102,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             _competenciesWriter.WriteCompetencies(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that a debug log was recorded with a message containing "course/competencies.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("course/competencies.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/competencies.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -118,7 +123,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 _competenciesWriter.WriteCompetencies(_dummyCourse, dummyOutputPath));
 
             // Assert: Verify that an error log was recorded with a message containing "course/competencies.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("course/competencies.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/competencies.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

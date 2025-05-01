@@ -165,8 +165,19 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
             string output = WriteTagsAndGetOutput(tags);
 
             // Assert: Ensure that logger.Trace is called for each tag with the expected message.
-            _testLogger.Received(1).LogTrace(Arg.Is<string>(msg => msg.Contains("Tag1") && msg.Contains(expectedFileName)));
-            _testLogger.Received(1).LogTrace(Arg.Is<string>(msg => msg.Contains("Tag2") && msg.Contains(expectedFileName)));
+            _testLogger.Received().Log(
+                LogLevel.Trace,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("Tag1") && o.ToString().Contains(expectedFileName)),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
+
+            _testLogger.Received().Log(
+                LogLevel.Trace,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("Tag2") && o.ToString().Contains(expectedFileName)),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

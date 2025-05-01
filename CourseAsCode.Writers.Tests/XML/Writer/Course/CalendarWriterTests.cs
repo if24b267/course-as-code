@@ -68,7 +68,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             _calendarWriter.WriteCalendar(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that a debug log was recorded with a message containing "course/calendar.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("course/calendar.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/calendar.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -84,7 +89,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 _calendarWriter.WriteCalendar(_dummyCourse, dummyOutputPath));
 
             // Verify that an error log was recorded with a message containing "course/calendar.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("course/calendar.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/calendar.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

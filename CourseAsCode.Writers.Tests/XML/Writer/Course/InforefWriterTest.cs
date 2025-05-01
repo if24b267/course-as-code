@@ -116,7 +116,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             _inforefWriter.WriteInforef(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that a debug log was written with a message containing "course/inforef.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("course/inforef.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/inforef.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -131,7 +136,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             Assert.Throws<InvalidOperationException>(() => _inforefWriter.WriteInforef(_dummyCourse, dummyOutputPath));
 
             // Verify that an error log was written with a message containing "course/inforef.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("course/inforef.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("course/inforef.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }
