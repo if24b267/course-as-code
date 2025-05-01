@@ -2,3 +2,10 @@ site_name: Course as Code
 site_url: https://mydomain.org/mysite
 theme:
   name: material
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+plugins:
+  - plantuml:
+      puml_url: https://www.plantuml.com/plantuml/
