@@ -13,9 +13,9 @@ Course as Code is a modular application that, broadly speaking, consists of thre
 @startuml
 
 <style>
-rectangle {
-  HorizontalAlignment center
-}
+    rectangle {
+    HorizontalAlignment center
+    }
 </style>
 
 ' Define components (rectangles)
