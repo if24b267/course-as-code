@@ -120,7 +120,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _groupsWriter.WriteGroups(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "groups.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("groups.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("groups.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]

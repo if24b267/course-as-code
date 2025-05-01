@@ -68,7 +68,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _scalesWriter.WriteScales(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that logger.Debug was called with a message containing "scales.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"scales.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("scales.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]

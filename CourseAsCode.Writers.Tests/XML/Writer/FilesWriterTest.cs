@@ -97,7 +97,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
 
             // Assert: Verify that logger.Debug was called with a message containing "files.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("files.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("files.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -146,7 +151,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
 
             // Assert: Verify that a warning is logged
-            _testLogger.Received().LogWarning(Arg.Is<string>(s => s.Contains("nonexistent.txt")));
+            _testLogger.Received().Log(
+                LogLevel.Warning,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("nonexistent.txt")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -197,7 +207,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
 
             // Assert: Verify that an error is logged
-            _testLogger.Received().LogError(Arg.Any<IOException>(), Arg.Is<string>(s => s.Contains("throwOnOpen.txt")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("throwOnOpen.txt")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]

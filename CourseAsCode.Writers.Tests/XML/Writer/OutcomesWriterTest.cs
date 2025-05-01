@@ -68,7 +68,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _outcomesWriter.WriteOutcomes(_dummyCourse, dummyOutputPath);
 
             // Assert: Verify that a debug log was written with a message containing "outcomes.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"outcomes.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("outcomes.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]

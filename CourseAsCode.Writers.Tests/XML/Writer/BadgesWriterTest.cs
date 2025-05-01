@@ -66,7 +66,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _testBadgesWriter.WriteBadges(dummyOutputPath);
 
             // Assert: Verify that logger.Debug is called with a message containing "badges.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("badges.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("badges.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]

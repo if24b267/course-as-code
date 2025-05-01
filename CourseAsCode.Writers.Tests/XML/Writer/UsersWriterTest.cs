@@ -137,7 +137,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _usersWriter.WriteUsers(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert: Verify that a debug log was recorded containing "users.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"users.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("users.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -152,7 +157,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _usersWriter.WriteUsers(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert: Verify that an error log was recorded containing "users.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("users.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("users.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 

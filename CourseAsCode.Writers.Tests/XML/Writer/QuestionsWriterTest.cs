@@ -609,7 +609,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert
-            _questionsLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"questions.xml")));
+            _questionsLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("questions.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]

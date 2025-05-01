@@ -108,7 +108,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _rolesWriter.WriteRoles(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert: Verify that a debug log was recorded containing "roles.xml"
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"users.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("roles.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]

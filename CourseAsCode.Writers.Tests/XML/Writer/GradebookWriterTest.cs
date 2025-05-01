@@ -85,7 +85,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _gradebookWriter.WriteGradebook(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH);
 
             // Assert: Verify that a debug log was recorded containing the gradebook file name
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains("gradebook.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("gradebook.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
