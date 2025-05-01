@@ -1,0 +1,123 @@
+# Moodle Backup File
+Moodle allows courses to be exported in the form of backup files. These files have the extension `.mbz` and are essentially ZIP archives that contain a collection of XML files. These XML files represent all aspects of the course, including the course structure, user roles, files, and other settings.
+
+Although these files are basically ZIP archives, for unknown reasons they cannot be opened with standard tools such as `winrar`, `7zip`, or the default Windows extraction program. A simple method to extract the .xml files from the backup is to use the Linux tool `tar`.
+
+```bash
+tar -xzf backup-moodle2-course-ID-YYYYMMDD-HHMM.mbz
+```
+
+This command can be executed natively on Linux systems or using the Windows Subsystem for Linux (WSL) on Windows. The extracted files will be placed in the current working directory.
+
+## Folder Structure
+Once the files have been extracted, we can observe the following folder structure:
+
+
+``` sh
+📦course_backup
+┣ 📂activities #(1)
+┃ ┣ 📂url_1 
+┃ ┣ ┣ 📜calendar.xml
+┃ ┣ ┣ 📜comments.xml
+┃ ┣ ┣ 📜competencies.xml
+┃ ┣ ┣ 📜completion.xml
+┃ ┣ ┣ 📜filters.xml
+┃ ┣ ┣ 📜grade_history.xml
+┃ ┣ ┣ 📜grades.xml
+┃ ┣ ┣ 📜inforef.xml #(2)
+┃ ┣ ┣ 📜modules.xml
+┃ ┣ ┣ 📜roles.xml
+┃ ┣ ┣ 📜url.xml
+┃ ┣ ┗ 📜xapistate.xml
+┃ ┣ 📂resource_2
+┃ ┣ ┣ 📜resource.xml #(3)
+┃ ┣ ┗ ...
+┃ ┣ 📂label_3
+┃ ┣ ┣ 📜label.xml
+┃ ┣ ┗ ...
+┃ ┣ 📂quiz_4
+┃ ┣ ┣ 📜quiz.xml
+┃ ┣ ┗ ...
+┃ ┗ 📂assign_5
+┃ ┣ ┣ 📜assign.xml
+┃ ┣ ┗ ...
+┣ 📂course
+┃ ┣ 📜calendar.xml
+┃ ┣ 📜comments.xml
+┃ ┣ 📜competencies.xml
+┃ ┣ 📜completionDefaults.xml
+┃ ┣ 📜contentbank.xml
+┃ ┣ 📜course.xml
+┃ ┣ 📜enrolments.xml
+┃ ┣ 📜filters.xml
+┃ ┣ 📜inforef.xml
+┃ ┗ 📜roles.xml
+┣ 📂files
+┃ ┗ 📂4e
+┃   ┗ 📜4e3d7ade69bbaeaacd2e664327cc7e9952b0fbf0
+┣ 📂sections
+┃ ┣ 📂section_1
+┃ ┃ ┣ 📜inforef.xml
+┃ ┃ ┗ 📜section.xml
+┃ ┣ 📂section_2
+┃ ┣ 📂section_3
+┃ ┣ 📂section_4
+┃ ┗ 📂section_5
+┣ 📜badges.xml
+┣ 📜completion.xml
+┣ 📜files.xml
+┣ 📜grade_history.xml
+┣ 📜gradebook.xml
+┣ 📜groups.xml
+┣ 📜moodle_backup.xml
+┣ 📜outcomes.xml
+┣ 📜questions.xml
+┣ 📜roles.xml
+┣ 📜scales.xml
+┗ 📜users.xml
+```
+
+1. The `activities` directory contains subdirectories for each activity in the course. Each activity has its own set of XML files that describe its properties and settings. The names of these directories are generated based on the activity type (their internal moodle name) and a unique identifier which corresponds to the `ActivityID`.
+
+2. The contents of this file differ from activity to activity. It is a reference file that points to other resources used within the activity. The file is usually empty unless the activity contains specific references to other resources or files. However, the basic structure of the file is the same for every activity.
+
+3. Each activity contains almost the same basic set of XML files (`calendar.xml`, `comments.xml`, etc.), which hardly differ from each other. The only file that differs from activity to activity is the `*.xml` file that is named after the activity (e.g., `url.xml`, `quiz.xml`, `assign.xml`, etc.). This file contains the specific information for the respective activity, and its structure differs from activity to activity.
+
+
+- **`course`**
+    - **`calendar.xml`**: empty XML file
+    - **`comments.xml`**: empty XML file
+    - **`competencies.xml`**: empty XML file
+    - **`completionDefaults.xml`**: empty XML file
+    - **`contentbank.xml`**: empty XML file
+    - **`course.xml`**: Contains general information about the course, most of the information provided during the course creation process.
+    - **`enrolments.xml`**: Contains information about the enrolments in the course. See [Enrolments](https://docs.moodle.org/405/en/Enrolments) for more details.
+    - **`filters.xml`**: empty XML file
+    - **`inforef.xml`**: Contains references to users, roles, and files associated with the course.
+    - **`roles.xml`**: Seems to contain the assignment of roles to users within the course.
+
+- **`files`**
+    - **`4e`**: This directory and its subdirectories (e.g., `4e3d7ade69bbaeaacd2e664327cc7e9952b0fbf0`) contain the actual files uploaded to the course.
+        - **`4e3d7ade69bbaeaacd2e664327cc7e9952b0fbf0`**: This is an example of a hashed filename; this specific one corresponds to the `logo.png` file that was uploaded to the course.
+
+- **`sections`**
+    - **`section_1`**:
+        - **`inforef.xml`**: empty XML file
+        - **`section.xml`**: empty XML file
+    - **`section_2`**: All other sections (section_2, section_3, section_4, section_5, etc.) have the same structure as `section_1`.
+    - **`section_3`**
+    - **`section_4`**
+    - **`section_5`**: These directories correspond to the "General" section at the top of the course page plus the sections created during the course creation process.
+
+- **`badges.xml`**: empty XML file
+- **`completion.xml`**: empty XML file
+- **`files.xml`**: Seems to contain information about the files uploaded to the course. One of the entries corresponds to the `logo.png` file, and there may be other unknown entries.
+- **`grade_history.xml`**: empty XML file
+- **`gradebook.xml`**: Contains information about the gradebook setup for the course.
+- **`groups.xml`**: empty XML file
+- **`moodle_backup.xml`**: Seems to contain metadata about the backup itself.
+- **`outcomes.xml`**: empty XML file
+- **`questions.xml`**: empty XML file
+- **`roles.xml`**: Seems to contain information about the roles available in the course (distinct from role assignments within the course context found in `course/roles.xml`).
+- **`scales.xml`**: empty XML file
+- **`users.xml`**: empty XML file
