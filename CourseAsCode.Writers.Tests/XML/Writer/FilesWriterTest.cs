@@ -211,7 +211,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 LogLevel.Error,
                 Arg.Any<EventId>(),
                 Arg.Is<object>(o => o.ToString().Contains("throwOnOpen.txt")),
-                null,
+                Arg.Any<Exception>(),
                 Arg.Any<Func<object, Exception, string>>()!);
         }
 
@@ -227,7 +227,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH));
 
             // Assert: Verify that logger.Error was called with a message containing "files.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("files.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("files.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

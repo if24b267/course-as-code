@@ -129,9 +129,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             _fileWriter.WriteFile(DEFAULT_DUMMY_OUTPUT_PATH, _dummyFile);
 
             // Assert: Verify that a debug log was recorded indicating the file creation.
-            _testLogger.Received().LogDebug(Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("resource.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("resource.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -145,9 +148,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Assert.Throws<InvalidOperationException>(() =>
                 _fileWriter.WriteFile(DEFAULT_DUMMY_OUTPUT_PATH, _dummyFile));
 
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("resource.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("resource.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

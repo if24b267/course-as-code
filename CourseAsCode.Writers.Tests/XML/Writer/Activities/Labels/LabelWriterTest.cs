@@ -114,9 +114,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             _labelWriter.WriteLabel(DEFAULT_DUMMY_OUTPUT_PATH, _dummyLabel);
 
             // Assert: Verify that a debug log was recorded.
-            _testLogger.Received().LogDebug(Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("label.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("label.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -130,9 +133,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             Assert.Throws<InvalidOperationException>(() =>
                 _labelWriter.WriteLabel(DEFAULT_DUMMY_OUTPUT_PATH, _dummyLabel));
 
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("label.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("label.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

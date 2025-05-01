@@ -89,7 +89,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _outcomesWriter.WriteOutcomes(_dummyCourse, dummyOutputPath));
 
             // Verify that an error log was written containing "outcomes.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("outcomes.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("outcomes.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

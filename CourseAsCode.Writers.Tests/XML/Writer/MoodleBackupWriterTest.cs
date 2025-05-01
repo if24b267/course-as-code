@@ -123,7 +123,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _moodleBackupWriter.WriteMoodleBackup(_dummyCourse, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Assert that an error log was recorded containing "moodle_backup.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("moodle_backup.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("moodle_backup.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

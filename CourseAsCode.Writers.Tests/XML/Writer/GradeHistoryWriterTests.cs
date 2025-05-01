@@ -106,7 +106,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _gradehistoryWriter.WriteGradehistory(_dummyCourse, dummyOutputPath));
 
             // Verify that logger.Error was called with a message containing "gradehistory.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("gradehistory.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("gradehistory.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

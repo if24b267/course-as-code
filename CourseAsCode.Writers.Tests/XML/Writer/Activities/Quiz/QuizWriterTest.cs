@@ -355,7 +355,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             _quizWriter.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz);
 
             // Assert: The logger should have been called with a debug message
-            _logger.Received().LogDebug(Arg.Is<string>(msg => msg.Contains("quiz.xml")));
+            _logger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("quiz.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -366,8 +371,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Act and assert: The logger should have been called with an error message and the exception should be rethrown
             Assert.Throws<InvalidOperationException>(() => writer.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz));
-            _logger.Received()
-                   .LogError(Arg.Any<Exception>(), Arg.Is<string>(msg => msg.Contains("quiz.xml")));
+            _logger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("quiz.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

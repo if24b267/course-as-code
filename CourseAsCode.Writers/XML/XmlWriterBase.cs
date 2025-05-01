@@ -73,7 +73,6 @@ namespace CourseAsCode.Writers.XML
         /// <returns>An XmlWriter instance initialized with the current settings.</returns>
         protected XmlWriter CreateXmlWriter(string filePath)
         {
-            Logger.LogDebug("Creating XmlWriter for file path: {FilePath}", filePath);
             return _xmlWriterFactory.Create(filePath, Settings);
         }
 

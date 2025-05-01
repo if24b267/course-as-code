@@ -105,8 +105,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl);
 
             // Assert: Verify that a debug log was recorded
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                                                               s.Contains("url.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("url.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -120,8 +124,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             Assert.Throws<InvalidOperationException>(() =>
                 _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl));
 
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                                                                                     s.Contains("url.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("url.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

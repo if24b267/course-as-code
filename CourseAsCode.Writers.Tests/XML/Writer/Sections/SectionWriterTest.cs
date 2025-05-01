@@ -107,7 +107,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             _sectionWriter.WriteSections(DEFAULT_DUMMY_OUTPUT_PATH, sections);
 
             // Verify that a debug log was recorded for successful creation
-            _testLogger.Received().LogDebug(Arg.Is<string>(s => s.Contains($"section_{_dummySection.SystemDefaults.SectionId}/section.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains($"section_{_dummySection.SystemDefaults.SectionId}/section.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -130,8 +135,19 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             Assert.IsEmpty(output, "Output should be empty because the section was skipped.");
 
             // Verify that error logs were recorded
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("Error creating directory for section")));
-            _testLogger.Received().LogError(Arg.Is<string>(s => s.Contains("Skipping section")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("Error creating directory for section")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
+
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("Skipping section")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

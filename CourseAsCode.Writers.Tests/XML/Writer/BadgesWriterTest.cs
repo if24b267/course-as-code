@@ -87,7 +87,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.Throws<InvalidOperationException>(() => _testBadgesWriter.WriteBadges(dummyOutputPath));
 
             // Verify that logger.Error is called with a message containing "badges.xml"
-            _testLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("badges.xml")));
+            _testLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("badges.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }

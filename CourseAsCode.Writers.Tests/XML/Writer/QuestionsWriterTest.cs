@@ -630,7 +630,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH));
 
             // Verify that an error log was recorded containing "questions.xml"
-            _questionsLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s => s.Contains("questions.xml")));
+            _questionsLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains("questions.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
 

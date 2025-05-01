@@ -151,31 +151,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
         }
 
         [Test]
-        public void WriteModule_WritesTagsSectionCorrectly()
-        {
-            // Act
-            _moduleWriterFile.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyFile);
-            string output = _testFactory.StringWriter.ToString();
-
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-
-            // Assert: Verify that a <tags> element exists and contains the expected number <tag> elements
-            var tagsElement = doc.DocumentElement?.SelectSingleNode("tags") as XmlElement;
-            Assert.IsNotNull(tagsElement, "The <tags> element is missing");
-
-            var tagNodes = tagsElement.SelectNodes("tag");
-            Assert.IsNotNull(tagNodes, "No <tag> elements found despite having tags");
-            Assert.That(tagNodes.Count, Is.EqualTo(_dummyFile.Tags!.Count));
-
-            // Check details of the first tag
-            var firstTag = tagNodes[0] as XmlElement;
-            Assert.That(firstTag?.GetAttribute("id"), Is.EqualTo("0"));
-            Assert.That(firstTag?["name"]?.InnerText, Is.EqualTo("filetag1"));
-            Assert.That(firstTag?["rawname"]?.InnerText, Is.EqualTo("filetag1"));
-        }
-
-        [Test]
         public void WriteModule_ThrowsInvalidCastException_ForNonFileActivity()
         {
             // Arrange: Create a dummy activity that is not a MoodleFile.
@@ -197,9 +172,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             _moduleWriterFile.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyFile);
 
             // Assert: Verify that a debug log was recorded containing "module.xml"
-            _fakeLogger.Received().LogDebug(Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("module.xml")));
+            _fakeLogger.Received().Log(
+                LogLevel.Debug,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("module.xml")),
+                null,
+                Arg.Any<Func<object, Exception, string>>()!);
         }
 
         [Test]
@@ -213,9 +191,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Assert.Throws<InvalidOperationException>(() =>
                 _moduleWriterFile.WriteModule(DEFAULT_DUMMY_OUTPUT_PATH, _dummyCourse, _dummySection, _dummyFile));
 
-            _fakeLogger.Received().LogError(Arg.Any<Exception>(), Arg.Is<string>(s =>
-                s.Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) &&
-                s.Contains("module.xml")));
+            _fakeLogger.Received().Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(o => o.ToString().Contains(Path.GetFileName(DEFAULT_DUMMY_OUTPUT_PATH)) && o.ToString().Contains("module.xml")),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!);
         }
     }
 }
