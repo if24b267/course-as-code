@@ -3,6 +3,7 @@ using System.Xml.Schema;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -37,6 +38,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Use real implementations for integration testing
             _xmlWriterFactory = new DefaultXmlWriterFactory();
             _logger = NullLogger<RolesWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _RolesHelper = new RolesHelper();
 
             _dummyCourse = new Course
             {

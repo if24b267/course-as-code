@@ -30,7 +30,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         private IGeneralHelper _generalHelper;
         private ISequentialIdGenerator _sequentialIdGenerator;
         private ITagsWriter _tagsWriter;
-        private readonly List<IQuestionPluginWriter> _pluginWriters;
+        private readonly List<IQuestionPluginWriter> _pluginWriters = new List<IQuestionPluginWriter>();
 
 
         [SetUp]
@@ -68,7 +68,6 @@ namespace CourseAsCode.Writers.Tests.Integration
         }
 
         [Test]
-        [Ignore("Needs to be refactored due to QuestionsWriter now requiring certain dependencies")]
         public void WriteQuestions_GeneratesValidXml()
         {
             // Arrange
