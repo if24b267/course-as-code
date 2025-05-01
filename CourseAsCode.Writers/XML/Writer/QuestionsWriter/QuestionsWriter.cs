@@ -3,14 +3,17 @@ using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using NLog;
 
-namespace CourseAsCode.Writers.XML.Writer
+namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
 {
     /// <summary>
     /// Handles the creation and writing of the questions.xml file for a course.
@@ -21,34 +24,49 @@ namespace CourseAsCode.Writers.XML.Writer
         private const string DEFAULT_SERVER_ADDRESS = "172.21.0.3";
         private const int DEFAULT_SERVER_PORT = 8080;
 
-        private readonly IGeneralHelper _generalHelper;
-
-        // Counters for IDs | TODO: Refactor to use a more robust ID generation strategy
-        private int _nextCategoryId = DEFAULT_TOP_CATEGORY_ID + 1;
-        private int _nextBankEntryId = 1;
-        private int _nextAnswerId = 1;
-        private int _nextHintId = 1;
-
         private const int DEFAULT_TOP_CATEGORY_ID = 1;
         private const int DEFAULT_CONTEXT_ID = 383; // Every value >> 100 seems to be working fine | Needs to be the same as in `QuizWriter.cs`
         private const int DEFAULT_CONTEXT_LEVEL = 50; // 50 = course, 70 = module
         private const int DEFAULT_CONTEXT_INSTANCE_ID = 135; // Honestly, no idea what this is for
 
-        /// <summary>
-        /// Default constructor using default implementations for dependencies.
-        /// </summary>
-        public QuestionsWriter()
-            : base(new DefaultXmlWriterFactory(), LogManager.GetCurrentClassLogger())
-        {
-            _generalHelper = GeneralHelper.Instance;
-        }
+        private readonly IGeneralHelper _generalHelper;
+        private readonly ISequentialIdGenerator _sequentialIdGenerator;
+        private readonly Dictionary<Type, IQuestionPluginWriter> _pluginWriters;
+
 
         /// <summary>
-        /// Constructor supporting Dependency Injection for Unit Testing.
+        /// Constructor supporting Dependency Injection
         /// </summary>
-        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper) : base(xmlWriterFactory, logger)
+        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IEnumerable<IQuestionPluginWriter> pluginWriters)
+            : base(xmlWriterFactory, logger)
         {
-            _generalHelper = generalHelper;
+            _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
+
+            // Build the lookup dictionary for plugin writers
+            _pluginWriters = new Dictionary<Type, IQuestionPluginWriter>();
+
+            foreach (var writer in pluginWriters ?? throw new ArgumentNullException(nameof(pluginWriters)))
+            {
+                if (writer is MultiChoicePluginWriter)
+                {
+                    _pluginWriters[typeof(MultipleChoiceQuestion)] = writer;
+                }
+                else if (writer is DropdownPluginWriter)
+                {
+                    _pluginWriters[typeof(DropdownQuestion)] = writer;
+                }
+                else if (writer is DragDropTextPluginWriter)
+                {
+                    _pluginWriters[typeof(DragAndDropTextQuestion)] = writer;
+                }
+
+                // Add other mappings here
+                else
+                {
+                    Logger.Warn($"Unknown plugin writer type encountered during registration: {writer.GetType().FullName}");
+                }
+            }
         }
 
 
@@ -75,7 +93,7 @@ namespace CourseAsCode.Writers.XML.Writer
                     // Questions are grouped by category | Each entry for a category contains the entries for all questions belonging to that category
                     foreach (var categoryGrouping in course.Questions.GroupBy(q => q.Category))
                     {
-                        int categoryId = _nextCategoryId++;
+                        int categoryId = _sequentialIdGenerator.GetNextCategoryId();
                         WriteQuestionCategory(writer, categoryId, categoryGrouping.Key, categoryGrouping.ToList());
 
                         LogTrace($"Created question category {categoryId}: '{categoryGrouping.Key}' with {categoryGrouping.Count()} questions");
@@ -133,6 +151,7 @@ namespace CourseAsCode.Writers.XML.Writer
                 // Store the ID of the category the question was saved to, so that other Writers (specifically InfoRefWriter) can reference it later
                 question.CategoryId = categoryId;
             }
+
             writer.WriteEndElement(); // </question_bank_entries>
 
             writer.WriteEndElement(); // </question_category>
@@ -147,7 +166,7 @@ namespace CourseAsCode.Writers.XML.Writer
         /// <param name="question">the question to save</param>
         private void WriteQuestionBankEntry(XmlWriter writer, int categoryId, Question question)
         {
-            int bankEntryId = _nextBankEntryId++;
+            int bankEntryId = _sequentialIdGenerator.GetNextBankEntryId();
             question.BankEntryId = bankEntryId; // Store the ID of the question bank entry the question was saved to, so that QuizWriter can reference it later
 
             writer.WriteStartElement("question_bank_entry");
@@ -223,21 +242,12 @@ namespace CourseAsCode.Writers.XML.Writer
             };
             WriteElements(writer, questionBaseElements);
 
-            // Write the specific plugin block based on the question type
-            switch (question)
+            // Use the appropriate question plugin writer based on the question type to write the specific plugin block
+            if (!_pluginWriters.TryGetValue(question.GetType(), out var pluginWriter))
             {
-                case MultipleChoiceQuestion multichoiceQuestion:
-                    WriteMultiChoicePlugin(writer, multichoiceQuestion);
-                    break;
-                case DropdownQuestion dropdownQuestion:
-                    WriteDropdownPlugin(writer, dropdownQuestion);
-                    break;
-
-                // Implement additional question types here
-                default:
-                    LogWarn($"Unsupported question type {question.GetType().Name} – skipping plugin block");
-                    break;
+                LogWarn($"Unsupported question type {question.GetType().Name} – skipping plugin block for question '{question.QuestionName}' (ID: {question.QuestionId}).");
             }
+            pluginWriter?.WritePluginData(writer, question, _generalHelper, _sequentialIdGenerator);
 
             // Comments
             WriteEmptyPlugin(writer, "qbank_comment_question", "comments");
@@ -252,143 +262,6 @@ namespace CourseAsCode.Writers.XML.Writer
             TagsWriter.WriteTags(writer, question.Tags, "tags", Logger);
 
             writer.WriteEndElement(); // </question>
-        }
-
-
-        /// <summary>
-        /// Writes the `plugin_qtype_multichoice_question` element of questions.xml that is used for multiple choice questions
-        /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="multiChoiceQuestion">the question to save</param>
-        private void WriteMultiChoicePlugin(XmlWriter writer, MultipleChoiceQuestion multiChoiceQuestion)
-        {
-            writer.WriteStartElement("plugin_qtype_multichoice_question");
-
-            // Answers ------------------------------------------------------------
-            writer.WriteStartElement("answers");
-            foreach (var answer in multiChoiceQuestion.Answers)
-            {
-                int answerId = _nextAnswerId++;
-                writer.WriteStartElement("answer");
-                writer.WriteAttributeString("id", answerId.ToString());
-
-                WriteElements(writer, new Dictionary<string, string>
-                {
-                    { "answertext", answer.AnswerText },
-                    { "answerformat", _generalHelper.EnumIntegerToString(answer.AnswerTextFormat) },
-                    { "fraction", answer.AnswerGrade.ToString("0.0000000", CultureInfo.InvariantCulture) },
-                    { "feedback", answer.AnswerFeedback ?? string.Empty },
-                    { "feedbackformat", _generalHelper.EnumIntegerToString(answer.AnswerFeedbackFormat) },
-                });
-
-                writer.WriteEndElement(); // </answer>
-            }
-
-            writer.WriteEndElement(); // </answers>
-
-            // Multichoice settings -------------------------------------------------
-            writer.WriteStartElement("multichoice");
-            int multichoiceId = _nextAnswerId++; // reuse counter for simplicity (avoids creating a new counter for just this element)
-            writer.WriteAttributeString("id", multichoiceId.ToString());
-
-            var multichoiceElements = new Dictionary<string, string>
-            {
-                { "layout", "0" },
-                { "single", multiChoiceQuestion.SingleChoice ? "1" : "0" },
-                { "shuffleanswers", multiChoiceQuestion.ShuffleAnswers ? "1" : "0" },
-                { "correctfeedback", multiChoiceQuestion.CorrectResponseFeedback ?? string.Empty },
-                { "correctfeedbackformat", _generalHelper.EnumIntegerToString(multiChoiceQuestion.CorrectResponseFeedbackFormat) },
-                { "partiallycorrectfeedback", multiChoiceQuestion.PartiallyCorrectResponseFeedback ?? string.Empty },
-                { "partiallycorrectfeedbackformat", _generalHelper.EnumIntegerToString(multiChoiceQuestion.PartiallyCorrectResponseFeedbackFormat) },
-                { "incorrectfeedback", multiChoiceQuestion.IncorrectResponseFeedback ?? string.Empty },
-                { "incorrectfeedbackformat", _generalHelper.EnumIntegerToString(multiChoiceQuestion.IncorrectResponseFeedbackFormat) },
-                { "answernumbering", EnumMappers.MapNumberingFormat(multiChoiceQuestion.ChoiceNumbering) },
-                { "shownumcorrect", multiChoiceQuestion.Hints != null && multiChoiceQuestion.Hints.Any(h => h.ShowNumberOfCorrectAnswers) ? "1" : "0" },
-                { "showstandardinstruction", multiChoiceQuestion.ShowStandardInstructions ? "1" : "0" },
-            };
-            WriteElements(writer, multichoiceElements);
-
-            writer.WriteEndElement(); // </multichoice>
-            writer.WriteEndElement(); // </plugin_qtype_multichoice_question>
-        }
-
-
-        /// <summary>
-        /// Writes the `plugin_qtype_match_question` element of questions.xml for dropdown (matching) questions
-        /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
-        /// <param name="dropdownQuestion">the question to save</param>
-        private void WriteDropdownPlugin(XmlWriter writer, DropdownQuestion dropdownQuestion)
-        {
-            writer.WriteStartElement("plugin_qtype_match_question");
-
-            // Match Options ------------------------------------------------------
-            writer.WriteStartElement("matchoptions");
-            int matchOptionsId = _nextAnswerId++; // Reuse counter for simplicity (avoids creating a new counter for just this element)
-            writer.WriteAttributeString("id", matchOptionsId.ToString());
-
-            var matchOptionsElements = new Dictionary<string, string>
-            {
-                { "shuffleanswers", "1" }, // The answer choices will ALWAYS be shuffled, this cannot be changed
-                { "correctfeedback", dropdownQuestion.CorrectResponseFeedback ?? string.Empty },
-                { "correctfeedbackformat", _generalHelper.EnumIntegerToString(dropdownQuestion.CorrectResponseFeedbackFormat) },
-                { "partiallycorrectfeedback", dropdownQuestion.PartiallyCorrectResponseFeedback ?? string.Empty },
-                { "partiallycorrectfeedbackformat", _generalHelper.EnumIntegerToString(dropdownQuestion.PartiallyCorrectResponseFeedbackFormat) },
-                { "incorrectfeedback", dropdownQuestion.IncorrectResponseFeedback ?? string.Empty },
-                { "incorrectfeedbackformat", _generalHelper.EnumIntegerToString(dropdownQuestion.IncorrectResponseFeedbackFormat) },
-                { "shownumcorrect", (dropdownQuestion.Hints?.Any(h => h.ShowNumberOfCorrectAnswers) ?? false) ? "1" : "0" }, // Determine if hints require showing the number of correct answers | TODO: Check if this is correct
-            };
-            WriteElements(writer, matchOptionsElements);
-            writer.WriteEndElement(); // </matchoptions>
-
-
-            // Matches (Sub-questions and Answer Pool) ---------------------------
-            writer.WriteStartElement("matches");
-
-            // Use HashSet to efficiently collect all additional answer options (the wrong answers)
-            var additionalAnswerOptions = new HashSet<string>();
-
-            // First pass: Write the actual sub-questions and store additional (wrong) answer options in the HashSet
-            foreach (var subQuestion in dropdownQuestion.Answers)
-            {
-                int matchId = _nextAnswerId++;
-                writer.WriteStartElement("match");
-                writer.WriteAttributeString("id", matchId.ToString());
-
-                WriteElements(writer, new Dictionary<string, string>
-                {
-                    { "questiontext", subQuestion.QuestionText },
-                    { "questiontextformat", _generalHelper.EnumIntegerToString(subQuestion.QuestionTextFormat) },
-                    { "answertext", subQuestion.CorrectAnswer },
-                });
-                writer.WriteEndElement(); // </match>
-
-                // Add all wrong answers for this sub-question to the pool
-                foreach (var wrongAnswer in subQuestion.WrongAnswers)
-                {
-                    additionalAnswerOptions.Add(wrongAnswer);
-                }
-            }
-
-            // Second pass: Write the additional answer options (the wrong answers) to the XML
-            // In Moodle, these are stored as matching options that have no <questiontext> element but do have an <answertext> element
-            foreach (var answerOption in additionalAnswerOptions)
-            {
-                int poolMatchId = _nextAnswerId++;
-                writer.WriteStartElement("match");
-                writer.WriteAttributeString("id", poolMatchId.ToString());
-
-                WriteElements(writer, new Dictionary<string, string>
-                {
-                    { "questiontext", string.Empty }, // Empty question text signifies this is just an available answer choice in the dropdown and not a sub-question
-                    { "questiontextformat", "1" },
-                    { "answertext", answerOption },
-                });
-                writer.WriteEndElement(); // </match>
-            }
-
-            writer.WriteEndElement(); // </matches>
-            writer.WriteEndElement(); // </plugin_qtype_match_question>
         }
 
 
@@ -421,7 +294,7 @@ namespace CourseAsCode.Writers.XML.Writer
             writer.WriteStartElement("question_hints");
             foreach (var hint in hints)
             {
-                int hintId = _nextHintId++;
+                int hintId = _sequentialIdGenerator.GetNextHintId();
                 writer.WriteStartElement("question_hint");
                 writer.WriteAttributeString("id", hintId.ToString());
 
@@ -436,6 +309,7 @@ namespace CourseAsCode.Writers.XML.Writer
 
                 writer.WriteEndElement(); // </question_hint>
             }
+
             writer.WriteEndElement(); // </question_hints>
         }
 
@@ -488,7 +362,7 @@ namespace CourseAsCode.Writers.XML.Writer
                 { "contextinstanceid",contextInstanceId.ToString() },
                 { "info", "" }, { "infoformat","0" },
                 { "stamp", GenerateStamp() },
-                { "parent","0" }, { "sortorder","0" }, { "idnumber","$@NULL@$" }
+                { "parent","0" }, { "sortorder","0" }, { "idnumber","$@NULL@$" },
             });
             writer.WriteStartElement("question_bank_entries"); writer.WriteEndElement();
             writer.WriteEndElement(); // </question_category>
