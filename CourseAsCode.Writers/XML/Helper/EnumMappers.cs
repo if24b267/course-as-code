@@ -1,6 +1,7 @@
 ﻿using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 
 namespace CourseAsCode.Writers.XML.Helper
@@ -39,6 +40,7 @@ namespace CourseAsCode.Writers.XML.Helper
             {
                 SingleChoiceQuestion or MultipleChoiceQuestion => "multichoice",
                 DropdownQuestion => "match",
+                DragAndDropTextQuestion => "ddwtos",
 
                 // Implement other question types here
                 _ => "multichoice",

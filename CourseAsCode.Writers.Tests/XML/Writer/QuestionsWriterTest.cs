@@ -4,10 +4,13 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
+using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using NLog;
 using NSubstitute;
 
@@ -19,8 +22,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private XmlWriterFactoryTest _testFactory;
         private ILogger _logger;
         private IGeneralHelper _fakeGeneralHelper;
+        private ISequentialIdGenerator _fakeIdGenerator;
         private QuestionsWriter _questionsWriter;
         private Model.Course _course;
+
+        private const string MOCKED_MOODLE_AUTOFORMAT = "0";
+        private const string MOCKED_HTML_FORMAT = "1";
+        private const string MOCKED_PLAINTEXT_FORMAT = "2";
+        private const string MOCKED_MARKDOWN_FORMAT = "4";
 
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
         private const string DEFAULT_FORMAT_MAPPED = "1";
@@ -35,11 +44,38 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Fake general helper with predictable outputs
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
-            _fakeGeneralHelper.EnumIntegerToString(Arg.Any<FormattingFormat>()).Returns(DEFAULT_FORMAT_MAPPED); // Default to HTML format "1"
+            _fakeGeneralHelper.EnumIntegerToString(FormattingFormat.HTML).Returns(MOCKED_HTML_FORMAT);
+            _fakeGeneralHelper.EnumIntegerToString(FormattingFormat.Markdown).Returns(MOCKED_MARKDOWN_FORMAT);
+            _fakeGeneralHelper.EnumIntegerToString(FormattingFormat.PlainText).Returns(MOCKED_PLAINTEXT_FORMAT);
+            _fakeGeneralHelper.EnumIntegerToString(FormattingFormat.MoodleAutoFormat).Returns(MOCKED_MOODLE_AUTOFORMAT);
+            _fakeGeneralHelper.EnumIntegerToString(Arg.Any<FormattingFormat>()).Returns(MOCKED_HTML_FORMAT); // Fallback
             _fakeGeneralHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns(DEFAULT_TIMESTAMP);
 
+            // Setup fake ID generator to return predictable sequential IDs for testing
+            int categoryIdCounter = 2; // Start from 2 to avoid conflict with the top category
+            int bankEntryIdCounter = 1;
+            int answerIdCounter = 1;
+            int hintIdCounter = 1;
+            _fakeIdGenerator = Substitute.For<ISequentialIdGenerator>();
+            _fakeIdGenerator.GetNextCategoryId().Returns(_ => categoryIdCounter++);
+            _fakeIdGenerator.GetNextBankEntryId().Returns(_ => bankEntryIdCounter++);
+            _fakeIdGenerator.GetNextAnswerId().Returns(_ => answerIdCounter++);
+            _fakeIdGenerator.GetNextHintId().Returns(_ => hintIdCounter++);
+
+            // Create instances of the plugin writer strategies
+            // Pass the logger as they inherit from XmlWriterBase which requires it
+            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _logger);
+            var dropdownWriter = new DropdownPluginWriter(_testFactory, _logger);
+            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _logger);
+            var pluginWriters = new List<IQuestionPluginWriter>
+            {
+                multiChoiceWriter,
+                dropdownWriter,
+                dragDropTextWriter,
+            };
+
             // Instantiate QuestionsWriter with dependencies
-            _questionsWriter = new QuestionsWriter(_testFactory, _logger, _fakeGeneralHelper);
+            _questionsWriter = new QuestionsWriter(_testFactory, _logger, _fakeGeneralHelper, _fakeIdGenerator, pluginWriters);
 
             // Create a dummy course - questions will be added per test
             _course = new Model.Course
@@ -64,6 +100,30 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 var doc = new XmlDocument();
                 doc.LoadXml(output);
             });
+        }
+
+        [Test]
+        public void WriteQuestions_HandlesEmptyQuestionList()
+        {
+            // Arrange: Don't add questions, so the list is empty
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            string output = _testFactory.StringWriter.ToString();
+
+            // Assert: Should still produce valid XML with root and top category
+            var doc = new XmlDocument();
+            Assert.DoesNotThrow(() => doc.LoadXml(output), "XML should be well-formed even with no questions");
+
+            Assert.That(doc.DocumentElement?.Name, Is.EqualTo("question_categories"));
+            var categoryNodes = doc.SelectNodes("//question_category");
+
+            // Should only contain the 'top' category
+            Assert.That(categoryNodes?.Count, Is.EqualTo(1), "Should only have the 'top' category");
+            Assert.That(categoryNodes[0]?.SelectSingleNode("name")?.InnerText, Is.EqualTo("top"));
+
+            // Bank entries within 'top' should be empty
+            Assert.That(categoryNodes[0]?.SelectSingleNode("question_bank_entries")?.HasChildNodes, Is.False);
         }
 
         [Test]
@@ -369,6 +429,168 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         }
 
         [Test]
+        public void WriteQuestions_WritesDragDropTextBaseElementsCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicDragDropTextQuestion(50, "DDTBaseCat");
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Check base question elements
+            var questionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']");
+            Assert.IsNotNull(questionNode, $"Question node with ID {question.QuestionId} not found");
+
+            Assert.That(questionNode.SelectSingleNode("name")?.InnerText, Is.EqualTo(question.QuestionName));
+            Assert.That(questionNode.SelectSingleNode("questiontext")?.InnerText, Is.EqualTo(question.QuestionText));
+            Assert.That(questionNode.SelectSingleNode("questiontextformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
+            Assert.That(questionNode.SelectSingleNode("generalfeedback")?.InnerText, Is.EqualTo(question.GeneralFeedback));
+            Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
+            Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
+            Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("ddwtos")); // Mapped value for DragDropText
+            Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
+            Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
+        }
+
+        [Test]
+        public void WriteQuestions_WritesDragDropTextPluginStructureCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicDragDropTextQuestion(51, "DDTStructCat");
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Plugin structure
+            var pluginNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/plugin_qtype_ddwtos_question");
+            Assert.IsNotNull(pluginNode, "ddwtos plugin node not found");
+
+            var answersNode = pluginNode.SelectSingleNode("answers");
+            Assert.IsNotNull(answersNode, "Answers node not found");
+            Assert.That(answersNode.SelectNodes("answer")?.Count, Is.EqualTo(question.Answers.Count), "Incorrect number of answer choices");
+
+            var ddwtosNode = pluginNode.SelectSingleNode("ddwtos");
+            Assert.IsNotNull(ddwtosNode, "ddwtos options node not found");
+        }
+
+        [Test]
+        public void WriteQuestions_WritesDragDropTextAnswersAndFeedbackCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicDragDropTextQuestion(52, "DDTAnsCat");
+            _course.Questions.Add(question);
+
+            var choice1 = question.Answers.First(c => c.ID == 1); // Category A -> Group 1
+            var choice2 = question.Answers.First(c => c.ID == 2); // Category B -> Group 2
+            var choice4 = question.Answers.First(c => c.ID == 4); // Category A -> Group 1
+
+            // Expected PHP feedback strings
+            string expectedFeedback1 = "O:8:\"stdClass\":2:{s:9:\"draggroup\";s:1:\"1\";s:8:\"infinite\";b:0;}"; // Cat A
+            string expectedFeedback2 = "O:8:\"stdClass\":2:{s:9:\"draggroup\";s:1:\"2\";s:8:\"infinite\";b:0;}"; // Cat B
+            string expectedFeedback4 = "O:8:\"stdClass\":2:{s:9:\"draggroup\";s:1:\"1\";s:8:\"infinite\";b:0;}"; // Cat A
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Check specific answer nodes
+            var answersNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//plugin_qtype_ddwtos_question/answers");
+            Assert.IsNotNull(answersNode);
+
+            // Choice 1 (France, Cat A)
+            var answer1Node = answersNode.SelectSingleNode($"answer[answertext='{choice1.Value}']");
+            Assert.IsNotNull(answer1Node, $"Answer node for '{choice1.Value}' not found");
+            Assert.That(answer1Node.SelectSingleNode("answerformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
+            Assert.That(answer1Node.SelectSingleNode("fraction")?.InnerText, Is.EqualTo("0.0000000"));
+            Assert.That(answer1Node.SelectSingleNode("feedback")?.InnerText, Is.EqualTo(expectedFeedback1));
+            Assert.That(answer1Node.SelectSingleNode("feedbackformat")?.InnerText, Is.EqualTo("0"));
+
+            // Choice 2 (London, Cat B)
+            var answer2Node = answersNode.SelectSingleNode($"answer[answertext='{choice2.Value}']");
+            Assert.IsNotNull(answer2Node, $"Answer node for '{choice2.Value}' not found");
+            Assert.That(answer2Node.SelectSingleNode("answerformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
+            Assert.That(answer2Node.SelectSingleNode("fraction")?.InnerText, Is.EqualTo("0.0000000"));
+            Assert.That(answer2Node.SelectSingleNode("feedback")?.InnerText, Is.EqualTo(expectedFeedback2));
+            Assert.That(answer2Node.SelectSingleNode("feedbackformat")?.InnerText, Is.EqualTo("0"));
+
+             // Choice 4 (Germany, Cat A)
+            var answer4Node = answersNode.SelectSingleNode($"answer[answertext='{choice4.Value}']");
+            Assert.IsNotNull(answer4Node, $"Answer node for '{choice4.Value}' not found");
+            Assert.That(answer4Node.SelectSingleNode("answerformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
+            Assert.That(answer4Node.SelectSingleNode("fraction")?.InnerText, Is.EqualTo("0.0000000"));
+            Assert.That(answer4Node.SelectSingleNode("feedback")?.InnerText, Is.EqualTo(expectedFeedback4));
+            Assert.That(answer4Node.SelectSingleNode("feedbackformat")?.InnerText, Is.EqualTo("0"));
+        }
+
+        [Test]
+        public void WriteQuestions_HandlesDragDropTextWithNoCategoriesCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicDragDropTextQuestion(56, "DDTNoCat");
+
+            // Override answers to have no categories
+            question.Answers = new List<TextChoice>
+            {
+                new TextChoice { ID = 1, Value = "Choice1", Category = null },
+                new TextChoice { ID = 2, Value = "Choice2", Category = "" },
+            };
+            _course.Questions.Add(question);
+
+            // Expected PHP feedback strings (all should map to group 1)
+            string expectedFeedback = "O:8:\"stdClass\":2:{s:9:\"draggroup\";s:1:\"1\";s:8:\"infinite\";b:0;}";
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Check feedback for both answers
+            var answersNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//plugin_qtype_ddwtos_question/answers");
+            Assert.IsNotNull(answersNode);
+
+            var answer1Feedback = answersNode.SelectSingleNode("answer[answertext='Choice1']/feedback")?.InnerText;
+            Assert.That(answer1Feedback, Is.EqualTo(expectedFeedback), "PHP Feedback string for Choice1 with null category is incorrect");
+
+            var answer2Feedback = answersNode.SelectSingleNode("answer[answertext='Choice2']/feedback")?.InnerText;
+            Assert.That(answer2Feedback, Is.EqualTo(expectedFeedback), "PHP Feedback string for Choice2 with empty category is incorrect");
+        }
+
+        [Test]
+        public void WriteQuestions_WritesDragDropTextOptionsCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicDragDropTextQuestion(53, "DDTOptionsCat", withFeedback: true, withHints: true);
+            question.ShuffleAnswers = false; // Override default shuffle
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Check ddwtos options node
+            var ddwtosNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//ddwtos");
+            Assert.IsNotNull(ddwtosNode, "ddwtos options node not found");
+
+            Assert.That(ddwtosNode.SelectSingleNode("shuffleanswers")?.InnerText, Is.EqualTo("0")); // Set to false in arrange
+            Assert.That(ddwtosNode.SelectSingleNode("correctfeedback")?.InnerText, Is.EqualTo(question.CorrectResponseFeedback));
+            Assert.That(ddwtosNode.SelectSingleNode("correctfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
+            Assert.That(ddwtosNode.SelectSingleNode("partiallycorrectfeedback")?.InnerText, Is.EqualTo(question.PartiallyCorrectResponseFeedback));
+            Assert.That(ddwtosNode.SelectSingleNode("partiallycorrectfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
+            Assert.That(ddwtosNode.SelectSingleNode("incorrectfeedback")?.InnerText, Is.EqualTo(question.IncorrectResponseFeedback));
+            Assert.That(ddwtosNode.SelectSingleNode("incorrectfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
+            Assert.That(ddwtosNode.SelectSingleNode("shownumcorrect")?.InnerText, Is.EqualTo("1")); // Hints were added
+        }
+
+        [Test]
         public void WriteQuestions_LogsDebugOnSuccess()
         {
             // Arrange
@@ -386,7 +608,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _questionsWriter = new QuestionsWriter(throwingFactory, _logger, _fakeGeneralHelper);
+            _questionsWriter = new QuestionsWriter(throwingFactory, _logger, _fakeGeneralHelper, _fakeIdGenerator, new List<IQuestionPluginWriter>());
             _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act & Assert: Verify that an exception is thrown
@@ -492,7 +714,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                         WrongAnswers = ["WrongAnswerB", "WrongAnswerC"], // "WrongAnswerB" is shared
                     },
                 },
-                Hints = null, // Add hints separately
+                Hints = null, // Hints are added below
                 Tags = new List<string> { $"TagDD{id}" },
             };
 
@@ -528,6 +750,77 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             }
 
             return dq;
+        }
+
+
+        /// <summary>
+        /// Creates a basic drag-and-drop text question with specified parameters
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withHints">Indicates whether the question should include hints</param>
+        /// <param name="withFeedback">Indicates whether the question should include feedback for responses</param>
+        /// <param name="questionReady">Indicates whether the question is considered ready for use</param>
+        /// <returns>A <see cref="DragAndDropTextQuestion"/> object initialized with specified settings and default structure</returns>
+        private DragAndDropTextQuestion CreateBasicDragDropTextQuestion(int id, string category, bool withHints = false, bool withFeedback = false)
+        {
+            var ddtq = new DragAndDropTextQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"DragDrop_{id}",
+                QuestionText = "The capital of [[1]] is Paris. The capital of the UK is [[2]]. The capital of Austria is [[3]].",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = $"General Feedback DDT {id}",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 3.0f,
+                HintPenalty = 0.3333333f,
+                QuestionReady = true,
+                ShuffleAnswers = true,
+                Answers = new List<TextChoice>
+                {
+                    new TextChoice { ID = 1, Value = "France", Category = "A", ValueFormat = FormattingFormat.PlainText },
+                    new TextChoice { ID = 2, Value = "London", Category = "B", ValueFormat = FormattingFormat.HTML },
+                    new TextChoice { ID = 3, Value = "Vienna", Category = "A", ValueFormat = FormattingFormat.PlainText },
+                    new TextChoice { ID = 4, Value = "Germany", Category = "A", ValueFormat = FormattingFormat.HTML }, // Distractor in group A
+                    new TextChoice { ID = 5, Value = "Madrid", Category = "B", ValueFormat = FormattingFormat.PlainText }, // Distractor in group B
+                },
+                Hints = null, // Hints are added below
+                Tags = new List<string> { $"TagDDT{id}" },
+            };
+
+            if (withFeedback)
+            {
+                ddtq.CorrectResponseFeedback = "DDT Correct";
+                ddtq.CorrectResponseFeedbackFormat = FormattingFormat.HTML;
+                ddtq.PartiallyCorrectResponseFeedback = "DDT Partial";
+                ddtq.PartiallyCorrectResponseFeedbackFormat = FormattingFormat.PlainText;
+                ddtq.IncorrectResponseFeedback = "DDT Incorrect";
+                ddtq.IncorrectResponseFeedbackFormat = FormattingFormat.Markdown;
+            }
+
+            if (withHints)
+            {
+                ddtq.Hints = new List<Hint>
+                {
+                    new Hint
+                    {
+                        HintText = "DDT Hint 1",
+                        HintTextFormat = FormattingFormat.HTML,
+                        ShowNumberOfCorrectAnswers = true,
+                        ClearIncorrectResponses = false,
+                    },
+                    new Hint
+                    {
+                        HintText = "DDT Hint 2",
+                        HintTextFormat = FormattingFormat.PlainText,
+                        ShowNumberOfCorrectAnswers = false,
+                        ClearIncorrectResponses = true,
+                    },
+                };
+            }
+
+            return ddtq;
         }
     }
 }

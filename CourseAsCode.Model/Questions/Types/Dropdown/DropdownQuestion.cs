@@ -11,7 +11,7 @@ namespace CourseAsCode.Model.Questions.Types.Dropdown
     public class DropdownQuestion : Question
     {
         [Description("Each dropdown question consists of multiple sub-questions, for each of which an answer is to be selected")]
-        public List<DropdownSubQuestion> Answers { get; init; } = new List<DropdownSubQuestion>();
+        public List<DropdownSubQuestion> Answers { get; set; } = new List<DropdownSubQuestion>();
 
         // Specific feedbacks
         [Description("Feedback shown after the question was answered correctly")]
