@@ -19,7 +19,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
         /// <param name="logger">Logger instance specific to <see cref="FileWriter"/></param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public FileWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper generalHelper)
+        public FileWriter(IXmlWriterFactory xmlWriterFactory, ILogger<FileWriter> logger, IGeneralHelper generalHelper)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));

@@ -23,7 +23,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <param name="courseHelper">Helper method providing specific helper methods focused on course management</param>
         /// <param name="helper">General Helper providing various helper methods</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public CourseWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, ICourseHelper courseHelper, IGeneralHelper helper)
+        public CourseWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CourseWriter> logger, ICourseHelper courseHelper, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
             _courseHelper = courseHelper ?? throw new ArgumentNullException(nameof(courseHelper));

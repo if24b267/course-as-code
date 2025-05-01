@@ -24,7 +24,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         /// <param name="logger">Logger instance specific to <see cref="RoleAssignmentsWriter"/></param>
         /// <param name="helper">General Helper providing various helper methods</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public RoleAssignmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger logger, IGeneralHelper helper)
+        public RoleAssignmentsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<RoleAssignmentsWriter> logger, IGeneralHelper helper)
             : base(xmlWriterFactory, logger)
         {
             _helper = helper ?? throw new ArgumentNullException(nameof(helper));

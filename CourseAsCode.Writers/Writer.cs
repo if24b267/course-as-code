@@ -25,7 +25,7 @@ using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Writer.Sections;
 using Microsoft.Extensions.DependencyInjection;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers
 {
@@ -91,7 +91,7 @@ namespace CourseAsCode.Writers
         private readonly QuizWriter _quizWriter;
 
         // -- Additional Dependencies -- //
-        private readonly Logger _logger;
+        private readonly ILogger<Writer> _logger;
 
         public Writer(
             CalendarWriter calendarWriter,
@@ -138,7 +138,7 @@ namespace CourseAsCode.Writers
             ModuleWriterFile moduleWriterFile,
             ModuleWriterQuiz moduleWriterQuiz,
             QuizWriter quizWriter,
-            Logger logger)
+            ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
             _calendarWriter = calendarWriter ?? throw new ArgumentNullException(nameof(calendarWriter));
@@ -206,8 +206,8 @@ namespace CourseAsCode.Writers
 
         public bool WriteCourse(Course course, string outputPath)
         {
-            _logger.Debug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
-            _logger.Info($"The course will be saved at {outputPath}");
+            _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
+            _logger.LogInformation($"The course will be saved at {outputPath}");
 
             // ---------------------------------------------
             // TEMPORARY CODE FOR TESTING - REMOVE LATER
@@ -607,7 +607,7 @@ namespace CourseAsCode.Writers
             // Ensure sections list is not empty
             if (course.Sections.Count == 0)
             {
-                _logger.Info("No sections specified by user, adding default section");
+                _logger.LogInformation("No sections specified by user, adding default section");
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
             }
 
@@ -674,7 +674,7 @@ namespace CourseAsCode.Writers
                 // Iterate through all activities of that section
                 foreach (var activity in section.Activities)
                 {
-                    _logger.Debug($"Writing activity {activity.ActivityId}: {activity.Name}");
+                    _logger.LogDebug($"Writing activity {activity.ActivityId}: {activity.Name}");
 
                     string? activityPath = string.Empty;
 
@@ -711,7 +711,7 @@ namespace CourseAsCode.Writers
                     // Skip if activityPath is null (i.e. directory creation failed)
                     if (activityPath == null)
                     {
-                        _logger.Error($"Skipping activity {activity.ActivityId}: {activity.Name} due to directory creation failure");
+                        _logger.LogError($"Skipping activity {activity.ActivityId}: {activity.Name} due to directory creation failure");
                         continue;
                     }
 
@@ -843,7 +843,7 @@ namespace CourseAsCode.Writers
             }
             catch (Exception e)
             {
-                _logger.Fatal($"Could not create directory {path}: {e.Message}");
+                _logger.LogCritical($"Could not create directory {path}: {e.Message}");
                 return false;
             }
         }
@@ -851,9 +851,16 @@ namespace CourseAsCode.Writers
 
         public static void ConfigureXmlServices(IServiceCollection services)
         {
+            // General XML services and helpers
             services.AddSingleton<IXmlWriterFactory, DefaultXmlWriterFactory>();
             services.AddSingleton<IGeneralHelper>(GeneralHelper.Instance);
+            services.AddSingleton<IMoodleVersionHelper, MoodleVersionHelper>();
+            services.AddSingleton<ICourseHelper, CourseHelper>();
             services.AddSingleton<ISequentialIdGenerator, SequentialIdGenerator>();
+            services.AddSingleton<IFileHelper, FileHelper>();
+            services.AddSingleton<IFileService, FileService>();
+            services.AddSingleton<IRolesHelper, RolesHelper>();
+            services.AddSingleton<IUserHelper, UserHelper>();
 
             // Plugins for the QuestionWriter
             services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
@@ -886,6 +893,7 @@ namespace CourseAsCode.Writers
             services.AddSingleton<BadgesWriter>();
             services.AddSingleton<CompletionWriter>();
             services.AddSingleton<SectionWriter>();
+            services.AddSingleton<InforefSectionsWriter>();
             services.AddSingleton<ActivityGradesWriter>();
             services.AddSingleton<ActivityGradehistoryWriter>();
             services.AddSingleton<ActivityInforefWriter>();
