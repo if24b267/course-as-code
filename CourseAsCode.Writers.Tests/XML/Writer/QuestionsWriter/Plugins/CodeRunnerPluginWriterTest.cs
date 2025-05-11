@@ -1,6 +1,7 @@
 using System.Xml;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
+using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
@@ -244,11 +245,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
         public void WritePluginData_ThrowsArgumentException_WhenNotCodeRunnerQuestion()
         {
             // Arrange - create a different question type (not CodeRunner)
-            var wrongQuestion = new CourseAsCode.Model.Questions.Types.MultipleChoice.MultipleChoiceQuestion
+            var wrongQuestion = new DropdownQuestion
             {
                 QuestionId = 999,
                 QuestionName = "Wrong Type Question",
-                Category = "Test Category"
+                Category = "Test Category",
+                QuestionText = "Test question text"
             };
 
             // Act & Assert
