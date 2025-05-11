@@ -26,7 +26,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
         {
             _testFactory = new XmlWriterFactoryTest();
             _logger = Substitute.For<ILogger<CodeRunnerPluginWriter>>();
-            
+
             // Mock helpers
             _generalHelper = Substitute.For<IGeneralHelper>();
             _generalHelper.EnumIntegerToString(FormattingFormat.HTML).Returns(DEFAULT_FORMAT_MAPPED);
@@ -44,6 +44,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             // Create the writer under test
             _codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _logger);
 
+            // Create a fresh StringWriter for each test
+            _testFactory.ClearContents();
+
             // Create an XML writer
             _xmlWriter = _testFactory.Create("test.xml", new XmlWriterSettings());
             _xmlWriter.WriteStartDocument();
@@ -53,10 +56,25 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
         [TearDown]
         public void TearDown()
         {
-            _xmlWriter.WriteEndElement();
-            _xmlWriter.WriteEndDocument();
-            _xmlWriter.Flush();
-            _xmlWriter.Close();
+            // Only close if not already closed in the test
+            try
+            {
+                _xmlWriter.WriteEndElement();
+                _xmlWriter.WriteEndDocument();
+                _xmlWriter.Flush();
+            }
+            catch (InvalidOperationException)
+            {
+                // The XML writer might already be closed in the test
+            }
+            finally
+            {
+                // Always close the writer
+                if (_xmlWriter != null)
+                {
+                    _xmlWriter.Close();
+                }
+            }
         }
 
         [Test]
@@ -67,6 +85,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Act
             _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+
+            // Close the XML elements before reading
+            _xmlWriter.WriteEndElement(); // Close the root element
+            _xmlWriter.WriteEndDocument();
+            _xmlWriter.Flush();
+
             string output = _testFactory.StringWriter.ToString();
 
             // Assert
@@ -83,6 +107,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             var testCasesNode = pluginNode.SelectSingleNode("coderunner_testcases");
             Assert.IsNotNull(testCasesNode, "CodeRunner testcases node not found");
             Assert.That(testCasesNode.SelectNodes("coderunner_testcase")?.Count, Is.EqualTo(question.TestCases.Count));
+
+            // Reset the XML writer for the next test
+            _xmlWriter = _testFactory.Create("test.xml", new XmlWriterSettings());
+            _xmlWriter.WriteStartDocument();
+            _xmlWriter.WriteStartElement("root");
         }
 
         [Test]
@@ -93,6 +122,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Act
             _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+
+            // Close the XML elements before reading
+            _xmlWriter.WriteEndElement(); // Close the root element
+            _xmlWriter.WriteEndDocument();
+            _xmlWriter.Flush();
+
             string output = _testFactory.StringWriter.ToString();
 
             // Assert
@@ -131,6 +166,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             Assert.That(optionNode.SelectSingleNode("filenamesexplain")?.InnerText, Is.EqualTo(question.FilenamesExplain));
             Assert.That(optionNode.SelectSingleNode("displayfeedback")?.InnerText, Is.EqualTo(question.DisplayFeedback ? "1" : "0"));
             Assert.That(optionNode.SelectSingleNode("giveupallowed")?.InnerText, Is.EqualTo(question.GiveUpAllowed ? "1" : "0"));
+
+            // Reset the XML writer for the next test
+            _xmlWriter = _testFactory.Create("test.xml", new XmlWriterSettings());
+            _xmlWriter.WriteStartDocument();
+            _xmlWriter.WriteStartElement("root");
         }
 
         [Test]
@@ -141,6 +181,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Act
             _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+
+            // Close the XML elements before reading
+            _xmlWriter.WriteEndElement(); // Close the root element
+            _xmlWriter.WriteEndDocument();
+            _xmlWriter.Flush();
+
             string output = _testFactory.StringWriter.ToString();
 
             // Assert
@@ -177,6 +223,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             Assert.That(secondTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(secondTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
             Assert.That(secondTestCaseNode.SelectSingleNode("stdin")?.InnerText, Is.EqualTo(secondTestCase.StdIn));
             Assert.That(secondTestCaseNode.SelectSingleNode("extra")?.InnerText, Is.EqualTo(secondTestCase.Extra));
+
+            // Reset the XML writer for the next test
+            _xmlWriter = _testFactory.Create("test.xml", new XmlWriterSettings());
+            _xmlWriter.WriteStartDocument();
+            _xmlWriter.WriteStartElement("root");
         }
 
         [Test]
