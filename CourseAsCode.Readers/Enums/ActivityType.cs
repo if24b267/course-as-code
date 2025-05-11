@@ -7,5 +7,6 @@ namespace CourseAsCode.Readers.Enums
         TEXTMEDIAAREA,
         QUIZ,
         FILE,
+        ASSIGNMENT
     }
 }

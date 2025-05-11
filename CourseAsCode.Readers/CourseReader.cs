@@ -176,6 +176,7 @@ namespace CourseAsCode.Readers
             services.AddSingleton<IActivityReader, YamlActivityReader>();
             services.AddSingleton<ISectionReader, YamlSectionReader>();
             services.AddSingleton<IQuestionReader, YamlQuestionReader>();
+            services.AddSingleton<IAssignmentReader, YamlAssignmentReader>();
             services.AddSingleton<ICourseReader, CourseReader>();
         }
     }

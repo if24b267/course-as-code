@@ -15,14 +15,16 @@ namespace CourseAsCode.Readers.YAML.Readers
         private readonly IUrlReader _urlReader;
         private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
         private readonly IQuizReader _quizReader;
+        private readonly IAssignmentReader _assignmentReader;
 
-        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader)
+        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader)
         {
             _fileReader = fileReader;
             _textMediaAreaReader = textMediaAreaReader;
             _urlReader = urlReader;
             _yamlFileReaderHelper = yamlFileReaderHelper;
             _quizReader = quizReader;
+            _assignmentReader = assignmentReader;
         }
 
         public Activity? Read(string modelObjectPath)
@@ -59,7 +61,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case ActivityType.QUIZ:
                     _logger.Debug($"Reading quiz activity from {modelObjectPath}");
                     return _quizReader.Read(modelObjectPath);
-
+                case ActivityType.ASSIGNMENT:
+                    _logger.Debug($"Reading assignment activity from {modelObjectPath}");
+                    return _assignmentReader.Read(modelObjectPath);
             }
 
             return null;
