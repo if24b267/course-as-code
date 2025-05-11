@@ -1,12 +1,13 @@
-﻿using CourseAsCode.Model.Activities;
+using CourseAsCode.Model.Activities;
 using CourseAsCode.Readers.Interfaces;
 
-namespace CourseAsCode.Readers.YAML.Readers;
-
-public class YamlAssignmentReader : IAssignmentReader
+namespace CourseAsCode.Readers.YAML.Readers
 {
-    public Activity Read(string modelObjectPath)
+    public class YamlAssignmentReader : IAssignmentReader
     {
-        throw new NotImplementedException();
+        public Activity Read(string modelObjectPath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -4,70 +4,71 @@ using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 using YamlDotNet.Core;
 
-namespace CourseAsCode.Readers.YAML.Readers;
-
-public class YamlUrlReader : IUrlReader
+namespace CourseAsCode.Readers.YAML.Readers
 {
-    private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-    private readonly IYamlFileReaderHelper _yamlReaderHelper;
-
-    public YamlUrlReader(IYamlFileReaderHelper yamlReaderHelper)
+    public class YamlUrlReader : IUrlReader
     {
-        _yamlReaderHelper = yamlReaderHelper;
-    }
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly IYamlFileReaderHelper _yamlReaderHelper;
 
-    // For backward compatibility
-    public YamlUrlReader()
-        : this(new YamlFileReaderHelper())
-    {
-    }
-
-    public URL? Read(string modelObjectPath)
-    {
-        // TODO: maybe make this into a middleware
-        if (!File.Exists(modelObjectPath))
+        public YamlUrlReader(IYamlFileReaderHelper yamlReaderHelper)
         {
-            _logger.Error($"File {modelObjectPath} does not exist.");
-            return null;
+            _yamlReaderHelper = yamlReaderHelper;
         }
 
-        try
+        // For backward compatibility
+        public YamlUrlReader()
+            : this(new YamlFileReaderHelper())
         {
-            // DeserializeFromContent YAML to object
-            var yamlUrl = _yamlReaderHelper.DeserializeFromFile<YamlUrl>(modelObjectPath);
+        }
 
-            // Validate the URL format
-            var validationResults = _yamlReaderHelper.ValidateObject(yamlUrl);
-            if (validationResults.Any())
+        public URL? Read(string modelObjectPath)
+        {
+            // TODO: maybe make this into a middleware
+            if (!File.Exists(modelObjectPath))
             {
-                var errors = string.Join(", ", validationResults.Select(r => r.ErrorMessage));
-                _logger.Warn($"Validation warnings for URL '{modelObjectPath}': {errors}");
+                _logger.Error($"File {modelObjectPath} does not exist.");
+                return null;
             }
 
-            var modelUrl = ConvertYamlUrlToModelUrl(yamlUrl);
-            return modelUrl;
-        }
-        catch (YamlException ex)
-        {
-            _logger.Error(ex, $"Error deserializing URL from '{modelObjectPath}': {ex.Message}");
-            return null;
-        }
-        catch (Exception ex)
-        {
-            _logger.Error(ex, $"Unexpected error reading URL from '{modelObjectPath}': {ex.Message}");
-            return null;
-        }
-    }
+            try
+            {
+                // DeserializeFromContent YAML to object
+                var yamlUrl = _yamlReaderHelper.DeserializeFromFile<YamlUrl>(modelObjectPath);
 
-    private URL? ConvertYamlUrlToModelUrl(YamlUrl yamlUrl)
-    {
-        // TODO: default values?
-        return new URL()
+                // Validate the URL format
+                var validationResults = _yamlReaderHelper.ValidateObject(yamlUrl);
+                if (validationResults.Any())
+                {
+                    var errors = string.Join(", ", validationResults.Select(r => r.ErrorMessage));
+                    _logger.Warn($"Validation warnings for URL '{modelObjectPath}': {errors}");
+                }
+
+                var modelUrl = ConvertYamlUrlToModelUrl(yamlUrl);
+                return modelUrl;
+            }
+            catch (YamlException ex)
+            {
+                _logger.Error(ex, $"Error deserializing URL from '{modelObjectPath}': {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"Unexpected error reading URL from '{modelObjectPath}': {ex.Message}");
+                return null;
+            }
+        }
+
+        private URL? ConvertYamlUrlToModelUrl(YamlUrl yamlUrl)
         {
-            ActivityId = ValueKeeper.CurrentActivityId,
-            Name = yamlUrl.Name,
-            ExternalUrl = yamlUrl.URL,
-            Description = yamlUrl.Description,
-        };
+            // TODO: default values?
+            return new URL()
+            {
+                ActivityId = ValueKeeper.CurrentActivityId,
+                Name = yamlUrl.Name,
+                ExternalUrl = yamlUrl.URL,
+                Description = yamlUrl.Description,
+            };
+        }
     }
 }
