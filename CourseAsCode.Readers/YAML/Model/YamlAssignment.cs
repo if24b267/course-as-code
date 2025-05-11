@@ -13,7 +13,7 @@ namespace CourseAsCode.Readers.YAML.Model
         public bool? SendNotifications { get; set; }
         public bool? SendLateNotifications { get; set; }
         public bool? SendStudentNotifications { get; set; }
-        public DateTime DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
         public DateTime? CutoffDate { get; set; }
         public DateTime? GradingDueDate { get; set; }
         public DateTime? AllowSubmissionsFromDate { get; set; }

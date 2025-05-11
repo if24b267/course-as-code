@@ -23,10 +23,9 @@ namespace CourseAsCode.Readers.Helper
         {
             // Standard deserializer - validates only required fields
             _deserializer = new DeserializerBuilder()
-                .WithTypeConverter(new DateTimeConverter(
+                .WithTypeConverter(new CustomDateTimeConverter(
                     provider: CultureInfo.InvariantCulture,
                     formats: _dateFormats))
-
                 .IgnoreUnmatchedProperties()
                 .WithNodeDeserializer(
                     i => new DeserializerValidation(i),
