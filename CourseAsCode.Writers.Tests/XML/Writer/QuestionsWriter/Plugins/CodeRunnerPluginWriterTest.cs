@@ -244,8 +244,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
         public void WritePluginData_ThrowsArgumentException_WhenNotCodeRunnerQuestion()
         {
             // Arrange - create a different question type (not CodeRunner)
-            var wrongQuestion = Substitute.For<CourseAsCode.Model.Questions.Question>();
-            wrongQuestion.QuestionName.Returns("Wrong Type Question");
+            var wrongQuestion = new CourseAsCode.Model.Questions.Types.MultipleChoice.MultipleChoiceQuestion
+            {
+                QuestionId = 999,
+                QuestionName = "Wrong Type Question",
+                Category = "Test Category"
+            };
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() =>
