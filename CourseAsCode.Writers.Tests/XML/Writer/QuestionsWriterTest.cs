@@ -276,6 +276,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(optionNode.SelectSingleNode("allornothing")?.InnerText, Is.EqualTo(question.AllOrNothing ? "1" : "0"));
             Assert.That(optionNode.SelectSingleNode("penaltyregime")?.InnerText, Is.EqualTo(question.PenaltyRegime));
             Assert.That(optionNode.SelectSingleNode("precheck")?.InnerText, Is.EqualTo(question.Precheck.ToString()));
+            Assert.That(optionNode.SelectSingleNode("hidecheck")?.InnerText, Is.EqualTo(question.HideCheck.ToString()));
+            Assert.That(optionNode.SelectSingleNode("showsource")?.InnerText, Is.EqualTo(question.ShowSource.ToString()));
+            Assert.That(optionNode.SelectSingleNode("answerboxlines")?.InnerText, Is.EqualTo(question.AnswerBoxLines.ToString()));
+            Assert.That(optionNode.SelectSingleNode("answerboxcolumns")?.InnerText, Is.EqualTo(question.AnswerBoxColumns.ToString()));
+            Assert.That(optionNode.SelectSingleNode("answerpreload")?.InnerText, Is.EqualTo(question.AnswerPreload));
+            Assert.That(optionNode.SelectSingleNode("globalextra")?.InnerText, Is.EqualTo(question.GlobalExtra));
             Assert.That(optionNode.SelectSingleNode("answer")?.InnerText, Is.EqualTo(question.Answer));
             Assert.That(optionNode.SelectSingleNode("validateonsave")?.InnerText, Is.EqualTo(question.ValidateOnSave ? "1" : "0"));
         }
@@ -312,6 +318,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(secondTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(secondTestCase.Expected));
             Assert.That(secondTestCaseNode.SelectSingleNode("useasexample")?.InnerText, Is.EqualTo(secondTestCase.UseAsExample ? "1" : "0"));
             Assert.That(secondTestCaseNode.SelectSingleNode("hiderestiffail")?.InnerText, Is.EqualTo(secondTestCase.HideRestIfFail ? "1" : "0"));
+            Assert.That(secondTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(secondTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
         }
 
         [Test]
