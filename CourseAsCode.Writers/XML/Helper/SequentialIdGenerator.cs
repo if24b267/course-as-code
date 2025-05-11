@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 
 namespace CourseAsCode.Writers.XML.Helper
 {
@@ -8,6 +8,8 @@ namespace CourseAsCode.Writers.XML.Helper
         private int _nextBankEntryId = 1;
         private int _nextAnswerId = 1;
         private int _nextHintId = 1;
+        private int _nextCodeRunnerOptionId = 1;
+        private int _nextCodeRunnerTestCaseId = 1;
 
         public int GetNextCategoryId()
         {
@@ -27,6 +29,16 @@ namespace CourseAsCode.Writers.XML.Helper
         public int GetNextHintId()
         {
             return _nextHintId++;
+        }
+
+        public int GetNextCodeRunnerOptionId()
+        {
+            return _nextCodeRunnerOptionId++;
+        }
+
+        public int GetNextCodeRunnerTestCaseId()
+        {
+            return _nextCodeRunnerTestCaseId++;
         }
     }
 }
