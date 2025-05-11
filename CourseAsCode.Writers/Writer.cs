@@ -5,6 +5,7 @@ using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Interfaces;
@@ -537,6 +538,123 @@ namespace CourseAsCode.Writers
                 },
             };
 
+            // Add a CodeRunner question for Java programming
+            var q5 = new CodeRunnerQuestion
+            {
+                QuestionId = 16,
+                Category = "Programming",
+                QuestionName = "Java Program: Hello World",
+                QuestionText = "<p>Write a complete Java program that prints exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must define a public class named Main and include a main method. No input is needed.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "<p>Make sure you understand how to create a main class in Java.</p>",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.0f,
+                QuestionReady = true,
+                CodeRunnerType = "java_program",
+                PrototypeType = 0,
+                AllOrNothing = true,
+                PenaltyRegime = "10, 20, ...",
+                Precheck = 0,
+                HideCheck = 0,
+                ShowSource = 0,
+                AnswerBoxLines = 18,
+                AnswerBoxColumns = 100,
+                AnswerPreload = "",
+                GlobalExtra = "",
+                Answer = "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
+                ValidateOnSave = true,
+                TemplateParams = "",
+                HoistTemplateParams = true,
+                ExtractCodeFromJson = true,
+                TemplateParamsLang = "None",
+                TemplateParamsEvalPerTry = false,
+                TemplateParamsEvald = "{}",
+                TwigAll = false,
+                UiParameters = "",
+                Attachments = 0,
+                AttachmentsRequired = 0,
+                MaxFileSize = 10240,
+                FilenamesRegex = "",
+                FilenamesExplain = "",
+                DisplayFeedback = true,
+                GiveUpAllowed = false,
+                TestCases = new List<CodeRunnerTestCase>
+                {
+                    new CodeRunnerTestCase
+                    {
+                        Id = 1,
+                        TestCode = "Hello World Output",
+                        TestType = 0,
+                        Expected = "Hello, World!",
+                        UseAsExample = false,
+                        Display = "SHOW",
+                        HideRestIfFail = false,
+                        Mark = 1.000m,
+                        StdIn = "",
+                        Extra = ""
+                    }
+                }
+            };
+
+            // Add a CodeRunner question for C programming
+            var q6 = new CodeRunnerQuestion
+            {
+                QuestionId = 17,
+                Category = "Programming",
+                QuestionName = "C Program: Hello World",
+                QuestionText = "<p>Write a complete C program that prints the following text exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must include the necessary #include statements and a main() function. No input is needed.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "<p>Remember to include standard libraries and proper syntax.</p>",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.0f,
+                QuestionReady = true,
+                CodeRunnerType = "c_program", // Make sure this matches the installed prototype in Moodle
+                PrototypeType = 0,
+                AllOrNothing = true,
+                PenaltyRegime = "10, 20, ...",
+                Precheck = 0,
+                HideCheck = 0,
+                ShowSource = 0,
+                AnswerBoxLines = 18,
+                AnswerBoxColumns = 100,
+                AnswerPreload = "",
+                GlobalExtra = "",
+                Answer = "#include <stdio.h>\n\nint main() {\n    printf(\"Hello, World!\\n\");\n    return 0;\n}",
+                ValidateOnSave = true,
+                TemplateParams = "",
+                HoistTemplateParams = true,
+                ExtractCodeFromJson = true,
+                TemplateParamsLang = "None",
+                TemplateParamsEvalPerTry = false,
+                TemplateParamsEvald = "{}",
+                TwigAll = false,
+                UiParameters = "",
+                Attachments = 0,
+                AttachmentsRequired = 0,
+                MaxFileSize = 10240,
+                FilenamesRegex = "",
+                FilenamesExplain = "",
+                DisplayFeedback = true,
+                GiveUpAllowed = false,
+                TestCases = new List<CodeRunnerTestCase>
+                {
+                    new CodeRunnerTestCase
+                    {
+                        Id = 1,
+                        TestCode = "Hello World Output    ",
+                        TestType = 0,
+                        Expected = "Hello, World!",
+                        UseAsExample = false,
+                        Display = "SHOW",
+                        HideRestIfFail = false,
+                        Mark = 1.000m,
+                        StdIn = "",
+                        Extra = ""
+                    }
+                }
+            };
 
             // Create new quiz activity and add it to the course
             var testQuiz = new Quiz
@@ -559,7 +677,7 @@ namespace CourseAsCode.Writers
                 ShuffleWithinQuestions  = true,
                 NewPageThreshold        = 0,
                 ShowPicture             = PictureOptions.SmallImage,
-                Questions               = new() { q1, q2, q3, q4 },
+                Questions               = new() { q1, q2, q3, q4, q5, q6 },
                 Feedback                = new List<QuizFeedback>()
                 {
                     new QuizFeedback()
@@ -599,6 +717,66 @@ namespace CourseAsCode.Writers
             course.Questions.Add(q2);
             course.Questions.Add(q3);
             course.Questions.Add(q4);
+            course.Questions.Add(q5);
+            course.Questions.Add(q6);
+
+            // Create a dedicated CodeRunner quiz
+            var codeRunnerQuiz = new Quiz
+            {
+                ActivityId              = 7,
+                Name                    = "Programming Challenges",
+                Description             = "<p>This quiz contains programming challenges using CodeRunner</p>",
+                DescriptionFormat       = FormattingFormat.HTML,
+                OpenTime                = null,
+                CloseTime               = null,
+                TimeLimit               = 7200,
+                TimeExpiryHandling      = TimeExpiryHandle.AutoSubmit,
+                QuestionBehaviour       = QuestionBehaviour.Deferred,
+                AllowRedosDuringAttempt = true,
+                AllowedAttempts         = 3,
+                BuildOnPreviousAttempts = true,
+                GradingMethod           = GradingMethod.LastAttempt,
+                DecimalsToDisplayGrades = 2,
+                DecimalsToDisplayMarks  = -1,
+                ShuffleWithinQuestions  = false,
+                NewPageThreshold        = 1,
+                ShowPicture             = PictureOptions.SmallImage,
+                Questions               = new() { q5, q6 },
+                Feedback                = new List<QuizFeedback>()
+                {
+                    new QuizFeedback()
+                    {
+                        FeedbackText = "<p>Excellent programming skills!</p>",
+                        GradeBoundary = 100f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                    new QuizFeedback()
+                    {
+                        FeedbackText  = "<p>Good attempt, but there is room for improvement.</p>",
+                        GradeBoundary = 50f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                    new QuizFeedback()
+                    {
+                        FeedbackText = "<p>You need more practice with programming fundamentals.</p>",
+                        GradeBoundary = 0f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+            };
+
+            var codeRunnerSection = new Section
+            {
+                SystemDefaults = new Section.SystemDefaultsSection
+                {
+                    SectionId = 6,
+                    PathToSection = "sections/section_6",
+                },
+                Name = "Programming Section",
+                Activities = new List<Activity> { codeRunnerQuiz },
+            };
+
+            course.Sections.Add(codeRunnerSection);
 
             // ---------------------------------------------
             // TEMPORARY CODE FOR TESTING - END
@@ -866,6 +1044,7 @@ namespace CourseAsCode.Writers
             services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
             services.AddSingleton<IQuestionPluginWriter, DropdownPluginWriter>();
             services.AddSingleton<IQuestionPluginWriter, MultiChoicePluginWriter>();
+            services.AddSingleton<IQuestionPluginWriter, CodeRunnerPluginWriter>();
 
             // Register QuestionsWriter (depends on the plugins registered above)
             services.AddSingleton<QuestionsWriter>();

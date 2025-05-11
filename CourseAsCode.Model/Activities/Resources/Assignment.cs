@@ -123,7 +123,7 @@ public class Assignment : Activity
 
     public class SystemDefaultsAssignment
     {
-        public int ModuleId { get; set; } = 13; 
+        public int ModuleId { get; set; } = 13;
         public string ModuleName { get; set; } = "assign";
     }
 }
