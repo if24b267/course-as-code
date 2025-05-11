@@ -1,7 +1,8 @@
-﻿using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Activities.Resources;
 
-namespace CourseAsCode.Readers.Interfaces;
-
-public interface ITextAndMediaAreaReader : IModelObjectReader<TextAndMediaArea>
+namespace CourseAsCode.Readers.Interfaces
 {
+    public interface ITextAndMediaAreaReader : IModelObjectReader<TextAndMediaArea>
+    {
+    }
 }

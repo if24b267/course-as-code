@@ -7,83 +7,84 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.Converters;
 using YamlDotNet.Serialization.NodeDeserializers;
 
-namespace CourseAsCode.Readers.Helper;
-
-/// <summary>
-/// Implementation of YAML file reader and validator with dependency injection support
-/// </summary>
-public class YamlFileReaderHelper : IYamlFileReaderHelper
+namespace CourseAsCode.Readers.Helper
 {
-    private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-    private static readonly string[] _dateFormats = ["dd-MM-yyyy HH:mm"];
-
-    private readonly IDeserializer _deserializer;
-
-    public YamlFileReaderHelper()
-    {
-        // Standard deserializer - validates only required fields
-        _deserializer = new DeserializerBuilder()
-             .WithTypeConverter(new DateTimeConverter(
-                  provider: CultureInfo.InvariantCulture,
-                  formats: _dateFormats))
-
-             .IgnoreUnmatchedProperties()
-             .WithNodeDeserializer(
-                 i => new DeserializerValidation(i),
-                 s => s.InsteadOf<ObjectNodeDeserializer>())
-             .Build();
-    }
-
     /// <summary>
-    /// DeserializeFromContent YAML content to the specified type (validates only required fields)
+    /// Implementation of YAML file reader and validator with dependency injection support
     /// </summary>
-    public T DeserializeFromContent<T>(string yamlContent)
+    public class YamlFileReaderHelper : IYamlFileReaderHelper
     {
-        _logger.Debug($"Deserializing YAML content to {typeof(T).Name}");
-        if (string.IsNullOrWhiteSpace(yamlContent))
+        private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly string[] _dateFormats = ["dd-MM-yyyy HH:mm"];
+
+        private readonly IDeserializer _deserializer;
+
+        public YamlFileReaderHelper()
         {
-            throw new ArgumentException("YAML content cannot be null or empty", nameof(yamlContent));
+            // Standard deserializer - validates only required fields
+            _deserializer = new DeserializerBuilder()
+                .WithTypeConverter(new DateTimeConverter(
+                    provider: CultureInfo.InvariantCulture,
+                    formats: _dateFormats))
+
+                .IgnoreUnmatchedProperties()
+                .WithNodeDeserializer(
+                    i => new DeserializerValidation(i),
+                    s => s.InsteadOf<ObjectNodeDeserializer>())
+                .Build();
         }
 
-        return _deserializer.Deserialize<T>(yamlContent);
-    }
-
-    /// <summary>
-    /// DeserializeFromContent YAML file to the specified type (validates only required fields)
-    /// </summary>
-    public T DeserializeFromFile<T>(string filePath)
-    {
-        _logger.Debug($"Deserializing YAML file \"{filePath}\" to {typeof(T).Name}");
-        if (string.IsNullOrWhiteSpace(filePath))
+        /// <summary>
+        /// DeserializeFromContent YAML content to the specified type (validates only required fields)
+        /// </summary>
+        public T DeserializeFromContent<T>(string yamlContent)
         {
-            throw new ArgumentException("File path cannot be null or empty", nameof(filePath));
+            _logger.Debug($"Deserializing YAML content to {typeof(T).Name}");
+            if (string.IsNullOrWhiteSpace(yamlContent))
+            {
+                throw new ArgumentException("YAML content cannot be null or empty", nameof(yamlContent));
+            }
+
+            return _deserializer.Deserialize<T>(yamlContent);
         }
 
-        if (!File.Exists(filePath))
+        /// <summary>
+        /// DeserializeFromContent YAML file to the specified type (validates only required fields)
+        /// </summary>
+        public T DeserializeFromFile<T>(string filePath)
         {
-            throw new FileNotFoundException($"File not found: {filePath}");
+            _logger.Debug($"Deserializing YAML file \"{filePath}\" to {typeof(T).Name}");
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException("File path cannot be null or empty", nameof(filePath));
+            }
+
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"File not found: {filePath}");
+            }
+
+            var yamlContent = File.ReadAllText(filePath);
+            return DeserializeFromContent<T>(yamlContent);
         }
 
-        var yamlContent = File.ReadAllText(filePath);
-        return DeserializeFromContent<T>(yamlContent);
-    }
+        /// <summary>
+        /// Validates a deserialized object using the enhanced validation rules
+        /// </summary>
+        /// <param name="obj">The object to validate</param>
+        /// <returns>A list of validation results, empty if validation passed</returns>
+        public List<ValidationResult> ValidateObject(object obj)
+        {
+            return DeserializerValidation.ValidateObject(obj);
+        }
 
-    /// <summary>
-    /// Validates a deserialized object using the enhanced validation rules
-    /// </summary>
-    /// <param name="obj">The object to validate</param>
-    /// <returns>A list of validation results, empty if validation passed</returns>
-    public List<ValidationResult> ValidateObject(object obj)
-    {
-        return DeserializerValidation.ValidateObject(obj);
-    }
-
-    /// <summary>
-    /// Validates a deserialized object and throws YamlException if validation fails
-    /// </summary>
-    /// <param name="obj">The object to validate</param>
-    public void ValidateObjectAndThrow(object obj)
-    {
-        DeserializerValidation.ValidateObjectAndThrow(obj);
+        /// <summary>
+        /// Validates a deserialized object and throws YamlException if validation fails
+        /// </summary>
+        /// <param name="obj">The object to validate</param>
+        public void ValidateObjectAndThrow(object obj)
+        {
+            DeserializerValidation.ValidateObjectAndThrow(obj);
+        }
     }
 }
