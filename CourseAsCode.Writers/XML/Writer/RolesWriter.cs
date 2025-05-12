@@ -30,9 +30,22 @@ namespace CourseAsCode.Writers.XML.Writer
                     writer.WriteStartDocument();
                     writer.WriteStartElement("roles_definition");
 
-                    // Hardcoded roles as per your sample XML
-                    WriteSingleRole(writer, 3, "editingteacher", "$@NULL@$", "", "3", "editingteacher");
-                    WriteSingleRole(writer, 5, "student", "$@NULL@$", "", "5", "student");
+                    if (course.Roles != null)
+                    {
+                        foreach (var role in course.Roles)
+                        {
+                            WriteSingleRole(
+                                writer,
+                                role.SystemDefaults.RoleId,
+                                role.Name ?? string.Empty,
+                                role.ShortName,
+                                role.LocalName ?? "$@NULL@$",
+                                role.Description ?? string.Empty,
+                                role.SystemDefaults.RoleId.ToString(),
+                                "editingteacher" // ggf. anpassen
+                            );
+                        }
+                    }
 
                     writer.WriteEndElement(); // Close <roles_definition>
                     writer.WriteEndDocument();
@@ -47,29 +60,27 @@ namespace CourseAsCode.Writers.XML.Writer
             }
         }
 
-        /// <summary>
-        /// Hardcoded: writes a single role to the roles.xml file as in your sample.
-        /// </summary>
-        private void WriteSingleRole(XmlWriter writer, int id, string shortname, string nameincourse, string description, string sortorder, string archetype)
+        private void WriteSingleRole(XmlWriter writer, int id, string name, string shortname, string nameincourse, string description, string sortorder, string archetype)
         {
             WriteStartElementWithAttributes(writer, "role", new Dictionary<string, string>
-            {
-                { "id", id.ToString() }
-            });
+    {
+        { "id", id.ToString() }
+    });
 
             var elements = new Dictionary<string, string>
-            {
-                { "name", "" },
-                { "shortname", shortname },
-                { "nameincourse", nameincourse },
-                { "description", description },
-                { "sortorder", sortorder },
-                { "archetype", archetype }
-            };
+    {
+        { "name", name },
+        { "shortname", shortname },
+        { "nameincourse", nameincourse },
+        { "description", description },
+        { "sortorder", sortorder },
+        { "archetype", archetype }
+    };
 
             WriteElements(writer, elements);
 
             writer.WriteEndElement(); // Close <role>
         }
+
     }
 }
