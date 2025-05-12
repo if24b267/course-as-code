@@ -11,9 +11,9 @@ public class AssignmentDefaults
 
     // Submission Settings
     public const bool DEFAULT_SUBMISSION_DRAFTS = false;
-    public const bool DEFAULT_SEND_NOTIFICATIONS = true;
+    public const bool DEFAULT_SEND_NOTIFICATIONS = false;
     public const bool DEFAULT_SEND_LATE_NOTIFICATIONS = false;
-    public const bool DEFAULT_SEND_STUDENT_NOTIFICATIONS = true;
+    public const bool DEFAULT_SEND_STUDENT_NOTIFICATIONS = false;
     public static readonly DateTime? DEFAULT_DUE_DATE = null;
     public static readonly DateTime? DEFAULT_CUTOFF_DATE = null;
     public static readonly DateTime? DEFAULT_GRADING_DUE_DATE = null;

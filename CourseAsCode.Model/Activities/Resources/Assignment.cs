@@ -117,13 +117,16 @@ public class Assignment : Activity
 
     public class SensibleDefaultsAssignment
     {
-        // TODO
+        public string? Activity { get; set; }
+        public int? ActivityFormat { get; set; }
+        public int? TimeLimit { get; set; }
+        public int? SubmissionAttachments { get; set; }
     }
 
 
     public class SystemDefaultsAssignment
     {
-        public int ModuleId { get; set; } = 13; 
+        public int ModuleId { get; set; } = 13;
         public string ModuleName { get; set; } = "assign";
     }
 }
@@ -152,11 +155,11 @@ public class AssignmentSubmission
 /// </summary>
 public class AssignmentOverride
 {
-        public int OverrideId { get; set; }
-        public int UserId { get; set; }
-        public DateTime? DueDate { get; set; }
-        public DateTime? CutoffDate { get; set; }
-        // Add additional override-related properties as needed.
+    public int OverrideId { get; set; }
+    public int UserId { get; set; }
+    public DateTime? DueDate { get; set; }
+    public DateTime? CutoffDate { get; set; }
+    // Add additional override-related properties as needed.
 }
 
 /// <summary>

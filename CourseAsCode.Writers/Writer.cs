@@ -206,6 +206,31 @@ namespace CourseAsCode.Writers
 
         public bool WriteCourse(Course course, string outputPath)
         {
+
+            //TODO: user wird benötigt für assignment (DUMMY)
+            var user = new User
+            {
+                Username = "course_as_code",
+                EMail = new System.Net.Mail.MailAddress("user@example.com"),
+                FirstName = "Admin",
+                LastName = "User",
+                SystemDefaults = new User.SystemDefaultsUser
+                {
+                    Id = 2,
+                    ExternalId = 5 // Beispiel für contextid
+                },
+                Tags = new List<User.UserTag>
+                {
+                    new User.UserTag { Id = 5, Name = "test", RawName = "test" },
+                },
+                Preferences = new List<User.UserPreference>
+                {
+                    new User.UserPreference { Id = 1, Name = "core_message_migrate_data", Value = "1" },
+                }
+            };
+            course.EnrolledUsers = new List<User> { user };
+
+
             _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
             _logger.LogInformation($"The course will be saved at {outputPath}");
 
