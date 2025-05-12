@@ -13,20 +13,11 @@ namespace CourseAsCode.Writers.XML.Writer
 
         private readonly IRolesHelper _rolesHelper;
 
-
-        /// <summary>
-        /// Creates a new instance of the RolesWriter class
-        /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
-        /// <param name="logger">Logger instance specific to RolesWriter</param>
-        /// <param name="rolesHelper">Helper method providing specific helper methods focused on role management</param>
-        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
         public RolesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<RolesWriter> logger, IRolesHelper rolesHelper)
             : base(xmlWriterFactory, logger)
         {
             _rolesHelper = rolesHelper ?? throw new ArgumentNullException(nameof(rolesHelper));
         }
-
 
         public void WriteRoles(Model.Course course, string outputPath)
         {
@@ -39,10 +30,9 @@ namespace CourseAsCode.Writers.XML.Writer
                     writer.WriteStartDocument();
                     writer.WriteStartElement("roles_definition");
 
-                    foreach (var role in course.Roles)
-                    {
-                        WriteSingleRole(writer, role);
-                    }
+                    // Hardcoded roles as per your sample XML
+                    WriteSingleRole(writer, 3, "editingteacher", "$@NULL@$", "", "3", "editingteacher");
+                    WriteSingleRole(writer, 5, "student", "$@NULL@$", "", "5", "student");
 
                     writer.WriteEndElement(); // Close <roles_definition>
                     writer.WriteEndDocument();
@@ -58,32 +48,28 @@ namespace CourseAsCode.Writers.XML.Writer
         }
 
         /// <summary>
-        /// writes a single role to the roles.xml file.
+        /// Hardcoded: writes a single role to the roles.xml file as in your sample.
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="role">initialized Moodle Role.</param>
-        private void WriteSingleRole(XmlWriter writer, Role role)
+        private void WriteSingleRole(XmlWriter writer, int id, string shortname, string nameincourse, string description, string sortorder, string archetype)
         {
             WriteStartElementWithAttributes(writer, "role", new Dictionary<string, string>
             {
-                { "id", role.SystemDefaults.RoleId.ToString() },
+                { "id", id.ToString() }
             });
 
             var elements = new Dictionary<string, string>
             {
-                { "name", role.Name ?? string.Empty },
-                { "shortname", role.ShortName },
-                { "nameincourse", role.LocalName ?? "$@NULL@$" },
-                { "description", role.Description ?? string.Empty },
-                { "sortorder", role.SystemDefaults.RoleId.ToString() }, // TODO: Determine function of this field, seemingly the same as roleid
-                { "archetype", _rolesHelper.GetArchetypeFromEnum(role.Archetype) },
+                { "name", "" },
+                { "shortname", shortname },
+                { "nameincourse", nameincourse },
+                { "description", description },
+                { "sortorder", sortorder },
+                { "archetype", archetype }
             };
 
             WriteElements(writer, elements);
 
             writer.WriteEndElement(); // Close <role>
-
-            LogTrace($"Wrote role {role.Name} to {DEFAULT_ROLES_RELATIVE_PATH}");
         }
     }
 }

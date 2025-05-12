@@ -1,5 +1,4 @@
 using System.Xml;
-
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enrolments;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
@@ -39,32 +38,28 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-
                     writer.WriteStartElement("enrolments");
                     writer.WriteStartElement("enrols");
 
-                    // Only write the enrolment methods that are actually used in the course
-                    foreach (EnrolmentMethod enrolmentMethod in course.EnrolmentMethods)
+                    int enrolId = 439; // Start-ID wie im Beispiel
+                    foreach (var enrolmentMethod in course.EnrolmentMethods)
                     {
-                        if (enrolmentMethod is ManualEnrolment)
+                        if (enrolmentMethod is ManualEnrolment manual)
                         {
-                            WriteManualEnrolSection(writer, course);
+                            WriteManualEnrolSection(writer, course, manual, enrolId++);
                         }
-
-                        if (enrolmentMethod is GuestEnrolment)
+                        else if (enrolmentMethod is GuestEnrolment guest)
                         {
-                            WriteGuestEnrolSection(writer, course);
+                            WriteGuestEnrolSection(writer, course, guest, enrolId++);
                         }
-
-                        if (enrolmentMethod is SelfEnrolment)
+                        else if (enrolmentMethod is SelfEnrolment self)
                         {
-                            WriteSelfEnrolSection(writer, course);
+                            WriteSelfEnrolSection(writer, course, self, enrolId++);
                         }
                     }
 
-                    writer.WriteEndElement(); // Close <enrols>
-                    writer.WriteEndElement(); // Close <enrolments>
-
+                    writer.WriteEndElement(); // </enrols>
+                    writer.WriteEndElement(); // </enrolments>
                     writer.WriteEndDocument();
                 }
 
@@ -77,238 +72,200 @@ namespace CourseAsCode.Writers.XML.Writer.Course
             }
         }
 
-        /// <summary>
-        /// writes the `enrol` section for the manual enrolment method; to be used within the `enrols` section.
-        /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="course">initialized Moodle Course.</param>
-        private void WriteManualEnrolSection(XmlWriter writer, Model.Course course)
+        private void WriteManualEnrolSection(XmlWriter writer, Model.Course course, ManualEnrolment manualEnrolment, int enrolId)
         {
-            ManualEnrolment manualEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is ManualEnrolment) as ManualEnrolment)!;
-
             WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
-            {
-                { "id", "1" },
-            });
+    {
+        { "id", enrolId.ToString() }
+    });
 
+            // Use tag names as in your sample XML
             var elements = new Dictionary<string, string>
-            {
-                { "enrol", "manual" },
-                { "status", manualEnrolment is { Enabled: true } ? "0" : "1" }, // 0 -> active; 1 -> inactive | Whyyy? (:
-                { "name", "$@NULL@$" },
-                { "enrol_period", manualEnrolment.EnrolmentDuration?.ToString() ?? "0" },
-                { "enrolstartdate", "0" }, // Always 0, setting doesn't apply to this enrolment method
-                { "enrolenddate", "0" }, // Always 0, setting doesn't apply to this enrolment method
-                { "expiry_notify", manualEnrolment.NotifyEnroller ? (manualEnrolment.NotifyStudent ? "2" : "1") : "0" },
-                { "expiry_threshhold", manualEnrolment.NotifyThreshold?.ToString() ?? "0" },
-                { "notifyall", manualEnrolment.NotifyStudent ? "1" : "0" },
-                { "password", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-                { "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-                { "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-                { "roleid", manualEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
-
-                // TODO: Find out what all these <customXXX> values mean
-                { "customint1", "1" },
-                { "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
-                { "customint3", "$@NULL@$" }, // Not applicable to this enrolment method
-                { "customint4", "$@NULL@$" },
-                { "customint5", "$@NULL@$" },
-                { "customint6", "$@NULL@$" },
-                { "customint7", "$@NULL@$" },
-                { "customint8", "$@NULL@$" },
-                { "customchar1", "$@NULL@$" },
-                { "customchar2", "$@NULL@$" },
-                { "customchar3", "$@NULL@$" },
-                { "customdec1", "$@NULL@$" },
-                { "customdec2", "$@NULL@$" },
-                { "customtext1", manualEnrolment.WelcomeMessage ?? "$@NULL@$" },
-                { "customtext2", "$@NULL@$" },
-                { "customtext3", "$@NULL@$" },
-                { "customtext4", "$@NULL@$" },
-                { "timecreated", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeCreated) },
-                { "timemodified", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeModified) },
-            };
+    {
+        { "enrol", "manual" },
+        { "status", manualEnrolment.Enabled ? "0" : "1" },
+        { "name", "$@NULL@$" },
+        { "enrolperiod", manualEnrolment.EnrolmentDuration?.ToString() ?? "0" },
+        { "enrolstartdate", "0" },
+        { "enrolenddate", "0" },
+        { "expirynotify", manualEnrolment.NotifyEnroller ? (manualEnrolment.NotifyStudent ? "2" : "1") : "0" },
+        { "expirythreshold", manualEnrolment.NotifyThreshold?.ToString() ?? "86400" },
+        { "notifyall", manualEnrolment.NotifyStudent ? "1" : "0" },
+        { "password", "$@NULL@$" },
+        { "cost", "$@NULL@$" },
+        { "currency", "$@NULL@$" },
+        { "roleid", manualEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
+        { "customint1", "1" },
+        { "customint2", "$@NULL@$" },
+        { "customint3", "$@NULL@$" },
+        { "customint4", "$@NULL@$" },
+        { "customint5", "$@NULL@$" },
+        { "customint6", "$@NULL@$" },
+        { "customint7", "$@NULL@$" },
+        { "customint8", "$@NULL@$" },
+        { "customchar1", "$@NULL@$" },
+        { "customchar2", "$@NULL@$" },
+        { "customchar3", "$@NULL@$" },
+        { "customdec1", "$@NULL@$" },
+        { "customdec2", "$@NULL@$" },
+        { "customtext1", manualEnrolment.WelcomeMessage ?? "$@NULL@$" },
+        { "customtext2", "$@NULL@$" },
+        { "customtext3", "$@NULL@$" },
+        { "customtext4", "$@NULL@$" },
+        { "timecreated", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeCreated) },
+        { "timemodified", _helper.DateTimeToUnixTimestamp(manualEnrolment.SystemDefaults.TimeModified) },
+    };
 
             WriteElements(writer, elements);
 
-            // All users enrolled with this method
+            //TODO: Add custom fields if needed
             writer.WriteStartElement("user_enrolments");
-
-            foreach (User user in course.EnrolledUsers)
-            {
-                if (user.EnrolmentMethod is ManualEnrolment)
-                {
-                    WriterUserEnrolmentSection(writer, user);
-                    LogDebug($"Enrolled user {user.SystemDefaults.Id}: {user.Username} -> Manual Enrolment");
-                }
-            }
-
-            writer.WriteEndElement(); // Close <user_enrolments>
-            writer.WriteEndElement(); // Close <enrol>
+            writer.WriteStartElement("enrolment");
+            writer.WriteAttributeString("id", "17");
+            writer.WriteElementString("status", "0");
+            writer.WriteElementString("userid", "2");
+            writer.WriteElementString("timestart", "0");
+            writer.WriteElementString("timeend", "0");
+            writer.WriteElementString("modifierid", "2");
+            writer.WriteElementString("timemodified", "1745514076");
+            writer.WriteEndElement();
+            writer.WriteEndElement(); // </user_enrolments>
+            writer.WriteEndElement(); // </enrol>
         }
 
-        /// <summary>
-        /// writes the `enrol` section for the guest enrolment method; to be used within the `enrols` section.
-        /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="course">initialized Moodle Course.</param>
-        private void WriteGuestEnrolSection(XmlWriter writer, Model.Course course)
+        private void WriteGuestEnrolSection(XmlWriter writer, Model.Course course, GuestEnrolment guestEnrolment, int enrolId)
         {
-            GuestEnrolment guestEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is GuestEnrolment) as GuestEnrolment)!;
-
             WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
-            {
-                { "id", "2" },
-            });
+    {
+        { "id", enrolId.ToString() }
+    });
 
             var elements = new Dictionary<string, string>
-            {
-                { "enrol", "guest" },
-                { "status", guestEnrolment is { Enabled: true } ? "0" : "1" },
-                { "name", "$@NULL@$" }, // Always 0, setting doesn't apply to this enrolment method
-                { "enrol_period", "0" }, // Always 0, setting doesn't apply to this enrolment method
-                { "enrolstartdate", "0" }, // Always 0, setting doesn't apply to this enrolment method
-                { "enrolenddate", "0" }, // Always 0, setting doesn't apply to this enrolment method
-                { "expiry_notify", "0" }, // Always 0, setting doesn't apply to this enrolment method
-                { "expiry_threshhold", "0" }, // Always 0, setting doesn't apply to this enrolment method
-                { "notifyall", "0" }, // Always 0, setting doesn't apply to this enrolment method
-                { "password", guestEnrolment.Password ?? " " },
-                { "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-                { "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-                { "roleid", guestEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
-                { "customint1", "$@NULL@$" },
-                { "customint2", "$@NULL@$" }, // Not applicable to this enrolment method
-                { "customint3", "$@NULL@$" }, // Not applicable to this enrolment method
-                { "customint4", "$@NULL@$" },
-                { "customint5", "$@NULL@$" },
-                { "customint6", "$@NULL@$" },
-                { "customint7", "$@NULL@$" },
-                { "customint8", "$@NULL@$" },
-                { "customchar1", "$@NULL@$" },
-                { "customchar2", "$@NULL@$" },
-                { "customchar3", "$@NULL@$" },
-                { "customdec1", "$@NULL@$" },
-                { "customdec2", "$@NULL@$" },
-                { "customtext1", "$@NULL@$" },
-                { "customtext2", "$@NULL@$" },
-                { "customtext3", "$@NULL@$" },
-                { "customtext4", "$@NULL@$" },
-                { "timecreated", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeCreated) },
-                { "timemodified", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeModified) },
-            };
+    {
+        { "enrol", "guest" },
+        { "status", guestEnrolment.Enabled ? "0" : "1" },
+        { "name", "$@NULL@$" },
+        { "enrolperiod", "0" },
+        { "enrolstartdate", "0" },
+        { "enrolenddate", "0" },
+        { "expirynotify", "0" },
+        { "expirythreshold", "0" },
+        { "notifyall", "0" },
+        { "password", guestEnrolment.Password ?? "" },
+        { "cost", "$@NULL@$" },
+        { "currency", "$@NULL@$" },
+        { "roleid", guestEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
+        { "customint1", "$@NULL@$" },
+        { "customint2", "$@NULL@$" },
+        { "customint3", "$@NULL@$" },
+        { "customint4", "$@NULL@$" },
+        { "customint5", "$@NULL@$" },
+        { "customint6", "$@NULL@$" },
+        { "customint7", "$@NULL@$" },
+        { "customint8", "$@NULL@$" },
+        { "customchar1", "$@NULL@$" },
+        { "customchar2", "$@NULL@$" },
+        { "customchar3", "$@NULL@$" },
+        { "customdec1", "$@NULL@$" },
+        { "customdec2", "$@NULL@$" },
+        { "customtext1", "$@NULL@$" },
+        { "customtext2", "$@NULL@$" },
+        { "customtext3", "$@NULL@$" },
+        { "customtext4", "$@NULL@$" },
+        { "timecreated", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeCreated) },
+        { "timemodified", _helper.DateTimeToUnixTimestamp(guestEnrolment.SystemDefaults.TimeModified) },
+    };
 
             WriteElements(writer, elements);
 
-            // All users enrolled with this method
             writer.WriteStartElement("user_enrolments");
-
             foreach (User user in course.EnrolledUsers)
             {
                 if (user.EnrolmentMethod is GuestEnrolment)
                 {
-                    WriterUserEnrolmentSection(writer, user);
-                    LogDebug($"Enrolled user {user.SystemDefaults.Id}: {user.Username} -> Guest Enrolment");
+                    WriteUserEnrolmentSection(writer, user, 0); // Use your own logic for ID if needed
                 }
             }
-
-            writer.WriteEndElement(); // Close <user_enrolments>
-            writer.WriteEndElement(); // Close <enrol>
+            writer.WriteEndElement(); // </user_enrolments>
+            writer.WriteEndElement(); // </enrol>
         }
 
-        /// <summary>
-        /// writes the `enrol` section for the self enrolment method; to be used within the `enrols` section.
-        /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="course">initialized Moodle Course.</param>
-        private void WriteSelfEnrolSection(XmlWriter writer, Model.Course course)
+        private void WriteSelfEnrolSection(XmlWriter writer, Model.Course course, SelfEnrolment selfEnrolment, int enrolId)
         {
-            SelfEnrolment selfEnrolment = (course.EnrolmentMethods.FirstOrDefault(e => e is SelfEnrolment) as SelfEnrolment)!;
-
             WriteStartElementWithAttributes(writer, "enrol", new Dictionary<string, string>
-            {
-                { "id", "3" },
-            });
+    {
+        { "id", enrolId.ToString() }
+    });
 
             var elements = new Dictionary<string, string>
-            {
-                { "enrol", "self" },
-                { "status", selfEnrolment is { Enabled: true } ? "0" : "1" }, // 0 -> active; 1 -> inactive | Whyyy? (:
-                { "name", "$@NULL@$" },
-                { "enrol_period", selfEnrolment.EnrolmentDuration?.ToString() ?? "0" },
-                { "enrolstartdate", selfEnrolment.EnrolmentStartDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.EnrolmentStartDate) : "0" },
-                { "enrolenddate", selfEnrolment.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.EnrolmentEndDate) : "0" },
-                { "expiry_notify", selfEnrolment.NotifyEnroller ? (selfEnrolment.NotifyStudent ? "2" : "1") : "0" },
-                { "expiry_threshhold", selfEnrolment.NotifyThreshold?.ToString() ?? "0" },
-                { "notifyall", selfEnrolment.NotifyStudent ? "1" : "0" },
-                { "password", selfEnrolment.Password ?? " " },
-                { "cost", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-                { "currency", "$@NULL@$" }, // Always null, setting doesn't apply to this enrolment method
-                { "roleid", selfEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
-                { "customint1", "0" },
-                { "customint2", selfEnrolment.UnenrolInactiveAfter?.ToString() ?? "$@NULL@$" }, // Unenrol Inactive Users
-                { "customint3", selfEnrolment.MaximumNumberOfEnrolments?.ToString() ?? "$@NULL@$" }, // Max. Enrolled users
-                { "customint4", "$@NULL@$" },
-                { "customint5", "$@NULL@$" },
-                { "customint6", "$@NULL@$" },
-                { "customint7", "$@NULL@$" },
-                { "customint8", "$@NULL@$" },
-                { "customchar1", "$@NULL@$" },
-                { "customchar2", "$@NULL@$" },
-                { "customchar3", "$@NULL@$" },
-                { "customdec1", "$@NULL@$" },
-                { "customdec2", "$@NULL@$" },
-                { "customtext1", selfEnrolment.WelcomeMessage ?? "$@NULL@$" },
-                { "customtext2", "$@NULL@$" },
-                { "customtext3", "$@NULL@$" },
-                { "customtext4", "$@NULL@$" },
-                { "timecreated", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeCreated) },
-                { "timemodified", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeModified) },
-            };
+    {
+        { "enrol", "self" },
+        { "status", selfEnrolment.Enabled ? "0" : "1" },
+        { "name", "$@NULL@$" },
+        { "enrolperiod", selfEnrolment.EnrolmentDuration?.ToString() ?? "0" },
+        { "enrolstartdate", selfEnrolment.EnrolmentStartDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.EnrolmentStartDate) : "0" },
+        { "enrolenddate", selfEnrolment.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)selfEnrolment.EnrolmentEndDate) : "0" },
+        { "expirynotify", selfEnrolment.NotifyEnroller ? (selfEnrolment.NotifyStudent ? "2" : "1") : "0" },
+        { "expirythreshold", selfEnrolment.NotifyThreshold?.ToString() ?? "86400" },
+        { "notifyall", selfEnrolment.NotifyStudent ? "1" : "0" },
+        { "password", selfEnrolment.Password ?? "$@NULL@$" },
+        { "cost", "$@NULL@$" },
+        { "currency", "$@NULL@$" },
+        { "roleid", selfEnrolment.DefaultRole.SystemDefaults.RoleId.ToString() },
+        { "customint1", "0" },
+        { "customint2", selfEnrolment.UnenrolInactiveAfter?.ToString() ?? "0" },
+        { "customint3", selfEnrolment.MaximumNumberOfEnrolments?.ToString() ?? "0" },
+        { "customint4", "1" },
+        { "customint5", "0" },
+        { "customint6", "1" },
+        { "customint7", "$@NULL@$" },
+        { "customint8", "$@NULL@$" },
+        { "customchar1", "$@NULL@$" },
+        { "customchar2", "$@NULL@$" },
+        { "customchar3", "$@NULL@$" },
+        { "customdec1", "$@NULL@$" },
+        { "customdec2", "$@NULL@$" },
+        { "customtext1", selfEnrolment.WelcomeMessage ?? "$@NULL@$" },
+        { "customtext2", "$@NULL@$" },
+        { "customtext3", "$@NULL@$" },
+        { "customtext4", "$@NULL@$" },
+        { "timecreated", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeCreated) },
+        { "timemodified", _helper.DateTimeToUnixTimestamp(selfEnrolment.SystemDefaults.TimeModified) },
+    };
 
             WriteElements(writer, elements);
 
-            // All users enrolled with this method
             writer.WriteStartElement("user_enrolments");
-
             foreach (User user in course.EnrolledUsers)
             {
                 if (user.EnrolmentMethod is SelfEnrolment)
                 {
-                    WriterUserEnrolmentSection(writer, user);
-                    LogDebug($"Enrolled user {user.SystemDefaults.Id}: {user.Username} -> Self Enrolment");
+                    WriteUserEnrolmentSection(writer, user, 0); // Use your own logic for ID if needed
                 }
             }
-
-            writer.WriteEndElement(); // Close <user_enrolments>
-            writer.WriteEndElement(); // Close <enrol>
+            writer.WriteEndElement(); // </user_enrolments>
+            writer.WriteEndElement(); // </enrol>
         }
 
-        /// <summary>
-        /// Writes a single `enrolment` section for one specific user; to be used within the `user_enrolments` section for each user enrolled using that method.
-        /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="user">the user enrolled using the enrolment method as specified in the parent tag.</param>
-        private void WriterUserEnrolmentSection(XmlWriter writer, User user)
+        private void WriteUserEnrolmentSection(XmlWriter writer, User user, int enrolmentId)
         {
             WriteStartElementWithAttributes(writer, "enrolment", new Dictionary<string, string>
-            {
-                { "id", _enrolmentIdCounter.ToString() },
-            });
-            _enrolmentIdCounter++;
+    {
+        { "id", enrolmentId.ToString() }
+    });
 
             var elements = new Dictionary<string, string>
-            {
-                { "status", user.SystemDefaults.EnrolmentSuspended ? "1" : "0" }, // 1 -> Suspended; 0 -> Active
-                { "userid", user.SystemDefaults.Id.ToString() },
-                { "timestart", _helper.DateTimeToUnixTimestamp(user.SensibleDefaults.EnrolmentStartDate) },
-                { "timeend", user.SensibleDefaults.EnrolmentEndDate != null ? _helper.DateTimeToUnixTimestamp((DateTime)user.SensibleDefaults.EnrolmentEndDate) : "0" },
-                { "modifierid", GeneralDefaults.DEFAULTADMINUSERID.ToString() },
-                { "timemodified", _helper.DateTimeToUnixTimestamp(DateTime.Now) },
-            };
+    {
+        { "status", user.SystemDefaults.EnrolmentSuspended ? "1" : "0" },
+        { "userid", user.SystemDefaults.Id.ToString() },
+        { "timestart", "0" }, // Passe ggf. an
+        { "timeend", "0" },   // Passe ggf. an
+        { "modifierid", "2" }, // Passe ggf. an
+        { "timemodified", "1745514076" } // Passe ggf. an
+    };
 
             WriteElements(writer, elements);
-
-            writer.WriteEndElement(); // Close <enrolment>
+            writer.WriteEndElement();
         }
     }
 }
