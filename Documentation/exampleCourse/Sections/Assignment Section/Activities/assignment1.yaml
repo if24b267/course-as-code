@@ -3,6 +3,8 @@ Name: Cool Assignment
 Description: This is an assignment activity.
 # Assignment Specific Settings
 Intro: This is the assignment intro.
+AllowSubmissionDrafts: true
+SendNotifications: false
 DueDate: 31-08-2025 23:59
 AllowSubmissionsFromDate: 31-01-2023 23:59
 Grade: 50
