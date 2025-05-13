@@ -5,6 +5,7 @@ using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Interfaces;
@@ -230,6 +231,467 @@ namespace CourseAsCode.Writers
             };
             course.EnrolledUsers = new List<User> { user };
 
+            // -------------------------------------------------
+            // QUIZ TESTING - REMOVE LATER
+            // -------------------------------------------------
+
+            // Add a dummy dropdown question to the course
+            var q1 = new DropdownQuestion()
+            {
+                QuestionId = 12,
+                Category = "Geography",
+                QuestionName = "Democracies around the world",
+                QuestionText = "<p>Please select the correct form of government for the given countries</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                DefaultMark = 1,
+                HintPenalty = 0.3333333f,
+                Answers = new List<DropdownSubQuestion>
+                {
+                    new DropdownSubQuestion
+                    {
+                        QuestionText = "<p>Russia</p>",
+                        QuestionTextFormat = FormattingFormat.HTML,
+                        CorrectAnswer = "Electoral Autocracy",
+                    },
+                    new DropdownSubQuestion
+                    {
+                        QuestionText = "<p>Canada</p>",
+                        QuestionTextFormat = FormattingFormat.HTML,
+                        CorrectAnswer = "Parliamentary Democracy",
+                    },
+                    new DropdownSubQuestion
+                    {
+                        QuestionText = "<p>USA</p>",
+                        QuestionTextFormat = FormattingFormat.HTML,
+                        CorrectAnswer = "Illiberal Democracy",
+                        WrongAnswers = new List<string> { "Federal Democracy", "Constitutional Democracy" },
+                    },
+                    new DropdownSubQuestion
+                    {
+                        QuestionText = "<p>China</p>",
+                        QuestionTextFormat = FormattingFormat.HTML,
+                        CorrectAnswer = "One-Party Dictatorship",
+                    },
+                },
+            };
+
+            var q2 = new DropdownQuestion()
+            {
+                QuestionId = 13,
+                Category = "Programming Languages",
+                QuestionName = "Programming Paradigms",
+                QuestionText = "<p>Select the primary programming paradigm associated with each language.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                DefaultMark = 1,
+                HintPenalty = 0.25f,
+                Answers = new List<DropdownSubQuestion>
+                {
+                    new DropdownSubQuestion
+                    {
+                        QuestionText = "<p>Haskell</p>",
+                        QuestionTextFormat = FormattingFormat.HTML,
+                        CorrectAnswer = "Functional",
+                    },
+                    new DropdownSubQuestion
+                    {
+                        QuestionText = "<p>Java</p>",
+                        QuestionTextFormat = FormattingFormat.HTML,
+                        CorrectAnswer = "Object-Oriented",
+                        WrongAnswers = new List<string> { "Functional" },
+                    },
+                    new DropdownSubQuestion
+                    {
+                        QuestionText = "<p>C</p>",
+                        QuestionTextFormat = FormattingFormat.HTML,
+                        CorrectAnswer = "Procedural",
+                    },
+                    new DropdownSubQuestion
+                    {
+                        QuestionText = "<p>Prolog</p>",
+                        QuestionTextFormat = FormattingFormat.HTML,
+                        CorrectAnswer = "Logic Programming",
+                        WrongAnswers = new List<string> { "Markdown Language" },
+                    },
+                },
+            };
+
+            var q3 = new DragAndDropTextQuestion()
+            {
+                QuestionId = 14,
+                Category = "Computer Science Basics",
+                QuestionName = "Computer Science Basics Q1",
+                QuestionText = "<p>The [[1]] is a type of system software that manages [[5]] and software resources, and provides common services for computer programs</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                DefaultMark = 1,
+                HintPenalty = 0.25f,
+                Answers = new List<TextChoice>
+                {
+                    new TextChoice()
+                    {
+                        ID = 1,
+                        Value = "Operating System",
+                        ValueFormat = FormattingFormat.HTML,
+                        Category = "A",
+                    },
+                    new TextChoice()
+                    {
+                        ID = 2,
+                        Value = "Compiler",
+                        ValueFormat = FormattingFormat.HTML,
+                        Category = "A",
+                    },
+                    new TextChoice()
+                    {
+                        ID = 3,
+                        Value = "Microsoft Word",
+                        ValueFormat = FormattingFormat.HTML,
+                        Category = "A",
+                    },
+                    new TextChoice()
+                    {
+                        ID = 4,
+                        Value = "Printer",
+                        ValueFormat = FormattingFormat.HTML,
+                        Category = "A",
+                    },
+                    new TextChoice()
+                    {
+                        ID = 5,
+                        Value = "Hardware",
+                        ValueFormat = FormattingFormat.HTML,
+                        Category = "B",
+                    },
+                    new TextChoice()
+                    {
+                        ID = 6,
+                        Value = "Internet",
+                        ValueFormat = FormattingFormat.HTML,
+                        Category = "B",
+                    },
+                    new TextChoice()
+                    {
+                        ID = 7,
+                        Value = "Printing",
+                        ValueFormat = FormattingFormat.HTML,
+                        Category = "B",
+                    },
+                },
+            };
+
+
+            var q4 = new DragAndDropTextQuestion()
+            {
+                QuestionId = 15,
+                Category = "Linux Basics",
+                QuestionName = "Linux File Permissions Q1",
+                QuestionText = "In Linux, file permissions are controlled by three sets of access rights: [[3]], [[4]], and [[5]]. To view the permissions of a file, you can use the [[1]] command. Permissions are typically displayed as a string like `rwxr-xr--`, where each letter represents a different [[6]].",
+                QuestionTextFormat = FormattingFormat.Markdown,
+                DefaultMark = 1,
+                HintPenalty = 0.25f,
+                Answers = new List<TextChoice>
+                {
+                    new TextChoice()
+                    {
+                        ID = 1,
+                        Value = "ls -l",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 2,
+                        Value = "chmod",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 3,
+                        Value = "owner",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 4,
+                        Value = "group",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 5,
+                        Value = "other",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 6,
+                        Value = "permission",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 7,
+                        Value = "cd",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 8,
+                        Value = "shutdown",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 9,
+                        Value = "cat",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                    new TextChoice()
+                    {
+                        ID = 10,
+                        Value = "nano",
+                        ValueFormat = FormattingFormat.HTML,
+                    },
+                },
+            };
+
+            // Add a CodeRunner question for Java programming
+            var q5 = new CodeRunnerQuestion
+            {
+                QuestionId = 16,
+                Category = "Programming",
+                QuestionName = "Java Program: Hello World",
+                QuestionText = "<p>Write a complete Java program that prints exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must define a public class named Main and include a main method. No input is needed.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "<p>Make sure you understand how to create a main class in Java.</p>",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.0f,
+                QuestionReady = true,
+                CodeRunnerType = "java_program",
+                PrototypeType = 0,
+                AllOrNothing = true,
+                PenaltyRegime = "10, 20, ...",
+                Precheck = 0,
+                HideCheck = 0,
+                ShowSource = 0,
+                AnswerBoxLines = 18,
+                AnswerBoxColumns = 100,
+                AnswerPreload = "",
+                GlobalExtra = "",
+                Answer = "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
+                ValidateOnSave = true,
+                TemplateParams = "",
+                HoistTemplateParams = true,
+                ExtractCodeFromJson = true,
+                TemplateParamsLang = "None",
+                TemplateParamsEvalPerTry = false,
+                TemplateParamsEvald = "{}",
+                TwigAll = false,
+                UiParameters = "",
+                Attachments = 0,
+                AttachmentsRequired = 0,
+                MaxFileSize = 10240,
+                FilenamesRegex = "",
+                FilenamesExplain = "",
+                DisplayFeedback = true,
+                GiveUpAllowed = false,
+                TestCases = new List<CodeRunnerTestCase>
+                {
+                    new CodeRunnerTestCase
+                    {
+                        Id = 1,
+                        TestCode = "Hello World Output",
+                        TestType = 0,
+                        Expected = "Hello, World!",
+                        UseAsExample = false,
+                        Display = "SHOW",
+                        HideRestIfFail = false,
+                        Mark = 1.000m,
+                        StdIn = "",
+                        Extra = ""
+                    }
+                }
+            };
+
+            // Add a CodeRunner question for C programming
+            var q6 = new CodeRunnerQuestion
+            {
+                QuestionId = 17,
+                Category = "Programming",
+                QuestionName = "C Program: Hello World",
+                QuestionText = "<p>Write a complete C program that prints the following text exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must include the necessary #include statements and a main() function. No input is needed.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "<p>Remember to include standard libraries and proper syntax.</p>",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.0f,
+                QuestionReady = true,
+                CodeRunnerType = "c_program", // Make sure this matches the installed prototype in Moodle
+                PrototypeType = 0,
+                AllOrNothing = true,
+                PenaltyRegime = "10, 20, ...",
+                Precheck = 0,
+                HideCheck = 0,
+                ShowSource = 0,
+                AnswerBoxLines = 18,
+                AnswerBoxColumns = 100,
+                AnswerPreload = "",
+                GlobalExtra = "",
+                Answer = "#include <stdio.h>\n\nint main() {\n    printf(\"Hello, World!\\n\");\n    return 0;\n}",
+                ValidateOnSave = true,
+                TemplateParams = "",
+                HoistTemplateParams = true,
+                ExtractCodeFromJson = true,
+                TemplateParamsLang = "None",
+                TemplateParamsEvalPerTry = false,
+                TemplateParamsEvald = "{}",
+                TwigAll = false,
+                UiParameters = "",
+                Attachments = 0,
+                AttachmentsRequired = 0,
+                MaxFileSize = 10240,
+                FilenamesRegex = "",
+                FilenamesExplain = "",
+                DisplayFeedback = true,
+                GiveUpAllowed = false,
+                TestCases = new List<CodeRunnerTestCase>
+                {
+                    new CodeRunnerTestCase
+                    {
+                        Id = 1,
+                        TestCode = "Hello World Output    ",
+                        TestType = 0,
+                        Expected = "Hello, World!",
+                        UseAsExample = false,
+                        Display = "SHOW",
+                        HideRestIfFail = false,
+                        Mark = 1.000m,
+                        StdIn = "",
+                        Extra = ""
+                    }
+                }
+            };
+
+            // Create new quiz activity and add it to the course
+            var testQuiz = new Quiz
+            {
+                ActivityId              = 6,
+                Name                    = "New Question Types quiz",
+                Description             = "<p>This quiz is hardcoded and was generated by Course‑as‑Code</p>",
+                DescriptionFormat       = FormattingFormat.HTML,
+                OpenTime                = null,
+                CloseTime               = null,
+                TimeLimit               = 3600,
+                TimeExpiryHandling      = TimeExpiryHandle.AutoSubmit,
+                QuestionBehaviour       = QuestionBehaviour.Deferred,
+                AllowRedosDuringAttempt = true,
+                AllowedAttempts         = 2,
+                BuildOnPreviousAttempts = true,
+                GradingMethod           = GradingMethod.LastAttempt,
+                DecimalsToDisplayGrades = 2,
+                DecimalsToDisplayMarks  = -1,
+                ShuffleWithinQuestions  = true,
+                NewPageThreshold        = 0,
+                ShowPicture             = PictureOptions.SmallImage,
+                Questions               = new() { q1, q2, q3, q4, q5, q6 },
+                Feedback                = new List<QuizFeedback>()
+                {
+                    new QuizFeedback()
+                    {
+                        FeedbackText = "<p>You did it!</p>",
+                        GradeBoundary = 100f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                    new QuizFeedback()
+                    {
+                        FeedbackText  = "<p>Probably should go back to kindergarten</p>",
+                        GradeBoundary = 50f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                    new QuizFeedback()
+                    {
+                        FeedbackText = "<p>Oh, wow that's just sad</p>",
+                        GradeBoundary = 0f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+            };
+
+            var testSection = new Section
+            {
+                SystemDefaults = new Section.SystemDefaultsSection
+                {
+                    SectionId = 5,
+                    PathToSection = "sections/section_5",
+                },
+                Name = "Quiz Test Section",
+                Activities = new List<Activity> { testQuiz },
+            };
+
+            course.Sections.Add(testSection);
+            course.Questions.Add(q1);
+            course.Questions.Add(q2);
+            course.Questions.Add(q3);
+            course.Questions.Add(q4);
+            course.Questions.Add(q5);
+            course.Questions.Add(q6);
+
+            // Create a dedicated CodeRunner quiz
+            var codeRunnerQuiz = new Quiz
+            {
+                ActivityId              = 7,
+                Name                    = "Programming Challenges",
+                Description             = "<p>This quiz contains programming challenges using CodeRunner</p>",
+                DescriptionFormat       = FormattingFormat.HTML,
+                OpenTime                = null,
+                CloseTime               = null,
+                TimeLimit               = 7200,
+                TimeExpiryHandling      = TimeExpiryHandle.AutoSubmit,
+                QuestionBehaviour       = QuestionBehaviour.Deferred,
+                AllowRedosDuringAttempt = true,
+                AllowedAttempts         = 3,
+                BuildOnPreviousAttempts = true,
+                GradingMethod           = GradingMethod.LastAttempt,
+                DecimalsToDisplayGrades = 2,
+                DecimalsToDisplayMarks  = -1,
+                ShuffleWithinQuestions  = false,
+                NewPageThreshold        = 1,
+                ShowPicture             = PictureOptions.SmallImage,
+                Questions               = new() { q5, q6 },
+                Feedback                = new List<QuizFeedback>()
+                {
+                    new QuizFeedback()
+                    {
+                        FeedbackText = "<p>Excellent programming skills!</p>",
+                        GradeBoundary = 100f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                    new QuizFeedback()
+                    {
+                        FeedbackText  = "<p>Good attempt, but there is room for improvement.</p>",
+                        GradeBoundary = 50f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                    new QuizFeedback()
+                    {
+                        FeedbackText = "<p>You need more practice with programming fundamentals.</p>",
+                        GradeBoundary = 0f,
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+            };
+
+            var codeRunnerSection = new Section
+            {
+                SystemDefaults = new Section.SystemDefaultsSection
+                {
+                    SectionId = 6,
+                    PathToSection = "sections/section_6",
+                },
+                Name = "Programming Section",
+                Activities = new List<Activity> { codeRunnerQuiz },
+            };
+
+            course.Sections.Add(codeRunnerSection);
 
             _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
             _logger.LogInformation($"The course will be saved at {outputPath}");
@@ -496,6 +958,7 @@ namespace CourseAsCode.Writers
             services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
             services.AddSingleton<IQuestionPluginWriter, DropdownPluginWriter>();
             services.AddSingleton<IQuestionPluginWriter, MultiChoicePluginWriter>();
+            services.AddSingleton<IQuestionPluginWriter, CodeRunnerPluginWriter>();
 
             // Register QuestionsWriter (depends on the plugins registered above)
             services.AddSingleton<QuestionsWriter>();

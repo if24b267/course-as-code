@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Questions.Types.Dropdown
@@ -20,7 +20,6 @@ namespace CourseAsCode.Model.Questions.Types.Dropdown
 
         [Description("List of incorrect answers to the question")]
         public List<string> WrongAnswers { get; init; } = new List<string>();
-
 
         /* Note: Due to the way Matching Questions work in Moodle, any Wrong and Correct Answer will also be displayed as a selectable option for all other sub-questions:
          *

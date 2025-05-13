@@ -5,9 +5,9 @@ using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
+using QWriter = CourseAsCode.Writers.XML.Writer.QuestionsWriter.QuestionsWriter;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -22,7 +22,7 @@ namespace CourseAsCode.Writers.Tests.Integration
 
         // Dependencies needed for QuestionsWriter
         private IXmlWriterFactory _xmlWriterFactory;
-        private ILogger<QuestionsWriter> _logger;
+        private ILogger<QWriter> _logger;
         private ILogger<TagsWriter> _tagsLogger;
         private ILogger<MultiChoicePluginWriter> _multiChoicePluginWriterLogger;
         private ILogger<DragDropTextPluginWriter> _dragDropTextPluginWriterLogger;
@@ -46,7 +46,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             // --- Initialize Dependencies ---
             // Use real implementations for integration testing
             _xmlWriterFactory = new DefaultXmlWriterFactory();
-            _logger = NullLogger<QuestionsWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _logger = NullLogger<QWriter>.Instance; // Use NullLogger to avoid log output during tests
             _tagsLogger = NullLogger<TagsWriter>.Instance; // Use NullLogger to avoid log output during tests
             _multiChoicePluginWriterLogger = NullLogger<MultiChoicePluginWriter>.Instance; // Use NullLogger to avoid log output during tests
             _dropdownPluginWriterLogger = NullLogger<DropdownPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteQuestions_GeneratesValidXml()
         {
             // Arrange
-            var writer = new QuestionsWriter(_xmlWriterFactory, _logger, _generalHelper, _sequentialIdGenerator, _tagsWriter, _pluginWriters);
+            var writer = new QWriter(_xmlWriterFactory, _logger, _generalHelper, _sequentialIdGenerator, _tagsWriter, _pluginWriters);
 
             // Act
             writer.WriteQuestions(_dummyCourse, _outputPath);

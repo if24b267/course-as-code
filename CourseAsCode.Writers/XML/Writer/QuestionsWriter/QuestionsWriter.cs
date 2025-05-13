@@ -3,6 +3,7 @@ using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.XML.Helper;
@@ -69,7 +70,10 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
                 {
                     _pluginWriters[typeof(DragAndDropTextQuestion)] = writer;
                 }
-
+                else if (writer is CodeRunnerPluginWriter)
+                {
+                    _pluginWriters[typeof(CodeRunnerQuestion)] = writer;
+                }
                 // Add other mappings here
                 else
                 {
@@ -290,6 +294,10 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
             else if (question is DropdownQuestion ddq)
             {
                 hints = ddq.Hints;
+            }
+            else if (question is CodeRunnerQuestion crq)
+            {
+                hints = crq.Hints;
             }
 
             // Handle no hints

@@ -4,13 +4,14 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
+using QWriter = CourseAsCode.Writers.XML.Writer.QuestionsWriter.QuestionsWriter;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -20,14 +21,15 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     public class QuestionsWriterTests
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger<QuestionsWriter> _questionsLogger;
+        private ILogger<QWriter> _questionsLogger;
         private ILogger<MultiChoicePluginWriter> _multiChoiceLogger;
         private ILogger<DropdownPluginWriter> _dropdownLogger;
         private ILogger<DragDropTextPluginWriter> _dragDropTextLogger;
+        private ILogger<CodeRunnerPluginWriter> _codeRunnerLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private ISequentialIdGenerator _fakeIdGenerator;
         private ITagsWriter _fakeTagsWriter;
-        private QuestionsWriter _questionsWriter;
+        private QWriter _questionsWriter;
         private Model.Course _course;
 
         private const string MOCKED_MOODLE_AUTOFORMAT = "0";
@@ -44,10 +46,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Set up fake XML writer factory (to capture XML output) and logger
             _testFactory = new XmlWriterFactoryTest();
-            _questionsLogger = Substitute.For<ILogger<QuestionsWriter>>();
+            _questionsLogger = Substitute.For<ILogger<QWriter>>();
             _multiChoiceLogger = Substitute.For<ILogger<MultiChoicePluginWriter>>();
             _dropdownLogger = Substitute.For<ILogger<DropdownPluginWriter>>();
             _dragDropTextLogger = Substitute.For<ILogger<DragDropTextPluginWriter>>();
+            _codeRunnerLogger = Substitute.For<ILogger<CodeRunnerPluginWriter>>();
 
             // Fake general helper with predictable outputs
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -63,11 +66,15 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             int bankEntryIdCounter = 1;
             int answerIdCounter = 1;
             int hintIdCounter = 1;
+            int codeRunnerOptionIdCounter = 1;
+            int codeRunnerTestCaseIdCounter = 1;
             _fakeIdGenerator = Substitute.For<ISequentialIdGenerator>();
             _fakeIdGenerator.GetNextCategoryId().Returns(_ => categoryIdCounter++);
             _fakeIdGenerator.GetNextBankEntryId().Returns(_ => bankEntryIdCounter++);
             _fakeIdGenerator.GetNextAnswerId().Returns(_ => answerIdCounter++);
             _fakeIdGenerator.GetNextHintId().Returns(_ => hintIdCounter++);
+            _fakeIdGenerator.GetNextCodeRunnerOptionId().Returns(_ => codeRunnerOptionIdCounter++);
+            _fakeIdGenerator.GetNextCodeRunnerTestCaseId().Returns(_ => codeRunnerTestCaseIdCounter++);
 
             // Setup fake tags writer
             _fakeTagsWriter = Substitute.For<ITagsWriter>();
@@ -76,15 +83,17 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _multiChoiceLogger);
             var dropdownWriter = new DropdownPluginWriter(_testFactory, _dropdownLogger);
             var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _dragDropTextLogger);
+            var codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _codeRunnerLogger);
             var pluginWriters = new List<IQuestionPluginWriter>
             {
                 multiChoiceWriter,
                 dropdownWriter,
                 dragDropTextWriter,
+                codeRunnerWriter,
             };
 
             // Instantiate QuestionsWriter with dependencies
-            _questionsWriter = new QuestionsWriter(_testFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, pluginWriters);
+            _questionsWriter = new QWriter(_testFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, pluginWriters);
 
             // Create a dummy course - questions will be added per test
             _course = new Model.Course
@@ -192,6 +201,174 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: The total number of question_bank_entry elements should match total questions (at least that's the case in our implementation)
             var entryNodes = doc.SelectNodes("//question_bank_entry");
             Assert.That(entryNodes?.Count, Is.EqualTo(_course.Questions.Count), "Incorrect number of bank entries");
+        }
+
+        [Test]
+        public void WriteQuestions_WritesCodeRunnerBaseElementsCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicCodeRunnerQuestion(60, "CodeRunnerCat");
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Check base question elements
+            var questionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']");
+            Assert.IsNotNull(questionNode, $"Question node with ID {question.QuestionId} not found");
+
+            Assert.That(questionNode.SelectSingleNode("name")?.InnerText, Is.EqualTo(question.QuestionName));
+            Assert.That(questionNode.SelectSingleNode("questiontext")?.InnerText, Is.EqualTo(question.QuestionText));
+            Assert.That(questionNode.SelectSingleNode("questiontextformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
+            Assert.That(questionNode.SelectSingleNode("generalfeedback")?.InnerText, Is.EqualTo(question.GeneralFeedback));
+            Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
+            Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
+            Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("coderunner")); // Mapped value for CodeRunner
+            Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
+            Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
+        }
+
+        [Test]
+        public void WriteQuestions_WritesCodeRunnerPluginStructureCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicCodeRunnerQuestion(61, "CodeRunnerStructCat");
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Plugin structure
+            var pluginNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/plugin_qtype_coderunner_question");
+            Assert.IsNotNull(pluginNode, "CodeRunner plugin node not found");
+
+            var optionsNode = pluginNode.SelectSingleNode("coderunner_options/coderunner_option");
+            Assert.IsNotNull(optionsNode, "CodeRunner options node not found");
+
+            var testCasesNode = pluginNode.SelectSingleNode("coderunner_testcases");
+            Assert.IsNotNull(testCasesNode, "CodeRunner testcases node not found");
+            Assert.That(testCasesNode.SelectNodes("coderunner_testcase")?.Count, Is.EqualTo(question.TestCases.Count));
+        }
+
+        [Test]
+        public void WriteQuestions_WritesCodeRunnerOptionsCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicCodeRunnerQuestion(62, "CodeRunnerOptionsCat");
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Check options content
+            var optionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//coderunner_option");
+            Assert.IsNotNull(optionNode);
+
+            Assert.That(optionNode.SelectSingleNode("coderunnertype")?.InnerText, Is.EqualTo(question.CodeRunnerType));
+            Assert.That(optionNode.SelectSingleNode("prototypetype")?.InnerText, Is.EqualTo(question.PrototypeType.ToString()));
+            Assert.That(optionNode.SelectSingleNode("allornothing")?.InnerText, Is.EqualTo(question.AllOrNothing ? "1" : "0"));
+            Assert.That(optionNode.SelectSingleNode("penaltyregime")?.InnerText, Is.EqualTo(question.PenaltyRegime));
+            Assert.That(optionNode.SelectSingleNode("precheck")?.InnerText, Is.EqualTo(question.Precheck.ToString()));
+            Assert.That(optionNode.SelectSingleNode("hidecheck")?.InnerText, Is.EqualTo(question.HideCheck.ToString()));
+            Assert.That(optionNode.SelectSingleNode("showsource")?.InnerText, Is.EqualTo(question.ShowSource.ToString()));
+            Assert.That(optionNode.SelectSingleNode("answerboxlines")?.InnerText, Is.EqualTo(question.AnswerBoxLines.ToString()));
+            Assert.That(optionNode.SelectSingleNode("answerboxcolumns")?.InnerText, Is.EqualTo(question.AnswerBoxColumns.ToString()));
+            Assert.That(optionNode.SelectSingleNode("answerpreload")?.InnerText, Is.EqualTo(question.AnswerPreload));
+            Assert.That(optionNode.SelectSingleNode("globalextra")?.InnerText, Is.EqualTo(question.GlobalExtra));
+            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText, Is.EqualTo(question.Answer));
+            Assert.That(optionNode.SelectSingleNode("validateonsave")?.InnerText, Is.EqualTo(question.ValidateOnSave ? "1" : "0"));
+        }
+
+        [Test]
+        public void WriteQuestions_WritesCodeRunnerTestCasesCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicCodeRunnerQuestion(63, "CodeRunnerTestCat");
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Check test cases
+            var testCaseNodes = doc.SelectNodes($"//question[@id='{question.QuestionId}']//coderunner_testcase");
+            Assert.IsNotNull(testCaseNodes);
+            Assert.That(testCaseNodes.Count, Is.EqualTo(question.TestCases.Count));
+
+            // Check first test case
+            var firstTestCase = question.TestCases[0];
+            var firstTestCaseNode = testCaseNodes[0];
+            Assert.That(firstTestCaseNode.SelectSingleNode("testcode")?.InnerText, Is.EqualTo(firstTestCase.TestCode));
+            Assert.That(firstTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(firstTestCase.Expected));
+            Assert.That(firstTestCaseNode.SelectSingleNode("display")?.InnerText, Is.EqualTo(firstTestCase.Display));
+            Assert.That(firstTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(firstTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
+
+            // Check second test case
+            var secondTestCase = question.TestCases[1];
+            var secondTestCaseNode = testCaseNodes[1];
+            Assert.That(secondTestCaseNode.SelectSingleNode("testcode")?.InnerText, Is.EqualTo(secondTestCase.TestCode));
+            Assert.That(secondTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(secondTestCase.Expected));
+            Assert.That(secondTestCaseNode.SelectSingleNode("useasexample")?.InnerText, Is.EqualTo(secondTestCase.UseAsExample ? "1" : "0"));
+            Assert.That(secondTestCaseNode.SelectSingleNode("hiderestiffail")?.InnerText, Is.EqualTo(secondTestCase.HideRestIfFail ? "1" : "0"));
+            Assert.That(secondTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(secondTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
+        }
+
+        [Test]
+        public void WriteQuestions_WritesCodeRunnerHintsCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicCodeRunnerQuestion(64, "CodeRunnerHintsCat", withHints: true);
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Hints structure and content
+            var hintsNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/question_hints");
+            Assert.IsNotNull(hintsNode, "Hints node not found");
+
+            var hintNodes = hintsNode.SelectNodes("question_hint");
+            Assert.That(hintNodes?.Count, Is.EqualTo(question.Hints.Count));
+
+            // Hint 1
+            Assert.That(hintNodes[0]?.SelectSingleNode("hint")?.InnerText, Is.EqualTo(question.Hints[0].HintText));
+            Assert.That(hintNodes[0]?.SelectSingleNode("hintformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
+            Assert.That(hintNodes[0]?.SelectSingleNode("shownumcorrect")?.InnerText, Is.EqualTo(question.Hints[0].ShowNumberOfCorrectAnswers ? "1" : "0"));
+            Assert.That(hintNodes[0]?.SelectSingleNode("clearwrong")?.InnerText, Is.EqualTo(question.Hints[0].ClearIncorrectResponses ? "1" : "0"));
+
+            // Hint 2
+            Assert.That(hintNodes[1]?.SelectSingleNode("hint")?.InnerText, Is.EqualTo(question.Hints[1].HintText));
+            Assert.That(hintNodes[1]?.SelectSingleNode("hintformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
+            Assert.That(hintNodes[1]?.SelectSingleNode("shownumcorrect")?.InnerText, Is.EqualTo(question.Hints[1].ShowNumberOfCorrectAnswers ? "1" : "0"));
+            Assert.That(hintNodes[1]?.SelectSingleNode("clearwrong")?.InnerText, Is.EqualTo(question.Hints[1].ClearIncorrectResponses ? "1" : "0"));
+        }
+
+        [Test]
+        public void WriteQuestions_HandlesCodeRunnerWithNoHintsCorrectly()
+        {
+            // Arrange
+            var question = CreateBasicCodeRunnerQuestion(65, "CodeRunnerNoHintsCat", withHints: false);
+            _course.Questions.Add(question);
+
+            // Act
+            _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
+            var doc = new XmlDocument();
+            doc.LoadXml(_testFactory.StringWriter.ToString());
+
+            // Assert: Empty hints node
+            var hintsNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/question_hints");
+            Assert.IsNotNull(hintsNode, "Hints node should exist even if empty");
+            Assert.That(hintsNode.ChildNodes.Count, Is.EqualTo(0), "Hints node should be empty");
         }
 
         [Test]
@@ -622,7 +799,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _questionsWriter = new QuestionsWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, new List<IQuestionPluginWriter>());
+            _questionsWriter = new QWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, new List<IQuestionPluginWriter>());
             _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act & Assert: Verify that an exception is thrown
@@ -781,6 +958,112 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         /// <param name="withFeedback">Indicates whether the question should include feedback for responses</param>
         /// <param name="questionReady">Indicates whether the question is considered ready for use</param>
         /// <returns>A <see cref="DragAndDropTextQuestion"/> object initialized with specified settings and default structure</returns>
+
+        /// <summary>
+        /// Creates a basic CodeRunner question with predefined parameters and structure
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withHints">Indicates whether the question should include hints</param>
+        /// <returns>A <see cref="CodeRunnerQuestion"/> object initialized with default values and structure</returns>
+        private CodeRunnerQuestion CreateBasicCodeRunnerQuestion(int id, string category, bool withHints = false)
+        {
+            var crq = new CodeRunnerQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"CodeRunner_{id}",
+                QuestionText = "<p>Write a program that outputs \"Hello, World!\"</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "<p>Remember to include the appropriate main method.</p>",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.1f,
+                QuestionReady = true,
+                CodeRunnerType = "java_program",
+                PrototypeType = 0,
+                AllOrNothing = true,
+                PenaltyRegime = "10, 20, ...",
+                Precheck = 0,
+                HideCheck = 0,
+                ShowSource = 0,
+                AnswerBoxLines = 18,
+                AnswerBoxColumns = 100,
+                AnswerPreload = "",
+                GlobalExtra = "",
+                Answer = "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
+                ValidateOnSave = true,
+                TemplateParams = "",
+                HoistTemplateParams = true,
+                ExtractCodeFromJson = true,
+                TemplateParamsLang = "None",
+                TemplateParamsEvalPerTry = false,
+                TemplateParamsEvald = "{}",
+                TwigAll = false,
+                UiParameters = "",
+                Attachments = 0,
+                AttachmentsRequired = 0,
+                MaxFileSize = 10240,
+                FilenamesRegex = "",
+                FilenamesExplain = "",
+                DisplayFeedback = true,
+                GiveUpAllowed = false,
+                TestCases = new List<CodeRunnerTestCase>
+                {
+                    new CodeRunnerTestCase
+                    {
+                        Id = 1,
+                        TestCode = "Hello World Test",
+                        TestType = 0,
+                        Expected = "Hello, World!",
+                        UseAsExample = false,
+                        Display = "SHOW",
+                        HideRestIfFail = false,
+                        Mark = 1.000m,
+                        StdIn = "",
+                        Extra = ""
+                    },
+                    new CodeRunnerTestCase
+                    {
+                        Id = 2,
+                        TestCode = "Empty Input Test",
+                        TestType = 0,
+                        Expected = "Hello, World!",
+                        UseAsExample = true,
+                        Display = "HIDE_IF_FAIL",
+                        HideRestIfFail = true,
+                        Mark = 0.500m,
+                        StdIn = "",
+                        Extra = "Some extra data"
+                    }
+                },
+                Hints = null,
+                Tags = new List<string> { $"Tag_CR_{id}" }
+            };
+
+            if (withHints)
+            {
+                crq.Hints = new List<Hint>
+                {
+                    new Hint
+                    {
+                        HintText = "CodeRunner Hint 1",
+                        HintTextFormat = FormattingFormat.HTML,
+                        ShowNumberOfCorrectAnswers = true,
+                        ClearIncorrectResponses = false,
+                    },
+                    new Hint
+                    {
+                        HintText = "CodeRunner Hint 2",
+                        HintTextFormat = FormattingFormat.PlainText,
+                        ShowNumberOfCorrectAnswers = false,
+                        ClearIncorrectResponses = true,
+                    },
+                };
+            }
+
+            return crq;
+        }
         private DragAndDropTextQuestion CreateBasicDragDropTextQuestion(int id, string category, bool withHints = false, bool withFeedback = false)
         {
             var ddtq = new DragAndDropTextQuestion
