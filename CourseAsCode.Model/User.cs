@@ -34,6 +34,8 @@ public class User
     public SensibleDefaultsUser SensibleDefaults { get; set; } = new SensibleDefaultsUser();
     public SystemDefaultsUser SystemDefaults { get; set; } = new SystemDefaultsUser();
     public UserPreferencesClass UserPreferences { get; set; } = new UserPreferencesClass();
+    public List<UserTag> Tags { get; set; } = new();
+    public List<UserPreference> Preferences { get; set; } = new();
 
     // Defaults
     public class SensibleDefaultsUser
@@ -135,5 +137,19 @@ public class User
         public string? Theme { get; set; } = UserDefaults.DEFAULT_THEME;
         [Description("if enabled, the enrolment of the user in the course is suspended")]
         public bool EnrolmentSuspended { get; set; } = UserDefaults.DEFAULT_ENROLMENT_SUSPENDED;
+    }
+
+    public class UserTag
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string RawName { get; set; } = string.Empty;
+    }
+
+    public class UserPreference
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? Value { get; set; }
     }
 }

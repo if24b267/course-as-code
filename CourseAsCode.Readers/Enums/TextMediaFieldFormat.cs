@@ -1,9 +1,10 @@
-﻿namespace CourseAsCode.Readers.Enums;
-
-public enum TextMediaFieldFormat
+namespace CourseAsCode.Readers.Enums
 {
-    AUTO = 0,
-    HTML = 1,
-    PLAIN = 2,
-    MARKDOWN = 4,
+    public enum TextMediaFieldFormat
+    {
+        AUTO = 0,
+        HTML = 1,
+        PLAIN = 2,
+        MARKDOWN = 4,
+    }
 }
