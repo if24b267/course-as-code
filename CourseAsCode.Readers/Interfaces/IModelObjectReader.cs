@@ -1,6 +1,7 @@
-﻿namespace CourseAsCode.Readers.Interfaces;
-
-public interface IModelObjectReader<T>
+namespace CourseAsCode.Readers.Interfaces
 {
-    public T? Read(string modelObjectPath);
+    public interface IModelObjectReader<T>
+    {
+        public T? Read(string modelObjectPath);
+    }
 }

@@ -207,114 +207,29 @@ namespace CourseAsCode.Writers
 
         public bool WriteCourse(Course course, string outputPath)
         {
-            _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
-            _logger.LogInformation($"The course will be saved at {outputPath}");
 
-            // ---------------------------------------------
-            // TEMPORARY CODE FOR TESTING - REMOVE LATER
-            // ---------------------------------------------
-
-            // Add a dummy assignment activity to the course
-            var testAssignment = new Assignment
+            //TODO: user wird benötigt für assignment (DUMMY)
+            var user = new User
             {
-                ActivityId = 10,
-                Name = "Sample Assignment",
-                Intro = "This is a sample assignment for testing purposes.",
-                AlwaysShowDescription = true,
-                SubmissionDrafts = true,
-                SendNotifications = true,
-                SendLateNotifications = false,
-                SendStudentNotifications = true,
-                DueDate = DateTime.UtcNow.AddDays(7), // 7 days in the future
-                CutoffDate = DateTime.UtcNow.AddDays(10), // 10 days in the future
-                GradingDueDate = DateTime.UtcNow.AddDays(14), // 14 days in the future
-                AllowSubmissionsFromDate = DateTime.UtcNow, // Submissions allowed from now
-                Grade = 100,
-                CompletionSubmit = true,
-                RequireSubmissionStatement = false,
-                TeamSubmission = false,
-                RequireAllTeamMembersSubmit = false,
-                TeamSubmissionGroupingId = 0,
-                BlindMarking = false,
-                HideGrader = false,
-                RevealIdentities = true,
-                AttemptReopenMethod = "manual",
-                MaxAttempts = 3,
-                MarkingWorkflow = true,
-                MarkingAllocation = false,
-                MarkingAnonymous = false,
-                PreventSubmissionNotInGroup = false,
-                Submissions = new List<AssignmentSubmission>
+                Username = "course_as_code",
+                EMail = new System.Net.Mail.MailAddress("user@example.com"),
+                FirstName = "Admin",
+                LastName = "User",
+                SystemDefaults = new User.SystemDefaultsUser
                 {
-                    new AssignmentSubmission
-                    {
-                        SubmissionId = 1,
-                        UserId = 101,
-                        TimeCreated = DateTime.UtcNow.AddDays(-1), // Created yesterday
-                        TimeModified = DateTime.UtcNow, // Modified today
-                        TimeStarted = DateTime.UtcNow.AddDays(-2).ToString("o"), // Started 2 days ago
-                        Status = "submitted",
-                        GroupId = 0,
-                        AttemptNumber = 1,
-                        IsLatest = true
-                    },
-                    new AssignmentSubmission
-                    {
-                        SubmissionId = 2,
-                        UserId = 102,
-                        TimeCreated = DateTime.UtcNow.AddDays(-3), // Created 3 days ago
-                        TimeModified = null, // Not modified yet
-                        TimeStarted = null, // Not started yet
-                        Status = "draft",
-                        GroupId = 0,
-                        AttemptNumber = 0,
-                        IsLatest = false
-                    }
+                    Id = 2,
+                    ExternalId = 5 // Beispiel für contextid
                 },
-                PluginConfigs = new List<PluginConfig>
+                Tags = new List<User.UserTag>
                 {
-                    new PluginConfig
-                    {
-                        ConfigId = 1,
-                        PluginName = "assignsubmission_file",
-                        Subtype = "file",
-                        Name = "maxfilesubmissions",
-                        Value = "5"
-                    },
-                    new PluginConfig
-                    {
-                        ConfigId = 2,
-                        PluginName = "assignsubmission_onlinetext",
-                        Subtype = "onlinetext",
-                        Name = "wordlimit",
-                        Value = "1000"
-                    }
+                    new User.UserTag { Id = 5, Name = "test", RawName = "test" },
                 },
-                Overrides = new List<AssignmentOverride>
+                Preferences = new List<User.UserPreference>
                 {
-                    new AssignmentOverride
-                    {
-                        OverrideId = 1,
-                        UserId = 101,
-                        DueDate = DateTime.UtcNow.AddDays(8), // User has 1 extra day
-                        CutoffDate = DateTime.UtcNow.AddDays(11) // User has 1 extra day
-                    }
+                    new User.UserPreference { Id = 1, Name = "core_message_migrate_data", Value = "1" },
                 }
             };
-
-            // Add the assignment to a section
-            var assignmentSection = new Section
-            {
-                SystemDefaults = new Section.SystemDefaultsSection
-                {
-                    SectionId = 4,
-                    PathToSection = "sections/section_4"
-                },
-                Name = "Assignment Test Section",
-                Activities = new List<Activity> { testAssignment }
-            };
-
-            course.Sections.Add(assignmentSection);
+            course.EnrolledUsers = new List<User> { user };
 
             // -------------------------------------------------
             // QUIZ TESTING - REMOVE LATER
@@ -778,9 +693,8 @@ namespace CourseAsCode.Writers
 
             course.Sections.Add(codeRunnerSection);
 
-            // ---------------------------------------------
-            // TEMPORARY CODE FOR TESTING - END
-            // ---------------------------------------------
+            _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
+            _logger.LogInformation($"The course will be saved at {outputPath}");
 
             // Ensure sections list is not empty
             if (course.Sections.Count == 0)

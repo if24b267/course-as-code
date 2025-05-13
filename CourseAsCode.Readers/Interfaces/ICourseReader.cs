@@ -1,9 +1,10 @@
-﻿using CourseAsCode.Model;
+using CourseAsCode.Model;
 using CourseAsCode.Readers.Enums;
 
-namespace CourseAsCode.Readers.Interfaces;
-
-public interface ICourseReader
+namespace CourseAsCode.Readers.Interfaces
 {
-    public Course? Read(string path, CourseFormat format);
+    public interface ICourseReader
+    {
+        public Course? Read(string path, CourseFormat format);
+    }
 }

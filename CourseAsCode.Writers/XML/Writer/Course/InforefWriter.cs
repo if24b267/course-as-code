@@ -37,60 +37,77 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-
                     writer.WriteStartElement("inforef");
 
-
-                    // Reference all enrolled users
+                    //TODO: Remove hardcoded values
+                    /*
+                    // <userref>
                     writer.WriteStartElement("userref");
-
                     foreach (var user in course.EnrolledUsers)
                     {
-                        WriteOneInforefSection(writer, user.SystemDefaults.Id, "user");
+                        writer.WriteStartElement("user");
+                        writer.WriteElementString("id", user.SystemDefaults.Id.ToString());
+                        writer.WriteEndElement(); // </user>
                     }
+                    writer.WriteEndElement(); // </userref>
 
-                    writer.WriteEndElement(); // Close </userref>
-
-
-                    // Reference all roles
+                    // <roleref>
                     writer.WriteStartElement("roleref");
-
                     foreach (var role in course.Roles)
                     {
-                        WriteOneInforefSection(writer, role.SystemDefaults.RoleId, "role");
+                        writer.WriteStartElement("role");
+                        writer.WriteElementString("id", role.SystemDefaults.RoleId.ToString());
+                        writer.WriteEndElement(); // </role>
                     }
+                    writer.WriteEndElement(); // </roleref>
+                    */
+                    writer.WriteStartElement("userref");
+                    writer.WriteStartElement("user");
+                    writer.WriteElementString("id", "2");
+                    writer.WriteEndElement(); // </user>
+                    writer.WriteEndElement(); // </userref>
 
-                    writer.WriteEndElement(); // Close </roleref>
+                    // <roleref>
+                    writer.WriteStartElement("roleref");
+                    writer.WriteStartElement("role");
+                    writer.WriteElementString("id", "3");
+                    writer.WriteEndElement(); // </role>
+                    writer.WriteStartElement("role");
+                    writer.WriteElementString("id", "5");
+                    writer.WriteEndElement(); // </role>
+                    writer.WriteEndElement(); // </roleref>
 
-
-                    // Reference all files
+                    // <fileref>
                     writer.WriteStartElement("fileref");
-
-                    foreach (Section section in course.Sections)
+                    foreach (var section in course.Sections)
                     {
-                        foreach (Activity activity in section.Activities)
+                        foreach (var activity in section.Activities)
                         {
-                            if (activity is MoodleFile moodleFile)
+                            if (activity is MoodleFile file)
                             {
-                                WriteOneInforefSection(writer, moodleFile.ActivityId, "file");
+                                writer.WriteStartElement("file");
+                                writer.WriteElementString("id", file.ActivityId.ToString());
+                                writer.WriteEndElement(); // </file>
                             }
                         }
                     }
+                    writer.WriteEndElement(); // </fileref>
 
-                    writer.WriteEndElement(); // Close </fileref>
-
-
-                    // Reference all question categories in the course
+                    // <question_categoryref>
                     writer.WriteStartElement("question_categoryref");
-
-                    foreach (var categoryGrouping in course.Questions.GroupBy(q => q.Category))
+                    var writtenCategoryIds = new HashSet<int>();
+                    foreach (var question in course.Questions)
                     {
-                        WriteOneInforefSection(writer, categoryGrouping.First().CategoryId, "question_category");
+                        if (writtenCategoryIds.Add(question.CategoryId))
+                        {
+                            writer.WriteStartElement("question_category");
+                            writer.WriteElementString("id", question.CategoryId.ToString());
+                            writer.WriteEndElement(); // </question_category>
+                        }
                     }
+                    writer.WriteEndElement(); // </question_categoryref>
 
-                    writer.WriteEndElement(); // Close </question_categoryref>
-
-                    writer.WriteEndElement(); // Close </inforef>
+                    writer.WriteEndElement(); // </inforef>
                     writer.WriteEndDocument();
                 }
 
@@ -102,6 +119,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 throw;
             }
         }
+
 
 
         /// <summary>

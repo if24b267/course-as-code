@@ -1,7 +1,8 @@
-using CourseAsCode.Model.Activities;
+using CourseAsCode.Model.Activities.Resources;
 
-namespace CourseAsCode.Readers.Interfaces;
-
-public interface IAssignmentReader : IModelObjectReader<Activity>
+namespace CourseAsCode.Readers.Interfaces
 {
+    public interface IAssignmentReader : IModelObjectReader<Assignment>
+    {
+    }
 }

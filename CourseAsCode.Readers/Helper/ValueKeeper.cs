@@ -1,17 +1,18 @@
 using CourseAsCode.Model.Questions;
 
-namespace CourseAsCode.Readers.Helper;
-
-// TODO: change this so values are being dependency injected
-public static class ValueKeeper
+namespace CourseAsCode.Readers.Helper
 {
-    public static string? CoursePath { get; set; }
+    // TODO: change this so values are being dependency injected
+    public static class ValueKeeper
+    {
+        public static string? CoursePath { get; set; }
 
-    // currently only being counted up from 1
-    public static int CurrentActivityId { get; set; }
+        // currently only being counted up from 1
+        public static int CurrentActivityId { get; set; }
 
-    // currently only being counted up from 1
-    public static int CurrentSectionId { get; set; }
+        // currently only being counted up from 1
+        public static int CurrentSectionId { get; set; }
 
-    public static List<Question> Questions { get; set; }
+        public static List<Question> Questions { get; set; }
+    }
 }

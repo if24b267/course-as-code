@@ -1,7 +1,8 @@
-﻿using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Activities.Resources;
 
-namespace CourseAsCode.Readers.Interfaces;
-
-public interface IUrlReader : IModelObjectReader<URL>
+namespace CourseAsCode.Readers.Interfaces
 {
+    public interface IUrlReader : IModelObjectReader<URL>
+    {
+    }
 }
