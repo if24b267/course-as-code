@@ -64,7 +64,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
             var additionalAnswerOptions = new HashSet<string>();
 
             // First pass: Write the actual sub-questions and store additional (wrong) answer options in the HashSet
-            foreach (var subQuestion in dropdownQuestion.Answers)
+            foreach (var subQuestion in dropdownQuestion.SubQuestions)
             {
                 int matchId = sequentialIdGenerator.GetNextAnswerId();
                 writer.WriteStartElement("match");

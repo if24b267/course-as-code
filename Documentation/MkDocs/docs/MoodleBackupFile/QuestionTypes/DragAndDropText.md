@@ -1,5 +1,10 @@
 # Analysis of Drag-and-Drop Text (Lückentext) Questions in Moodle XML Backups
 
+!!! warning
+    The insights described on this page originate from reverse engineering conducted **before** the activity was implemented in Course as Code. Since small errors often came to light during the implementation process, and these were (unfortunately) not always corrected accordingly in the reverse engineering documentation, it's possible that the following information is in some parts **incomplete** or **incorrect**.
+
+    It is therefore recommended to always cross-reference the information with the implementation in the writer classes.
+
 ## General Information
 
 Drag-and-drop text questions (often referred to as "Lückentext" in German) are a question type in Moodle that allows students to fill in gaps in text by dragging and dropping words or phrases. These questions are represented as "ddwtos" (drag-and-drop words into text) in Moodle's question system. This document analyzes the XML structure used in Moodle backup files for drag-and-drop text questions.
@@ -162,10 +167,11 @@ Here's a simplified representation of a drag-and-drop text question:
 ```
 
 In this example:
+
 - The question text contains two placeholders: `[[1]]` and `[[5]]`
 - There are 7 draggable items divided into 2 groups:
-  - Group 1: "Operating System", "Compiler", "Microsoft Word", "Printer"
-  - Group 2: "Hardware", "Internet", "Printing"
+    - Group 1: "Operating System", "Compiler", "Microsoft Word", "Printer"
+    - Group 2: "Hardware", "Internet", "Printing"
 - Shuffleanswers is enabled, so the draggable items will be displayed in random order
 
 ## Placeholder Syntax
@@ -178,6 +184,7 @@ The [[1]] is a type of system software that manages [[5]] and software resources
 ```
 
 Students would need to drag:
+
 - The appropriate term to gap `[[1]]` (likely "Operating System")
 - The appropriate term to gap `[[5]]` (likely "Hardware")
 
@@ -255,6 +262,7 @@ Drag-and-drop text (Lückentext) questions in Moodle provide a way for students 
 - Supports hints to guide students toward correct answers
 
 When implementing a drag-and-drop text question writer or reader, special attention should be paid to:
+
 1. The format of the placeholders in the question text
 2. The correct generation of the serialized PHP object for drag group assignments
 3. The mapping between internal model categories and XML drag groups

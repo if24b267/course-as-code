@@ -491,8 +491,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Check number of matches: 2 sub-questions + 3 unique wrong answers (A, B, C) = 5 total matches
             var matchNodes = matchesNode.SelectNodes("match");
-            var uniqueWrongAnswers = question.Answers.SelectMany(a => a.WrongAnswers).Distinct().Count();
-            Assert.That(matchNodes?.Count, Is.EqualTo(question.Answers.Count + uniqueWrongAnswers));
+            var uniqueWrongAnswers = question.SubQuestions.SelectMany(a => a.WrongAnswers).Distinct().Count();
+            Assert.That(matchNodes?.Count, Is.EqualTo(question.SubQuestions.Count + uniqueWrongAnswers));
         }
 
         [Test]
@@ -502,8 +502,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var question = CreateBasicDropdownQuestion(22, "DDCatPool");
             _course.Questions.Add(question);
 
-            var subQ1 = question.Answers[0];
-            var subQ2 = question.Answers[1];
+            var subQ1 = question.SubQuestions[0];
+            var subQ2 = question.SubQuestions[1];
 
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
@@ -893,7 +893,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 DefaultMark = 2.0f,
                 HintPenalty = 0.25f,
                 QuestionReady = true,
-                Answers = new List<DropdownSubQuestion>
+                SubQuestions = new List<DropdownSubQuestion>
                 {
                     new DropdownSubQuestion
                     {
