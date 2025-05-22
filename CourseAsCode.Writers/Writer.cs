@@ -245,7 +245,7 @@ namespace CourseAsCode.Writers
                 QuestionTextFormat = FormattingFormat.HTML,
                 DefaultMark = 1,
                 HintPenalty = 0.3333333f,
-                Answers = new List<DropdownSubQuestion>
+                SubQuestions = new List<DropdownSubQuestion>
                 {
                     new DropdownSubQuestion
                     {
@@ -284,7 +284,7 @@ namespace CourseAsCode.Writers
                 QuestionTextFormat = FormattingFormat.HTML,
                 DefaultMark = 1,
                 HintPenalty = 0.25f,
-                Answers = new List<DropdownSubQuestion>
+                SubQuestions = new List<DropdownSubQuestion>
                 {
                     new DropdownSubQuestion
                     {

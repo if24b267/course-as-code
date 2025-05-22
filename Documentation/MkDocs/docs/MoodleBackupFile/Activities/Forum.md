@@ -1,5 +1,9 @@
-
 # Analysis of Forum Activity Backup Files Created by Moodle
+
+!!! warning
+    The insights described on this page originate from reverse engineering conducted **before** the activity was implemented in Course as Code. Since small errors often came to light during the implementation process, and these were (unfortunately) not always corrected accordingly in the reverse engineering documentation, it's possible that the following information is in some parts **incomplete** or **incorrect**.
+
+    It is therefore recommended to always cross-reference the information with the implementation in the writer classes.
 
 ## General Information
 

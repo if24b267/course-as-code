@@ -21,7 +21,6 @@ CourseAsCode is a powerful tool that enables you to define Moodle courses in cod
 - [Development](#development)
   - [Building from Source](#building-from-source)
   - [Running Tests](#running-tests)
-  - [Contributing](#contributing)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [License](#license)
@@ -284,21 +283,6 @@ dotnet test CourseAsCode.Readers.Tests
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 ```
 
-### Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-new-feature`)
-3. Make your changes
-4. Run tests to ensure everything works (`dotnet test`)
-5. Run the code formatter (`./format-code.sh` or `.\format-code.ps1`)
-6. Commit your changes (`git commit -m 'Add my new feature'`)
-7. Push to the branch (`git push origin feature/my-new-feature`)
-8. Create a new Pull Request
-
-Please follow the existing code style and include appropriate tests.
-
 ## Troubleshooting
 
 ### Common Issues
@@ -317,23 +301,10 @@ Please follow the existing code style and include appropriate tests.
    - Verify the question type (e.g., `java_program`, `c_program`) is supported in the target Moodle instance
 
 ### Logs
+Logging is performed using **Nlog**. The logs are written to:
 
-CourseAsCode uses NLog for logging. Logs are written to:
-- Console (for basic information)
-- `logs/courseascode.log` (for detailed logs)
-
-Examine these logs when troubleshooting issues.
+- Console (basic information)
+- `logs/app.log` (detailed)
 
 ## Documentation
-
-Additional documentation is available in the `Documentation` directory:
-
-- **Architecture Documentation**: `Documentation/Architecture.puml`
-- **Code Style Guide**: `Documentation/CodeStyle/CODE_STYLE.md`
-- **Internal Data Model**: `Documentation/InternalDataModel/Internal_Data_Model.md`
-- **Moodle XML Mappings**: `Documentation/InternalDataModel/Internal Data Model - Moodle XML Mappings.md`
-- **Reverse Engineering Analysis**:
-  - `Documentation/ReverseEngineering/Quiz.md`
-  - `Documentation/ReverseEngineering/CodeRunner.md`
-  - `Documentation/ReverseEngineering/Dropdown.md`
-  - `Documentation/ReverseEngineering/DragAndDropText.md`
+Additional documentation is available at [davimalu.github.io/course-as-code/](https://davimalu.github.io/course-as-code/)

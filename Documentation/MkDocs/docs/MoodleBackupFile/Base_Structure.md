@@ -1,6 +1,9 @@
 # Analysis of files created by Moodle for an empty course
-## Test
-### Line 3
+
+!!! warning
+    This document was one of the first pieces of documentation created during the reverse engineering process. At that time, we had only a very rudimentary understanding of the structure of a Moodle course and its backup file. Unfortunately, this document was **not** kept up to date, which is why the information it contains is very likely **incomplete** and/or **incorrect**.
+
+    While the document can offer a good overview of a Moodle course's structure, it shouldn't be used for detailed information.
 
 ## Information provided to Moodle in the course creation process (WEB-UI)
 

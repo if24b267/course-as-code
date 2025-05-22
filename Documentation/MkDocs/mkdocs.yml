@@ -39,6 +39,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - admonition
+  - pymdownx.details
 
 plugins:
   - plantuml:
@@ -53,10 +55,17 @@ nav:
   - Architecture:
       - Overview: Architecture/Overview.md
       - Reader: Architecture/Reader.md
-      - Internal Data Model: Architecture/InternalDataModel.md
+      - Data Model: Architecture/DataModel.md
       - Writer: Architecture/Writer.md
   - Moodle Backup File (.mbz):
       - General: MoodleBackupFile/General.md
-      - Structure: MoodleBackupFile/Structure.md
+      - Base Structure: MoodleBackupFile/Base_Structure.md
       - Activites:
+        - Assignment: MoodleBackupFile/Activities/Assignment.md
+        - Forum: MoodleBackupFile/Activities/Forum.md
         - Quiz: MoodleBackupFile/Activities/Quiz.md
+      - QuestionTypes:
+        - CodeRunner: MoodleBackupFile/QuestionTypes/CodeRunner.md
+        - Dropdown: MoodleBackupFile/QuestionTypes/Dropdown.md
+        - Matching: MoodleBackupFile/QuestionTypes/DragAndDropText.md
+        
