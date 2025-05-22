@@ -1,10 +1,4 @@
 # Data Model
-!!! success "Verified Information"
-    - Diese Seite wurde vollständig **ohne** den Einsatz von KI-Tools geschrieben
-        - Alle Informationen sind manuell verifiziert und auf Korrektheit geprüft
-    - Das letzte Update erfolgte am `22.05.2025` mit [PR-XXX]()
-
-
 Diese Seite erklärt das interne Datenmodell, das verwendet wird, um die vom Reader ausgelesenen Daten zwischenzuspeichern. Es handelt sich dabei mehr oder weniger um eine alternative (Alternativ zu den Moodle Backup Files) Art und Weise, einen Moodle Kurs samt aller mit ihm assoziierten Parameter zu speichern.
 
 Zur besseren Verständlichkeit teilen wir das Datenmodell nachfolgend in zwei Teilbereiche auf: 
@@ -268,12 +262,11 @@ Die URL Aktivität referenziert auf eine externe Resource, die außerhalb des Mo
 !!! note
     Die [Quiz Aktivität](https://docs.moodle.org/500/en/Quiz_activity) ist die mit Abstand umfangreichste Aktivität, die von **Course as Code** unterstützt wird, da ein Quiz wiederum verschiedenste Fragetypen beinhalten kann, die alle einer eigenen Struktur im Datenmodell benötigen. Zur besseren Übersicht wurde ihr daher ein eigener Abschnitt in dieser Dokumentation gewidmet.
 
-## [Quizzes](https://docs.moodle.org/500/en/Quiz_activity)
+## [Quiz](https://docs.moodle.org/500/en/Quiz_activity)
 
 ```puml
 @startuml
-
-package Quiz <<Frame>> {
+package Quizzes <<Frame>> {
     abstract class Activity {
         + Name: string
         + Description: string
@@ -327,7 +320,7 @@ package Quiz <<Frame>> {
         + SubQuestions: List<DropdownSubQuestion>
     }
     
-    class DropdownSubQuestion extends DropdownQuestion {
+    class DropdownSubQuestion {
         + QuestionText: string
         + CorrectAnswer: string
         + WrongAnswers: List<string>
@@ -337,7 +330,7 @@ package Quiz <<Frame>> {
         + ShuffleAnswers: bool
     }
     
-    class TextChoice extends DragAndDropTextQuestion {
+    class TextChoice {
         + ID: int
         + Value: string
         + Category: string
@@ -351,23 +344,34 @@ package Quiz <<Frame>> {
         ...
     }
     
-    class CodeRunnerTestCase extends CodeRunnerQuestion {
+    class CodeRunnerTestCase {
         + TestCode: string
         + Expected: string
         ...
     }
-    
-    
+}
+
 ' A quiz contains multiple questions
 Question "0..*" --o "0..*" Quiz : contains
 
-' A Multiple Choice Question contains multiple Answer choices
 MultipleChoiceQuestion "1..*" *-- "1..*" MultiChoiceAnswer : contains
-
-}
+DropdownQuestion "1" *-- "1..*" DropdownSubQuestion : contains
+DragAndDropTextQuestion "1" *-- "1..*" TextChoice : contains
+CodeRunnerQuestion "1" *-- "1..*" CodeRunnerTestCase : contains
 
 @enduml
 ```
+
+Wie bei allen anderen bisher behandelten Aktivitäten handelt es sich auch beim Quiz um eine Aktivität, die die abstrakte `Activity` Klasse erweitert. Ein Quiz besteht grob aus 2 Elementen:
+
+- Der Quiz Aktivität selbst und Parametern, die diese genauer beschreiben (bspw. `OpenTime`, `CloseTime`, `GradeToPass`, `AllowedAttempts`, etc.)
+- einer Reihe von Fragen verschiedenen Typs
+
+Die Parameter, die die Metadaten des Quizzes festlegen, sind die Properties der `Quiz` Klasse (siehe die **Description Attributes** in der Model Klasse für eine genaue Beschreibung aller verfügbaren Parameter).
+
+Zudem ist jedes Quiz mit `SafeExamBrowserSettings` assoziiert. Der [Safe Exam Browser (kurz SEB)](https://safeexambrowser.org/about_overview_en.html) ist ein spezieller Browser, der den Zugriff auf viele OS-Funktionen sowie auf andere Websiten blockiert, um Studierenden das Schummeln zu erschweren. Pro Quiz kann eingestellt werden, ob SEB benötigt wird, um das Quiz durchzuführen und wie der SEB für dieses Quiz konfiguriert werden soll - die Informationen dafür werden in der `SafeExamBrowserSettings` Klasse gespeichert.
+
+Herzstück jeden Quizzes sind die Quizfragen, die von den Studenten beantwortet werden müssen. Ein Quiz kann beliebig viele Fragen beliebiger Typen enthalten, wobei eine Frage auch in mehreren Quizzes vorkommen kann.
 
 ### Fragetypen
 
