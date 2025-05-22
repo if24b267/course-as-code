@@ -1,6 +1,9 @@
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
@@ -46,9 +49,72 @@ namespace CourseAsCode.Readers.YAML.Readers
                     return ConvertYamlQuestionToSingleChoiceQuestion(yamlQuestion);
                 case QuestionType.MULTIPLECHOICE:
                     return ConvertYamlQuestionToMultipleChoiceQuestion(yamlQuestion);
+                case QuestionType.DROPDOWN:
+                    return ConvertYamlQuestionToDropdownQuestion(yamlQuestion);
+                case QuestionType.DRAGANDDROPTEXT:
+                    return ConvertYamlQuestionToDragAndDropTextQuestion(yamlQuestion);
             }
             _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
             return null;
+        }
+
+        private DragAndDropTextQuestion ConvertYamlQuestionToDragAndDropTextQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new DragAndDropTextQuestion()
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                Category = yamlQuestion.Category,
+                Answers = ConvertYamlDragDropAnswerToMoodleTextChoice(yamlQuestion.DragDropAnswers)
+            };
+            question.QuestionId = yamlQuestion.QuestionId;
+            question.QuestionTextFormat = yamlQuestion.QuestionTextFormat;
+            question.DefaultMark = yamlQuestion.DefaultMark;
+            question.QuestionReady = yamlQuestion.QuestionReady;
+            question.HintPenalty = yamlQuestion.HintPenalty;
+            question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
+
+            return question;
+        }
+
+        private List<TextChoice> ConvertYamlDragDropAnswerToMoodleTextChoice(List<YamlDragDropAnswerText> yamlDragDropAnswers)
+        {
+            return yamlDragDropAnswers.Select(yamlDragDropAnswer => new TextChoice()
+            {
+                ID = yamlDragDropAnswer.Id,
+                Value = yamlDragDropAnswer.Text,
+                ValueFormat = yamlDragDropAnswer.TextFormat ?? FormattingFormat.PlainText,
+                Category = yamlDragDropAnswer.Category,
+            })
+                .ToList();
+        }
+
+        private DropdownQuestion ConvertYamlQuestionToDropdownQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new DropdownQuestion()
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                Category = yamlQuestion.Category,
+            };
+
+            question.QuestionId = yamlQuestion.QuestionId;
+            question.QuestionTextFormat = yamlQuestion.QuestionTextFormat;
+            question.DefaultMark = yamlQuestion.DefaultMark;
+            question.QuestionReady = yamlQuestion.QuestionReady;
+            question.HintPenalty = yamlQuestion.HintPenalty;
+            question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
+            question.SubQuestions = ConvertYamlSubQuestionListToMoodleSubQuestionList(yamlQuestion.SubQuestions);
+            return question;
+        }
+
+        private List<DropdownSubQuestion> ConvertYamlSubQuestionListToMoodleSubQuestionList(List<YamlSubQuestion> yamlSubQuestions)
+        {
+            return yamlSubQuestions.Select(yamlSubQuestion => new DropdownSubQuestion()
+                {
+                    QuestionText = yamlSubQuestion.SubQuestionText, QuestionTextFormat = yamlSubQuestion.SubQuestionTextFormat, CorrectAnswer = yamlSubQuestion.CorrectAnswer, WrongAnswers = yamlSubQuestion.WrongAnswers ?? [],
+                })
+                .ToList();
         }
 
         private SingleChoiceQuestion ConvertYamlQuestionToSingleChoiceQuestion(YamlQuestion yamlQuestion)

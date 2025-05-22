@@ -17,5 +17,7 @@ namespace CourseAsCode.Readers.YAML.Model
         public List<YamlQuestionAnswer> Answers { get; set; }
         public float HintPenalty { get; set; } = 0.1f;
         public List<YamlHint>? Hints { get; set; }
+        public List<YamlSubQuestion>? SubQuestions { get; set; }
+        public List<YamlDragDropAnswerText>? DragDropAnswers { get; set; }
     }
 }

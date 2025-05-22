@@ -236,6 +236,7 @@ namespace CourseAsCode.Writers
             // -------------------------------------------------
 
             // Add a dummy dropdown question to the course
+            /*
             var q1 = new DropdownQuestion()
             {
                 QuestionId = 12,
@@ -451,7 +452,7 @@ namespace CourseAsCode.Writers
                         ValueFormat = FormattingFormat.HTML,
                     },
                 },
-            };
+            };*/
 
             // Add a CodeRunner question for Java programming
             var q5 = new CodeRunnerQuestion
@@ -570,7 +571,7 @@ namespace CourseAsCode.Writers
                     }
                 }
             };
-
+            /*
             // Create new quiz activity and add it to the course
             var testQuiz = new Quiz
             {
@@ -628,10 +629,6 @@ namespace CourseAsCode.Writers
             };
 
             course.Sections.Add(testSection);
-            course.Questions.Add(q1);
-            course.Questions.Add(q2);
-            course.Questions.Add(q3);
-            course.Questions.Add(q4);
             course.Questions.Add(q5);
             course.Questions.Add(q6);
 
@@ -692,7 +689,7 @@ namespace CourseAsCode.Writers
             };
 
             course.Sections.Add(codeRunnerSection);
-
+            */
             _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
             _logger.LogInformation($"The course will be saved at {outputPath}");
 
