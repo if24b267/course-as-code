@@ -284,21 +284,6 @@ dotnet test CourseAsCode.Readers.Tests
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 ```
 
-### Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-new-feature`)
-3. Make your changes
-4. Run tests to ensure everything works (`dotnet test`)
-5. Run the code formatter (`./format-code.sh` or `.\format-code.ps1`)
-6. Commit your changes (`git commit -m 'Add my new feature'`)
-7. Push to the branch (`git push origin feature/my-new-feature`)
-8. Create a new Pull Request
-
-Please follow the existing code style and include appropriate tests.
-
 ## Troubleshooting
 
 ### Common Issues
