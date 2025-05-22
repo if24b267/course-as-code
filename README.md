@@ -21,7 +21,6 @@ CourseAsCode is a powerful tool that enables you to define Moodle courses in cod
 - [Development](#development)
   - [Building from Source](#building-from-source)
   - [Running Tests](#running-tests)
-  - [Contributing](#contributing)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [License](#license)
