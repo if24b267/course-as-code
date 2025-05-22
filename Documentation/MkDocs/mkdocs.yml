@@ -61,4 +61,5 @@ nav:
       - General: MoodleBackupFile/General.md
       - Structure: MoodleBackupFile/Structure.md
       - Activites:
+        - Assignment: MoodleBackupFile/Activities/Assignment.md
         - Quiz: MoodleBackupFile/Activities/Quiz.md
