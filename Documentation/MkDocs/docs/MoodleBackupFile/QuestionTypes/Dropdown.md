@@ -1,5 +1,10 @@
 # Analysis of Dropdown (Matching) Questions in Moodle XML Backups
 
+!!! warning
+    The insights described on this page originate from reverse engineering conducted **before** the activity was implemented in Course as Code. Since small errors often came to light during the implementation process, and these were (unfortunately) not always corrected accordingly in the reverse engineering documentation, it's possible that the following information is in some parts **incomplete** or **incorrect**.
+
+    It is therefore recommended to always cross-reference the information with the implementation in the writer classes.
+
 ## General Information
 
 In Moodle, dropdown questions are implemented as a type of "matching" question. These questions allow instructors to create prompts (sub-questions) where students must select the correct answer from a dropdown menu of options. This document analyzes the XML structure used in Moodle backup files for dropdown/matching questions.
@@ -58,14 +63,14 @@ The `matchoptions` section contains an element with an `id` attribute and includ
 The `matches` section contains multiple `match` elements, each with an `id` attribute. There are two types of matches:
 
 1. **Sub-question matches**: These have both `questiontext` and `answertext` elements, where:
-   - `questiontext`: The prompt or stem for the sub-question
-   - `questiontextformat`: Format of the sub-question text
-   - `answertext`: The correct answer for this sub-question
+    - `questiontext`: The prompt or stem for the sub-question
+    - `questiontextformat`: Format of the sub-question text
+    - `answertext`: The correct answer for this sub-question
 
 2. **Distractor-only matches**: These have an empty `questiontext` and only contain an `answertext` element:
-   - `questiontext`: Empty (represented as `""`)
-   - `questiontextformat`: Format (still present but irrelevant)
-   - `answertext`: A distractor option that will appear in dropdown menus but isn't the correct answer for any sub-question
+    - `questiontext`: Empty (represented as `""`)
+    - `questiontextformat`: Format (still present but irrelevant)
+    - `answertext`: A distractor option that will appear in dropdown menus but isn't the correct answer for any sub-question
 
 ### **Example Dropdown/Matching Question**
 
@@ -147,6 +152,7 @@ Here's a simplified representation of a dropdown/matching question:
 ```
 
 In this example:
+
 - There are 4 sub-questions (Haskell, Java, C, and Prolog) with their correct answers
 - There are 2 distractors (one is a duplicate "Functional" which may confuse students, and "Markdown Language")
 - All these answers will be pooled together and presented in dropdown menus for each sub-question
@@ -180,6 +186,7 @@ new DropdownSubQuestion
 ```
 
 Would be converted to:
+
 1. A match with "Java" as the questiontext and "Object-Oriented" as the answertext
 2. A distractor match with empty questiontext and "Functional" as the answertext
 

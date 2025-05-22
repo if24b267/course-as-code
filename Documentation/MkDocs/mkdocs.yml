@@ -59,7 +59,13 @@ nav:
       - Writer: Architecture/Writer.md
   - Moodle Backup File (.mbz):
       - General: MoodleBackupFile/General.md
-      - Structure: MoodleBackupFile/Structure.md
+      - Base Structure: MoodleBackupFile/Base_Structure.md
       - Activites:
         - Assignment: MoodleBackupFile/Activities/Assignment.md
+        - Forum: MoodleBackupFile/Activities/Forum.md
         - Quiz: MoodleBackupFile/Activities/Quiz.md
+      - QuestionTypes:
+        - CodeRunner: MoodleBackupFile/QuestionTypes/CodeRunner.md
+        - Dropdown: MoodleBackupFile/QuestionTypes/Dropdown.md
+        - Matching: MoodleBackupFile/QuestionTypes/DragAndDropText.md
+        
