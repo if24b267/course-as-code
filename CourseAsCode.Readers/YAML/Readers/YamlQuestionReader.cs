@@ -35,6 +35,12 @@ namespace CourseAsCode.Readers.YAML.Readers
             foreach (YamlQuestion yamlQuestion in questionList.Questions)
             {
                 var question = ConvertYamlQuestionToMoodleQuestion(yamlQuestion);
+                if (finalQuestionList.Any(questionFromList => questionFromList.QuestionId == question.QuestionId))
+                {
+                    _logger.Error($"Question with ID {question.QuestionId} already exists in the list.");
+                    // skip if the question id already exists
+                    continue;
+                }
                 finalQuestionList.Add(question);
             }
 
@@ -46,12 +52,16 @@ namespace CourseAsCode.Readers.YAML.Readers
             switch (yamlQuestion.QuestionType)
             {
                 case QuestionType.SINGLECHOICE:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to SingleChoiceQuestion");
                     return ConvertYamlQuestionToSingleChoiceQuestion(yamlQuestion);
                 case QuestionType.MULTIPLECHOICE:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to MultipleChoiceQuestion");
                     return ConvertYamlQuestionToMultipleChoiceQuestion(yamlQuestion);
                 case QuestionType.DROPDOWN:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DropdownQuestion");
                     return ConvertYamlQuestionToDropdownQuestion(yamlQuestion);
                 case QuestionType.DRAGANDDROPTEXT:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
                     return ConvertYamlQuestionToDragAndDropTextQuestion(yamlQuestion);
             }
             _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
@@ -72,6 +82,7 @@ namespace CourseAsCode.Readers.YAML.Readers
             question.DefaultMark = yamlQuestion.DefaultMark;
             question.QuestionReady = yamlQuestion.QuestionReady;
             question.HintPenalty = yamlQuestion.HintPenalty;
+            question.ShuffleAnswers = yamlQuestion.ShuffleAnswers;
             question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
 
             return question;
