@@ -302,23 +302,10 @@ dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
    - Verify the question type (e.g., `java_program`, `c_program`) is supported in the target Moodle instance
 
 ### Logs
+Logging is performed using **Nlog**. The logs are written to:
 
-CourseAsCode uses NLog for logging. Logs are written to:
-- Console (for basic information)
-- `logs/courseascode.log` (for detailed logs)
-
-Examine these logs when troubleshooting issues.
+- Console (basic information)
+- `logs/app.log` (detailed)
 
 ## Documentation
-
-Additional documentation is available in the `Documentation` directory:
-
-- **Architecture Documentation**: `Documentation/Architecture.puml`
-- **Code Style Guide**: `Documentation/CodeStyle/CODE_STYLE.md`
-- **Internal Data Model**: `Documentation/InternalDataModel/Internal_Data_Model.md`
-- **Moodle XML Mappings**: `Documentation/InternalDataModel/Internal Data Model - Moodle XML Mappings.md`
-- **Reverse Engineering Analysis**:
-  - `Documentation/ReverseEngineering/Quiz.md`
-  - `Documentation/ReverseEngineering/CodeRunner.md`
-  - `Documentation/ReverseEngineering/Dropdown.md`
-  - `Documentation/ReverseEngineering/DragAndDropText.md`
+Additional documentation is available at [davimalu.github.io/course-as-code/](https://davimalu.github.io/course-as-code/)
