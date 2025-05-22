@@ -83,6 +83,12 @@ namespace CourseAsCode.Readers.YAML.Readers
             question.QuestionReady = yamlQuestion.QuestionReady;
             question.HintPenalty = yamlQuestion.HintPenalty;
             question.ShuffleAnswers = yamlQuestion.ShuffleAnswers;
+            question.CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback;
+            question.CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat;
+            question.PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback;
+            question.PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat;
+            question.IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback;
+            question.IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat;
             question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
 
             return question;
@@ -114,6 +120,12 @@ namespace CourseAsCode.Readers.YAML.Readers
             question.DefaultMark = yamlQuestion.DefaultMark;
             question.QuestionReady = yamlQuestion.QuestionReady;
             question.HintPenalty = yamlQuestion.HintPenalty;
+            question.CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback;
+            question.CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat;
+            question.PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback;
+            question.PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat;
+            question.IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback;
+            question.IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat;
             question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
             question.SubQuestions = ConvertYamlSubQuestionListToMoodleSubQuestionList(yamlQuestion.SubQuestions);
             return question;
@@ -144,6 +156,12 @@ namespace CourseAsCode.Readers.YAML.Readers
             question.QuestionReady = yamlQuestion.QuestionReady;
             question.Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers);
             question.HintPenalty = yamlQuestion.HintPenalty;
+            question.CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback;
+            question.CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat;
+            question.PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback;
+            question.PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat;
+            question.IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback;
+            question.IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat;
             question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
             return question;
         }
@@ -164,6 +182,12 @@ namespace CourseAsCode.Readers.YAML.Readers
             question.QuestionReady = yamlQuestion.QuestionReady;
             question.Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers);
             question.HintPenalty = yamlQuestion.HintPenalty;
+            question.CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback;
+            question.CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat;
+            question.PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback;
+            question.PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat;
+            question.IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback;
+            question.IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat;
             question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
             return question;
         }

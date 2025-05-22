@@ -7,6 +7,9 @@ Questions:
     DefaultMark: 1
     ShuffleAnswers: true
     QuestionType: DRAGANDDROPTEXT
+    CorrectResponseFeedback: "Correct! The command `ls -l` is used to list files and their permissions in Linux."
+    PartiallyCorrectResponseFeedback: "Partially correct. The command `ls -l` is used to list files and their permissions in Linux."
+    IncorrectResponseFeedback: "Incorrect. The command `ls -l` is used to list files and their permissions in Linux."
     DragDropAnswers:
       - Id: 1
         Text: "ls -l"
