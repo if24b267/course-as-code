@@ -2,12 +2,6 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Enums.Quizzes;
-using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types.CodeRunner;
-using CourseAsCode.Model.Questions.Types.DragAndDropText;
-using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
@@ -471,6 +465,7 @@ namespace CourseAsCode.Writers
 
             course.Sections.Add(codeRunnerSection);
             */
+
             _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
             _logger.LogInformation($"The course will be saved at {outputPath}");
 
