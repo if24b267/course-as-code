@@ -10,15 +10,9 @@ using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.YAML.Readers
 {
-    public class YamlQuestionReader : IQuestionReader
+    public class YamlQuestionReader(IYamlFileReaderHelper fileReaderHelper) : IQuestionReader
     {
-        private IYamlFileReaderHelper _yamlFileReaderHelper;
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-
-        public YamlQuestionReader(IYamlFileReaderHelper fileReaderHelper)
-        {
-            _yamlFileReaderHelper = fileReaderHelper;
-        }
 
         public List<Question>? Read(string modelObjectPath)
         {
@@ -28,7 +22,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 return null;
             }
 
-            var questionList = _yamlFileReaderHelper.DeserializeFromFile<YamlQuestionList>(modelObjectPath);
+            var questionList = fileReaderHelper.DeserializeFromFile<YamlQuestionList>(modelObjectPath);
 
             var finalQuestionList = new List<Question>();
 
@@ -63,33 +57,35 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.DRAGANDDROPTEXT:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
                     return ConvertYamlQuestionToDragAndDropTextQuestion(yamlQuestion);
+                default:
+                    _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
+                    break;
             }
-            _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
             return null;
         }
 
         private DragAndDropTextQuestion ConvertYamlQuestionToDragAndDropTextQuestion(YamlQuestion yamlQuestion)
         {
-            var question = new DragAndDropTextQuestion()
+            var question = new DragAndDropTextQuestion
             {
                 QuestionName = yamlQuestion.QuestionName,
                 QuestionText = yamlQuestion.QuestionText,
                 Category = yamlQuestion.Category,
-                Answers = ConvertYamlDragDropAnswerToMoodleTextChoice(yamlQuestion.DragDropAnswers)
+                Answers = ConvertYamlDragDropAnswerToMoodleTextChoice(yamlQuestion.DragDropAnswers),
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                HintPenalty = yamlQuestion.HintPenalty,
+                ShuffleAnswers = yamlQuestion.ShuffleAnswers,
+                CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback,
+                CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat,
+                PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback,
+                PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
+                IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
+                IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
             };
-            question.QuestionId = yamlQuestion.QuestionId;
-            question.QuestionTextFormat = yamlQuestion.QuestionTextFormat;
-            question.DefaultMark = yamlQuestion.DefaultMark;
-            question.QuestionReady = yamlQuestion.QuestionReady;
-            question.HintPenalty = yamlQuestion.HintPenalty;
-            question.ShuffleAnswers = yamlQuestion.ShuffleAnswers;
-            question.CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback;
-            question.CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat;
-            question.PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback;
-            question.PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat;
-            question.IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback;
-            question.IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat;
-            question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
 
             return question;
         }
@@ -108,26 +104,26 @@ namespace CourseAsCode.Readers.YAML.Readers
 
         private DropdownQuestion ConvertYamlQuestionToDropdownQuestion(YamlQuestion yamlQuestion)
         {
-            var question = new DropdownQuestion()
+            var question = new DropdownQuestion
             {
                 QuestionName = yamlQuestion.QuestionName,
                 QuestionText = yamlQuestion.QuestionText,
                 Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                HintPenalty = yamlQuestion.HintPenalty,
+                CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback,
+                CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat,
+                PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback,
+                PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
+                IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
+                IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
+                SubQuestions = ConvertYamlSubQuestionListToMoodleSubQuestionList(yamlQuestion.SubQuestions)
             };
 
-            question.QuestionId = yamlQuestion.QuestionId;
-            question.QuestionTextFormat = yamlQuestion.QuestionTextFormat;
-            question.DefaultMark = yamlQuestion.DefaultMark;
-            question.QuestionReady = yamlQuestion.QuestionReady;
-            question.HintPenalty = yamlQuestion.HintPenalty;
-            question.CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback;
-            question.CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat;
-            question.PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback;
-            question.PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat;
-            question.IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback;
-            question.IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat;
-            question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
-            question.SubQuestions = ConvertYamlSubQuestionListToMoodleSubQuestionList(yamlQuestion.SubQuestions);
             return question;
         }
 
@@ -142,53 +138,53 @@ namespace CourseAsCode.Readers.YAML.Readers
 
         private SingleChoiceQuestion ConvertYamlQuestionToSingleChoiceQuestion(YamlQuestion yamlQuestion)
         {
-            var question = new SingleChoiceQuestion()
+            var question = new SingleChoiceQuestion
             {
                 QuestionName = yamlQuestion.QuestionName,
                 QuestionText = yamlQuestion.QuestionText,
                 Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                ShuffleAnswers = yamlQuestion.ShuffleAnswers,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers),
+                HintPenalty = yamlQuestion.HintPenalty,
+                CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback,
+                CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat,
+                PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback,
+                PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
+                IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
+                IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
             };
 
-            question.QuestionId = yamlQuestion.QuestionId;
-            question.QuestionTextFormat = yamlQuestion.QuestionTextFormat;
-            question.ShuffleAnswers = yamlQuestion.ShuffleAnswers;
-            question.DefaultMark = yamlQuestion.DefaultMark;
-            question.QuestionReady = yamlQuestion.QuestionReady;
-            question.Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers);
-            question.HintPenalty = yamlQuestion.HintPenalty;
-            question.CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback;
-            question.CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat;
-            question.PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback;
-            question.PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat;
-            question.IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback;
-            question.IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat;
-            question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
             return question;
         }
 
         private MultipleChoiceQuestion ConvertYamlQuestionToMultipleChoiceQuestion(YamlQuestion yamlQuestion)
         {
-            var question = new MultipleChoiceQuestion()
+            var question = new MultipleChoiceQuestion
             {
                 QuestionName = yamlQuestion.QuestionName,
                 QuestionText = yamlQuestion.QuestionText,
                 Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                ShuffleAnswers = yamlQuestion.ShuffleAnswers,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers),
+                HintPenalty = yamlQuestion.HintPenalty,
+                CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback,
+                CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat,
+                PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback,
+                PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
+                IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
+                IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
             };
 
-            question.QuestionId = yamlQuestion.QuestionId;
-            question.QuestionTextFormat = yamlQuestion.QuestionTextFormat;
-            question.ShuffleAnswers = yamlQuestion.ShuffleAnswers;
-            question.DefaultMark = yamlQuestion.DefaultMark;
-            question.QuestionReady = yamlQuestion.QuestionReady;
-            question.Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers);
-            question.HintPenalty = yamlQuestion.HintPenalty;
-            question.CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback;
-            question.CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat;
-            question.PartiallyCorrectResponseFeedback = yamlQuestion.PartiallyCorrectResponseFeedback;
-            question.PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat;
-            question.IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback;
-            question.IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat;
-            question.Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints);
             return question;
         }
 
