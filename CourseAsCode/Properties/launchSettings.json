@@ -2,6 +2,10 @@
   "profiles": {
     "CourseAsCode": {
       "commandName": "Project",
+      "commandLineArgs": "-i \"../../../../Documentation/testCourse\" -o \"../../../../Documentation/out\""
+    },
+    "exampleCourse": {
+      "commandName": "Project",
       "commandLineArgs": "-i \"../../../../Documentation/exampleCourse\" -o \"../../../../Documentation/out\""
     }
   }

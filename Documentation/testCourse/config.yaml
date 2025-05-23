@@ -1,0 +1,29 @@
+CourseName: My test course
+# ShortName has to be unique
+# ShortName: PC
+Summary: Changed a few things
+# WHAT IS DESCRIPTION?
+# Description: Pokemon and more Pokemon. This is a description!
+Visible: true
+CategoryId: 2
+Category: TestCategory
+StartDate: 31-01-2023 23:59
+EndDate: 31-08-2025 23:59
+IdNumber: 123456
+
+ForcedLanguage: en
+ShowGrades: true
+NumberOfAnnouncements: 5
+ShowActivityDates: true
+
+ShowCompletionConditions: true
+EnableCompletionTracking: true
+
+GroupMode: 1
+ForceGroupMode: false
+
+QuestionListPaths:
+  - ./Questions/questions1.yaml
+  - ./Questions/questions2.yaml
+  - ./Questions/questions3.yaml
+  - ./Questions/questions4.yaml
