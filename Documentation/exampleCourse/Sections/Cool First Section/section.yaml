@@ -1,5 +1,0 @@
-SectionName: Cool First Section
-Activities:
-  - ActivityFilePath: Activities/url1.yaml
-  - ActivityFilePath: Activities/file1.yaml
-  - ActivityFilePath: Activities/label1.yaml
