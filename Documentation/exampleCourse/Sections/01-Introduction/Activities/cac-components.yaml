@@ -1,0 +1,6 @@
+Type: label
+Name: Architecture of Course as Code
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/cac-components.md
