@@ -17,5 +17,13 @@ namespace CourseAsCode.Readers.YAML.Model
         public List<YamlQuestionAnswer> Answers { get; set; }
         public float HintPenalty { get; set; } = 0.1f;
         public List<YamlHint>? Hints { get; set; }
+        public List<YamlSubQuestion>? SubQuestions { get; set; }
+        public string? CorrectResponseFeedback { get; set; }
+        public FormattingFormat CorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
+        public string? PartiallyCorrectResponseFeedback { get; set; }
+        public FormattingFormat PartiallyCorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
+        public string? IncorrectResponseFeedback { get; set; }
+        public FormattingFormat IncorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
+        public List<YamlDragDropAnswerText>? DragDropAnswers { get; set; }
     }
 }
