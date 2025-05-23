@@ -1,0 +1,12 @@
+SectionName: Supported Activity Types
+Summary: This section showcases the activity types that can currently be created using Course as Code.
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/TMA_supported-activities.yaml
+  - ActivityFilePath: Activities/TMA_text-and-media-area.yaml
+  - ActivityFilePath: Activities/TMA_urls.yaml
+  - ActivityFilePath: Activities/URL_documentation.yaml
+  - ActivityFilePath: Activities/TMA_files.yaml
+  - ActivityFilePath: Activities/FILE_moodle-backup-file.yaml
+  - ActivityFilePath: Activities/TMA_assignments.yaml
+  - ActivityFilePath: Activities/ASN_course-as-code-summary.yaml

@@ -1,0 +1,8 @@
+SectionName: Quizzes
+VisibleToStudents: true
+Summary: This section contains information about the quiz activity, supported Question types and a quiz to test your knowledge!
+Activities:
+  - ActivityFilePath: Activities/TMA_quizzes-introduction.yaml
+  - ActivityFilePath: Activities/URL_quiz-documentation.yaml
+  - ActivityFilePath: Activities/TMA_grade-warning.yaml
+  - ActivityFilePath: Activities/QUIZ_quizzes.yaml

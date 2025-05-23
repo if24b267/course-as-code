@@ -1,0 +1,188 @@
+Questions:
+  - QuestionName: MCQGradingSumRule
+    Category: Testing
+    QuestionId: 1
+    QuestionText: According to the documentation for `MultipleChoiceQuestion` within the "Quiz" section, what is an absolute necessity regarding `AnswerGrade`s for Moodle to correctly recognize the question?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Hints:
+      - HintText: The documentation emphasizes a critical rule for `AnswerGrade` summation in a particular type of callout box, specifically for positive grades.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: false
+    Answers:
+      - AnswerText: Positive `AnswerGrade`s must sum up to exactly 1.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The documentation states, "It is absolutely necessary that the **positive** `AnswerGrade`s sum up to exactly `1` - otherwise, the question will not be recognized correctly by Moodle."
+      - AnswerText: All negative `AnswerGrade`s combined must not exceed -1.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Negative `AnswerGrade`s can even be values greater than 1, so that the user receives overall point deductions if they answer the question incorrectly.
+      - AnswerText: At least one `AnswerGrade` must be a fraction to ensure Moodle's internal precision.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Using fractions is recommended for irrational numbers for precision, but the core rule is about the sum of positive grades.
+      - AnswerText: The `DefaultMark` of the question must be equal to the sum of all positive `AnswerGrade`s.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The sum of positive `AnswerGrade`s must be 1, regardless of the `DefaultMark` of the question itself.
+
+  - QuestionName: DropdownOptionAggregation
+    Category: Testing
+    QuestionId: 2
+    QuestionText: In a `DropdownQuestion` (referred to as "Matching Question" in Moodle), how are the selectable options for each dropdown menu determined, according to the documentation's explanation (including the 'bug' section)?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Hints:
+      - HintText: Review the examples and the 'bug' description for `DropdownQuestion`. It details how `CorrectAnswer`s and `WrongAnswers` from sub-questions contribute to the options.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: false
+    Answers:
+      - AnswerText: Each sub-question's dropdown menu only lists the `CorrectAnswer` defined for it and any `WrongAnswers` defined directly under that same sub-question.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation explains that options are pooled from all sub-questions.
+      - AnswerText: All `CorrectAnswer`s from all `DropdownSubQuestion`s are pooled and offered as options for every sub-question, but `WrongAnswers` are only shown for the sub-question they were defined for.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Both `CorrectAnswer`s and `WrongAnswers` are pooled from all sub-questions.
+      - AnswerText: The `CorrectAnswer` from each `DropdownSubQuestion` and all specified `WrongAnswers` from *all* `DropdownSubQuestion`s are pooled together, making this entire set of answers available as options in *every* sub-question's dropdown menu.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The documentation states, "every correct answer to a sub-question is also available as an answer option for all other sub-questions... If additional incorrect answer options are provided, they are also available as answer options for **all** sub-questions".
+      - AnswerText: Only the `CorrectAnswer`s are used; `WrongAnswers` serve as distractors that Moodle automatically generates based on similarity.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. `WrongAnswers` are explicitly defined and pooled.
+
+  - QuestionName: QuizActivityCharacteristics
+    Category: Testing
+    QuestionId: 3
+    QuestionText: Based on the "Quiz" section of the provided documentation, which of the following statements about the `Quiz` activity and its components are true?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: MULTIPLECHOICE
+    Hints:
+      - HintText: Consider what a Quiz consists of, its relation to other entities like `SafeExamBrowserSettings`, and how questions are managed within quizzes.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: true
+    Answers:
+      - AnswerText: A `Quiz` itself is an abstract class, and specific implementations like `MultipleChoiceQuiz` must be used.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. `Quiz` extends the abstract `Activity` class but is not itself abstract. `Question` is an example of an abstract class for question types.
+      - AnswerText: Every `Quiz` is associated with `SafeExamBrowserSettings`, which are used to configure if and how the Safe Exam Browser is employed for that quiz.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct! The documentation mentions, "Furthermore, every quiz is associated with `SafeExamBrowserSettings`."
+      - AnswerText: The `QuestionText` and `DefaultMark` are properties of the `Quiz` class, not the individual `Question` classes.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. `QuestionName`, `QuestionText`, and `DefaultMark` are described as parameters of the abstract parent class `Question`.
+      - AnswerText: A specific question (e.g., a `MultipleChoiceQuestion`) can be included in multiple different quizzes.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct! The text states, "a specific question can also appear in multiple quizzes."
+      - AnswerText: The documentation for `CodeRunnerQuestion` is noted as being the most complete and serves as a template for other question types.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation for `CodeRunnerQuestion` is explicitly marked with a warning as "incomplete and/or incorrect and needs to be revised."
+
+  - QuestionName: DragDropCategoryPurpose
+    Category: Testing
+    QuestionId: 4
+    QuestionText: In the context of a `DragAndDropTextQuestion`, what is the primary purpose of assigning a `Category` to a `TextChoice` element, as explained in the documentation?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Hints:
+      - HintText: The documentation shows an example using categories like "A" and "B" for `TextChoice` elements and explains how this affects the options available for different gaps.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: false
+    Answers:
+      - AnswerText: To automatically group related `TextChoice` elements in the user interface, improving readability for the student.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. While it might visually group them, its primary documented function is more specific to distractor management.
+      - AnswerText: To specify distractors individually per gap, allowing different sets of choices to be presented for different gaps in the `QuestionText`.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The documentation states, "A `TextChoice` can also be assigned to a specific `Category` to specify distractors individually per gap." The example then illustrates this.
+      - AnswerText: To link a `TextChoice` to a general topic or learning objective, which is used for reporting and analytics but not visible to the student.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation focuses on its role in structuring the question's interactive elements.
+      - AnswerText: To indicate that a `TextChoice` element is mandatory and must be used in one of the gaps, unlike uncategorized choices which are optional.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The `Category` is about controlling which choices appear for which gaps, not their mandatory status.
+
+  - QuestionName: SingleChoiceBooleanEffect
+    Category: Testing
+    QuestionId: 5
+    QuestionText: According to the "SingleChoiceQuestion" documentation, what is the consequence if the `AnswerGrade`s for a `MultipleChoiceQuestion` are set so that only one answer option is correct, but the `SingleChoice` boolean is left as `false`?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Hints:
+      - HintText: Review the 'info' box under the "SingleChoiceQuestion" subsection. It clarifies the difference between grading for a single correct answer and the student's ability to select options.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: false
+    Answers:
+      - AnswerText: Moodle will flag the question as having a configuration error, as `SingleChoice` must be `true` if only one answer is graded as correct.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation describes a specific behavior, not an error state.
+      - AnswerText: Although only one answer is correct from a grading perspective, the student will still be able to select multiple answer options during the quiz.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The documentation states, "If the `AnswerGrade`s are set such that only a single answer is correct, but the `SingleChoice` Boolean is left as `false`, only one answer to the question is correct, but the student can still select multiple answer options."
+      - AnswerText: The question will behave as a "True/False" question, regardless of the number of answer options provided.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The number of options and their content remain as defined; the issue is purely about the selection mechanism.
+      - AnswerText: The `SingleChoice` boolean will automatically be set to `true` by Moodle if it detects that only one answer has a positive grade.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation implies these are distinct settings that an author controls.
+
+  - QuestionName: AbstractQuestionProperties
+    Category: Testing
+    QuestionId: 6
+    QuestionText: The documentation mentions an abstract parent class `Question`. Which of the following are listed as parameters stored in this abstract `Question` class, common to all question types?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: MULTIPLECHOICE
+    Hints:
+      - HintText: Look for the 'info' box under the "Question Types" heading, which describes parameters common to all question types found in their abstract parent class.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: true
+    Answers:
+      - AnswerText: The question's `Name` (for internal representation), its `Text` (the question statement), and whether it is a `Draft` or finished.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct! The documentation states, "...their **name** (for internal representation in the QuestionBank), their **text** (i.e., the question itself...), or general parameters, such as whether the question is a *draft* or a finished question."
+      - AnswerText: The `OpenTime` and `CloseTime` for when the question is available.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. `OpenTime` and `CloseTime` are properties of the `Quiz` activity, not individual questions.
+      - AnswerText: "`ShuffleAnswer`` options and `ChoiceNumbering` preferences."
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. These are specific to `MultipleChoiceQuestion` as shown in its class diagram and description.
+      - AnswerText: The `DefaultMark` for the question.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: "Correct! The UML diagram for `Question` shows `+ DefaultMark: float`, and the text mentions general parameters are in the parent class"
+      - AnswerText: A list of `SubQuestions` if the question is a composite type.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. While some question types have sub-questions (e.g., `DropdownQuestion`), this is not a general property of the abstract `Question` class itself.
