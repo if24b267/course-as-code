@@ -1,0 +1,6 @@
+Type: label
+Name: Text and Media Areas
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/text-and-media-area.md

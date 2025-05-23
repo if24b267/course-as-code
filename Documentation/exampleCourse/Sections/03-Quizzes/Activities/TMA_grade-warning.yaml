@@ -1,0 +1,6 @@
+Type: label
+Name: GradeWarning
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/grade-warning.md
