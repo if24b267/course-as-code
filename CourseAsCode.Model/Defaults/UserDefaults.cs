@@ -44,7 +44,7 @@ public static class UserDefaults
 
     // System Defaults
     public const int DEFAULT_USER_ID = 0;
-    public static readonly int? DEFAULT_EXTERNAL_ID = null;
+    public static readonly int? DEFAULT_EXTERNAL_ID = 5;
     public static readonly IPAddress? DEFAULT_LAST_IP = null;
     public static readonly FormattingFormat DEFAULT_DESCRIPTION_FORMAT = FormattingFormat.HTML;
     public const bool DEFAULT_IS_CONFIRMED = false;
@@ -75,6 +75,19 @@ public static class UserDefaults
     public const bool DEFAULT_PERSIST_FILTER_SETTINGS = false;
     public const bool DEFAULT_CONTENT_BANK_VISIBLE = true;
     public const bool DEFAULT_ACCEPT_MESSAGES_FROM_CONTACTS_ONLY = false;
+
+
+    // Default für UserTag
+    public static readonly List<User.UserTag> DEFAULT_TAGS = new()
+    {
+        new User.UserTag { Id = 5, Name = "default", RawName = "default" }
+    };
+
+    // Default für UserPreference
+    public static readonly List<User.UserPreference> DEFAULT_PREFERENCES = new()
+    {
+        new User.UserPreference { Id = 1, Name = "core_message_migrate_data", Value = "1" }
+    };
 
     /// <summary>
     /// Returns a user object with all properties set to the default values

@@ -126,12 +126,17 @@ public class Assignment : Activity
 
     public class SystemDefaultsAssignment
     {
-        public int ModuleId { get; set; } = 13;
+        private static int _nextModuleId = 1000;
+        public int ModuleId { get; set; }
+
         public string ModuleName { get; set; } = "assign";
+
+        public SystemDefaultsAssignment()
+        {
+            ModuleId = _nextModuleId++;
+        }
     }
 }
-
-
 
 /// <summary>
 /// Represents an individual submission record for an assignment.
