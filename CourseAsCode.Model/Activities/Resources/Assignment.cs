@@ -6,6 +6,7 @@ namespace CourseAsCode.Model.Activities.Resources;
 
 public class Assignment : Activity
 {
+    private static Random _rnd = new Random();
     // ────────────────────────────────────────────────────────────────────────────
     // General Settings
     // ────────────────────────────────────────────────────────────────────────────
@@ -126,12 +127,10 @@ public class Assignment : Activity
 
     public class SystemDefaultsAssignment
     {
-        public int ModuleId { get; set; } = 13;
+        public int ModuleId { get; set; } = _rnd.Next(1, 1000);
         public string ModuleName { get; set; } = "assign";
     }
 }
-
-
 
 /// <summary>
 /// Represents an individual submission record for an assignment.
