@@ -43,7 +43,7 @@ public static class UserDefaults
     public static readonly DateTime? DEFAULT_ENROLMENT_END_DATE = null;
 
     // System Defaults
-    public const int DEFAULT_USER_ID = 0;
+    public const int DEFAULT_USER_ID = 2;
     public static readonly int? DEFAULT_EXTERNAL_ID = 5;
     public static readonly IPAddress? DEFAULT_LAST_IP = null;
     public static readonly FormattingFormat DEFAULT_DESCRIPTION_FORMAT = FormattingFormat.HTML;
@@ -80,7 +80,7 @@ public static class UserDefaults
     // Default für UserTag
     public static readonly List<User.UserTag> DEFAULT_TAGS = new()
     {
-        new User.UserTag { Id = 5, Name = "default", RawName = "default" }
+        new User.UserTag { Id = 5, Name = "test", RawName = "test" }
     };
 
     // Default für UserPreference
@@ -142,6 +142,8 @@ public static class UserDefaults
                 RoleChange = DEFAULT_ROLE_CHANGE_DATE,
                 Theme = DEFAULT_THEME,
                 EnrolmentSuspended = DEFAULT_ENROLMENT_SUSPENDED,
+                Tags = DEFAULT_TAGS,
+                Preferences = DEFAULT_PREFERENCES,
             },
             UserPreferences = new User.UserPreferencesClass()
             {
@@ -161,6 +163,8 @@ public static class UserDefaults
                 ContentBankVisible = DEFAULT_CONTENT_BANK_VISIBLE,
                 AcceptMessagesFromContactsOnly = DEFAULT_ACCEPT_MESSAGES_FROM_CONTACTS_ONLY,
             },
+            Tags = DEFAULT_TAGS,
+            Preferences = DEFAULT_PREFERENCES
         };
     }
 }

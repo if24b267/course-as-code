@@ -203,7 +203,7 @@ namespace CourseAsCode.Writers
         {
 
             //TODO: user wird benötigt für assignment (DUMMY)
-            /*var user = new User
+            var user = new User
             {
                 Username = "course_as_code",
                 EMail = new System.Net.Mail.MailAddress("user@example.com"),
@@ -212,7 +212,7 @@ namespace CourseAsCode.Writers
                 SystemDefaults = new User.SystemDefaultsUser
                 {
                     Id = 2,
-                    ExternalId = 5 //Beispiel für contextid
+                    ExternalId = 5
                 },
                 Tags = new List<User.UserTag>
                 {
@@ -222,9 +222,9 @@ namespace CourseAsCode.Writers
                 {
                     new User.UserPreference { Id = 1, Name = "core_message_migrate_data", Value = "1" },
                 }
-            };*/
-            course.EnrolledUsers = new List<User> { UserDefaults.GetDefaultUser() };
-            
+            };
+            course.EnrolledUsers = new List<User> { user };
+            //course.EnrolledUsers = new List<User> { UserDefaults.GetDefaultUser() };
             // -------------------------------------------------
             // QUIZ TESTING - REMOVE LATER
             // -------------------------------------------------
@@ -466,7 +466,7 @@ namespace CourseAsCode.Writers
             course.Sections.Add(codeRunnerSection);
             */
 
-            //course.EnrolledUsers = new List<User> { UserDefaults.GetDefaultUser() };
+
 
 
             _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
