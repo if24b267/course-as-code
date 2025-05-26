@@ -212,7 +212,7 @@ namespace CourseAsCode.Writers
                 SystemDefaults = new User.SystemDefaultsUser
                 {
                     Id = 2,
-                    ExternalId = 5 // Beispiel für contextid
+                    ExternalId = 5
                 },
                 Tags = new List<User.UserTag>
                 {
@@ -224,7 +224,7 @@ namespace CourseAsCode.Writers
                 }
             };
             course.EnrolledUsers = new List<User> { user };
-
+            //course.EnrolledUsers = new List<User> { UserDefaults.GetDefaultUser() };
             // -------------------------------------------------
             // QUIZ TESTING - REMOVE LATER
             // -------------------------------------------------
@@ -465,6 +465,9 @@ namespace CourseAsCode.Writers
 
             course.Sections.Add(codeRunnerSection);
             */
+
+
+
 
             _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
             _logger.LogInformation($"The course will be saved at {outputPath}");

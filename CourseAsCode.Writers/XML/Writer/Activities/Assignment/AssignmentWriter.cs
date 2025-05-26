@@ -45,15 +45,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
 
         private void WriteActivityAttributes(XmlWriter writer, Model.Activities.Resources.Assignment assignment)
         {
-            var systemDefaults = assignment.SystemDefaults ?? new Model.Activities.Resources.Assignment.SystemDefaultsAssignment
-            {
-                ModuleId = 433,
-                ModuleName = "assign"
-            };
-
             writer.WriteAttributeString("id", assignment.ActivityId.ToString());
-            writer.WriteAttributeString("moduleid", systemDefaults.ModuleId.ToString());
-            writer.WriteAttributeString("modulename", systemDefaults.ModuleName);
+            writer.WriteAttributeString("moduleid", assignment.SystemDefaults.ModuleId.ToString());
+            writer.WriteAttributeString("modulename", assignment.SystemDefaults.ModuleName);
             writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(assignment.Context));
         }
 
@@ -72,7 +66,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
 
             var assignmentElements = new Dictionary<string, string>
             {
-                { "name", assignment.Name ?? "Section 1 Assignment" },
+                { "name", assignment.Name ?? "Assignment" },
                 { "intro", assignment.Intro ?? "" },
                 { "introformat", _generalHelper.EnumIntegerToString(assignment.FormattingFormat) },
                 { "alwaysshowdescription", assignment.AlwaysShowDescription ? "1" : "0" },

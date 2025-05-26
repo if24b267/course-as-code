@@ -137,6 +137,8 @@ public class User
         public string? Theme { get; set; } = UserDefaults.DEFAULT_THEME;
         [Description("if enabled, the enrolment of the user in the course is suspended")]
         public bool EnrolmentSuspended { get; set; } = UserDefaults.DEFAULT_ENROLMENT_SUSPENDED;
+        public List<UserTag> Tags { get; set; } = UserDefaults.DEFAULT_TAGS;
+        public List<UserPreference> Preferences { get; set; } = UserDefaults.DEFAULT_PREFERENCES;
     }
 
     public class UserTag
