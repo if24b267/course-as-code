@@ -40,6 +40,6 @@ namespace CourseAsCode.Model.Activities
         public DateTime TimeModified { get; set; } = ActivityDefaults.DEFAULT_TIME_MODIFIED;
 
         public required int ModuleId { get; set; }
-        public required string ModuleName { get; set; } = "assign";
+        public required string ModuleName { get; set; }
     }
 }
