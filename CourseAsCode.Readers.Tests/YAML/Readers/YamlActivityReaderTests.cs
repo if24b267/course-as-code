@@ -30,6 +30,8 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
                 Description = "URL Description",
                 ExternalUrl = "https://example.com",
                 ActivityId = 1,
+                ModuleId = 101,
+                ModuleName = "url",
             });
 
             ValueKeeper.CurrentActivityId = 1;
@@ -112,6 +114,8 @@ FilePath: files/test.txt
             {
                 Name = "Test File",
                 ActivityId = 1,
+                ModuleId = 102,
+                ModuleName = "resource",
             });
 
             // Act
@@ -146,6 +150,8 @@ Content:
             {
                 Name = "Test Label",
                 ActivityId = 1,
+                ModuleId = 103,
+                ModuleName = "label",
             });
 
             // Act
@@ -180,7 +186,9 @@ FilePath: files/example.md
                 Name = "example",
                 Description = "Markdown example",
                 FilePath = "files/example.md",
-                ActivityId = 1
+                ActivityId = 1,
+                ModuleId = 104,
+                ModuleName = "resource",
             });
 
             // Act

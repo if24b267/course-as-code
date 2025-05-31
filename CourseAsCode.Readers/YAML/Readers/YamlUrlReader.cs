@@ -68,6 +68,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 Name = yamlUrl.Name,
                 ExternalUrl = yamlUrl.URL,
                 Description = yamlUrl.Description,
+
+                ModuleId = ValueKeeper.CurrentModuleId,
+                ModuleName = "url",
             };
         }
     }

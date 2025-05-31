@@ -75,7 +75,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                 DisplayDescription = true,
                 GroupMode = GroupMode.NoGroups,
                 Language = Language.English,
-                Tags = new List<string> { "alpha", "beta" }
+                Tags = new List<string> { "alpha", "beta" },
+                ModuleId = 101,
+                ModuleName = "quiz",
             };
         }
 
@@ -121,7 +123,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             var moduleEl = doc.DocumentElement!;
 
             // Assert: "id" attribute is set to the quiz's module id and "version" attribute via the moodle version helper'
-            Assert.That(moduleEl.GetAttribute("id"),    Is.EqualTo(_dummyQuiz.SystemDefaults.ModuleId.ToString()));
+            Assert.That(moduleEl.GetAttribute("id"),    Is.EqualTo(_dummyQuiz.ModuleId.ToString()));
             Assert.That(moduleEl.GetAttribute("version"), Is.EqualTo("2024100700"));
         }
 
@@ -140,7 +142,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             var moduleElement = doc.DocumentElement!;
 
             // Verify inner elements from the dictionary
-            Assert.That(moduleElement["modulename"]?.InnerText,  Is.EqualTo(_dummyQuiz.SystemDefaults.ModuleName));
+            Assert.That(moduleElement["modulename"]?.InnerText,  Is.EqualTo(_dummyQuiz.ModuleName));
             Assert.That(moduleElement["sectionid"]?.InnerText,   Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
             Assert.That(moduleElement["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
 
@@ -156,7 +158,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             var notQuiz = new URL
             {
                 ActivityId = 77,
-                Name = "not a quiz"
+                Name = "not a quiz",
+                ModuleId = 102,
+                ModuleName = "url",
             };
 
             // Act & Assert: Passing a non-Quiz activity should throw an InvalidCastException.

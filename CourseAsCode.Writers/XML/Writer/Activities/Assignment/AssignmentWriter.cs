@@ -46,8 +46,8 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
         private void WriteActivityAttributes(XmlWriter writer, Model.Activities.Resources.Assignment assignment)
         {
             writer.WriteAttributeString("id", assignment.ActivityId.ToString());
-            writer.WriteAttributeString("moduleid", assignment.SystemDefaults.ModuleId.ToString());
-            writer.WriteAttributeString("modulename", assignment.SystemDefaults.ModuleName);
+            writer.WriteAttributeString("moduleid", assignment.ModuleId.ToString());
+            writer.WriteAttributeString("modulename", assignment.ModuleName);
             writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(assignment.Context));
         }
 

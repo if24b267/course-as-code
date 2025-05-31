@@ -60,13 +60,13 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
                     writer.WriteStartDocument();
 
                     writer.WriteStartElement("module");
-                    writer.WriteAttributeString("id", urlObject.SystemDefaults.ModuleId.ToString());
+                    writer.WriteAttributeString("id", urlObject.ModuleId.ToString());
                     writer.WriteAttributeString("version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
 
                     // Write contents of module tag
                     var elements = new Dictionary<string, string>
                     {
-                        { "modulename", urlObject.SystemDefaults.ModuleName },
+                        { "modulename", urlObject.ModuleName },
                         { "sectionid", section.SystemDefaults.SectionId.ToString() },
                         { "sectionnumber", course.Sections.IndexOf(section).ToString() },
                         { "idnumber", string.Empty },

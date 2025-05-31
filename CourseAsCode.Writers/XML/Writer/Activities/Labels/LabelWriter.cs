@@ -66,8 +66,8 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         private void WriteActivityAttributes(XmlWriter writer, TextAndMediaArea activity)
         {
             writer.WriteAttributeString("id", activity.ActivityId.ToString());
-            writer.WriteAttributeString("moduleid", activity.SystemDefaults.ModuleId.ToString());
-            writer.WriteAttributeString("modulename", activity.SystemDefaults.ModuleName);
+            writer.WriteAttributeString("moduleid", activity.ModuleId.ToString());
+            writer.WriteAttributeString("modulename", activity.ModuleName);
             writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(activity.Context));
         }
 

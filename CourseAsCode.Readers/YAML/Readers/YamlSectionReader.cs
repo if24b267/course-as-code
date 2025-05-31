@@ -52,6 +52,7 @@ namespace CourseAsCode.Readers.YAML.Readers
 
                     activities.Add(activity);
                     ValueKeeper.CurrentActivityId++;
+                    ValueKeeper.CurrentModuleId++;
                 }
             }
 

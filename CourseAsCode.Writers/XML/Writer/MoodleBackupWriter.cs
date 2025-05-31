@@ -33,7 +33,7 @@ namespace CourseAsCode.Writers.XML.Writer
             _courseHelper = courseHelper ?? throw new ArgumentNullException(nameof(courseHelper));
         }
 
-        
+
         public void WriteMoodleBackup(Model.Course course, string outputPath)
         {
             try
@@ -161,9 +161,9 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         writer.WriteStartElement("activity");
 
-                        writer.WriteElementString("moduleid", textAndMediaArea.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("moduleid", textAndMediaArea.ModuleId.ToString());
                         writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                        writer.WriteElementString("modulename", textAndMediaArea.SystemDefaults.ModuleName);
+                        writer.WriteElementString("modulename", textAndMediaArea.ModuleName);
                         writer.WriteElementString("title", textAndMediaArea.Name);
                         writer.WriteElementString("directory", $"activities/label_{activity.ActivityId}");
                         writer.WriteElementString("insubsection", string.Empty);
@@ -175,9 +175,9 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         writer.WriteStartElement("activity");
 
-                        writer.WriteElementString("moduleid", urlObject.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("moduleid", urlObject.ModuleId.ToString());
                         writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                        writer.WriteElementString("modulename", urlObject.SystemDefaults.ModuleName);
+                        writer.WriteElementString("modulename", urlObject.ModuleName);
                         writer.WriteElementString("title", urlObject.Name);
                         writer.WriteElementString("directory", $"activities/url_{activity.ActivityId}");
                         writer.WriteElementString("insubsection", string.Empty);
@@ -189,9 +189,9 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         writer.WriteStartElement("activity");
 
-                        writer.WriteElementString("moduleid", moodleFile.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("moduleid", moodleFile.ModuleId.ToString());
                         writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                        writer.WriteElementString("modulename", moodleFile.SystemDefaults.ModuleName);
+                        writer.WriteElementString("modulename", moodleFile.ModuleName);
                         writer.WriteElementString("title", moodleFile.FileName);
                         writer.WriteElementString("directory", $"activities/resource_{activity.ActivityId}");
                         writer.WriteElementString("insubsection", string.Empty);
@@ -203,9 +203,9 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         writer.WriteStartElement("activity");
 
-                        writer.WriteElementString("moduleid", quiz.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("moduleid", quiz.ModuleId.ToString());
                         writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                        writer.WriteElementString("modulename", quiz.SystemDefaults.ModuleName);
+                        writer.WriteElementString("modulename", quiz.ModuleName);
                         writer.WriteElementString("title", quiz.Name);
                         writer.WriteElementString("directory", $"activities/quiz_{activity.ActivityId}");
                         writer.WriteElementString("insubsection", string.Empty);
@@ -217,9 +217,9 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         writer.WriteStartElement("activity");
 
-                        writer.WriteElementString("moduleid", assignment.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("moduleid", assignment.ModuleId.ToString());
                         writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                        writer.WriteElementString("modulename", assignment.SystemDefaults.ModuleName);
+                        writer.WriteElementString("modulename", assignment.ModuleName);
                         writer.WriteElementString("title", assignment.Name);
                         writer.WriteElementString("directory", $"activities/assign_{activity.ActivityId}");
                         writer.WriteElementString("insubsection", string.Empty);

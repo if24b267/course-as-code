@@ -78,6 +78,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
                 DisplayDescription = true,
                 Language = Language.English,
                 Tags = new List<string> { "tag1", "tag2" },
+                ModuleId = 101,
+                ModuleName = "label",
             };
         }
 
@@ -123,7 +125,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             var moduleElement = doc.DocumentElement;
 
             // Assert: "id" attribute is set to the label's module id and "version" attribute via the moodle version helper
-            Assert.That(moduleElement?.GetAttribute("id"), Is.EqualTo(_dummyLabel.SystemDefaults.ModuleId.ToString()));
+            Assert.That(moduleElement?.GetAttribute("id"), Is.EqualTo(_dummyLabel.ModuleId.ToString()));
             Assert.That(moduleElement.GetAttribute("version"), Is.EqualTo("2024100700"));
         }
 
@@ -142,7 +144,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             var moduleElement = doc.DocumentElement;
 
             // Verify inner elements from the dictionary
-            Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyLabel.SystemDefaults.ModuleName));
+            Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyLabel.ModuleName));
             Assert.That(moduleElement["sectionid"]?.InnerText, Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
             Assert.That(moduleElement?["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
 
@@ -159,6 +161,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             {
                 Name = "This activity is not a Label",
                 ActivityId = 20,
+                ModuleId = 102,
+                ModuleName = "url",
             };
 
             // Act & Assert: Passing a non-label activity should throw an InvalidCastException.

@@ -61,7 +61,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
                     writer.WriteStartDocument();
                     writer.WriteStartElement("module");
 
-                    writer.WriteAttributeString("id", labelObject.SystemDefaults.ModuleId.ToString());
+                    writer.WriteAttributeString("id", labelObject.ModuleId.ToString());
                     writer.WriteAttributeString("version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
 
                     WriteGeneralInformationToModules(writer, outputPath, course, section, labelObject);
@@ -87,7 +87,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Labels
         {
             var elements = new Dictionary<string, string>
             {
-                { "modulename", labelObject.SystemDefaults.ModuleName },
+                { "modulename", labelObject.ModuleName },
                 { "sectionid", section.SystemDefaults.SectionId.ToString() },
                 { "sectionnumber", course.Sections.IndexOf(section).ToString() },
                 { "idnumber", "$@NULL@$" },

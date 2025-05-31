@@ -49,7 +49,10 @@ namespace CourseAsCode.Readers.YAML.Readers
                 ShuffleQuestions = yamlQuiz.ShuffleQuestions,
                 AllowRedosDuringAttempt = yamlQuiz.AllowRedosDuringAttempt,
                 Password = yamlQuiz.Password,
-                Questions = questions
+                Questions = questions,
+
+                ModuleId = ValueKeeper.CurrentModuleId,
+                ModuleName = "quiz",
             };
         }
 
