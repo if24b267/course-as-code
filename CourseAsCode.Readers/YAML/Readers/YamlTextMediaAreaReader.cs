@@ -66,6 +66,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 ActivityId = ValueKeeper.CurrentActivityId,
                 Name = yamlTextMediaArea.Name,
                 Content = content,
+
+                ModuleId = ValueKeeper.CurrentModuleId,
+                ModuleName = "label",
             };
         }
 

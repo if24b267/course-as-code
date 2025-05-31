@@ -68,19 +68,5 @@ namespace CourseAsCode.Readers.YAML.Readers
 
             return null;
         }
-
-        // TODO: remove this, but first make the defaults work better
-        private URL? ConvertYamlActivityToMoodleUrl(YamlActivity yamlActivity)
-        {
-            // TODO: improve activity reading -> every activity could for example have visible to students set
-            // maybe a different class that reads the non specific parts of the activity
-            return new URL()
-            {
-                ActivityId = ValueKeeper.CurrentActivityId,
-                Name = yamlActivity.Name,
-                Description = yamlActivity.Description,
-                ExternalUrl = yamlActivity.URL,
-            };
-        }
     }
 }

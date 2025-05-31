@@ -1,12 +1,9 @@
 using System.ComponentModel;
-using CourseAsCode.Model.Defaults.Activities.Resources;
 
 namespace CourseAsCode.Model.Activities.Resources;
 
 public class URL : Activity
 {
-    private static Random _rnd = new Random();
-
     [Description("the url itself")]
     public string ExternalUrl { get; set; }
 
@@ -20,7 +17,5 @@ public class URL : Activity
 
     public class SystemDefaultsUrl
     {
-        public int ModuleId { get; set; } = _rnd.Next(1, 1000);
-        public string ModuleName { get; set; } = "url";
     }
 }

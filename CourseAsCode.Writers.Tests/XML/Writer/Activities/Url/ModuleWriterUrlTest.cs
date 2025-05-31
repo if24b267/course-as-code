@@ -77,6 +77,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
                 DisplayDescription = true,
                 Language = Language.English,
                 Tags = new List<string> { "tag1", "tag2" },
+                ModuleId = 101,
+                ModuleName = "url",
             };
         }
 
@@ -122,7 +124,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             // Assert: "id" attribute is set to the current module id (initially "0") and "version" attribute is set via the moodle version helper
             var moduleElement = doc.DocumentElement;
 
-            Assert.That(moduleElement?.GetAttribute("id"), Is.EqualTo(_dummyUrl.SystemDefaults.ModuleId.ToString()));
+            Assert.That(moduleElement?.GetAttribute("id"), Is.EqualTo(_dummyUrl.ModuleId.ToString()));
             Assert.That(moduleElement?.GetAttribute("version"), Is.EqualTo("2024100700"));
         }
 
@@ -141,7 +143,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             var moduleElement = doc.DocumentElement;
 
             // Verify inner elements from the dictionary
-            Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyUrl.SystemDefaults.ModuleName));
+            Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyUrl.ModuleName));
             Assert.That(moduleElement["sectionid"]?.InnerText, Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
             Assert.That(moduleElement?["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
 
@@ -158,6 +160,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             {
                 Name = "This activity is not an URL",
                 ActivityId = 20,
+                ModuleId = 102,
+                ModuleName = "label",
             };
 
             // Act & Assert: Verify that passing a non-URL activity throws an InvalidCastException.

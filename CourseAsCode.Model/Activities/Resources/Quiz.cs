@@ -8,8 +8,6 @@ namespace CourseAsCode.Model.Activities.Resources;
 
 public class Quiz : Activity
 {
-    private static Random _rnd = new Random();
-
     // ────────────────────────────────────────────────────────────────────────────
     // Timing
     // ────────────────────────────────────────────────────────────────────────────
@@ -116,8 +114,6 @@ public class Quiz : Activity
 
     public class SystemDefaultsQuiz
     {
-        public int ModuleId { get; set; } = _rnd.Next(1, 1000);
-        public string ModuleName { get; set; } = "quiz";
     }
 
 

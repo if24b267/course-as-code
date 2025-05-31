@@ -77,6 +77,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 MarkingAnonymous = yamlAssignment.MarkingAnonymous ?? AssignmentDefaults.DEFAULT_MARKING_ANONYMOUS,
                 PreventSubmissionNotInGroup = yamlAssignment.PreventSubmissionNotInGroup ??
                                               AssignmentDefaults.DEFAULT_PREVENT_SUBMISSION_NOT_IN_GROUP,
+
+                ModuleId = ValueKeeper.CurrentModuleId,
+                ModuleName = "assign",
             };
         }
     }

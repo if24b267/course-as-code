@@ -66,8 +66,8 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Url
         private void WriteActivityAttributes(XmlWriter writer, URL urlObject)
         {
             writer.WriteAttributeString("id", urlObject.ActivityId.ToString());
-            writer.WriteAttributeString("moduleid", urlObject.SystemDefaults.ModuleId.ToString());
-            writer.WriteAttributeString("modulename", urlObject.SystemDefaults.ModuleName);
+            writer.WriteAttributeString("moduleid", urlObject.ModuleId.ToString());
+            writer.WriteAttributeString("modulename", urlObject.ModuleName);
             writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(urlObject.Context));
         }
 

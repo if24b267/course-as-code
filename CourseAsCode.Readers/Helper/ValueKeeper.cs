@@ -13,6 +13,9 @@ namespace CourseAsCode.Readers.Helper
         // currently only being counted up from 1
         public static int CurrentSectionId { get; set; }
 
+        // currently only being counted up from 1
+        public static int CurrentModuleId { get; set; }
+
         public static List<Question> Questions { get; set; }
     }
 }

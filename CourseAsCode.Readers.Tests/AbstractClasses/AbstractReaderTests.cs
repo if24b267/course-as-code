@@ -73,7 +73,7 @@ namespace CourseAsCode.Readers.Tests.AbstractClasses
             public override TestActivity Read(string modelObjectPath)
             {
                 CalledPath = modelObjectPath;
-                return new TestActivity { Name = "Test Activity" };
+                return new TestActivity { Name = "Test Activity", ModuleId = 1, ModuleName = "url" };
             }
         }
 

@@ -23,6 +23,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             Name = "Test URL",
             Description = "This is a test URL description",
             ExternalUrl = "https://example.com",
+            ModuleId = 101,
+            ModuleName = "url",
         };
 
         [SetUp]
@@ -71,8 +73,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             Assert.IsNotNull(activityElement, "The XML document should have a root element");
             Assert.That(activityElement.Name, Is.EqualTo("activity"));
             Assert.That(activityElement.GetAttribute("id"), Is.EqualTo(_dummyUrl.ActivityId.ToString()));
-            Assert.That(activityElement.GetAttribute("moduleid"), Is.EqualTo(_dummyUrl.SystemDefaults.ModuleId.ToString()));
-            Assert.That(activityElement.GetAttribute("modulename"), Is.EqualTo(_dummyUrl.SystemDefaults.ModuleName));
+            Assert.That(activityElement.GetAttribute("moduleid"), Is.EqualTo(_dummyUrl.ModuleId.ToString()));
+            Assert.That(activityElement.GetAttribute("modulename"), Is.EqualTo(_dummyUrl.ModuleName));
             Assert.That(activityElement.GetAttribute("contextid"), Is.EqualTo("0")); // from mocked EnumIntegerToString
         }
 

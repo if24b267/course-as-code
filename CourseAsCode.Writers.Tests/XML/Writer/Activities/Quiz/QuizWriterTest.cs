@@ -160,7 +160,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                         GradeBoundary = 0f,
                         OverallFeedbackFormat = FormattingFormat.HTML
                     }
-                }
+                },
+                ModuleId = 101,
+                ModuleName = "quiz",
             };
         }
 
@@ -194,8 +196,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             Assert.IsNotNull(root, "The XML document should have a root element");
             Assert.That(root.Name, Is.EqualTo("activity"));
             Assert.That(root.GetAttribute("id"), Is.EqualTo(_dummyQuiz.ActivityId.ToString()));
-            Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyQuiz.SystemDefaults.ModuleId.ToString()));
-            Assert.That(root.GetAttribute("modulename"), Is.EqualTo(_dummyQuiz.SystemDefaults.ModuleName));
+            Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyQuiz.ModuleId.ToString()));
+            Assert.That(root.GetAttribute("modulename"), Is.EqualTo(_dummyQuiz.ModuleName));
             Assert.That(root.GetAttribute("contextid"), Is.EqualTo("383")); // hardcoded in the QuizWriter
         }
 

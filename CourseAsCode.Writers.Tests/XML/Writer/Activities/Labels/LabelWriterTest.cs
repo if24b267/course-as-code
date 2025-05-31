@@ -25,11 +25,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             Name = "Test Label",
             Content = "This is a test label content",
             FormattingFormat = FormattingFormat.Markdown,
-            SystemDefaults = new TextAndMediaArea.SystemDefaultsTextAndMediaArea()
-            {
-                ModuleId = 101,
-                ModuleName = "label",
-            },
+            ModuleId = 101,
+            ModuleName = "label",
         };
 
         [SetUp]
@@ -80,8 +77,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             Assert.IsNotNull(root, "The XML document should have a root element");
             Assert.That(root.Name, Is.EqualTo("activity"));
             Assert.That(root.GetAttribute("id"), Is.EqualTo(_dummyLabel.ActivityId.ToString()));
-            Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyLabel.SystemDefaults.ModuleId.ToString()));
-            Assert.That(root.GetAttribute("modulename"), Is.EqualTo(_dummyLabel.SystemDefaults.ModuleName));
+            Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyLabel.ModuleId.ToString()));
+            Assert.That(root.GetAttribute("modulename"), Is.EqualTo(_dummyLabel.ModuleName));
             Assert.That(root.GetAttribute("contextid"), Is.EqualTo("4")); // from mocked EnumIntegerToString
         }
 

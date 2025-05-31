@@ -114,6 +114,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 Name = "TestFile",
                 FilePath = "nonexistent.txt",
                 FileName = "nonexistent.txt",
+                ModuleId = 1,
+                ModuleName = "resource",
             };
             _dummyCourse.Sections[0].Activities.Add(moodleFile);
 
@@ -141,6 +143,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 Name = "TestFile",
                 FilePath = "nonexistent.txt",
                 FileName = "nonexistent.txt",
+                ModuleId = 1,
+                ModuleName = "resource",
             };
             _dummyCourse.Sections[0].Activities.Add(moodleFile);
 
@@ -168,6 +172,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 Name = "TestFile",
                 FilePath = "throwOnOpen.txt",
                 FileName = "throwOnOpen.txt",
+                ModuleId = 1,
+                ModuleName = "resource",
             };
             _dummyCourse.Sections[0].Activities.Add(moodleFile);
 
@@ -196,6 +202,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 Name = "TestFile",
                 FilePath = "throwOnOpen.txt",
                 FileName = "throwOnOpen.txt",
+                ModuleId = 1,
+                ModuleName = "resource",
             };
             _dummyCourse.Sections[0].Activities.Add(moodleFile);
 
