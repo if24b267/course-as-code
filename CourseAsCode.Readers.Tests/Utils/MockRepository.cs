@@ -23,6 +23,8 @@ namespace CourseAsCode.Readers.Tests.Utils
                          Name = "Mock URL",
                          Description = "Mock URL Description",
                          ExternalUrl = "https://example.com",
+                         ModuleId = 1,
+                         ModuleName = "url",
                      };
                  });
 
@@ -35,6 +37,8 @@ namespace CourseAsCode.Readers.Tests.Utils
                          ActivityId = 2,
                          Name = "Mock File",
                          Description = "Mock File Description",
+                         ModuleId = 2,
+                         ModuleName = "resource",
                      };
                  });
 

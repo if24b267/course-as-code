@@ -59,13 +59,13 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Quiz
                     writer.WriteStartDocument();
 
                     writer.WriteStartElement("module");
-                    writer.WriteAttributeString("id", quiz.SystemDefaults.ModuleId.ToString());
+                    writer.WriteAttributeString("id", quiz.ModuleId.ToString());
                     writer.WriteAttributeString("version",
                         _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
 
                     var moduleElements = new Dictionary<string, string>
                     {
-                        { "modulename", quiz.SystemDefaults.ModuleName },
+                        { "modulename", quiz.ModuleName },
                         { "sectionid", section.SystemDefaults.SectionId.ToString() },
                         { "sectionnumber", course.Sections.IndexOf(section).ToString() },
                         { "idnumber", string.Empty },

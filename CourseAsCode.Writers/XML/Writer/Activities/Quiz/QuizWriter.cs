@@ -72,8 +72,8 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Quiz
         private void WriteActivityAttributes(XmlWriter writer, Model.Activities.Resources.Quiz quizObject)
         {
             writer.WriteAttributeString("id", quizObject.ActivityId.ToString());
-            writer.WriteAttributeString("moduleid", quizObject.SystemDefaults.ModuleId.ToString());
-            writer.WriteAttributeString("modulename", quizObject.SystemDefaults.ModuleName);
+            writer.WriteAttributeString("moduleid", quizObject.ModuleId.ToString());
+            writer.WriteAttributeString("modulename", quizObject.ModuleName);
             writer.WriteAttributeString("contextid", DEFAULT_CONTEXT_ID);
         }
 

@@ -47,6 +47,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 Description = yamlFile.Description,
                 FilePath = yamlFile.FilePath,
                 FileName = Path.GetFileName(yamlFile.FilePath),
+
+                ModuleId = ValueKeeper.CurrentModuleId,
+                ModuleName = "resource",
             };
         }
     }

@@ -28,11 +28,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Description = "Test file description",
             DescriptionFormat = FormattingFormat.Markdown,
             TimeModified = new DateTime(2020, 1, 1),
-            SystemDefaults = new MoodleFile.SystemDefaultsFile()
-            {
-                ModuleId = 202,
-                ModuleName = "resource",
-            },
+            ModuleId = 202,
+            ModuleName = "resource",
         };
 
         [SetUp]
@@ -83,8 +80,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Assert.IsNotNull(root, "The XML document should have a root element");
             Assert.That(root.Name, Is.EqualTo("activity"));
             Assert.That(root.GetAttribute("id"), Is.EqualTo(_dummyFile.ActivityId.ToString()));
-            Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyFile.SystemDefaults.ModuleId.ToString()));
-            Assert.That(root.GetAttribute("modulename"), Is.EqualTo(_dummyFile.SystemDefaults.ModuleName));
+            Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyFile.ModuleId.ToString()));
+            Assert.That(root.GetAttribute("modulename"), Is.EqualTo(_dummyFile.ModuleName));
             Assert.That(root.GetAttribute("contextid"), Is.EqualTo("4")); // from mocked EnumIntegerToString
         }
 
