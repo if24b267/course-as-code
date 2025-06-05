@@ -51,8 +51,8 @@ namespace CourseAsCode.Readers.Helper
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Unexpected error deserializing YAML content: {ex.Message}");
-                throw new YamlException($"Unexpected error deserializing YAML content: {ex.Message}", ex);
+                _logger.Fatal(ex, $"Unexpected error deserializing YAML content: {ex.Message}");
+                throw;
             }
         }
 

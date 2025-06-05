@@ -248,7 +248,7 @@ Questions:
   - QuestionName: dragAndDropStructure
     Category: dragdrop
     QuestionId: 9
-    QuestionText: "<p>In a <strong>DragAndDropTextQuestion</strong>, the main <code>QuestionText</code> contains placeholders like <code>[[1]]</code>, <code>[[2]]</code>, etc. Each number in a placeholder corresponds to the <code>[[ID_PROPERTY]]</code> of a <code>TextChoice</code> element. The actual text to be dragged into the gap is specified in the <code>[[VALUE_PROPERTY]]</code> of the respective <code>TextChoice</code>. To organize distractors for different gaps, <code>TextChoice</code> elements can be assigned a <code>[[CATEGORY_PROPERTY]]</code>. If a <code>TextChoice</code> element's ID is not referenced in any placeholder, it serves as a <code>[[UNUSED_CHOICE_ROLE]]</code>.</p>"
+    QuestionText: "<p>In a <strong>DragAndDropTextQuestion</strong>, the main <code>QuestionText</code> contains placeholders like <code>[[1]]</code>, <code>[[2]]</code>, etc. Each number in a placeholder corresponds to the <code>[[1]]</code> of a <code>TextChoice</code> element. The actual text to be dragged into the gap is specified in the <code>[[2]]</code> of the respective <code>TextChoice</code>. To organize distractors for different gaps, <code>TextChoice</code> elements can be assigned a <code>[[3]]</code>. If a <code>TextChoice</code> element's ID is not referenced in any placeholder, it serves as a <code>[[4]]</code>.</p>"
     QuestionTextFormat: HTML
     DefaultMark: 4 # 1 mark per blank
     ShuffleAnswers: true
@@ -257,28 +257,28 @@ Questions:
     PartiallyCorrectResponseFeedback: <p>Almost there! Double-check the properties of TextChoice elements and how gaps are defined.</p>
     IncorrectResponseFeedback: <p>Take another look at the 'DragAndDropTextQuestion' section to clarify how placeholders, TextChoices, and categories work.</p>
     DragDropAnswers:
-      - Id: "ID_PROPERTY"
+      - Id: 1
         Text: ID
         TextFormat: HTML
-      - Id: "VALUE_PROPERTY"
+      - Id: 2
         Text: Value
         TextFormat: HTML
-      - Id: "CATEGORY_PROPERTY"
+      - Id: 3
         Text: Category
         TextFormat: HTML
-      - Id: "UNUSED_CHOICE_ROLE"
+      - Id: 4
         Text: distractor
         TextFormat: HTML
-      - Id: "5" # Distractor
+      - Id: 5 # Distractor
         Text: placeholder
         TextFormat: HTML
-      - Id: "6" # Distractor
+      - Id: 6 # Distractor
         Text: QuestionText
         TextFormat: HTML
-      - Id: "7" # Distractor
+      - Id: 7 # Distractor
         Text: SubQuestion
         TextFormat: HTML
-      - Id: "8" # Distractor
+      - Id: 8 # Distractor
         Text: correct answer
         TextFormat: HTML
 
@@ -435,7 +435,8 @@ Questions:
       - SubQuestionText: <p><code>double</code></p>
         SubQuestionTextFormat: HTML
         CorrectAnswer: <p>Used to store double-precision floating-point numbers, offering more precision than <code>float</code>.</p>
-        WrongAnswers: # will be visible as distractors for all sub-questions
+        # will be visible as distractors for all sub-questions
+        WrongAnswers:
           - <p>Used to store true/false values (not a standard C data type).</p>
           - <p>Used to store large strings of text.</p>
 
@@ -472,29 +473,29 @@ Questions:
     ShuffleAnswers: true
     QuestionType: DRAGANDDROPTEXT
     DragDropAnswers:
-      - Id: "1"
-        Text: main
+      - Id: 1
+        Text: "main"
         TextFormat: HTML
-      - Id: "2"
-        Text: entry
+      - Id: 2
+        Text: "entry"
         TextFormat: HTML
-      - Id: "3"
-        Text: #include
+      - Id: 3
+        Text: "#include"
         TextFormat: HTML
-      - Id: "4"
-        Text: libraries
+      - Id: 4
+        Text: "libraries"
         TextFormat: HTML
-      - Id: "5" # Distractor
-        Text: header
+      - Id: 5 # Distractor
+        Text: "header"
         TextFormat: HTML
-      - Id: "6" # Distractor
-        Text: start
+      - Id: 6 # Distractor
+        Text: "start"
         TextFormat: HTML
-      - Id: "7" # Distractor
-        Text: function
+      - Id: 7 # Distractor
+        Text: "function"
         TextFormat: HTML
-      - Id: "8" # Distractor
-        Text: compilation
+      - Id: 8 # Distractor
+        Text: "compilation"
         TextFormat: HTML
 
   - QuestionName: PointersCloze
@@ -506,29 +507,29 @@ Questions:
     ShuffleAnswers: true
     QuestionType: DRAGANDDROPTEXT
     DragDropAnswers:
-      - Id: "1"
-        Text: pointer
+      - Id: 1
+        Text: "pointer"
         TextFormat: HTML
-      - Id: "2"
-        Text: address
+      - Id: 2
+        Text: "address"
         TextFormat: HTML
-      - Id: "3"
+      - Id: 3
         Text: "&"
         TextFormat: HTML
-      - Id: "4"
+      - Id: 4
         Text: "*"
         TextFormat: HTML
-      - Id: "5" # Distractor
-        Text: value
+      - Id: 5 # Distractor
+        Text: "value"
         TextFormat: HTML
-      - Id: "6" # Distractor
-        Text: type
+      - Id: 6 # Distractor
+        Text: "type"
         TextFormat: HTML
-      - Id: "7" # Distractor
-        Text: ->
+      - Id: 7 # Distractor
+        Text: "->"
         TextFormat: HTML
-      - Id: "8" # Distractor
-        Text: .
+      - Id: 8 # Distractor
+        Text: "."
         TextFormat: HTML
 
   - QuestionName: ForLoopOutputCloze
