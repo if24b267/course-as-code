@@ -2,140 +2,106 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
-using CourseAsCode.Writers.XML.Writer;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers
 {
     public class Writer : IWriter
     {
-        // -- General Writers -- //
-        private readonly FilesWriter _filesWriter;
-        private readonly GradehistoryWriter _gradehistoryWriter;
-        private readonly GradebookWriter _gradebookWriter;
-        private readonly GroupsWriter _groupsWriter;
-        private readonly MoodleBackupWriter _moodleBackupWriter;
-        private readonly OutcomesWriter _outcomesWriter;
-        private readonly QuestionsWriter _questionsWriter;
-        private readonly RolesWriter _rolesWriter;
-        private readonly ScalesWriter _scalesWriter;
-        private readonly UsersWriter _usersWriter;
-        private readonly BadgesWriter _badgesWriter;
-        private readonly CompletionWriter _completionWriter;
+        // -- Services for writing the various aspects of the Moodle Course -- //
+        private readonly IRootFilesWriterService _rootFilesWriterService;
+        private readonly ICourseFilesWriterService _courseFilesWriterService;
+        private readonly ISectionFilesWriterService _sectionFilesWriterService;
+        private readonly IActivitiesWriterService _activitiesWriterService;
 
         // -- Additional Dependencies -- //
         private readonly ILogger<Writer> _logger;
-
-        // -- Services for writing the various aspects of the Moodle Course -- //
-        private readonly IActivitiesWriterService _activitiesWriterService;
-        private readonly ISectionFilesWriterService _sectionFilesWriterService;
-        private readonly ICourseFilesWriterService _courseFilesWriterService;
+        private readonly IFileService _fileService;
 
         public Writer(
-            FilesWriter filesWriter,
-            GradehistoryWriter gradehistoryWriter,
-            GradebookWriter gradebookWriter,
-            GroupsWriter groupsWriter,
-            MoodleBackupWriter moodleBackupWriter,
-            OutcomesWriter outcomesWriter,
-            QuestionsWriter questionsWriter,
-            RolesWriter rolesWriter,
-            ScalesWriter scalesWriter,
-            UsersWriter usersWriter,
-            BadgesWriter badgesWriter,
-            CompletionWriter completionWriter,
-            IActivitiesWriterService activitiesWriterService,
-            ISectionFilesWriterService sectionFilesWriterService,
+            ILogger<Writer> logger,
+            IRootFilesWriterService rootFilesWriterService,
             ICourseFilesWriterService courseFilesWriterService,
-            ILogger<Writer> logger)
+            ISectionFilesWriterService sectionFilesWriterService,
+            IActivitiesWriterService activitiesWriterService,
+            IFileService fileService)
         {
-            // -- General Writers Assignment -- //
-            _filesWriter = filesWriter ?? throw new ArgumentNullException(nameof(filesWriter));
-            _gradehistoryWriter = gradehistoryWriter ?? throw new ArgumentNullException(nameof(gradehistoryWriter));
-            _gradebookWriter = gradebookWriter ?? throw new ArgumentNullException(nameof(gradebookWriter));
-            _groupsWriter = groupsWriter ?? throw new ArgumentNullException(nameof(groupsWriter));
-            _moodleBackupWriter = moodleBackupWriter ?? throw new ArgumentNullException(nameof(moodleBackupWriter));
-            _outcomesWriter = outcomesWriter ?? throw new ArgumentNullException(nameof(outcomesWriter));
-            _questionsWriter = questionsWriter ?? throw new ArgumentNullException(nameof(questionsWriter));
-            _rolesWriter = rolesWriter ?? throw new ArgumentNullException(nameof(rolesWriter));
-            _scalesWriter = scalesWriter ?? throw new ArgumentNullException(nameof(scalesWriter));
-            _usersWriter = usersWriter ?? throw new ArgumentNullException(nameof(usersWriter));
-            _badgesWriter = badgesWriter ?? throw new ArgumentNullException(nameof(badgesWriter));
-            _completionWriter = completionWriter ?? throw new ArgumentNullException(nameof(completionWriter));
+            // -- Services Assignment -- //
+            _rootFilesWriterService = rootFilesWriterService ?? throw new ArgumentNullException(nameof(rootFilesWriterService));
+            _courseFilesWriterService = courseFilesWriterService ?? throw new ArgumentNullException(nameof(courseFilesWriterService));
+            _sectionFilesWriterService = sectionFilesWriterService ?? throw new ArgumentNullException(nameof(sectionFilesWriterService));
+            _activitiesWriterService = activitiesWriterService ?? throw new ArgumentNullException(nameof(activitiesWriterService));
 
             // -- Additional Dependencies Assignment -- //
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-            // Services
-            _activitiesWriterService = activitiesWriterService ?? throw new ArgumentNullException(nameof(activitiesWriterService));
-            _sectionFilesWriterService = sectionFilesWriterService ?? throw new ArgumentNullException(nameof(sectionFilesWriterService));
-            _courseFilesWriterService = courseFilesWriterService ?? throw new ArgumentNullException(nameof(courseFilesWriterService));
+            _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
 
 
+        /// <summary>
+        /// Writes the specified course to disk, creating the necessary folder structure and files.
+        /// </summary>
+        /// <param name="course">The course object containing data to be written.</param>
+        /// <param name="outputPath">The directory path where the course data will be saved.</param>
+        /// <returns>True if the course was successfully written; false in case of an error.</returns>
         public bool WriteCourse(Course course, string outputPath)
         {
-            var user = new User { };
-            course.EnrolledUsers = new List<User> { user };
-
-
             _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
             _logger.LogInformation($"The course will be saved at {outputPath}");
 
-            // Ensure sections list is not empty
+            PrepareCourseDefaults(course);
+
+            try
+            {
+                EnsureFolderStructureExists(outputPath);
+
+                _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
+                _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
+                _sectionFilesWriterService.WriteSectionFiles(course, outputPath); // Files in /sections
+                _activitiesWriterService.WriteActivities(course, outputPath); // Files in /activities
+
+                _logger.LogInformation($"Course '{course.FullName}' successfully written to {outputPath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, $"Unexpected error while writing course '{course.FullName}'");
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Ensures the required folder structure for the Moodle Backup exists by creating necessary directories under the specified output path.
+        /// </summary>
+        /// <param name="outputPath">The root directory where the folder structure will be created.</param>
+        private void EnsureFolderStructureExists(string outputPath)
+        {
+            _fileService.CreateDirectory(outputPath);
+            _fileService.CreateDirectory(Path.Combine(outputPath, "course"));
+            _fileService.CreateDirectory(Path.Combine(outputPath, "sections"));
+            _fileService.CreateDirectory(Path.Combine(outputPath, "activities"));
+            _fileService.CreateDirectory(Path.Combine(outputPath, "files"));
+        }
+
+
+        /// <summary>
+        /// Equip the course with default values for enrolled users and sections if they are not defined
+        /// </summary>
+        /// <param name="course">The course object to populate with default values</param>
+        private void PrepareCourseDefaults(Course course)
+        {
+            if (course.EnrolledUsers.Count == 0)
+            {
+                _logger.LogDebug("No enrolled users found, adding a default user.");
+                course.EnrolledUsers = new List<User> { UserDefaults.GetDefaultUser() };
+            }
+
             if (course.Sections.Count == 0)
             {
                 _logger.LogInformation("No sections specified by user, adding default section");
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
-            }
-
-            // -- Write course files -- //
-
-            // Create course directory if it does not exist
-            if (!SafeCreateDirectory(Path.Combine(outputPath, "course")))
-            {
-                Environment.Exit(1);
-            }
-
-            // Root directory
-            _badgesWriter.WriteBadges(outputPath);
-            _completionWriter.WriteCompletion(course, outputPath);
-            _filesWriter.WriteFiles(course, outputPath);
-            _gradebookWriter.WriteGradebook(course, outputPath);
-            _gradehistoryWriter.WriteGradehistory(course, outputPath);
-            _groupsWriter.WriteGroups(course, outputPath);
-            _moodleBackupWriter.WriteMoodleBackup(course, outputPath);
-            _outcomesWriter.WriteOutcomes(course, outputPath);
-            _questionsWriter.WriteQuestions(course, outputPath);
-            _rolesWriter.WriteRoles(course, outputPath);
-            _scalesWriter.WriteScales(course, outputPath);
-            _usersWriter.WriteUsers(course, outputPath);
-
-            // -- Write /course directory files -- //
-            _courseFilesWriterService.WriteCourseFiles(course, outputPath);
-
-            // -- Write section files -- //
-            _sectionFilesWriterService.WriteSectionFiles(course, outputPath);
-
-            // -- Write activity files -- //
-            _activitiesWriterService.WriteActivities(course, outputPath);
-
-            return true;
-        }
-
-
-        private bool SafeCreateDirectory(string path)
-        {
-            try
-            {
-                Directory.CreateDirectory(path);
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogCritical($"Could not create directory {path}: {e.Message}");
-                return false;
             }
         }
     }

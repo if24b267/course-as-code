@@ -104,10 +104,11 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<ModuleWriterQuiz>();
             services.AddSingleton<QuizWriter>();
 
-            // Register the main writer
+            // Register the main writer and its dependencies
             services.AddSingleton<IActivitiesWriterService, ActivitiesWriterService>();
             services.AddSingleton<ISectionFilesWriterService, SectionFilesWriterService>();
             services.AddSingleton<ICourseFilesWriterService, CourseFilesWriterService>();
+            services.AddSingleton<IRootFilesWriterService, RootFilesWriterService>();
             services.AddSingleton<IWriter, Writers.Writer>();
         }
     }
