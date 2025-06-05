@@ -1,16 +1,8 @@
 using CourseAsCode.Model;
-using CourseAsCode.Model.Activities;
-using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
-using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using CourseAsCode.Writers.XML.Writer.Activities.File;
-using CourseAsCode.Writers.XML.Writer.Activities.Labels;
-using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
-using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 using CourseAsCode.Writers.XML.Writer.Sections;
@@ -43,14 +35,13 @@ namespace CourseAsCode.Writers
         private readonly RoleAssignmentsWriter _roleAssignmentsWriter;
         private readonly BadgesWriter _badgesWriter;
         private readonly CompletionWriter _completionWriter;
-        private readonly SectionWriter _sectionWriter;
-        private readonly InforefSectionsWriter _inforefSectionsWriter;
 
         // -- Additional Dependencies -- //
         private readonly ILogger<Writer> _logger;
 
-        // Services
-        private IActivitiesWriterService _activitiesWriterService;
+        // -- Services for writing the various aspects of the Moodle Course -- //
+        private readonly IActivitiesWriterService _activitiesWriterService;
+        private readonly ISectionFilesWriterService _sectionFilesWriterService;
 
         public Writer(
             CalendarWriter calendarWriter,
@@ -75,9 +66,8 @@ namespace CourseAsCode.Writers
             RoleAssignmentsWriter roleAssignmentsWriter,
             BadgesWriter badgesWriter,
             CompletionWriter completionWriter,
-            SectionWriter sectionWriter,
-            InforefSectionsWriter inforefSectionsWriter,
             IActivitiesWriterService activitiesWriterService,
+            ISectionFilesWriterService sectionFilesWriterService,
             ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
@@ -103,14 +93,13 @@ namespace CourseAsCode.Writers
             _roleAssignmentsWriter = roleAssignmentsWriter ?? throw new ArgumentNullException(nameof(roleAssignmentsWriter));
             _badgesWriter = badgesWriter ?? throw new ArgumentNullException(nameof(badgesWriter));
             _completionWriter = completionWriter ?? throw new ArgumentNullException(nameof(completionWriter));
-            _sectionWriter = sectionWriter ?? throw new ArgumentNullException(nameof(sectionWriter));
-            _inforefSectionsWriter = inforefSectionsWriter ?? throw new ArgumentNullException(nameof(inforefSectionsWriter));
 
             // -- Additional Dependencies Assignment -- //
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             // Services
             _activitiesWriterService = activitiesWriterService ?? throw new ArgumentNullException(nameof(activitiesWriterService));
+            _sectionFilesWriterService = sectionFilesWriterService ?? throw new ArgumentNullException(nameof(sectionFilesWriterService));
         }
 
 
@@ -166,18 +155,7 @@ namespace CourseAsCode.Writers
 
 
             // -- Write section files -- //
-
-            // Create sections directory if it does not exist
-            if (!SafeCreateDirectory(Path.Combine(outputPath, "sections")))
-            {
-                Environment.Exit(1);
-            }
-
-            // Create section.xml for each section
-            _sectionWriter.WriteSections(outputPath, course.Sections);
-
-            // Create inforef.xml for each section
-            _inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
+            _sectionFilesWriterService.WriteSectionFiles(course, outputPath);
 
             // -- Write activity files -- //
             _activitiesWriterService.WriteActivities(course, outputPath);
@@ -185,27 +163,6 @@ namespace CourseAsCode.Writers
             return true;
         }
 
-
-        /// <summary>
-        /// Creates an activity directory using the specified prefix and processes it via the given action.
-        /// </summary>
-        /// <param name="outputPath">The base output directory.</param>
-        /// <param name="activity">The activity instance.</param>
-        /// <param name="prefix">prefix that distinguishes the activity type (e.g., "resource", "url", "label").</param>
-        /// <param name="processActivity">A lambda that performs the writing logic for the activity.</param>
-        /// <returns>The path to the created directory, or null if directory creation fails.</returns>
-        private string? CreateActivity(string outputPath, Activity activity, string prefix, Action<string> processActivity)
-        {
-            string activityPath = Path.Combine(outputPath, "activities", $"{prefix}_{activity.ActivityId}");
-
-            if (!SafeCreateDirectory(activityPath))
-            {
-                return null;
-            }
-
-            processActivity(activityPath);
-            return activityPath;
-        }
 
         private bool SafeCreateDirectory(string path)
         {

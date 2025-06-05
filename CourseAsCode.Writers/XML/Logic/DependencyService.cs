@@ -106,6 +106,7 @@ namespace CourseAsCode.Writers.XML.Logic
 
             // Register the main writer
             services.AddSingleton<IActivitiesWriterService, ActivitiesWriterService>();
+            services.AddSingleton<ISectionFilesWriterService, SectionFilesWriterService>();
             services.AddSingleton<IWriter, Writers.Writer>();
         }
     }
