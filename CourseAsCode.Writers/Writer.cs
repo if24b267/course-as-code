@@ -3,9 +3,7 @@ using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
-using CourseAsCode.Writers.XML.Writer.Sections;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers
@@ -13,12 +11,6 @@ namespace CourseAsCode.Writers
     public class Writer : IWriter
     {
         // -- General Writers -- //
-        private readonly CalendarWriter _calendarWriter;
-        private readonly CommentsWriter _commentsWriter;
-        private readonly CompetenciesWriter _competenciesWriter;
-        private readonly CompletiondefaultsWriter _completiondefaultsWriter;
-        private readonly ContentbankWriter _contentbankWriter;
-        private readonly CourseWriter _courseWriter;
         private readonly FilesWriter _filesWriter;
         private readonly GradehistoryWriter _gradehistoryWriter;
         private readonly GradebookWriter _gradebookWriter;
@@ -29,10 +21,6 @@ namespace CourseAsCode.Writers
         private readonly RolesWriter _rolesWriter;
         private readonly ScalesWriter _scalesWriter;
         private readonly UsersWriter _usersWriter;
-        private readonly EnrolmentsWriter _enrolmentsWriter;
-        private readonly FiltersWriter _filtersWriter;
-        private readonly InforefWriter _inforefWriter;
-        private readonly RoleAssignmentsWriter _roleAssignmentsWriter;
         private readonly BadgesWriter _badgesWriter;
         private readonly CompletionWriter _completionWriter;
 
@@ -42,14 +30,9 @@ namespace CourseAsCode.Writers
         // -- Services for writing the various aspects of the Moodle Course -- //
         private readonly IActivitiesWriterService _activitiesWriterService;
         private readonly ISectionFilesWriterService _sectionFilesWriterService;
+        private readonly ICourseFilesWriterService _courseFilesWriterService;
 
         public Writer(
-            CalendarWriter calendarWriter,
-            CommentsWriter commentsWriter,
-            CompetenciesWriter competenciesWriter,
-            CompletiondefaultsWriter completiondefaultsWriter,
-            ContentbankWriter contentbankWriter,
-            CourseWriter courseWriter,
             FilesWriter filesWriter,
             GradehistoryWriter gradehistoryWriter,
             GradebookWriter gradebookWriter,
@@ -60,23 +43,14 @@ namespace CourseAsCode.Writers
             RolesWriter rolesWriter,
             ScalesWriter scalesWriter,
             UsersWriter usersWriter,
-            EnrolmentsWriter enrolmentsWriter,
-            FiltersWriter filtersWriter,
-            InforefWriter inforefWriter,
-            RoleAssignmentsWriter roleAssignmentsWriter,
             BadgesWriter badgesWriter,
             CompletionWriter completionWriter,
             IActivitiesWriterService activitiesWriterService,
             ISectionFilesWriterService sectionFilesWriterService,
+            ICourseFilesWriterService courseFilesWriterService,
             ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
-            _calendarWriter = calendarWriter ?? throw new ArgumentNullException(nameof(calendarWriter));
-            _commentsWriter = commentsWriter ?? throw new ArgumentNullException(nameof(commentsWriter));
-            _competenciesWriter = competenciesWriter ?? throw new ArgumentNullException(nameof(competenciesWriter));
-            _completiondefaultsWriter = completiondefaultsWriter ?? throw new ArgumentNullException(nameof(completiondefaultsWriter));
-            _contentbankWriter = contentbankWriter ?? throw new ArgumentNullException(nameof(contentbankWriter));
-            _courseWriter = courseWriter ?? throw new ArgumentNullException(nameof(courseWriter));
             _filesWriter = filesWriter ?? throw new ArgumentNullException(nameof(filesWriter));
             _gradehistoryWriter = gradehistoryWriter ?? throw new ArgumentNullException(nameof(gradehistoryWriter));
             _gradebookWriter = gradebookWriter ?? throw new ArgumentNullException(nameof(gradebookWriter));
@@ -87,10 +61,6 @@ namespace CourseAsCode.Writers
             _rolesWriter = rolesWriter ?? throw new ArgumentNullException(nameof(rolesWriter));
             _scalesWriter = scalesWriter ?? throw new ArgumentNullException(nameof(scalesWriter));
             _usersWriter = usersWriter ?? throw new ArgumentNullException(nameof(usersWriter));
-            _enrolmentsWriter = enrolmentsWriter ?? throw new ArgumentNullException(nameof(enrolmentsWriter));
-            _filtersWriter = filtersWriter ?? throw new ArgumentNullException(nameof(filtersWriter));
-            _inforefWriter = inforefWriter ?? throw new ArgumentNullException(nameof(inforefWriter));
-            _roleAssignmentsWriter = roleAssignmentsWriter ?? throw new ArgumentNullException(nameof(roleAssignmentsWriter));
             _badgesWriter = badgesWriter ?? throw new ArgumentNullException(nameof(badgesWriter));
             _completionWriter = completionWriter ?? throw new ArgumentNullException(nameof(completionWriter));
 
@@ -100,6 +70,7 @@ namespace CourseAsCode.Writers
             // Services
             _activitiesWriterService = activitiesWriterService ?? throw new ArgumentNullException(nameof(activitiesWriterService));
             _sectionFilesWriterService = sectionFilesWriterService ?? throw new ArgumentNullException(nameof(sectionFilesWriterService));
+            _courseFilesWriterService = courseFilesWriterService ?? throw new ArgumentNullException(nameof(courseFilesWriterService));
         }
 
 
@@ -141,18 +112,8 @@ namespace CourseAsCode.Writers
             _scalesWriter.WriteScales(course, outputPath);
             _usersWriter.WriteUsers(course, outputPath);
 
-            // /course directory
-            _calendarWriter.WriteCalendar(course, outputPath);
-            _commentsWriter.WriteComments(course, outputPath);
-            _competenciesWriter.WriteCompetencies(course, outputPath);
-            _completiondefaultsWriter.WriteCompletionDefaults(course, outputPath);
-            _contentbankWriter.WriteContentbank(course, outputPath);
-            _courseWriter.WriteCourse(course, outputPath);
-            _enrolmentsWriter.WriteEnrolment(course, outputPath);
-            _filtersWriter.WriteFilters(course, outputPath);
-            _inforefWriter.WriteInforef(course, outputPath);
-            _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
-
+            // -- Write /course directory files -- //
+            _courseFilesWriterService.WriteCourseFiles(course, outputPath);
 
             // -- Write section files -- //
             _sectionFilesWriterService.WriteSectionFiles(course, outputPath);
