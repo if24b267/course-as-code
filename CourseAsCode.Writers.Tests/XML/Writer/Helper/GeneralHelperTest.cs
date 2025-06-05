@@ -12,9 +12,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
     {
         private GeneralHelper _generalHelper;
 
-        // Dependencies for GeneralHelper
-        private ILogger<GeneralHelper> _generalHelperLogger;
-
         // Dummy enum for testing EnumIntegerToString
         private enum DummyEnum
         {
@@ -26,8 +23,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         [SetUp]
         public void SetUp()
         {
-            _generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger to avoid log output during tests
-            _generalHelper = new GeneralHelper(_generalHelperLogger);
+            ILogger<GeneralHelper> generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelper = new GeneralHelper(generalHelperLogger);
         }
 
         [Test]

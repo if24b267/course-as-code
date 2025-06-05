@@ -30,6 +30,9 @@ namespace CourseAsCode.Writers.Tests.Integration
         // Dependencies for GeneralHelper
         private ILogger<GeneralHelper> _generalHelperLogger;
 
+        // Dependency for MoodleVersionHelper
+        private ILogger<MoodleVersionHelper> _moodleVersionHelperLogger;
+
         [SetUp]
         public void SetUp()
         {
@@ -45,8 +48,9 @@ namespace CourseAsCode.Writers.Tests.Integration
             _xmlWriterFactory = new DefaultXmlWriterFactory();
             _logger = NullLogger<MoodleBackupWriter>.Instance; // Use NullLogger to avoid log output during tests
             _generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger for GeneralHelper
+            _moodleVersionHelperLogger = NullLogger<MoodleVersionHelper>.Instance; // Use NullLogger for MoodleVersionHelper
             _generalHelper = new GeneralHelper(_generalHelperLogger);
-            _moodleVersionHelper = new MoodleVersionHelper();
+            _moodleVersionHelper = new MoodleVersionHelper(_moodleVersionHelperLogger);
             _courseHelper = new CourseHelper();
 
             _dummyCourse = new Course
