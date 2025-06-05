@@ -39,6 +39,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             _generalHelper.EnumIntegerToString(Arg.Any<Enum>()).Returns("0");
             _generalHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("1234567890");
 
+            // Mock the quiz helper
+            _quizHelper = Substitute.For<IQuizHelper>();
+
             // Instantiate the QuizWriter with the fake dependencies
             _quizWriter = new QuizWriter(_testFactory, _logger, _generalHelper, _quizHelper);
 

@@ -1,7 +1,9 @@
 using System.Globalization;
 using System.Xml;
+
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
+using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
@@ -12,9 +14,10 @@ using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
-using QWriter = CourseAsCode.Writers.XML.Writer.QuestionsWriter.QuestionsWriter;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+
+using QWriter = CourseAsCode.Writers.XML.Writer.QuestionsWriter.QuestionsWriter;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
 {
@@ -78,8 +81,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _fakeIdGenerator.GetNextCodeRunnerOptionId().Returns(_ => codeRunnerOptionIdCounter++);
             _fakeIdGenerator.GetNextCodeRunnerTestCaseId().Returns(_ => codeRunnerTestCaseIdCounter++);
 
-            // Setup fake quiz helper
+            // Setup fake quiz helper to always return "multichoice" for question type and "abc" for NumberingFormat
             _fakeQuizHelper = Substitute.For<IQuizHelper>();
+            _fakeQuizHelper.MapQuestionType(Arg.Any<Question>()).Returns("multichoice");
+            _fakeQuizHelper.MapNumberingFormat(Arg.Any<NumberingFormat>()).Returns("abc");
 
             // Setup fake tags writer
             _fakeTagsWriter = Substitute.For<ITagsWriter>();
@@ -231,7 +236,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
-            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("coderunner")); // Mapped value for CodeRunner
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
         }
@@ -399,7 +404,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
-            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mapped value for multi-choice
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
         }
@@ -466,7 +471,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
-            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("match")); // Mapped value for Dropdown
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
         }
@@ -642,7 +647,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
-            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("ddwtos")); // Mapped value for DragDropText
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
         }
