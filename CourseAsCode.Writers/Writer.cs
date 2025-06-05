@@ -706,6 +706,7 @@ namespace CourseAsCode.Writers
             services.AddSingleton<IFileService, FileService>();
             services.AddSingleton<IRolesHelper, RolesHelper>();
             services.AddSingleton<IUserHelper, UserHelper>();
+            services.AddSingleton<IQuizHelper, QuizHelper>();
 
             // Plugins for the QuestionWriter
             services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();

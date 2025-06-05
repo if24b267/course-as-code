@@ -52,6 +52,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
+            _quizHelper = quizHelper ?? throw new ArgumentNullException(nameof(quizHelper));
             _tagsWriter = tagsWriter ?? throw new ArgumentNullException(nameof(tagsWriter));
 
             // Build the lookup dictionary for plugin writers | TODO: Refactor this to use a more sophisticated method

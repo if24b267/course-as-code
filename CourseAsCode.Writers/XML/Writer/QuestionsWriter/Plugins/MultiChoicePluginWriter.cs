@@ -27,7 +27,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
         public MultiChoicePluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<MultiChoicePluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
             : base(xmlWriterFactory, logger)
         {
-            _generalHelper = _generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
             _quizHelper = quizHelper ?? throw new ArgumentNullException(nameof(quizHelper));
         }
