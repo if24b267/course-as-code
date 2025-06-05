@@ -11,7 +11,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         [SetUp]
         public void SetUp()
         {
-            _courseHelper = CourseHelper.Instance;
+            _courseHelper = new CourseHelper();
         }
 
         [TestCase(CourseFormat.CustomSections, "topics")]
