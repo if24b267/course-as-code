@@ -3,6 +3,7 @@ using System.Globalization;
 
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.Converters;
 using YamlDotNet.Serialization.NodeDeserializers;
@@ -44,7 +45,15 @@ namespace CourseAsCode.Readers.Helper
                 throw new ArgumentException("YAML content cannot be null or empty", nameof(yamlContent));
             }
 
-            return _deserializer.Deserialize<T>(yamlContent);
+            try
+            {
+                return _deserializer.Deserialize<T>(yamlContent);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"Unexpected error deserializing YAML content: {ex.Message}");
+                throw new YamlException($"Unexpected error deserializing YAML content: {ex.Message}", ex);
+            }
         }
 
         /// <summary>
