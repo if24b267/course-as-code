@@ -12,14 +12,24 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
 {
     public class MultiChoicePluginWriter : XmlWriterBase, IQuestionPluginWriter
     {
+        private readonly IGeneralHelper _generalHelper;
+        private readonly ISequentialIdGenerator _sequentialIdGenerator;
+        private readonly IQuizHelper _quizHelper;
+
         /// <summary>
         /// Creates a new instance of the MultiChoicePluginWriter class
         /// </summary>
         /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to MultiChoicePluginWriter</param>
-        public MultiChoicePluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<MultiChoicePluginWriter> logger)
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique IDs</param>
+        /// <param name="quizHelper">Quiz Helper providing utility methods for quizzes</param>
+        public MultiChoicePluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<MultiChoicePluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
             : base(xmlWriterFactory, logger)
         {
+            _generalHelper = _generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
+            _quizHelper = quizHelper ?? throw new ArgumentNullException(nameof(quizHelper));
         }
 
 
@@ -28,9 +38,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document</param>
         /// <param name="question">the question to save</param>
-        /// <param name="generalHelper">>Instance of a general helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Instance of a sequential ID generator for creating unique identifiers</param>
-        public void WritePluginData(XmlWriter writer, Question question, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
+        public void WritePluginData(XmlWriter writer, Question question)
         {
             if (question is not MultipleChoiceQuestion multiChoiceQuestion)
             {
@@ -43,17 +51,17 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
             writer.WriteStartElement("answers");
             foreach (var answer in multiChoiceQuestion.Answers)
             {
-                int answerId = sequentialIdGenerator.GetNextAnswerId();
+                int answerId = _sequentialIdGenerator.GetNextAnswerId();
                 writer.WriteStartElement("answer");
                 writer.WriteAttributeString("id", answerId.ToString());
 
                 WriteElements(writer, new Dictionary<string, string>
                 {
                     { "answertext", answer.AnswerText },
-                    { "answerformat", generalHelper.EnumIntegerToString(answer.AnswerTextFormat) },
+                    { "answerformat", _generalHelper.EnumIntegerToString(answer.AnswerTextFormat) },
                     { "fraction", answer.AnswerGrade.ToString("0.0000000", CultureInfo.InvariantCulture) },
                     { "feedback", answer.AnswerFeedback ?? string.Empty },
-                    { "feedbackformat", generalHelper.EnumIntegerToString(answer.AnswerFeedbackFormat) },
+                    { "feedbackformat", _generalHelper.EnumIntegerToString(answer.AnswerFeedbackFormat) },
                 });
 
                 writer.WriteEndElement(); // </answer>
@@ -63,7 +71,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
 
             // Multichoice settings -------------------------------------------------
             writer.WriteStartElement("multichoice");
-            int multichoiceId = sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
+            int multichoiceId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
             writer.WriteAttributeString("id", multichoiceId.ToString());
 
             var multichoiceElements = new Dictionary<string, string>
@@ -72,12 +80,12 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
                 { "single", multiChoiceQuestion.SingleChoice ? "1" : "0" },
                 { "shuffleanswers", multiChoiceQuestion.ShuffleAnswers ? "1" : "0" },
                 { "correctfeedback", multiChoiceQuestion.CorrectResponseFeedback ?? string.Empty },
-                { "correctfeedbackformat", generalHelper.EnumIntegerToString(multiChoiceQuestion.CorrectResponseFeedbackFormat) },
+                { "correctfeedbackformat", _generalHelper.EnumIntegerToString(multiChoiceQuestion.CorrectResponseFeedbackFormat) },
                 { "partiallycorrectfeedback", multiChoiceQuestion.PartiallyCorrectResponseFeedback ?? string.Empty },
-                { "partiallycorrectfeedbackformat", generalHelper.EnumIntegerToString(multiChoiceQuestion.PartiallyCorrectResponseFeedbackFormat) },
+                { "partiallycorrectfeedbackformat", _generalHelper.EnumIntegerToString(multiChoiceQuestion.PartiallyCorrectResponseFeedbackFormat) },
                 { "incorrectfeedback", multiChoiceQuestion.IncorrectResponseFeedback ?? string.Empty },
-                { "incorrectfeedbackformat", generalHelper.EnumIntegerToString(multiChoiceQuestion.IncorrectResponseFeedbackFormat) },
-                { "answernumbering", EnumMappers.MapNumberingFormat(multiChoiceQuestion.ChoiceNumbering) },
+                { "incorrectfeedbackformat", _generalHelper.EnumIntegerToString(multiChoiceQuestion.IncorrectResponseFeedbackFormat) },
+                { "answernumbering", _quizHelper.MapNumberingFormat(multiChoiceQuestion.ChoiceNumbering) },
                 { "shownumcorrect", multiChoiceQuestion.Hints != null && multiChoiceQuestion.Hints.Any(h => h.ShowNumberOfCorrectAnswers) ? "1" : "0" },
                 { "showstandardinstruction", multiChoiceQuestion.ShowStandardInstructions ? "1" : "0" },
             };

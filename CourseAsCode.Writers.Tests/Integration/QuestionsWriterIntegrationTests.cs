@@ -1,5 +1,6 @@
 using System.Xml;
 using System.Xml.Schema;
+
 using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
@@ -7,9 +8,10 @@ using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
-using QWriter = CourseAsCode.Writers.XML.Writer.QuestionsWriter.QuestionsWriter;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+
+using QWriter = CourseAsCode.Writers.XML.Writer.QuestionsWriter.QuestionsWriter;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {
@@ -29,11 +31,15 @@ namespace CourseAsCode.Writers.Tests.Integration
         private ILogger<DropdownPluginWriter> _dropdownPluginWriterLogger;
         private IGeneralHelper _generalHelper;
         private ISequentialIdGenerator _sequentialIdGenerator;
+        private IQuizHelper _quizHelper;
         private ITagsWriter _tagsWriter;
         private readonly List<IQuestionPluginWriter> _pluginWriters = new List<IQuestionPluginWriter>();
 
         // Dependencies for GeneralHelper
         private ILogger<GeneralHelper> _generalHelperLogger;
+
+        // Dependency for QuizHelper
+        private ILogger<QuizHelper> _quizHelperLogger;
 
 
         [SetUp]
@@ -55,14 +61,16 @@ namespace CourseAsCode.Writers.Tests.Integration
             _dropdownPluginWriterLogger = NullLogger<DropdownPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
             _dragDropTextPluginWriterLogger = NullLogger<DragDropTextPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
             _generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger to avoid log output during tests
+            _quizHelperLogger = NullLogger<QuizHelper>.Instance; // Use NullLogger to avoid log output during tests
             _generalHelper = new GeneralHelper(_generalHelperLogger);
             _sequentialIdGenerator = new SequentialIdGenerator();
+            _quizHelper = new QuizHelper(_quizHelperLogger);
             _tagsWriter = new TagsWriter(_tagsLogger);
 
             // PluginWriters
-            _pluginWriters.Add(new DragDropTextPluginWriter(_xmlWriterFactory, _dragDropTextPluginWriterLogger));
-            _pluginWriters.Add(new MultiChoicePluginWriter(_xmlWriterFactory, _multiChoicePluginWriterLogger));
-            _pluginWriters.Add(new DropdownPluginWriter(_xmlWriterFactory, _dropdownPluginWriterLogger));
+            _pluginWriters.Add(new DragDropTextPluginWriter(_xmlWriterFactory, _dragDropTextPluginWriterLogger, _generalHelper, _sequentialIdGenerator));
+            _pluginWriters.Add(new MultiChoicePluginWriter(_xmlWriterFactory, _multiChoicePluginWriterLogger, _generalHelper, _sequentialIdGenerator, _quizHelper));
+            _pluginWriters.Add(new DropdownPluginWriter(_xmlWriterFactory, _dropdownPluginWriterLogger, _generalHelper, _sequentialIdGenerator));
 
             _dummyCourse = new Course
             {
@@ -75,7 +83,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteQuestions_GeneratesValidXml()
         {
             // Arrange
-            var writer = new QWriter(_xmlWriterFactory, _logger, _generalHelper, _sequentialIdGenerator, _tagsWriter, _pluginWriters);
+            var writer = new QWriter(_xmlWriterFactory, _logger, _generalHelper, _sequentialIdGenerator, _quizHelper, _tagsWriter, _pluginWriters);
 
             // Act
             writer.WriteQuestions(_dummyCourse, _outputPath);

@@ -3,6 +3,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
         private ILogger<CodeRunnerPluginWriter> _logger;
         private IGeneralHelper _generalHelper;
         private ISequentialIdGenerator _idGenerator;
+        private IQuizHelper _quizHelper;
         private CodeRunnerPluginWriter _codeRunnerWriter;
         private XmlWriter _xmlWriter;
 
@@ -43,7 +45,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             _idGenerator.GetNextCodeRunnerTestCaseId().Returns(_ => testCaseIdCounter++);
 
             // Create the writer under test
-            _codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _logger);
+            _codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _logger, _idGenerator);
 
             // Create a fresh StringWriter for each test
             _testFactory.ClearContents();
@@ -85,7 +87,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             var question = CreateBasicCodeRunnerQuestion();
 
             // Act
-            _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+            _codeRunnerWriter.WritePluginData(_xmlWriter, question);
 
             // Close the XML elements before reading
             _xmlWriter.WriteEndElement(); // Close the root element
@@ -122,7 +124,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             var question = CreateBasicCodeRunnerQuestion();
 
             // Act
-            _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+            _codeRunnerWriter.WritePluginData(_xmlWriter, question);
 
             // Close the XML elements before reading
             _xmlWriter.WriteEndElement(); // Close the root element
@@ -181,7 +183,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             var question = CreateBasicCodeRunnerQuestion();
 
             // Act
-            _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+            _codeRunnerWriter.WritePluginData(_xmlWriter, question);
 
             // Close the XML elements before reading
             _xmlWriter.WriteEndElement(); // Close the root element
@@ -255,7 +257,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() =>
-                _codeRunnerWriter.WritePluginData(_xmlWriter, wrongQuestion, _generalHelper, _idGenerator));
+                _codeRunnerWriter.WritePluginData(_xmlWriter, wrongQuestion));
         }
 
         private CodeRunnerQuestion CreateBasicCodeRunnerQuestion()

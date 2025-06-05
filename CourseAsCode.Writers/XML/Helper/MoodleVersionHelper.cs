@@ -16,7 +16,7 @@ namespace CourseAsCode.Writers.XML.Helper
         /// <summary>
         /// Creates a new instance of the MoodleVersionHelper class
         /// </summary>
-        /// <param name="logger">Logger instance specific to TagsWriter</param>
+        /// <param name="logger">Logger instance specific to MoodleVersionHelper</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
         public MoodleVersionHelper(ILogger<MoodleVersionHelper> logger)
         {
@@ -24,11 +24,6 @@ namespace CourseAsCode.Writers.XML.Helper
         }
 
 
-        /// <summary>
-        /// Maps the MoodleVersion enum to the corresponding Moodle Version String
-        /// </summary>
-        /// <param name="version">The MoodleVersion enum value to be mapped</param>
-        /// <returns>A string representing the Moodle Version, e.g., 2024100700</returns>
         public string GetMoodleVersionStringFromEnum(MoodleVersion version)
         {
             return version switch
@@ -67,11 +62,6 @@ namespace CourseAsCode.Writers.XML.Helper
         }
 
 
-        /// <summary>
-        /// Maps the MoodleVersion enum to the corresponding Moodle Release String.
-        /// </summary>
-        /// <param name="version">The MoodleVersion enum value to be converted to a Moodle Release String.</param>
-        /// <returns>A string representing the Moodle Release, e.g., "4.5 (Build: 20241007)".</returns>
         public string GetMoodleReleaseStringFromEnum(MoodleVersion version)
         {
             return version switch

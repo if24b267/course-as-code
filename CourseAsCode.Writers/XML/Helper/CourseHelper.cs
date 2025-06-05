@@ -1,34 +1,23 @@
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 
-namespace CourseAsCode.Writers.XML.Helper;
-
-public class CourseHelper : ICourseHelper
+namespace CourseAsCode.Writers.XML.Helper
 {
-    private static CourseHelper? _instance;
-
-    public static CourseHelper Instance
+    /// <summary>
+    /// Provides utility methods for handling and converting course-related data, particularly for course formats.
+    /// </summary>
+    public class CourseHelper : ICourseHelper
     {
-        get
+        public string GetCourseFormatFromEnum(CourseFormat format)
         {
-            if (_instance == null)
+            return format switch
             {
-                _instance = new CourseHelper();
-            }
-
-            return _instance;
+                CourseFormat.CustomSections => "topics",
+                CourseFormat.WeeklySections => "weeks",
+                CourseFormat.SingleActivity => "singleactivity",
+                CourseFormat.Social => "social",
+                _ => "topics",
+            };
         }
-    }
-
-    public string GetCourseFormatFromEnum(CourseFormat format)
-    {
-        return format switch
-        {
-            CourseFormat.CustomSections => "topics",
-            CourseFormat.WeeklySections => "weeks",
-            CourseFormat.SingleActivity => "singleactivity",
-            CourseFormat.Social => "social",
-            _ => "topics",
-        };
     }
 }

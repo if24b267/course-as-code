@@ -1,38 +1,45 @@
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 
-namespace CourseAsCode.Writers.XML.Helper;
-
-public class UserHelper : IUserHelper
+namespace CourseAsCode.Writers.XML.Helper
 {
-    public string GetCountryFromEnum(Country country)
+    /// <summary>
+    /// Provides helper methods for handling user-related data
+    /// </summary>
+    public class UserHelper : IUserHelper
     {
-        return country switch
+        public string GetCountryFromEnum(Country country)
         {
-            Country.Austria => "AT",
-            Country.Germany => "DE",
-            Country.Switzerland => "CH",
-            _ => "AT",
-        };
-    }
+            return country switch
+            {
+                Country.Austria => "AT",
+                Country.Germany => "DE",
+                Country.Switzerland => "CH",
 
-    public string GetAuthMethodFromEnum(AuthenticationMethod authenticationMethod)
-    {
-        return authenticationMethod switch
+                _ => "AT",
+            };
+        }
+
+
+        public string GetAuthMethodFromEnum(AuthenticationMethod authenticationMethod)
         {
-            AuthenticationMethod.ManualCreation => "manual",
-            AuthenticationMethod.NoLogin => "nologin",
-            AuthenticationMethod.EMailSelfRegistration => "email",
-            AuthenticationMethod.CAS => "cas",
-            AuthenticationMethod.ExternalDatabase => "db",
-            AuthenticationMethod.LDAP => "ldap",
-            AuthenticationMethod.LTI => "lti",
-            AuthenticationMethod.MNet => "mnet",
-            AuthenticationMethod.OAuth2 => "oauth2",
-            AuthenticationMethod.Shibboleth => "shibboleth",
-            AuthenticationMethod.Webservice => "webservice",
-            AuthenticationMethod.NoAuthentication => "none",
-            _ => "manual",
-        };
+            return authenticationMethod switch
+            {
+                AuthenticationMethod.ManualCreation => "manual",
+                AuthenticationMethod.NoLogin => "nologin",
+                AuthenticationMethod.EMailSelfRegistration => "email",
+                AuthenticationMethod.CAS => "cas",
+                AuthenticationMethod.ExternalDatabase => "db",
+                AuthenticationMethod.LDAP => "ldap",
+                AuthenticationMethod.LTI => "lti",
+                AuthenticationMethod.MNet => "mnet",
+                AuthenticationMethod.OAuth2 => "oauth2",
+                AuthenticationMethod.Shibboleth => "shibboleth",
+                AuthenticationMethod.Webservice => "webservice",
+                AuthenticationMethod.NoAuthentication => "none",
+
+                _ => "manual",
+            };
+        }
     }
 }

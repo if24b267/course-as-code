@@ -8,6 +8,7 @@ using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
@@ -28,6 +29,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private ILogger<CodeRunnerPluginWriter> _codeRunnerLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private ISequentialIdGenerator _fakeIdGenerator;
+        private IQuizHelper _fakeQuizHelper;
         private ITagsWriter _fakeTagsWriter;
         private QWriter _questionsWriter;
         private Model.Course _course;
@@ -76,14 +78,17 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _fakeIdGenerator.GetNextCodeRunnerOptionId().Returns(_ => codeRunnerOptionIdCounter++);
             _fakeIdGenerator.GetNextCodeRunnerTestCaseId().Returns(_ => codeRunnerTestCaseIdCounter++);
 
+            // Setup fake quiz helper
+            _fakeQuizHelper = Substitute.For<IQuizHelper>();
+
             // Setup fake tags writer
             _fakeTagsWriter = Substitute.For<ITagsWriter>();
 
             // Create instances of the plugin writer strategies
-            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _multiChoiceLogger);
-            var dropdownWriter = new DropdownPluginWriter(_testFactory, _dropdownLogger);
-            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _dragDropTextLogger);
-            var codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _codeRunnerLogger);
+            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _multiChoiceLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper);
+            var dropdownWriter = new DropdownPluginWriter(_testFactory, _dropdownLogger, _fakeGeneralHelper, _fakeIdGenerator);
+            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _dragDropTextLogger, _fakeGeneralHelper, _fakeIdGenerator);
+            var codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _codeRunnerLogger, _fakeIdGenerator);
             var pluginWriters = new List<IQuestionPluginWriter>
             {
                 multiChoiceWriter,
@@ -93,7 +98,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             };
 
             // Instantiate QuestionsWriter with dependencies
-            _questionsWriter = new QWriter(_testFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, pluginWriters);
+            _questionsWriter = new QWriter(_testFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper, _fakeTagsWriter, pluginWriters);
 
             // Create a dummy course - questions will be added per test
             _course = new Model.Course
@@ -799,7 +804,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _questionsWriter = new QWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, new List<IQuestionPluginWriter>());
+            _questionsWriter = new QWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper, _fakeTagsWriter, new List<IQuestionPluginWriter>());
             _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act & Assert: Verify that an exception is thrown
