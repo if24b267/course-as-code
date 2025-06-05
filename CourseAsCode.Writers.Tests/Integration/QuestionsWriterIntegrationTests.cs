@@ -32,6 +32,9 @@ namespace CourseAsCode.Writers.Tests.Integration
         private ITagsWriter _tagsWriter;
         private readonly List<IQuestionPluginWriter> _pluginWriters = new List<IQuestionPluginWriter>();
 
+        // Dependencies for GeneralHelper
+        private ILogger<GeneralHelper> _generalHelperLogger;
+
 
         [SetUp]
         public void SetUp()
@@ -51,7 +54,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             _multiChoicePluginWriterLogger = NullLogger<MultiChoicePluginWriter>.Instance; // Use NullLogger to avoid log output during tests
             _dropdownPluginWriterLogger = NullLogger<DropdownPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
             _dragDropTextPluginWriterLogger = NullLogger<DragDropTextPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
-            _generalHelper = GeneralHelper.Instance;
+            _generalHelper = new GeneralHelper(_generalHelperLogger);
             _sequentialIdGenerator = new SequentialIdGenerator();
             _tagsWriter = new TagsWriter(_tagsLogger);
 

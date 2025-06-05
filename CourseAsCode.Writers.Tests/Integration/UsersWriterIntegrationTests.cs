@@ -27,6 +27,9 @@ namespace CourseAsCode.Writers.Tests.Integration
         private IGeneralHelper _generalHelper;
         private IUserHelper _userHelper;
 
+        // Dependencies for GeneralHelper
+        private ILogger<GeneralHelper> _generalHelperLogger;
+
         [SetUp]
         public void SetUp()
         {
@@ -46,7 +49,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             // --- Initialize Dependencies ---
             // Use real implementations for integration testing
             _xmlWriterFactory = new DefaultXmlWriterFactory();
-            _generalHelper = GeneralHelper.Instance; // Assuming GeneralHelper is a Singleton
+            _generalHelper = new GeneralHelper(_generalHelperLogger);
             _userHelper = new UserHelper(); // Assuming UserHelper can be instantiated directly
             // Use NullLogger to avoid log output during tests
             _logger = NullLogger<UsersWriter>.Instance;

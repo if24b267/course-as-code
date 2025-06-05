@@ -22,9 +22,12 @@ namespace CourseAsCode.Writers.Tests.Integration
 
         // Dependencies needed for CourseWriter
         private IXmlWriterFactory _xmlWriterFactory;
-        private ILogger<CourseWriter> _logger;
+        private ILogger<CourseWriter> _courseWriterLogger;
         private IGeneralHelper _generalHelper;
         private ICourseHelper _courseHelper;
+
+        // Dependencies for GeneralHelper
+        private ILogger<GeneralHelper> _generalHelperLogger;
 
         [SetUp]
         public void SetUp()
@@ -39,8 +42,8 @@ namespace CourseAsCode.Writers.Tests.Integration
             // --- Initialize Dependencies ---
             // Use real implementations for integration testing
             _xmlWriterFactory = new DefaultXmlWriterFactory();
-            _logger = NullLogger<CourseWriter>.Instance; // Use NullLogger to avoid log output during tests
-            _generalHelper = new GeneralHelper();
+            _courseWriterLogger = NullLogger<CourseWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelper = new GeneralHelper(_generalHelperLogger);
             _courseHelper = new CourseHelper();
 
             _dummyCourse = new Course
@@ -89,7 +92,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteCourse_GeneratesValidXml()
         {
             // Arrange
-            var writer = new CourseWriter(_xmlWriterFactory, _logger, _courseHelper, _generalHelper);
+            var writer = new CourseWriter(_xmlWriterFactory, _courseWriterLogger, _courseHelper, _generalHelper);
 
             // Sicherstellen, dass das Verzeichnis existiert
             var courseDirectory = Path.Combine(_outputPath, "course");

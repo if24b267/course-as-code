@@ -698,7 +698,7 @@ namespace CourseAsCode.Writers
         {
             // General XML services and helpers
             services.AddSingleton<IXmlWriterFactory, DefaultXmlWriterFactory>();
-            services.AddSingleton<IGeneralHelper>(GeneralHelper.Instance);
+            services.AddSingleton<IGeneralHelper, GeneralHelper>();
             services.AddSingleton<IMoodleVersionHelper, MoodleVersionHelper>();
             services.AddSingleton<ICourseHelper, CourseHelper>();
             services.AddSingleton<ISequentialIdGenerator, SequentialIdGenerator>();

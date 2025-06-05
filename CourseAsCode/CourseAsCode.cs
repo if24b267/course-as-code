@@ -4,10 +4,8 @@ using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Writers;
 using CourseAsCode.Writers.Interfaces;
-using CourseAsCode.Writers.XML.Helper;
-using CourseAsCode.Writers.XML.Writer.Course;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
@@ -16,7 +14,6 @@ namespace CourseAsCode
 {
     internal class CourseAsCode
     {
-        private static readonly GeneralHelper _writerGeneralHelper = GeneralHelper.Instance;
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         static void Main(string?[] args)
@@ -134,6 +131,7 @@ namespace CourseAsCode
                 return;
             }
 
+            IGeneralHelper _writerGeneralHelper = serviceProvider.GetRequiredService<IGeneralHelper>();
             var mbzFilePath = Path.GetFullPath(Path.Combine(outputPath, _writerGeneralHelper.GenerateBackupName(course)));
 
             if (File.Exists(mbzFilePath))

@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper;
+using Microsoft.Extensions.Logging;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
@@ -9,6 +10,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
     public class GeneralHelperTests
     {
         private GeneralHelper _generalHelper;
+
+        // Dependencies for GeneralHelper
+        private ILogger<GeneralHelper> _generalHelperLogger;
 
         // Dummy enum for testing EnumIntegerToString
         private enum DummyEnum
@@ -21,7 +25,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         [SetUp]
         public void SetUp()
         {
-            _generalHelper = GeneralHelper.Instance;
+            _generalHelper = new GeneralHelper(_generalHelperLogger);
         }
 
         [Test]
