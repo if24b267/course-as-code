@@ -1,0 +1,16 @@
+Name: Graded test about Java
+Type: QUIZ
+Description: Test your knowledge about the basics of the Java programming language!
+DescriptionFormat: MARKDOWN
+OpeningTime: 31-01-2023 00:00
+ClosingTime: 31-12-2025 23:59
+TimeLimit: 2000
+TimeExpiryHandling: AutoSubmit
+AllowedAttempts: 0
+GradeToPass: 4
+BuildOnPreviousAttempt: false
+GradingMethod: LastAttempt
+QuestionBehaviour: Deferred
+ShuffleQuestions: true
+AllowRedosDuringAttempt: false
+QuestionIds: [19, 20, 21, 22, 23, 24, 25, 26, 27]

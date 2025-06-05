@@ -1,0 +1,8 @@
+SectionName: Quizzes
+VisibleToStudents: true
+Summary:
+Activities:
+  - ActivityFilePath: Activities/TMA_Intro-to-C.yaml
+  - ActivityFilePath: Activities/QUIZ_Intro-to-C.yaml
+  - ActivityFilePath: Activities/TMA_Intro-to-Java.yaml
+  - ActivityFilePath: Activities/QUIZ_Intro-to-Java.yaml
