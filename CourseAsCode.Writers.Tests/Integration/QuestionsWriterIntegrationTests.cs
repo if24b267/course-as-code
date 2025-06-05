@@ -2,16 +2,16 @@ using System.Xml;
 using System.Xml.Schema;
 
 using CourseAsCode.Model;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-using QWriter = CourseAsCode.Writers.XML.Writer.QuestionsWriter.QuestionsWriter;
+using QWriter = CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.QuestionsWriter;
 
 namespace CourseAsCode.Writers.Tests.Integration
 {

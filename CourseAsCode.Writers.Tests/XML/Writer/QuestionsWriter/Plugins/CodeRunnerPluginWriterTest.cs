@@ -3,9 +3,9 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 

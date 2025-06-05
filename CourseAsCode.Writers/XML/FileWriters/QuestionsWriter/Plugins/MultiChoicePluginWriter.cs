@@ -8,7 +8,7 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
     public class MultiChoicePluginWriter : XmlWriterBase, IQuestionPluginWriter
     {

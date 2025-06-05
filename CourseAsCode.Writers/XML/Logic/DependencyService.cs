@@ -1,4 +1,6 @@
 ﻿using CourseAsCode.Writers.Interfaces;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.GeneralWriter;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
@@ -14,7 +16,6 @@ using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Writer.Sections;
 using Microsoft.Extensions.DependencyInjection;
 

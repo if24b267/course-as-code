@@ -1,15 +1,16 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 
-namespace CourseAsCode.Writers.XML.Logic;
-
-/// <summary>
-/// Default implementation of the IXmlWriterFactory Interface that creates an XmlWriter using XmlWriter.Create.
-/// </summary>
-public class DefaultXmlWriterFactory : IXmlWriterFactory
+namespace CourseAsCode.Writers.XML.Logic
 {
-    public XmlWriter Create(string filePath, XmlWriterSettings settings)
+    /// <summary>
+    /// Default implementation of the IXmlWriterFactory Interface that creates an XmlWriter using XmlWriter.Create.
+    /// </summary>
+    public class DefaultXmlWriterFactory : IXmlWriterFactory
     {
-        return XmlWriter.Create(filePath, settings);
+        public XmlWriter Create(string filePath, XmlWriterSettings settings)
+        {
+            return XmlWriter.Create(filePath, settings);
+        }
     }
 }
