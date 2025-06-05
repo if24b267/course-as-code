@@ -6,6 +6,9 @@ using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
 namespace CourseAsCode.Writers.XML.Helper
 {
+    /// <summary>
+    /// Provides various helper methods that don't fit into other helper classes
+    /// </summary>
     public class GeneralHelper : IGeneralHelper
     {
         private readonly ILogger<GeneralHelper> _logger;
@@ -22,9 +25,9 @@ namespace CourseAsCode.Writers.XML.Helper
 
 
         /// <summary>
-        /// creates the name of the backup (file) for the moodle backup according to moodle naming conventions.
+        /// Creates the name of the backup file for a Moodle course following Moodle's naming conventions
         /// </summary>
-        /// <param name="course">the initialized moodle course.</param>
+        /// <param name="course">The initialized Moodle course containing all necessary information</param>
         public string GenerateBackupName(Model.Course course)
         {
             // Moodle Backup Naming Convention:
@@ -45,9 +48,10 @@ namespace CourseAsCode.Writers.XML.Helper
 
 
         /// <summary>
-        /// converts a C# DateTime object to a Unix Timestamp, considering timezones.
+        /// Converts a C# <see cref="DateTime"/> object to a Unix timestamp, considering time zones.
         /// </summary>
-        /// <returns>String representing the Unix Timestamp, e.g. 1735122151.</returns>
+        /// <param name="dateTime">The <see cref="DateTime"/> to be converted.</param>
+        /// <returns>A string representing the Unix timestamp, e.g. "1735122151".</returns>
         public string DateTimeToUnixTimestamp(DateTime dateTime)
         {
             // Ensure the DateTime is in UTC
@@ -68,22 +72,23 @@ namespace CourseAsCode.Writers.XML.Helper
 
 
         /// <summary>
-        /// converts the integer values of an enum to a string, e.g. 1 -> "1".
+        /// Converts the integer value of an enum to its string representation
         /// </summary>
-        /// <param name="enumValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the enum.</typeparam>
+        /// <param name="enumValue">The enum value to be converted.</param>
+        /// <returns>A string representation of the underlying integer value of the enum</returns>
         public string EnumIntegerToString<T>(T enumValue)
             where T : Enum
         {
             return ((int)(object)enumValue).ToString();
         }
 
+
         /// <summary>
-        /// maps the Language enum to their corresponding shorts that are accepted by Moodle.
+        /// Maps a given <see cref="Language"/> enum value to its corresponding language code accepted by Moodle.
         /// </summary>
-        /// <param name="language"></param>
-        /// <returns></returns>
+        /// <param name="language">The <see cref="Language"/> enum value to be mapped.</param>
+        /// <returns>A string representing the language code if the mapping is successful; otherwise, an empty string.</returns>
         public string GetLanguageFromEnum(Language? language)
         {
             return language switch
@@ -96,10 +101,10 @@ namespace CourseAsCode.Writers.XML.Helper
 
 
         /// <summary>
-        /// maps the TimeZone enum to their corresponding shorts that are accepted by Moodle.
+        /// Maps the provided <see cref="TimeZone"/> enum value to its corresponding short representation that is accepted by Moodle.
         /// </summary>
-        /// <param name="timeZone"></param>
-        /// <returns></returns>
+        /// <param name="timeZone">The <see cref="TimeZone"/> enum value to be mapped.</param>
+        /// <returns>A string representation of the time zone corresponding to the provided enum value.</returns>
         public string GetTimeZoneFromEnum(TimeZone timeZone)
         {
             return timeZone switch

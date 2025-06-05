@@ -4,10 +4,14 @@ using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Helper
 {
-    // See https://moodledev.io/general/releases
+    /// <summary>
+    /// <para>Helper class to handle Moodle version-related operations such as mapping enums to version strings.</para>
+    /// <para>Implements the <see cref="IMoodleVersionHelper"/> interface.</para>
+    /// </summary>
     public class MoodleVersionHelper : IMoodleVersionHelper
     {
         private readonly ILogger<MoodleVersionHelper> _logger;
+
 
         /// <summary>
         /// Creates a new instance of the MoodleVersionHelper class
