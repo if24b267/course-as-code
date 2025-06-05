@@ -47,12 +47,14 @@ namespace CourseAsCode.Writers.Tests.Integration
             Directory.CreateDirectory(_outputPath);
 
             // --- Initialize Dependencies ---
+            // Use NullLogger to avoid log output during tests
+            _logger = NullLogger<UsersWriter>.Instance;
+            _generalHelperLogger = NullLogger<GeneralHelper>.Instance;
+
             // Use real implementations for integration testing
             _xmlWriterFactory = new DefaultXmlWriterFactory();
             _generalHelper = new GeneralHelper(_generalHelperLogger);
             _userHelper = new UserHelper(); // Assuming UserHelper can be instantiated directly
-            // Use NullLogger to avoid log output during tests
-            _logger = NullLogger<UsersWriter>.Instance;
 
             _dummyCourse = new Course
             {

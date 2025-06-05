@@ -54,6 +54,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             _multiChoicePluginWriterLogger = NullLogger<MultiChoicePluginWriter>.Instance; // Use NullLogger to avoid log output during tests
             _dropdownPluginWriterLogger = NullLogger<DropdownPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
             _dragDropTextPluginWriterLogger = NullLogger<DragDropTextPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger to avoid log output during tests
             _generalHelper = new GeneralHelper(_generalHelperLogger);
             _sequentialIdGenerator = new SequentialIdGenerator();
             _tagsWriter = new TagsWriter(_tagsLogger);

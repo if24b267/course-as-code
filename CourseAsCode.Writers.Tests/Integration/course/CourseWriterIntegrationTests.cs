@@ -43,6 +43,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Use real implementations for integration testing
             _xmlWriterFactory = new DefaultXmlWriterFactory();
             _courseWriterLogger = NullLogger<CourseWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger for GeneralHelper
             _generalHelper = new GeneralHelper(_generalHelperLogger);
             _courseHelper = new CourseHelper();
 

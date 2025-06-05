@@ -44,6 +44,7 @@ namespace CourseAsCode.Writers.Tests.Integration
             // Use real implementations for integration testing
             _xmlWriterFactory = new DefaultXmlWriterFactory();
             _logger = NullLogger<MoodleBackupWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger for GeneralHelper
             _generalHelper = new GeneralHelper(_generalHelperLogger);
             _moodleVersionHelper = new MoodleVersionHelper();
             _courseHelper = new CourseHelper();
