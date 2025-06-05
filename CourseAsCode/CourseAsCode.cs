@@ -5,6 +5,7 @@ using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Writers;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog;
@@ -116,7 +117,7 @@ namespace CourseAsCode
             });
 
             CourseReader.ConfigureYamlServices(serviceCollection);
-            Writer.ConfigureXmlServices(serviceCollection);
+            Writers.XML.Logic.DependencyService.ConfigureXmlServices(serviceCollection);
             var serviceProvider = serviceCollection.BuildServiceProvider();
             var courseReader = serviceProvider.GetRequiredService<ICourseReader>();
             var course = courseReader.Read(inputPath, courseFormat);

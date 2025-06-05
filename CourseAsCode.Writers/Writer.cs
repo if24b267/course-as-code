@@ -3,10 +3,7 @@ using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
-using CourseAsCode.Writers.XML.Helper;
-using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic;
-using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
@@ -16,10 +13,7 @@ using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Writer.Sections;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers
@@ -52,41 +46,11 @@ namespace CourseAsCode.Writers
         private readonly SectionWriter _sectionWriter;
         private readonly InforefSectionsWriter _inforefSectionsWriter;
 
-        // -- Activity Writers -- //
-        // Common Activity Writers
-        private readonly ActivityGradesWriter _activityGradesWriter;
-        private readonly ActivityGradehistoryWriter _activityGradehistoryWriter;
-        private readonly ActivityInforefWriter _activityInforefWriter;
-        private readonly ActivityRolesWriter _activityRolesWriter;
-        private readonly ActivityXapistateWriter _activityXapistateWriter;
-        private readonly ActivityCalendarWriter _activityCalendarWriter;
-        private readonly ActivityCommentsWriter _activityCommentsWriter;
-        private readonly ActivityCompetenciesWriter _activityCompetenciesWriter;
-        private readonly ActivityCompletionWriter _activityCompletionWriter;
-        private readonly ActivityFiltersWriter _activityFiltersWriter;
-
-        // Text and Media Area (Label) Activity Writers
-        private readonly LabelWriter _labelWriter;
-        private readonly ModuleWriterLabel _moduleWriterLabel;
-
-        // Assignment Activity Writers
-        private readonly AssignmentWriter _assignmentWriter;
-        private readonly ModuleWriterAssignment _moduleWriterAssignment;
-
-        // URL Activity Writers
-        private readonly UrlWriter _urlWriter;
-        private readonly ModuleWriterUrl _moduleWriterUrl;
-
-        // File Activity Writers
-        private readonly FileWriter _fileWriter;
-        private readonly ModuleWriterFile _moduleWriterFile;
-
-        // Quiz Activity Writers
-        private readonly ModuleWriterQuiz _moduleWriterQuiz;
-        private readonly QuizWriter _quizWriter;
-
         // -- Additional Dependencies -- //
         private readonly ILogger<Writer> _logger;
+
+        // Services
+        private IActivitiesWriterService _activitiesWriterService;
 
         public Writer(
             CalendarWriter calendarWriter,
@@ -113,26 +77,7 @@ namespace CourseAsCode.Writers
             CompletionWriter completionWriter,
             SectionWriter sectionWriter,
             InforefSectionsWriter inforefSectionsWriter,
-            ActivityGradesWriter activityGradesWriter,
-            ActivityGradehistoryWriter activityGradehistoryWriter,
-            ActivityInforefWriter activityInforefWriter,
-            ActivityRolesWriter activityRolesWriter,
-            ActivityXapistateWriter activityXapistateWriter,
-            ActivityCalendarWriter activityCalendarWriter,
-            ActivityCommentsWriter activityCommentsWriter,
-            ActivityCompetenciesWriter activityCompetenciesWriter,
-            ActivityCompletionWriter activityCompletionWriter,
-            ActivityFiltersWriter activityFiltersWriter,
-            LabelWriter labelWriter,
-            ModuleWriterLabel moduleWriterLabel,
-            AssignmentWriter assignmentWriter,
-            ModuleWriterAssignment moduleWriterAssignment,
-            UrlWriter urlWriter,
-            ModuleWriterUrl moduleWriterUrl,
-            FileWriter fileWriter,
-            ModuleWriterFile moduleWriterFile,
-            ModuleWriterQuiz moduleWriterQuiz,
-            QuizWriter quizWriter,
+            IActivitiesWriterService activitiesWriterService,
             ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
@@ -161,287 +106,16 @@ namespace CourseAsCode.Writers
             _sectionWriter = sectionWriter ?? throw new ArgumentNullException(nameof(sectionWriter));
             _inforefSectionsWriter = inforefSectionsWriter ?? throw new ArgumentNullException(nameof(inforefSectionsWriter));
 
-            // -- Activity Writers Assignment -- //
-            // Common Activity Writers
-            _activityGradesWriter = activityGradesWriter ?? throw new ArgumentNullException(nameof(activityGradesWriter));
-            _activityGradehistoryWriter = activityGradehistoryWriter ?? throw new ArgumentNullException(nameof(activityGradehistoryWriter));
-            _activityInforefWriter = activityInforefWriter ?? throw new ArgumentNullException(nameof(activityInforefWriter));
-            _activityRolesWriter = activityRolesWriter ?? throw new ArgumentNullException(nameof(activityRolesWriter));
-            _activityXapistateWriter = activityXapistateWriter ?? throw new ArgumentNullException(nameof(activityXapistateWriter));
-            _activityCalendarWriter = activityCalendarWriter ?? throw new ArgumentNullException(nameof(activityCalendarWriter));
-            _activityCommentsWriter = activityCommentsWriter ?? throw new ArgumentNullException(nameof(activityCommentsWriter));
-            _activityCompetenciesWriter = activityCompetenciesWriter ?? throw new ArgumentNullException(nameof(activityCompetenciesWriter));
-            _activityCompletionWriter = activityCompletionWriter ?? throw new ArgumentNullException(nameof(activityCompletionWriter));
-            _activityFiltersWriter = activityFiltersWriter ?? throw new ArgumentNullException(nameof(activityFiltersWriter));
-
-            // Text and Media Area (Label) Activity Writers
-            _labelWriter = labelWriter ?? throw new ArgumentNullException(nameof(labelWriter));
-            _moduleWriterLabel = moduleWriterLabel ?? throw new ArgumentNullException(nameof(moduleWriterLabel));
-
-            // Assignment Activity Writers
-            _assignmentWriter = assignmentWriter ?? throw new ArgumentNullException(nameof(assignmentWriter));
-            _moduleWriterAssignment = moduleWriterAssignment ?? throw new ArgumentNullException(nameof(moduleWriterAssignment));
-
-            // URL Activity Writers
-            _urlWriter = urlWriter ?? throw new ArgumentNullException(nameof(urlWriter));
-            _moduleWriterUrl = moduleWriterUrl ?? throw new ArgumentNullException(nameof(moduleWriterUrl));
-
-            // File Activity Writers
-            _fileWriter = fileWriter ?? throw new ArgumentNullException(nameof(fileWriter));
-            _moduleWriterFile = moduleWriterFile ?? throw new ArgumentNullException(nameof(moduleWriterFile));
-
-            // Quiz Activity Writers
-            _moduleWriterQuiz = moduleWriterQuiz ?? throw new ArgumentNullException(nameof(moduleWriterQuiz));
-            _quizWriter = quizWriter ?? throw new ArgumentNullException(nameof(quizWriter));
-
             // -- Additional Dependencies Assignment -- //
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+            // Services
+            _activitiesWriterService = activitiesWriterService ?? throw new ArgumentNullException(nameof(activitiesWriterService));
         }
 
 
         public bool WriteCourse(Course course, string outputPath)
         {
-            // -------------------------------------------------
-            // QUIZ TESTING - REMOVE LATER
-            // -------------------------------------------------
-            /*
-            // Add a CodeRunner question for Java programming
-            var q5 = new CodeRunnerQuestion
-            {
-                QuestionId = 16,
-                Category = "Programming",
-                QuestionName = "Java Program: Hello World",
-                QuestionText = "<p>Write a complete Java program that prints exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must define a public class named Main and include a main method. No input is needed.</p>",
-                QuestionTextFormat = FormattingFormat.HTML,
-                GeneralFeedback = "<p>Make sure you understand how to create a main class in Java.</p>",
-                GeneralFeedbackFormat = FormattingFormat.HTML,
-                DefaultMark = 1.0f,
-                HintPenalty = 0.0f,
-                QuestionReady = true,
-                CodeRunnerType = "java_program",
-                PrototypeType = 0,
-                AllOrNothing = true,
-                PenaltyRegime = "10, 20, ...",
-                Precheck = 0,
-                HideCheck = 0,
-                ShowSource = 0,
-                AnswerBoxLines = 18,
-                AnswerBoxColumns = 100,
-                AnswerPreload = "",
-                GlobalExtra = "",
-                Answer = "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
-                ValidateOnSave = true,
-                TemplateParams = "",
-                HoistTemplateParams = true,
-                ExtractCodeFromJson = true,
-                TemplateParamsLang = "None",
-                TemplateParamsEvalPerTry = false,
-                TemplateParamsEvald = "{}",
-                TwigAll = false,
-                UiParameters = "",
-                Attachments = 0,
-                AttachmentsRequired = 0,
-                MaxFileSize = 10240,
-                FilenamesRegex = "",
-                FilenamesExplain = "",
-                DisplayFeedback = true,
-                GiveUpAllowed = false,
-                TestCases = new List<CodeRunnerTestCase>
-                {
-                    new CodeRunnerTestCase
-                    {
-                        Id = 1,
-                        TestCode = "Hello World Output",
-                        TestType = 0,
-                        Expected = "Hello, World!",
-                        UseAsExample = false,
-                        Display = "SHOW",
-                        HideRestIfFail = false,
-                        Mark = 1.000m,
-                        StdIn = "",
-                        Extra = ""
-                    }
-                }
-            };
-
-            // Add a CodeRunner question for C programming
-            var q6 = new CodeRunnerQuestion
-            {
-                QuestionId = 17,
-                Category = "Programming",
-                QuestionName = "C Program: Hello World",
-                QuestionText = "<p>Write a complete C program that prints the following text exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must include the necessary #include statements and a main() function. No input is needed.</p>",
-                QuestionTextFormat = FormattingFormat.HTML,
-                GeneralFeedback = "<p>Remember to include standard libraries and proper syntax.</p>",
-                GeneralFeedbackFormat = FormattingFormat.HTML,
-                DefaultMark = 1.0f,
-                HintPenalty = 0.0f,
-                QuestionReady = true,
-                CodeRunnerType = "c_program", // Make sure this matches the installed prototype in Moodle
-                PrototypeType = 0,
-                AllOrNothing = true,
-                PenaltyRegime = "10, 20, ...",
-                Precheck = 0,
-                HideCheck = 0,
-                ShowSource = 0,
-                AnswerBoxLines = 18,
-                AnswerBoxColumns = 100,
-                AnswerPreload = "",
-                GlobalExtra = "",
-                Answer = "#include <stdio.h>\n\nint main() {\n    printf(\"Hello, World!\\n\");\n    return 0;\n}",
-                ValidateOnSave = true,
-                TemplateParams = "",
-                HoistTemplateParams = true,
-                ExtractCodeFromJson = true,
-                TemplateParamsLang = "None",
-                TemplateParamsEvalPerTry = false,
-                TemplateParamsEvald = "{}",
-                TwigAll = false,
-                UiParameters = "",
-                Attachments = 0,
-                AttachmentsRequired = 0,
-                MaxFileSize = 10240,
-                FilenamesRegex = "",
-                FilenamesExplain = "",
-                DisplayFeedback = true,
-                GiveUpAllowed = false,
-                TestCases = new List<CodeRunnerTestCase>
-                {
-                    new CodeRunnerTestCase
-                    {
-                        Id = 1,
-                        TestCode = "Hello World Output    ",
-                        TestType = 0,
-                        Expected = "Hello, World!",
-                        UseAsExample = false,
-                        Display = "SHOW",
-                        HideRestIfFail = false,
-                        Mark = 1.000m,
-                        StdIn = "",
-                        Extra = ""
-                    }
-                }
-            };
-
-            // Create new quiz activity and add it to the course
-            var testQuiz = new Quiz
-            {
-                ActivityId              = 6,
-                Name                    = "New Question Types quiz",
-                Description             = "<p>This quiz is hardcoded and was generated by Course‑as‑Code</p>",
-                DescriptionFormat       = FormattingFormat.HTML,
-                OpenTime                = null,
-                CloseTime               = null,
-                TimeLimit               = 3600,
-                TimeExpiryHandling      = TimeExpiryHandle.AutoSubmit,
-                QuestionBehaviour       = QuestionBehaviour.Deferred,
-                AllowRedosDuringAttempt = true,
-                AllowedAttempts         = 2,
-                BuildOnPreviousAttempts = true,
-                GradingMethod           = GradingMethod.LastAttempt,
-                DecimalsToDisplayGrades = 2,
-                DecimalsToDisplayMarks  = -1,
-                ShuffleWithinQuestions  = true,
-                NewPageThreshold        = 0,
-                ShowPicture             = PictureOptions.SmallImage,
-                Questions               = new() { q1, q2, q3, q4, q5, q6 },
-                Feedback                = new List<QuizFeedback>()
-                {
-                    new QuizFeedback()
-                    {
-                        FeedbackText = "<p>You did it!</p>",
-                        GradeBoundary = 100f,
-                        OverallFeedbackFormat = FormattingFormat.HTML,
-                    },
-                    new QuizFeedback()
-                    {
-                        FeedbackText  = "<p>Probably should go back to kindergarten</p>",
-                        GradeBoundary = 50f,
-                        OverallFeedbackFormat = FormattingFormat.HTML,
-                    },
-                    new QuizFeedback()
-                    {
-                        FeedbackText = "<p>Oh, wow that's just sad</p>",
-                        GradeBoundary = 0f,
-                        OverallFeedbackFormat = FormattingFormat.HTML,
-                    },
-                },
-            };
-
-            var testSection = new Section
-            {
-                SystemDefaults = new Section.SystemDefaultsSection
-                {
-                    SectionId = 5,
-                    PathToSection = "sections/section_5",
-                },
-                Name = "Quiz Test Section",
-                Activities = new List<Activity> { testQuiz },
-            };
-
-            course.Sections.Add(testSection);
-            course.Questions.Add(q5);
-            course.Questions.Add(q6);
-
-            // Create a dedicated CodeRunner quiz
-            var codeRunnerQuiz = new Quiz
-            {
-                ActivityId              = 7,
-                Name                    = "Programming Challenges",
-                Description             = "<p>This quiz contains programming challenges using CodeRunner</p>",
-                DescriptionFormat       = FormattingFormat.HTML,
-                OpenTime                = null,
-                CloseTime               = null,
-                TimeLimit               = 7200,
-                TimeExpiryHandling      = TimeExpiryHandle.AutoSubmit,
-                QuestionBehaviour       = QuestionBehaviour.Deferred,
-                AllowRedosDuringAttempt = true,
-                AllowedAttempts         = 3,
-                BuildOnPreviousAttempts = true,
-                GradingMethod           = GradingMethod.LastAttempt,
-                DecimalsToDisplayGrades = 2,
-                DecimalsToDisplayMarks  = -1,
-                ShuffleWithinQuestions  = false,
-                NewPageThreshold        = 1,
-                ShowPicture             = PictureOptions.SmallImage,
-                Questions               = new() { q5, q6 },
-                Feedback                = new List<QuizFeedback>()
-                {
-                    new QuizFeedback()
-                    {
-                        FeedbackText = "<p>Excellent programming skills!</p>",
-                        GradeBoundary = 100f,
-                        OverallFeedbackFormat = FormattingFormat.HTML,
-                    },
-                    new QuizFeedback()
-                    {
-                        FeedbackText  = "<p>Good attempt, but there is room for improvement.</p>",
-                        GradeBoundary = 50f,
-                        OverallFeedbackFormat = FormattingFormat.HTML,
-                    },
-                    new QuizFeedback()
-                    {
-                        FeedbackText = "<p>You need more practice with programming fundamentals.</p>",
-                        GradeBoundary = 0f,
-                        OverallFeedbackFormat = FormattingFormat.HTML,
-                    },
-                },
-            };
-
-            var codeRunnerSection = new Section
-            {
-                SystemDefaults = new Section.SystemDefaultsSection
-                {
-                    SectionId = 6,
-                    PathToSection = "sections/section_6",
-                },
-                Name = "Programming Section",
-                Activities = new List<Activity> { codeRunnerQuiz },
-            };
-
-            course.Sections.Add(codeRunnerSection);
-            */
-
             var user = new User { };
             course.EnrolledUsers = new List<User> { user };
 
@@ -506,155 +180,9 @@ namespace CourseAsCode.Writers
             _inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
 
             // -- Write activity files -- //
-
-            // Ensure there is an activities and a files directory (used by activities that require files)
-            if (!SafeCreateDirectory(Path.Combine(outputPath, "activities")) || !SafeCreateDirectory(Path.Combine(outputPath, "files")))
-            {
-                Environment.Exit(1);
-            }
-
-            // Iterate through all sections of the course
-            foreach (var section in course.Sections)
-            {
-                // Iterate through all activities of that section
-                foreach (var activity in section.Activities)
-                {
-                    _logger.LogDebug($"Writing activity {activity.ActivityId}: {activity.Name}");
-
-                    string? activityPath = string.Empty;
-
-                    // Text and Media Area (Label)-specific XML files
-                    if (activity is TextAndMediaArea textAndMediaArea)
-                    {
-                        activityPath = CreateTextAndMediaArea(course, outputPath, activity, textAndMediaArea, section);
-                    }
-
-                    // Assignment-specific XML files
-                    if (activity is Assignment assignment)
-                    {
-                        activityPath = CreateAssignmentActivity(course, outputPath, activity, assignment, section);
-                    }
-
-
-                    // URL-specific XML files
-                    if (activity is URL urlObject)
-                    {
-                        activityPath = CreateUrlActivity(course, outputPath, activity, urlObject, section);
-                    }
-
-                    // File-specific XML files
-                    if (activity is MoodleFile moodleFile)
-                    {
-                        activityPath = CreateFileActivity(course, outputPath, activity, moodleFile, section);
-                    }
-
-                    if (activity is Quiz quiz)
-                    {
-                        activityPath = CreateQuizActivity(course, outputPath, activity, quiz, section);
-                    }
-
-                    // Skip if activityPath is null (i.e. directory creation failed)
-                    if (activityPath == null)
-                    {
-                        _logger.LogError($"Skipping activity {activity.ActivityId}: {activity.Name} due to directory creation failure");
-                        continue;
-                    }
-
-                    // General activity XML files (common for all activities)
-                    _activityCalendarWriter.WriteCalendar(activityPath);
-                    _activityCommentsWriter.WriteComments(activityPath);
-                    _activityCompetenciesWriter.WriteCompetencies(activityPath);
-                    _activityCompletionWriter.WriteCompletion(activityPath);
-                    _activityFiltersWriter.WriteFilters(activityPath);
-                    _activityGradesWriter.WriteGrade(activityPath);
-                    _activityGradehistoryWriter.WriteGradeHistory(course, activityPath);
-                    _activityInforefWriter.WriteInforefLabel(course, activityPath, activity);
-                    _activityRolesWriter.WriteRoles(activityPath);
-                    _activityXapistateWriter.WriteState(activityPath);
-                }
-            }
+            _activitiesWriterService.WriteActivities(course, outputPath);
 
             return true;
-        }
-
-        /// <summary>
-        /// writes the XML files specific to the File activity.
-        /// </summary>
-        /// <returns>
-        /// <para> the path to the directory where the files for that activity were written. </para>
-        /// <para> null if the directory couldn't be created.</para>
-        /// </returns>
-        private string? CreateFileActivity(Course course, string outputPath, Activity activity, MoodleFile moodleFile, Section section)
-        {
-            return CreateActivity(outputPath, activity, "resource", activityPath =>
-            {
-                _fileWriter.WriteFile(activityPath, moodleFile);
-                _moduleWriterFile.WriteModule(activityPath, course, section, moodleFile);
-            });
-        }
-
-        /// <summary>
-        /// writes the XML files specific to the URL activity.
-        /// </summary>
-        /// <returns>
-        /// <para> the path to the directory where the files for that activity were written. </para>
-        /// <para> null if the directory couldn't be created.</para>
-        /// </returns>
-        private string? CreateUrlActivity(Course course, string outputPath, Activity activity, URL urlObject, Section section)
-        {
-            return CreateActivity(outputPath, activity, "url", activityPath =>
-            {
-                _urlWriter.WriteUrl(activityPath, urlObject);
-                _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
-            });
-        }
-
-        /// <summary>
-        /// writes the XML files specific to the Text and Media Area (Label) activity.
-        /// </summary>
-        /// <returns>
-        /// <para> the path to the directory where the files for that activity were written. </para>
-        /// <para> null if the directory couldn't be created.</para>
-        /// </returns>
-        private string? CreateTextAndMediaArea(Course course, string outputPath, Activity activity, TextAndMediaArea textAndMediaArea, Section section)
-        {
-            return CreateActivity(outputPath, activity, "label", activityPath =>
-            {
-                _labelWriter.WriteLabel(activityPath, textAndMediaArea);
-                _moduleWriterLabel.WriteModule(activityPath, course, section, textAndMediaArea);
-            });
-        }
-
-        /// <summary>
-        /// writes the XML files specific to the Assignment activity.
-        /// </summary>
-        /// <returns>
-        /// <para> the path to the directory where the files for that activity were written. </para>
-        /// <para> null if the directory couldn't be created.</para>
-        /// </returns>
-        private string? CreateAssignmentActivity(Course course, string outputPath, Activity activity, Assignment assignment, Section section)
-        {
-            return CreateActivity(outputPath, activity, "assign", activityPath =>
-            {
-                _assignmentWriter.WriteAssignment(activityPath, assignment);
-                _moduleWriterAssignment.WriteModule(activityPath, course, section, assignment);
-            });
-        }
-
-        /// <summary>
-        /// writes the XML files specific to the Quiz activity
-        /// </summary>
-        /// /// <returns>
-        /// <para> the path to the directory where the files for that activity were written </para>
-        /// <para> null if the directory couldn't be created</para>
-        /// </returns>
-        private string? CreateQuizActivity(Course course, string outputPath, Activity activity, Quiz quiz, Section section)
-        {
-            return CreateActivity(outputPath, activity, "quiz", activityPath =>
-            {
-                _quizWriter.WriteQuiz(activityPath, quiz);
-                _moduleWriterQuiz.WriteModule(activityPath, course, section, quiz);
-            });
         }
 
 
@@ -691,79 +219,6 @@ namespace CourseAsCode.Writers
                 _logger.LogCritical($"Could not create directory {path}: {e.Message}");
                 return false;
             }
-        }
-
-
-        public static void ConfigureXmlServices(IServiceCollection services)
-        {
-            // General XML services and helpers
-            services.AddSingleton<IXmlWriterFactory, DefaultXmlWriterFactory>();
-            services.AddSingleton<IGeneralHelper, GeneralHelper>();
-            services.AddSingleton<IMoodleVersionHelper, MoodleVersionHelper>();
-            services.AddSingleton<ICourseHelper, CourseHelper>();
-            services.AddSingleton<ISequentialIdGenerator, SequentialIdGenerator>();
-            services.AddSingleton<IFileHelper, FileHelper>();
-            services.AddSingleton<IFileService, FileService>();
-            services.AddSingleton<IRolesHelper, RolesHelper>();
-            services.AddSingleton<IUserHelper, UserHelper>();
-            services.AddSingleton<IQuizHelper, QuizHelper>();
-
-            // Plugins for the QuestionWriter
-            services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, DropdownPluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, MultiChoicePluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, CodeRunnerPluginWriter>();
-
-            // Register QuestionsWriter (depends on the plugins registered above)
-            services.AddSingleton<QuestionsWriter>();
-
-            // Register all other writers
-            services.AddSingleton<CalendarWriter>();
-            services.AddSingleton<CommentsWriter>();
-            services.AddSingleton<CompetenciesWriter>();
-            services.AddSingleton<CompletiondefaultsWriter>();
-            services.AddSingleton<ContentbankWriter>();
-            services.AddSingleton<CourseWriter>();
-            services.AddSingleton<FilesWriter>();
-            services.AddSingleton<GradehistoryWriter>();
-            services.AddSingleton<GradebookWriter>();
-            services.AddSingleton<GroupsWriter>();
-            services.AddSingleton<MoodleBackupWriter>();
-            services.AddSingleton<OutcomesWriter>();
-            services.AddSingleton<RolesWriter>();
-            services.AddSingleton<ScalesWriter>();
-            services.AddSingleton<UsersWriter>();
-            services.AddSingleton<EnrolmentsWriter>();
-            services.AddSingleton<FiltersWriter>();
-            services.AddSingleton<InforefWriter>();
-            services.AddSingleton<RoleAssignmentsWriter>();
-            services.AddSingleton<BadgesWriter>();
-            services.AddSingleton<CompletionWriter>();
-            services.AddSingleton<SectionWriter>();
-            services.AddSingleton<InforefSectionsWriter>();
-            services.AddSingleton<ActivityGradesWriter>();
-            services.AddSingleton<ActivityGradehistoryWriter>();
-            services.AddSingleton<ActivityInforefWriter>();
-            services.AddSingleton<ActivityRolesWriter>();
-            services.AddSingleton<ActivityXapistateWriter>();
-            services.AddSingleton<ActivityCalendarWriter>();
-            services.AddSingleton<ActivityCommentsWriter>();
-            services.AddSingleton<ActivityCompetenciesWriter>();
-            services.AddSingleton<ActivityCompletionWriter>();
-            services.AddSingleton<ActivityFiltersWriter>();
-            services.AddSingleton<LabelWriter>();
-            services.AddSingleton<ModuleWriterLabel>();
-            services.AddSingleton<AssignmentWriter>();
-            services.AddSingleton<ModuleWriterAssignment>();
-            services.AddSingleton<UrlWriter>();
-            services.AddSingleton<ModuleWriterUrl>();
-            services.AddSingleton<FileWriter>();
-            services.AddSingleton<ModuleWriterFile>();
-            services.AddSingleton<ModuleWriterQuiz>();
-            services.AddSingleton<QuizWriter>();
-            services.AddSingleton<ITagsWriter, TagsWriter>();
-
-            services.AddSingleton<IWriter, Writer>();
         }
     }
 }
