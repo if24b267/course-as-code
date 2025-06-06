@@ -536,7 +536,7 @@ Questions:
     Category: Control Flow
     QuestionId: 18
     QuestionText: |
-      <p>Consider the following C code:</p>
+      Consider the following C code:
 
       ```c
       #include <stdio.h>
@@ -550,9 +550,9 @@ Questions:
           return 0;
       }
       ```
-      
-      <p>For the given C code, the loop will iterate <code>[[1]]</code> times, and the final value printed for <code>i</code> will be <code>[[2]]</code>.</p>
-    QuestionTextFormat: HTML
+
+      For the given C code, the loop will iterate [[1]] times, and the final value printed for `i` will be [[2]].
+    QuestionTextFormat: MARKDOWN
     DefaultMark: 2
     ShuffleAnswers: true
     QuestionType: DRAGANDDROPTEXT
@@ -778,7 +778,7 @@ Questions:
     Category: Basics
     QuestionId: 25
     QuestionText: |
-      <p>Consider the basic structure of a Java class:</p>
+      Consider the basic structure of a Java class:
 
       ```java
       public [[1]] MyClass {
@@ -789,8 +789,8 @@ Questions:
       }
       ```
 
-      <p>In Java, every program is composed of at least one <code>[[2]]</code>. The <code>[[3]]</code> keyword specifies that the class is accessible from any other class. Inside the class, the <code>[[4]]</code> method serves as the application's entry point.</p>
-    QuestionTextFormat: HTML
+      In Java, every program is composed of at least one [[2]]. The [[3]] keyword specifies that the class is accessible from any other class. Inside the class, the [[4]] method serves as the application's entry point.
+    QuestionTextFormat: MARKDOWN
     DefaultMark: 4
     ShuffleAnswers: true
     QuestionType: DRAGANDDROPTEXT
@@ -826,7 +826,7 @@ Questions:
     QuestionText: |
       <p>Analyze the following Java `for` loop:</p>
 
-      ```java
+      <pre><code class="language-java">
       public class LoopExample {
           public static void main(String[] args) {
               int sum = 0;
@@ -836,7 +836,7 @@ Questions:
               System.out.println(sum);
           }
       }
-      ```
+      </code></pre>
 
       <p>The `for` loop in this code will execute <code>[[1]]</code> times. The value of `sum` after the loop completes will be <code>[[2]]</code>. The numbers added to `sum` will be <code>[[3]]</code>, <code>[[4]]</code>, and <code>[[5]]</code>.</p>
     QuestionTextFormat: HTML
@@ -879,7 +879,7 @@ Questions:
     Category: Methods
     QuestionId: 27
     QuestionText: |
-      <p>Complete the following method signature to declare a method named `calculateArea` that takes two `double` parameters, `length` and `width`, and returns a `double` value:</p>
+      Complete the following method signature to declare a method named `calculateArea` that takes two `double` parameters, `length` and `width`, and returns a `double` value:
 
       ```java
       public static [[1]] calculateArea([[2]] length, [[3]] width) {
@@ -887,8 +887,8 @@ Questions:
       }
       ```
 
-      <p>The return type of the method is <code>[[4]]</code>.</p>
-    QuestionTextFormat: HTML
+      The return type of the method is [[4]].
+    QuestionTextFormat: MARKDOWN
     DefaultMark: 4
     ShuffleAnswers: true
     QuestionType: DRAGANDDROPTEXT
