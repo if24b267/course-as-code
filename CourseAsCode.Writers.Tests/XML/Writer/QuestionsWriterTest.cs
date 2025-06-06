@@ -1,19 +1,23 @@
 using System.Globalization;
 using System.Xml;
+
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
+using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
-using QWriter = CourseAsCode.Writers.XML.Writer.QuestionsWriter.QuestionsWriter;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+
+using QWriter = CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.QuestionsWriter;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer
 {
@@ -28,6 +32,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private ILogger<CodeRunnerPluginWriter> _codeRunnerLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private ISequentialIdGenerator _fakeIdGenerator;
+        private IQuizHelper _fakeQuizHelper;
         private ITagsWriter _fakeTagsWriter;
         private QWriter _questionsWriter;
         private Model.Course _course;
@@ -76,14 +81,19 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _fakeIdGenerator.GetNextCodeRunnerOptionId().Returns(_ => codeRunnerOptionIdCounter++);
             _fakeIdGenerator.GetNextCodeRunnerTestCaseId().Returns(_ => codeRunnerTestCaseIdCounter++);
 
+            // Setup fake quiz helper to always return "multichoice" for question type and "abc" for NumberingFormat
+            _fakeQuizHelper = Substitute.For<IQuizHelper>();
+            _fakeQuizHelper.MapQuestionType(Arg.Any<Question>()).Returns("multichoice");
+            _fakeQuizHelper.MapNumberingFormat(Arg.Any<NumberingFormat>()).Returns("abc");
+
             // Setup fake tags writer
             _fakeTagsWriter = Substitute.For<ITagsWriter>();
 
             // Create instances of the plugin writer strategies
-            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _multiChoiceLogger);
-            var dropdownWriter = new DropdownPluginWriter(_testFactory, _dropdownLogger);
-            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _dragDropTextLogger);
-            var codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _codeRunnerLogger);
+            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _multiChoiceLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper);
+            var dropdownWriter = new DropdownPluginWriter(_testFactory, _dropdownLogger, _fakeGeneralHelper, _fakeIdGenerator);
+            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _dragDropTextLogger, _fakeGeneralHelper, _fakeIdGenerator);
+            var codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _codeRunnerLogger, _fakeIdGenerator);
             var pluginWriters = new List<IQuestionPluginWriter>
             {
                 multiChoiceWriter,
@@ -93,7 +103,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             };
 
             // Instantiate QuestionsWriter with dependencies
-            _questionsWriter = new QWriter(_testFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, pluginWriters);
+            _questionsWriter = new QWriter(_testFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper, _fakeTagsWriter, pluginWriters);
 
             // Create a dummy course - questions will be added per test
             _course = new Model.Course
@@ -226,7 +236,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
-            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("coderunner")); // Mapped value for CodeRunner
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
         }
@@ -282,7 +292,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(optionNode.SelectSingleNode("answerboxcolumns")?.InnerText, Is.EqualTo(question.AnswerBoxColumns.ToString()));
             Assert.That(optionNode.SelectSingleNode("answerpreload")?.InnerText, Is.EqualTo(question.AnswerPreload));
             Assert.That(optionNode.SelectSingleNode("globalextra")?.InnerText, Is.EqualTo(question.GlobalExtra));
-            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText, Is.EqualTo(question.Answer));
+            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText?.Replace("\r\n", "\n"), Is.EqualTo(question.Answer));
             Assert.That(optionNode.SelectSingleNode("validateonsave")?.InnerText, Is.EqualTo(question.ValidateOnSave ? "1" : "0"));
         }
 
@@ -394,7 +404,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
-            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mapped value for multi-choice
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
         }
@@ -461,7 +471,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
-            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("match")); // Mapped value for Dropdown
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
         }
@@ -637,7 +647,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
-            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("ddwtos")); // Mapped value for DragDropText
+            Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timecreated")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("timemodified")?.InnerText, Is.EqualTo(DEFAULT_TIMESTAMP)); // Mocked value
         }
@@ -799,7 +809,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _questionsWriter = new QWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeTagsWriter, new List<IQuestionPluginWriter>());
+            _questionsWriter = new QWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper, _fakeTagsWriter, new List<IQuestionPluginWriter>());
             _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act & Assert: Verify that an exception is thrown

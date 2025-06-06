@@ -6,18 +6,23 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
     public class DragDropTextPluginWriter : XmlWriterBase, IQuestionPluginWriter
     {
+        private readonly IGeneralHelper _generalHelper;
+        private readonly ISequentialIdGenerator _sequentialIdGenerator;
+
         /// <summary>
         /// Creates a new instance of the <see cref="DragDropTextPluginWriter"/> class
         /// </summary>
         /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to <see cref="DragDropTextPluginWriter"/></param>
-        public DragDropTextPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<DragDropTextPluginWriter> logger)
+        public DragDropTextPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<DragDropTextPluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
             : base(xmlWriterFactory, logger)
         {
+            _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
         }
 
 
@@ -26,9 +31,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document</param>
         /// <param name="question">the question to save</param>
-        /// <param name="generalHelper">>Instance of a general helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Instance of a sequential ID generator for creating unique identifiers</param>
-        public void WritePluginData(XmlWriter writer, Question question, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
+        public void WritePluginData(XmlWriter writer, Question question)
         {
             if (question is not DragAndDropTextQuestion dragDropQuestion)
             {
@@ -45,7 +48,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
 
             foreach (var choice in dragDropQuestion.Answers)
             {
-                int answerId = sequentialIdGenerator.GetNextAnswerId();
+                int answerId = _sequentialIdGenerator.GetNextAnswerId();
                 writer.WriteStartElement("answer");
                 writer.WriteAttributeString("id", answerId.ToString());
 
@@ -62,7 +65,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
                 WriteElements(writer, new Dictionary<string, string>
                 {
                     { "answertext", choice.Value },
-                    { "answerformat", generalHelper.EnumIntegerToString(choice.ValueFormat) },
+                    { "answerformat", _generalHelper.EnumIntegerToString(choice.ValueFormat) },
                     { "fraction", "0.0000000" }, // Always 0 for this question type
                     { "feedback", phpFeedback },
                     { "feedbackformat", "0" }, // Always 0 for this question type
@@ -75,18 +78,18 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
 
             // DDWTOS Options -----------------------------------------------------
             writer.WriteStartElement("ddwtos");
-            int ddwtosId = sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
+            int ddwtosId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
             writer.WriteAttributeString("id", ddwtosId.ToString());
 
             var ddwtosElements = new Dictionary<string, string>
             {
                 { "shuffleanswers", dragDropQuestion.ShuffleAnswers ? "1" : "0" },
                 { "correctfeedback", dragDropQuestion.CorrectResponseFeedback },
-                { "correctfeedbackformat", generalHelper.EnumIntegerToString(dragDropQuestion.CorrectResponseFeedbackFormat) },
+                { "correctfeedbackformat", _generalHelper.EnumIntegerToString(dragDropQuestion.CorrectResponseFeedbackFormat) },
                 { "partiallycorrectfeedback", dragDropQuestion.PartiallyCorrectResponseFeedback },
-                { "partiallycorrectfeedbackformat", generalHelper.EnumIntegerToString(dragDropQuestion.PartiallyCorrectResponseFeedbackFormat) },
+                { "partiallycorrectfeedbackformat", _generalHelper.EnumIntegerToString(dragDropQuestion.PartiallyCorrectResponseFeedbackFormat) },
                 { "incorrectfeedback", dragDropQuestion.IncorrectResponseFeedback },
-                { "incorrectfeedbackformat", generalHelper.EnumIntegerToString(dragDropQuestion.IncorrectResponseFeedbackFormat) },
+                { "incorrectfeedbackformat", _generalHelper.EnumIntegerToString(dragDropQuestion.IncorrectResponseFeedbackFormat) },
                 { "shownumcorrect", dragDropQuestion.Hints?.Any(h => h.ShowNumberOfCorrectAnswers) ?? false ? "1" : "0" },
             };
             WriteElements(writer, ddwtosElements);

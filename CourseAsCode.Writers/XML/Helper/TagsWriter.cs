@@ -4,10 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Helper
 {
+    /// <summary>
+    /// writes the <c>tags</c> section of the module.xml file for an arbitrary activity
+    /// </summary>
     public class TagsWriter : ITagsWriter
     {
         private readonly ILogger<TagsWriter> _logger;
-
 
         /// <summary>
         /// Creates a new instance of the TagsWriter class
@@ -20,12 +22,6 @@ namespace CourseAsCode.Writers.XML.Helper
         }
 
 
-        /// <summary>
-        /// Writes the tags section of module.xml for an arbitrary activity
-        /// </summary>
-        /// <param name="xmlWriter">The XML writer to write the tags to</param>
-        /// <param name="tags">The tags to write</param>
-        /// <param name="outputPath">The path to the output file</param>
         public void WriteTags(XmlWriter xmlWriter, List<string>? tags, string outputPath)
         {
             int tagId = 0;

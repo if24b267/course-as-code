@@ -20,6 +20,6 @@
 		<ProjectReference Include="..\CourseAsCode.Model\CourseAsCode.Model.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="XML\Writer\Activities\Url\" />
+	  <Folder Include="XML\FileWriters\Activities\Url\" />
 	</ItemGroup>
 </Project>

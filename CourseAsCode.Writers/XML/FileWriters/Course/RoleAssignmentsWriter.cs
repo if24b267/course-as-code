@@ -1,7 +1,6 @@
 using System.Xml;
 
 using CourseAsCode.Model;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
@@ -12,9 +11,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
     public class RoleAssignmentsWriter : XmlWriterBase
     {
         private const string DEFAULT_ROLE_ASSIGNMENTS_RELATIVE_PATH = "course/roles.xml";
-
-        // Helper singleton
-        private readonly IGeneralHelper _helper = GeneralHelper.Instance;
+        private readonly IGeneralHelper _helper;
 
 
         /// <summary>
@@ -74,6 +71,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
                 throw;
             }
         }
+
 
         /// <summary>
         /// writes the assignment of one specific user to one specific role; to be used inside the `roles` tag within course/roles.xml.

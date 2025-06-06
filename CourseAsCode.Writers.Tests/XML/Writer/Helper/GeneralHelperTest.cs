@@ -1,6 +1,8 @@
 using System.Text.RegularExpressions;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
@@ -21,7 +23,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         [SetUp]
         public void SetUp()
         {
-            _generalHelper = GeneralHelper.Instance;
+            ILogger<GeneralHelper> generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger to avoid log output during tests
+            _generalHelper = new GeneralHelper(generalHelperLogger);
         }
 
         [Test]

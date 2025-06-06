@@ -1,5 +1,7 @@
 ﻿using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
 {
@@ -11,7 +13,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         [SetUp]
         public void SetUp()
         {
-            _helper = MoodleVersionHelper.Instance;
+            ILogger<MoodleVersionHelper> moodleVersionHelperLogger = NullLogger<MoodleVersionHelper>.Instance; // Use NullLogger to avoid log output during tests
+            _helper = new MoodleVersionHelper(moodleVersionHelperLogger);
         }
 
         [TestCase(MoodleVersion.Moodle451, "2024100701")]
@@ -22,7 +25,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         [TestCase(MoodleVersion.Moodle442, "2024042202")]
         [TestCase(MoodleVersion.Moodle441, "2024042201")]
         [TestCase(MoodleVersion.Moodle440, "2024042200")]
-        [TestCase((MoodleVersion)999, "0000000000")] // invalid enum value
+        [TestCase((MoodleVersion)999, "2024100700")] // invalid enum value defaults to Moodle 4.5
         public void GetMoodleVersionStringFromEnum_ReturnsExpectedString(MoodleVersion version, string expected)
         {
             // Act
@@ -40,7 +43,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         [TestCase(MoodleVersion.Moodle442, "4.4.2 (Build: 2024042202)")]
         [TestCase(MoodleVersion.Moodle441, "4.4.1 (Build: 2024042201)")]
         [TestCase(MoodleVersion.Moodle440, "4.4 (Build: 2024042200)")]
-        [TestCase((MoodleVersion)999, "1.0 (Build: 0000000000)")] // invalid enum value
+        [TestCase((MoodleVersion)999, "4.5 (Build: 2024100700)")] // invalid enum value defaults to Moodle 4.5
         public void GetMoodleReleaseStringFromEnum_ReturnsExpectedString(MoodleVersion version, string expected)
         {
             // Act

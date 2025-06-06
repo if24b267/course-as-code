@@ -1,23 +1,28 @@
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 
-namespace CourseAsCode.Writers.XML.Helper;
-
-public class RolesHelper : IRolesHelper
+namespace CourseAsCode.Writers.XML.Helper
 {
-    public string GetArchetypeFromEnum(Archetype archetype)
+    /// <summary>
+    /// Provides helper methods for working with roles in Moodle
+    /// </summary>
+    public class RolesHelper : IRolesHelper
     {
-        return archetype switch
+        public string GetArchetypeFromEnum(Archetype archetype)
         {
-            Archetype.Manager => "manager",
-            Archetype.CourseCreator => "coursecreator",
-            Archetype.EditingTeacher => "editingteacher",
-            Archetype.NonEditingTeacher => "teacher",
-            Archetype.Student => "student",
-            Archetype.Guest => "guest",
-            Archetype.AuthenticatedUser => "user",
-            Archetype.AuthenticatedUserOnFrontpage => "frontpage",
-            _ => "user",
-        };
+            return archetype switch
+            {
+                Archetype.Manager => "manager",
+                Archetype.CourseCreator => "coursecreator",
+                Archetype.EditingTeacher => "editingteacher",
+                Archetype.NonEditingTeacher => "teacher",
+                Archetype.Student => "student",
+                Archetype.Guest => "guest",
+                Archetype.AuthenticatedUser => "user",
+                Archetype.AuthenticatedUserOnFrontpage => "frontpage",
+
+                _ => "user",
+            };
+        }
     }
 }
