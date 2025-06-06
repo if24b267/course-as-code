@@ -248,7 +248,7 @@ Questions:
   - QuestionName: dragAndDropStructure
     Category: dragdrop
     QuestionId: 9
-    QuestionText: "<p>In a <strong>DragAndDropTextQuestion</strong>, the main <code>QuestionText</code> contains placeholders like <code>[[1]]</code>, <code>[[2]]</code>, etc. Each number in a placeholder corresponds to the <code>[[1]]</code> of a <code>TextChoice</code> element. The actual text to be dragged into the gap is specified in the <code>[[2]]</code> of the respective <code>TextChoice</code>. To organize distractors for different gaps, <code>TextChoice</code> elements can be assigned a <code>[[3]]</code>. If a <code>TextChoice</code> element's ID is not referenced in any placeholder, it serves as a <code>[[4]]</code>.</p>"
+    QuestionText: "<p>In a <strong>DragAndDropTextQuestion</strong>, the main <code>QuestionText</code> contains placeholders like <code>[ [ 1 ] ]</code>, <code>[ [ 2 ] ]</code> (displayed with spaces so that they aren't detected by Moodle), etc. Each number in a placeholder corresponds to the <code>[[1]]</code> of a <code>TextChoice</code> element. The actual text to be dragged into the gap is specified in the <code>[[2]]</code> of the respective <code>TextChoice</code>. To organize distractors for different gaps, <code>TextChoice</code> elements can be assigned a <code>[[3]]</code>. If a <code>TextChoice</code> element's ID is not referenced in any placeholder, it serves as a <code>[[4]]</code>.</p>"
     QuestionTextFormat: HTML
     DefaultMark: 4 # 1 mark per blank
     ShuffleAnswers: true
@@ -537,6 +537,7 @@ Questions:
     QuestionId: 18
     QuestionText: |
       <p>Consider the following C code:</p>
+
       ```c
       #include <stdio.h>
 
@@ -549,6 +550,7 @@ Questions:
           return 0;
       }
       ```
+      
       <p>For the given C code, the loop will iterate <code>[[1]]</code> times, and the final value printed for <code>i</code> will be <code>[[2]]</code>.</p>
     QuestionTextFormat: HTML
     DefaultMark: 2
@@ -707,6 +709,7 @@ Questions:
           }
       }
       ```
+
       What will be printed to the console when this code is executed?
     QuestionTextFormat: MARKDOWN
     DefaultMark: 1
@@ -776,6 +779,7 @@ Questions:
     QuestionId: 25
     QuestionText: |
       <p>Consider the basic structure of a Java class:</p>
+
       ```java
       public [[1]] MyClass {
           // Class members (fields and methods)
@@ -784,6 +788,7 @@ Questions:
           }
       }
       ```
+
       <p>In Java, every program is composed of at least one <code>[[2]]</code>. The <code>[[3]]</code> keyword specifies that the class is accessible from any other class. Inside the class, the <code>[[4]]</code> method serves as the application's entry point.</p>
     QuestionTextFormat: HTML
     DefaultMark: 4
@@ -820,6 +825,7 @@ Questions:
     QuestionId: 26
     QuestionText: |
       <p>Analyze the following Java `for` loop:</p>
+
       ```java
       public class LoopExample {
           public static void main(String[] args) {
@@ -831,6 +837,7 @@ Questions:
           }
       }
       ```
+
       <p>The `for` loop in this code will execute <code>[[1]]</code> times. The value of `sum` after the loop completes will be <code>[[2]]</code>. The numbers added to `sum` will be <code>[[3]]</code>, <code>[[4]]</code>, and <code>[[5]]</code>.</p>
     QuestionTextFormat: HTML
     DefaultMark: 5 # 1 mark per blank
@@ -873,11 +880,13 @@ Questions:
     QuestionId: 27
     QuestionText: |
       <p>Complete the following method signature to declare a method named `calculateArea` that takes two `double` parameters, `length` and `width`, and returns a `double` value:</p>
+
       ```java
       public static [[1]] calculateArea([[2]] length, [[3]] width) {
           return length * width;
       }
       ```
+
       <p>The return type of the method is <code>[[4]]</code>.</p>
     QuestionTextFormat: HTML
     DefaultMark: 4
