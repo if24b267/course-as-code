@@ -154,7 +154,7 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                         }
                         else if (activity is MoodleFile moodleFile)
                         {
-                            activityPath = CreateActivityDirectory(outputPath, activity, "file");
+                            activityPath = CreateActivityDirectory(outputPath, activity, "resource");
 
                             _fileWriter.WriteFile(activityPath, moodleFile);
                             _moduleWriterFile.WriteModule(activityPath, course, section, moodleFile);
