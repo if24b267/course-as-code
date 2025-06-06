@@ -6,37 +6,38 @@ namespace CourseAsCode.Writers.XML.Helper.Interfaces;
 public interface IGeneralHelper
 {
     /// <summary>
-    /// creates the name of the backup (file) for the moodle backup according to moodle naming conventions.
+    /// Creates the name of the backup file for a Moodle course following Moodle's naming conventions
     /// </summary>
-    /// <param name="course">the initialized moodle course.</param>
+    /// <param name="course">The initialized Moodle course containing all necessary information</param>
     string GenerateBackupName(Model.Course course);
 
     /// <summary>
-    /// converts a C# DateTime object to a Unix Timestamp, considering timezones.
+    /// Converts a C# <see cref="DateTime"/> object to a Unix timestamp, considering time zones.
     /// </summary>
-    /// <returns>String representing the Unix Timestamp, e.g. 1735122151.</returns>
+    /// <param name="dateTime">The <see cref="DateTime"/> to be converted.</param>
+    /// <returns>A string representing the Unix timestamp, e.g. "1735122151".</returns>
     string DateTimeToUnixTimestamp(DateTime dateTime);
 
     /// <summary>
-    /// converts the integer values of an enum to a string, e.g. 1 -> "1".
+    /// Converts the integer value of an enum to its string representation
     /// </summary>
-    /// <param name="enumValue"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <typeparam name="T">The type of the enum.</typeparam>
+    /// <param name="enumValue">The enum value to be converted.</param>
+    /// <returns>A string representation of the underlying integer value of the enum</returns>
     string EnumIntegerToString<T>(T enumValue)
         where T : Enum;
 
     /// <summary>
-    /// maps the Language enum to their corresponding shorts that are accepted by Moodle.
+    /// Maps a given <see cref="Language"/> enum value to its corresponding language code accepted by Moodle.
     /// </summary>
-    /// <param name="language"></param>
-    /// <returns></returns>
+    /// <param name="language">The <see cref="Language"/> enum value to be mapped.</param>
+    /// <returns>A string representing the language code if the mapping is successful; otherwise, an empty string.</returns>
     string GetLanguageFromEnum(Language? language);
 
     /// <summary>
-    /// maps the TimeZone enum to their corresponding shorts that are accepted by Moodle.
+    /// Maps the provided <see cref="TimeZone"/> enum value to its corresponding short representation that is accepted by Moodle.
     /// </summary>
-    /// <param name="timeZone"></param>
-    /// <returns></returns>
+    /// <param name="timeZone">The <see cref="TimeZone"/> enum value to be mapped.</param>
+    /// <returns>A string representation of the time zone corresponding to the provided enum value.</returns>
     string GetTimeZoneFromEnum(TimeZone timeZone);
 }

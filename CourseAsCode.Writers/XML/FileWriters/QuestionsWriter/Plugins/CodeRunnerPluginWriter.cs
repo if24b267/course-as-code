@@ -6,18 +6,21 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
     public class CodeRunnerPluginWriter : XmlWriterBase, IQuestionPluginWriter
     {
+        private readonly ISequentialIdGenerator _sequentialIdGenerator;
+
         /// <summary>
         /// Creates a new instance of the CodeRunnerPluginWriter class
         /// </summary>
         /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to CodeRunnerPluginWriter</param>
-        public CodeRunnerPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CodeRunnerPluginWriter> logger)
+        public CodeRunnerPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CodeRunnerPluginWriter> logger, ISequentialIdGenerator sequentialIdGenerator)
             : base(xmlWriterFactory, logger)
         {
+            _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
         }
 
         /// <summary>
@@ -25,9 +28,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document</param>
         /// <param name="question">the question to save</param>
-        /// <param name="generalHelper">Instance of a general helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Instance of a sequential ID generator for creating unique identifiers</param>
-        public void WritePluginData(XmlWriter writer, Question question, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
+        public void WritePluginData(XmlWriter writer, Question question)
         {
             if (question is not CodeRunnerQuestion codeRunnerQuestion)
             {
@@ -38,7 +39,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
 
             // Write coderunner options
             writer.WriteStartElement("coderunner_options");
-            int optionId = sequentialIdGenerator.GetNextCodeRunnerOptionId();
+            int optionId = _sequentialIdGenerator.GetNextCodeRunnerOptionId();
             writer.WriteStartElement("coderunner_option");
             writer.WriteAttributeString("id", optionId.ToString());
 
@@ -97,7 +98,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
             writer.WriteStartElement("coderunner_testcases");
             foreach (var testCase in codeRunnerQuestion.TestCases)
             {
-                int testCaseId = sequentialIdGenerator.GetNextCodeRunnerTestCaseId();
+                int testCaseId = _sequentialIdGenerator.GetNextCodeRunnerTestCaseId();
                 writer.WriteStartElement("coderunner_testcase");
                 writer.WriteAttributeString("id", testCaseId.ToString());
 

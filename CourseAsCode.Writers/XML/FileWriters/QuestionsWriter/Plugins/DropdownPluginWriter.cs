@@ -6,18 +6,25 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
     public class DropdownPluginWriter : XmlWriterBase, IQuestionPluginWriter
     {
+        private readonly IGeneralHelper _generalHelper;
+        private readonly ISequentialIdGenerator _sequentialIdGenerator;
+
         /// <summary>
         /// Creates a new instance of the <see cref="DropdownPluginWriter"/> class
         /// </summary>
         /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to <see cref="DropdownPluginWriter"/></param>
-        public DropdownPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<DropdownPluginWriter> logger)
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique IDs</param>
+        public DropdownPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<DropdownPluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
             : base(xmlWriterFactory, logger)
         {
+            _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
         }
 
 
@@ -26,9 +33,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document</param>
         /// <param name="question">the question to save</param>
-        /// <param name="generalHelper">>Instance of a general helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Instance of a sequential ID generator for creating unique identifiers</param>
-        public void WritePluginData(XmlWriter writer, Question question, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
+        public void WritePluginData(XmlWriter writer, Question question)
         {
             if (question is not DropdownQuestion dropdownQuestion)
             {
@@ -39,18 +44,18 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
 
             // Match Options ------------------------------------------------------
             writer.WriteStartElement("matchoptions");
-            int matchOptionsId = sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
+            int matchOptionsId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
             writer.WriteAttributeString("id", matchOptionsId.ToString());
 
             var matchOptionsElements = new Dictionary<string, string>
             {
                 { "shuffleanswers", "1" }, // The answer choices will ALWAYS be shuffled, this cannot be changed
                 { "correctfeedback", dropdownQuestion.CorrectResponseFeedback ?? string.Empty },
-                { "correctfeedbackformat", generalHelper.EnumIntegerToString(dropdownQuestion.CorrectResponseFeedbackFormat) },
+                { "correctfeedbackformat", _generalHelper.EnumIntegerToString(dropdownQuestion.CorrectResponseFeedbackFormat) },
                 { "partiallycorrectfeedback", dropdownQuestion.PartiallyCorrectResponseFeedback ?? string.Empty },
-                { "partiallycorrectfeedbackformat", generalHelper.EnumIntegerToString(dropdownQuestion.PartiallyCorrectResponseFeedbackFormat) },
+                { "partiallycorrectfeedbackformat", _generalHelper.EnumIntegerToString(dropdownQuestion.PartiallyCorrectResponseFeedbackFormat) },
                 { "incorrectfeedback", dropdownQuestion.IncorrectResponseFeedback ?? string.Empty },
-                { "incorrectfeedbackformat", generalHelper.EnumIntegerToString(dropdownQuestion.IncorrectResponseFeedbackFormat) },
+                { "incorrectfeedbackformat", _generalHelper.EnumIntegerToString(dropdownQuestion.IncorrectResponseFeedbackFormat) },
                 { "shownumcorrect", (dropdownQuestion.Hints?.Any(h => h.ShowNumberOfCorrectAnswers) ?? false) ? "1" : "0" }, // Determine if hints require showing the number of correct answers | TODO: Check if this is correct
             };
             WriteElements(writer, matchOptionsElements);
@@ -66,14 +71,14 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
             // First pass: Write the actual sub-questions and store additional (wrong) answer options in the HashSet
             foreach (var subQuestion in dropdownQuestion.SubQuestions)
             {
-                int matchId = sequentialIdGenerator.GetNextAnswerId();
+                int matchId = _sequentialIdGenerator.GetNextAnswerId();
                 writer.WriteStartElement("match");
                 writer.WriteAttributeString("id", matchId.ToString());
 
                 WriteElements(writer, new Dictionary<string, string>
                 {
                     { "questiontext", subQuestion.QuestionText },
-                    { "questiontextformat", generalHelper.EnumIntegerToString(subQuestion.QuestionTextFormat) },
+                    { "questiontextformat", _generalHelper.EnumIntegerToString(subQuestion.QuestionTextFormat) },
                     { "answertext", subQuestion.CorrectAnswer },
                 });
                 writer.WriteEndElement(); // </match>
@@ -89,7 +94,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins
             // In Moodle, these are stored as matching options that have no <questiontext> element but do have an <answertext> element
             foreach (var answerOption in additionalAnswerOptions)
             {
-                int poolMatchId = sequentialIdGenerator.GetNextAnswerId();
+                int poolMatchId = _sequentialIdGenerator.GetNextAnswerId();
                 writer.WriteStartElement("match");
                 writer.WriteAttributeString("id", poolMatchId.ToString());
 

@@ -4,23 +4,42 @@ using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Helper
 {
-    public class EnumMappers
+    /// <summary>
+    /// Provides utility methods to handle mappings and operations related to quizzes
+    /// </summary>
+    public class QuizHelper : IQuizHelper
     {
-        public static string MapTimeExpiryHandle(TimeExpiryHandle handle)
+        private readonly ILogger<QuizHelper> _logger;
+
+        /// <summary>
+        /// Creates a new instance of the QuizHelper class
+        /// </summary>
+        /// <param name="logger">Logger instance specific to QuizHelper</param>
+        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
+        public QuizHelper(ILogger<QuizHelper> logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+
+        public string MapTimeExpiryHandle(TimeExpiryHandle handle)
         {
             return handle switch
             {
                 TimeExpiryHandle.AutoSubmit => "autosubmit",
                 TimeExpiryHandle.GracePeriod => "graceperiod",
                 TimeExpiryHandle.DoNotCount => "autoabandon",
+
                 _ => "autosubmit",
             };
         }
 
-        public static string MapQuestionBehaviour(QuestionBehaviour behaviour)
+
+        public string MapQuestionBehaviour(QuestionBehaviour behaviour)
         {
             return behaviour switch
             {
@@ -31,11 +50,13 @@ namespace CourseAsCode.Writers.XML.Helper
                 QuestionBehaviour.Immediate => "immediatefeedback",
                 QuestionBehaviour.ImmediateCBM => "immediatecbm",
                 QuestionBehaviour.InteractiveMultipleTries => "interactive",
+
                 _ => "deferredfeedback",
             };
         }
 
-        public static string MapQuestionType(Question question)
+
+        public string MapQuestionType(Question question)
         {
             return question switch
             {
@@ -50,7 +71,7 @@ namespace CourseAsCode.Writers.XML.Helper
         }
 
 
-        public static string MapNumberingFormat(NumberingFormat format)
+        public string MapNumberingFormat(NumberingFormat format)
         {
             return format switch
             {
@@ -60,6 +81,7 @@ namespace CourseAsCode.Writers.XML.Helper
                 NumberingFormat.Numeric => "123",
                 NumberingFormat.RomanLower => "iii",
                 NumberingFormat.RomanUpper => "IIII",
+
                 _ => "none",
             };
         }

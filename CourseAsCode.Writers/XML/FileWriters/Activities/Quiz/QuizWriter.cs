@@ -13,6 +13,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Quiz
     {
         private const string DEFAULT_QUIZ_RELATIVE_PATH = "quiz.xml";
         private readonly IGeneralHelper _generalHelper;
+        private readonly IQuizHelper _quizHelper;
 
         private const string DEFAULT_CONTEXT_ID = "383"; // Every value >> 100 seems to be working fine | Needs to be the same as in `QuestionsWriter.cs`
 
@@ -23,11 +24,13 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Quiz
         /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to <see cref="QuizWriter"/></param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <param name="quizHelper">Quiz Helper providing quiz-specific utility methods</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public QuizWriter(IXmlWriterFactory xmlWriterFactory, ILogger<QuizWriter> logger, IGeneralHelper generalHelper)
+        public QuizWriter(IXmlWriterFactory xmlWriterFactory, ILogger<QuizWriter> logger, IGeneralHelper generalHelper, IQuizHelper quizHelper)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _quizHelper = quizHelper ?? throw new ArgumentNullException(nameof(quizHelper));
         }
 
 
@@ -96,9 +99,9 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Quiz
                 { "timeopen", quiz.OpenTime != null ? _generalHelper.DateTimeToUnixTimestamp((DateTime)quiz.OpenTime) : "0" },
                 { "timeclose", quiz.CloseTime != null ? _generalHelper.DateTimeToUnixTimestamp((DateTime)quiz.CloseTime) : "0" },
                 { "timelimit", quiz.TimeLimit.ToString() },
-                { "overduehandling", EnumMappers.MapTimeExpiryHandle(quiz.TimeExpiryHandling) },
+                { "overduehandling", _quizHelper.MapTimeExpiryHandle(quiz.TimeExpiryHandling) },
                 { "graceperiod", quiz.GracePeriod.ToString() },
-                { "preferredbehaviour", EnumMappers.MapQuestionBehaviour(quiz.QuestionBehaviour) },
+                { "preferredbehaviour", _quizHelper.MapQuestionBehaviour(quiz.QuestionBehaviour) },
                 { "canredoquestions", quiz.AllowRedosDuringAttempt ? "1" : "0" },
                 { "attempts_number", quiz.AllowedAttempts.ToString() },
                 { "attemptonlast", quiz.BuildOnPreviousAttempts ? "1" : "0" },

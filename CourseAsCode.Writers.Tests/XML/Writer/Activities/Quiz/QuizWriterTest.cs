@@ -6,6 +6,7 @@ using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Writers.Tests.Fakes;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
         private XmlWriterFactoryTest _testFactory;
         private ILogger<QuizWriter> _logger;
         private IGeneralHelper _generalHelper;
+        private IQuizHelper _quizHelper;
         private QuizWriter _quizWriter;
         private QuizModel _dummyQuiz;
         private const string DEFAULT_DEFAULT_OUTPUT_PATH = "dummyDir";
@@ -37,8 +39,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             _generalHelper.EnumIntegerToString(Arg.Any<Enum>()).Returns("0");
             _generalHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("1234567890");
 
+            // Mock the quiz helper
+            _quizHelper = Substitute.For<IQuizHelper>();
+
             // Instantiate the QuizWriter with the fake dependencies
-            _quizWriter = new QuizWriter(_testFactory, _logger, _generalHelper);
+            _quizWriter = new QuizWriter(_testFactory, _logger, _generalHelper, _quizHelper);
 
             // Create dummy questions
             var q1 = new MultipleChoiceQuestion
@@ -369,7 +374,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
         public void WriteQuiz_LogsErrorAndRethrows_OnException()
         {
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            var writer          = new QuizWriter(throwingFactory, _logger, _generalHelper);
+            var writer          = new QuizWriter(throwingFactory, _logger, _generalHelper, _quizHelper);
 
             // Act and assert: The logger should have been called with an error message and the exception should be rethrown
             Assert.Throws<InvalidOperationException>(() => writer.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, _dummyQuiz));

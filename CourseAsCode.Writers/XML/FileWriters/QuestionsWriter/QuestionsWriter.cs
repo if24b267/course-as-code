@@ -6,14 +6,14 @@ using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
+namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
 {
     /// <summary>
     /// Handles the creation and writing of the questions.xml file for a course.
@@ -31,6 +31,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
 
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
+        private readonly IQuizHelper _quizHelper;
         private readonly ITagsWriter _tagsWriter;
         private readonly Dictionary<Type, IQuestionPluginWriter> _pluginWriters;
 
@@ -42,14 +43,16 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
         /// <param name="logger">Logger instance specific to QuestionsWriter</param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
         /// <param name="sequentialIdGenerator">Helper for generating sequential IDs for various entities</param>
+        /// <param name="quizHelper">Helper providing quiz-related utility methods</param>
         /// <param name="tagsWriter">Helper method providing specific helper methods focused on tag management</param>
         /// <param name="pluginWriters">Collection of plugin writers for different question types</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<QuestionsWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, ITagsWriter tagsWriter, IEnumerable<IQuestionPluginWriter> pluginWriters)
+        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<QuestionsWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper, ITagsWriter tagsWriter, IEnumerable<IQuestionPluginWriter> pluginWriters)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
+            _quizHelper = quizHelper ?? throw new ArgumentNullException(nameof(quizHelper));
             _tagsWriter = tagsWriter ?? throw new ArgumentNullException(nameof(tagsWriter));
 
             // Build the lookup dictionary for plugin writers | TODO: Refactor this to use a more sophisticated method
@@ -74,6 +77,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
                 {
                     _pluginWriters[typeof(CodeRunnerQuestion)] = writer;
                 }
+
                 // Add other mappings here
                 else
                 {
@@ -245,7 +249,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
                 { "generalfeedbackformat", _generalHelper.EnumIntegerToString(question.GeneralFeedbackFormat) },
                 { "defaultmark", question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture) },
                 { "penalty", question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture) },
-                { "qtype", EnumMappers.MapQuestionType(question) },
+                { "qtype", _quizHelper.MapQuestionType(question) },
                 { "length", "1" },
                 { "stamp", GenerateStamp() },
                 { "timecreated", _generalHelper.DateTimeToUnixTimestamp(DateTime.UtcNow) },
@@ -260,7 +264,7 @@ namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter
             {
                 LogWarn($"Unsupported question type {question.GetType().Name} – skipping plugin block for question '{question.QuestionName}' (ID: {question.QuestionId}).");
             }
-            pluginWriter?.WritePluginData(writer, question, _generalHelper, _sequentialIdGenerator);
+            pluginWriter?.WritePluginData(writer, question);
 
             // Comments
             WriteEmptyPlugin(writer, "qbank_comment_question", "comments");

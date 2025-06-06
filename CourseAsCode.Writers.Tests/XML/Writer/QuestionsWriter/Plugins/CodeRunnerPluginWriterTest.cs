@@ -3,8 +3,9 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -17,6 +18,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
         private ILogger<CodeRunnerPluginWriter> _logger;
         private IGeneralHelper _generalHelper;
         private ISequentialIdGenerator _idGenerator;
+        private IQuizHelper _quizHelper;
         private CodeRunnerPluginWriter _codeRunnerWriter;
         private XmlWriter _xmlWriter;
 
@@ -43,7 +45,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             _idGenerator.GetNextCodeRunnerTestCaseId().Returns(_ => testCaseIdCounter++);
 
             // Create the writer under test
-            _codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _logger);
+            _codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _logger, _idGenerator);
 
             // Create a fresh StringWriter for each test
             _testFactory.ClearContents();
@@ -85,7 +87,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             var question = CreateBasicCodeRunnerQuestion();
 
             // Act
-            _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+            _codeRunnerWriter.WritePluginData(_xmlWriter, question);
 
             // Close the XML elements before reading
             _xmlWriter.WriteEndElement(); // Close the root element
@@ -122,7 +124,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             var question = CreateBasicCodeRunnerQuestion();
 
             // Act
-            _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+            _codeRunnerWriter.WritePluginData(_xmlWriter, question);
 
             // Close the XML elements before reading
             _xmlWriter.WriteEndElement(); // Close the root element
@@ -150,7 +152,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             Assert.That(optionNode.SelectSingleNode("answerboxcolumns")?.InnerText, Is.EqualTo(question.AnswerBoxColumns.ToString()));
             Assert.That(optionNode.SelectSingleNode("answerpreload")?.InnerText, Is.EqualTo(question.AnswerPreload));
             Assert.That(optionNode.SelectSingleNode("globalextra")?.InnerText, Is.EqualTo(question.GlobalExtra));
-            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText, Is.EqualTo(question.Answer));
+            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText?.Replace("\r\n", "\n"), Is.EqualTo(question.Answer));
             Assert.That(optionNode.SelectSingleNode("validateonsave")?.InnerText, Is.EqualTo(question.ValidateOnSave ? "1" : "0"));
             Assert.That(optionNode.SelectSingleNode("templateparams")?.InnerText, Is.EqualTo(question.TemplateParams));
             Assert.That(optionNode.SelectSingleNode("hoisttemplateparams")?.InnerText, Is.EqualTo(question.HoistTemplateParams ? "1" : "0"));
@@ -181,7 +183,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             var question = CreateBasicCodeRunnerQuestion();
 
             // Act
-            _codeRunnerWriter.WritePluginData(_xmlWriter, question, _generalHelper, _idGenerator);
+            _codeRunnerWriter.WritePluginData(_xmlWriter, question);
 
             // Close the XML elements before reading
             _xmlWriter.WriteEndElement(); // Close the root element
@@ -255,7 +257,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() =>
-                _codeRunnerWriter.WritePluginData(_xmlWriter, wrongQuestion, _generalHelper, _idGenerator));
+                _codeRunnerWriter.WritePluginData(_xmlWriter, wrongQuestion));
         }
 
         private CodeRunnerQuestion CreateBasicCodeRunnerQuestion()
