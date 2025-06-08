@@ -5,6 +5,7 @@ namespace CourseAsCode.Readers.Enums
         SINGLECHOICE,
         MULTIPLECHOICE,
         DROPDOWN,
-        DRAGANDDROPTEXT
+        DRAGANDDROPTEXT,
+        CODERUNNER
     }
 }

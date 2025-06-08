@@ -27,3 +27,4 @@ QuestionListPaths:
   - ./Questions/questions2.yaml
   - ./Questions/questions3.yaml
   - ./Questions/questions4.yaml
+  - ./Questions/questions5.yaml
