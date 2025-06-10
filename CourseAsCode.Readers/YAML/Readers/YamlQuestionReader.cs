@@ -2,6 +2,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Readers.Enums;
@@ -43,6 +44,7 @@ namespace CourseAsCode.Readers.YAML.Readers
 
         private Question? ConvertYamlQuestionToMoodleQuestion(YamlQuestion yamlQuestion)
         {
+            // TODO: add some kind of verification that all required properties are set for that question type (e.g. coderunner -> coderunnertype)
             switch (yamlQuestion.QuestionType)
             {
                 case QuestionType.SINGLECHOICE:
@@ -57,11 +59,56 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.DRAGANDDROPTEXT:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
                     return ConvertYamlQuestionToDragAndDropTextQuestion(yamlQuestion);
+                case QuestionType.CODERUNNER:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
+                    return ConvertYamlQuestionToCodeRunnerQuestion(yamlQuestion);
                 default:
                     _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
                     break;
             }
             return null;
+        }
+
+        private CodeRunnerQuestion ConvertYamlQuestionToCodeRunnerQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new CodeRunnerQuestion
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                DefaultMark = yamlQuestion.DefaultMark,
+                CodeRunnerType = yamlQuestion.CodeRunnerType,
+                AllOrNothing = yamlQuestion.AllOrNothing,
+                Precheck = yamlQuestion.Precheck,
+                HideCheck = yamlQuestion.HideCheck ? 1 : 0,
+                ShowSource = yamlQuestion.ShowSource ? 1 : 0,
+                AnswerBoxLines = yamlQuestion.AnswerBoxLines,
+                AnswerBoxColumns = yamlQuestion.AnswerBoxColumns,
+                Answer = yamlQuestion.Answer,
+                ValidateOnSave = yamlQuestion.ValidateOnSave,
+                DisplayFeedback = yamlQuestion.DisplayFeedback,
+                GiveUpAllowed = yamlQuestion.GiveUpAllowed,
+                TestCases = ConvertYamlCodeRunnerTestCasesToCodeRunnerTestCases(yamlQuestion.CodeRunnerTestCases)
+            };
+
+            return question;
+        }
+
+        public List<CodeRunnerTestCase> ConvertYamlCodeRunnerTestCasesToCodeRunnerTestCases(List<YamlCodeRunnerTestCase> yamlCodeRunnerTestCases)
+        {
+            return yamlCodeRunnerTestCases.Select(yamlTestCase => new CodeRunnerTestCase()
+            {
+                Id = yamlTestCase.Id,
+                TestCode = yamlTestCase.TestCode,
+                TestType = yamlTestCase.TestType,
+                Expected = yamlTestCase.Expected,
+                UseAsExample = yamlTestCase.UseAsExample,
+                Display = yamlTestCase.Display,
+                HideRestIfFail = yamlTestCase.HideRestIfFail,
+                Mark = yamlTestCase.Mark,
+            }).ToList();
         }
 
         private DragAndDropTextQuestion ConvertYamlQuestionToDragAndDropTextQuestion(YamlQuestion yamlQuestion)

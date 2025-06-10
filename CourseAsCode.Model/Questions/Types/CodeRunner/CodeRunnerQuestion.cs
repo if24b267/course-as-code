@@ -18,6 +18,7 @@ public class CodeRunnerQuestion : Question
     [Description("Penalty regime for subsequent tries (e.g. '10, 20, ...')")]
     public string PenaltyRegime { get; set; } = "10, 20, ...";
 
+    // TODO: convert to enum?
     [Description("Enable precheck (0 = none, 1 = examples, 2 = selected, 3 = all)")]
     public int Precheck { get; set; } = 0;
 

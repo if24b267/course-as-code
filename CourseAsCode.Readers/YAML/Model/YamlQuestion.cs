@@ -25,5 +25,19 @@ namespace CourseAsCode.Readers.YAML.Model
         public string? IncorrectResponseFeedback { get; set; }
         public FormattingFormat IncorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
         public List<YamlDragDropAnswerText>? DragDropAnswers { get; set; }
+
+        // CodeRunner Question specific properties
+        public string CodeRunnerType { get; set; }
+        public bool AllOrNothing { get; set; } = true;
+        public int Precheck { get; set; } = 0;
+        public bool ShowSource { get; set; } = false;
+        public bool HideCheck { get; set; } = false;
+        public int AnswerBoxLines { get; set; } = 18;
+        public int AnswerBoxColumns { get; set; } = 100;
+        public string Answer { get; set; } = string.Empty;
+        public bool ValidateOnSave { get; set; } = true;
+        public bool DisplayFeedback { get; set; } = true;
+        public bool GiveUpAllowed { get; set; } = true;
+        public List<YamlCodeRunnerTestCase> CodeRunnerTestCases { get; set; }
     }
 }
