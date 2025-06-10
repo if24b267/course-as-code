@@ -1,5 +1,5 @@
 Questions:
-  - QuestionName: linuxfileperms
+  - QuestionName: coderunner hello world c
     Category: coderunner
     QuestionId: 7
     QuestionType: CODERUNNER
@@ -26,3 +26,16 @@ Questions:
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
+  - QuestionName: coderunner hello world java
+    Category: coderunner
+    QuestionId: 8
+    QuestionType: CODERUNNER
+    QuestionText: "<p>Write a complete Java program that prints exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must define a public class named Main and include a main method. No input is needed.</p>"
+    QuestionTextFormat: HTML
+    CodeRunnerType: java_program
+    Answer: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}"
+    CodeRunnerTestCases:
+      - Id: 1
+        TestCode: "Hello World Output"
+        Expected: "Hello, World!"
+        UseAsExample: false
