@@ -1,0 +1,6 @@
+Type: label
+Name: Supported Activities
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/supported-activities.md

@@ -1,173 +1,108 @@
-﻿using CourseAsCode.Model;
-using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Writers.Interfaces;
-using CourseAsCode.Writers.XML.Writer;
-using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using CourseAsCode.Writers.XML.Writer.Activities.File;
-using CourseAsCode.Writers.XML.Writer.Activities.Labels;
-using CourseAsCode.Writers.XML.Writer.Activities.Url;
-using CourseAsCode.Writers.XML.Writer.Course;
-using CourseAsCode.Writers.XML.Writer.Sections;
+using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
+using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers;
-
-public class Writer : IWriter
+namespace CourseAsCode.Writers
 {
-    // Writer
-    private readonly CalendarWriter _calendarWriter = new CalendarWriter();
-    private readonly CommentsWriter _commentsWriter = new CommentsWriter();
-    private readonly CompetenciesWriter _competenciesWriter = new CompetenciesWriter();
-    private readonly CompletiondefaultsWriter _completiondefaultsWriter = new CompletiondefaultsWriter();
-    private readonly ContentbankWriter _contentbankWriter = new ContentbankWriter();
-    private readonly CourseWriter _courseWriter = new CourseWriter();
-    private readonly FilesWriter _filesWriter = new FilesWriter();
-    private readonly GradehistoryWriter _gradehistoryWriter = new GradehistoryWriter();
-    private readonly GradebookWriter _gradebookWriter = new GradebookWriter();
-    private readonly GroupsWriter _groupsWriter = new GroupsWriter();
-    private readonly MoodleBackupWriter _moodleBackupWriter = new MoodleBackupWriter();
-    private readonly OutcomesWriter _outcomesWriter = new OutcomesWriter();
-    private readonly QuestionsWriter _questionsWriter = new QuestionsWriter();
-    private readonly RolesWriter _rolesWriter = new RolesWriter();
-    private readonly ScalesWriter _scalesWriter = new ScalesWriter();
-    private readonly UsersWriter _usersWriter = new UsersWriter();
-    private readonly EnrolmentsWriter _enrolmentsWriter = new EnrolmentsWriter();
-    private readonly FiltersWriter _filtersWriter = new FiltersWriter();
-    private readonly InforefWriter _inforefWriter = new InforefWriter();
-    private readonly RoleAssignmentsWriter _roleAssignmentsWriter = new RoleAssignmentsWriter();
-    private readonly BadgesWriter _badgesWriter = new BadgesWriter();
-    private readonly CompletionWriter _completionWriter = new CompletionWriter();
-    private readonly SectionWriter _sectionWriter = new SectionWriter();
-    
-    // -- Activity Writers -- //
-    // Common Activity Writers
-    private readonly ActivityGradesWriter _activityGradesWriter = new ActivityGradesWriter();
-    private readonly ActivityGradehistoryWriter _activityGradehistoryWriter = new ActivityGradehistoryWriter();
-    private readonly ActivityInforefWriter _activityInforefWriter = new ActivityInforefWriter();
-    private readonly ActivityRolesWriter _activityRolesWriter = new ActivityRolesWriter();
-    private readonly ActivityXapistateWriter _activityXapistateWriter = new ActivityXapistateWriter();
-    private readonly ActivityCalendarWriter _activityCalendarWriter = new ActivityCalendarWriter();
-    private readonly ActivityCommentsWriter _activityCommentsWriter = new ActivityCommentsWriter();
-    private readonly ActivityCompetenciesWriter _activityCompetenciesWriter = new ActivityCompetenciesWriter();
-    private readonly ActivityCompletionWriter _activityCompletionWriter = new ActivityCompletionWriter();
-    private readonly ActivityFiltersWriter _activityFiltersWriter = new ActivityFiltersWriter();
-    
-    // Text and Media Area (Label) Activity Writers
-    private readonly LabelWriter _labelWriter = new LabelWriter();
-    private readonly ModuleWriterLabel _moduleWriterLabel = new ModuleWriterLabel();
-    
-    // URL Activity Writers
-    private readonly UrlWriter _urlWriter = new UrlWriter();
-    private readonly ModuleWriterUrl _moduleWriterUrl = new ModuleWriterUrl();
-    
-    // File Activity Writers
-    private readonly FileWriter _fileWriter = new FileWriter();
-    private readonly ModuleWriterFile _moduleWriterFile = new ModuleWriterFile();
-    
-    private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-
-    public bool WriteCourse(Course course, string outputPath)
+    public class Writer : IWriter
     {
-        _logger.Debug($"Writing XML files to {outputPath}");
-        course.BackupMetadata ??= new BackupMetadataDefaults().GetDefaultBackupMetadata();
+        // -- Services for writing the various aspects of the Moodle Course -- //
+        private readonly IRootFilesWriterService _rootFilesWriterService;
+        private readonly ICourseFilesWriterService _courseFilesWriterService;
+        private readonly ISectionFilesWriterService _sectionFilesWriterService;
+        private readonly IActivitiesWriterService _activitiesWriterService;
 
-        // Ensure sections list is not empty
-        if (course.Sections == null || course.Sections.Count == 0)
+        // -- Additional Dependencies -- //
+        private readonly ILogger<Writer> _logger;
+        private readonly IFileService _fileService;
+
+        public Writer(
+            ILogger<Writer> logger,
+            IRootFilesWriterService rootFilesWriterService,
+            ICourseFilesWriterService courseFilesWriterService,
+            ISectionFilesWriterService sectionFilesWriterService,
+            IActivitiesWriterService activitiesWriterService,
+            IFileService fileService)
         {
-            _logger.Debug("No sections found, adding default section.");
-            course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
+            // -- Services Assignment -- //
+            _rootFilesWriterService = rootFilesWriterService ?? throw new ArgumentNullException(nameof(rootFilesWriterService));
+            _courseFilesWriterService = courseFilesWriterService ?? throw new ArgumentNullException(nameof(courseFilesWriterService));
+            _sectionFilesWriterService = sectionFilesWriterService ?? throw new ArgumentNullException(nameof(sectionFilesWriterService));
+            _activitiesWriterService = activitiesWriterService ?? throw new ArgumentNullException(nameof(activitiesWriterService));
+
+            // -- Additional Dependencies Assignment -- //
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
 
-        // -- Write course files -- //
-        // Create course directory if it does not exist
-        Directory.CreateDirectory(Path.Combine(outputPath, "course"));
 
-        _calendarWriter.WriteCalendar(course, outputPath);
-        _commentsWriter.WriteComments(course, outputPath);
-        _competenciesWriter.WriteCompetencies(course, outputPath);
-        _completiondefaultsWriter.WriteCompletionDefaults(course, outputPath);
-        _contentbankWriter.WriteContentbank(course, outputPath);
-        _courseWriter.WriteCourse(course, outputPath);
-        _filesWriter.WriteFiles(course, outputPath);
-        _gradehistoryWriter.WriteGradehistory(course, outputPath);
-        _gradebookWriter.WriteGradebook(course, outputPath);
-        _groupsWriter.WriteGroups(course, outputPath);
-        _moodleBackupWriter.WriteMoodleBackup(course, outputPath);
-        _outcomesWriter.WriteOutcomes(course, outputPath);
-        _questionsWriter.WriteQuestions(course, outputPath);
-        _rolesWriter.WriteRoles(course, outputPath);
-        _scalesWriter.WriteScales(course, outputPath);
-        _usersWriter.WriteUsers(course, outputPath);
-        _enrolmentsWriter.WriteEnrolment(course, outputPath);
-        _filtersWriter.WriteFilters(course, outputPath);
-        _inforefWriter.WriteInforef(course, outputPath);
-        _roleAssignmentsWriter.WriteRoleAssignments(course, outputPath);
-        _badgesWriter.WriteBadges(outputPath);
-        _completionWriter.WriteCompletion(course, outputPath);
-
-        // -- Write section files -- //
-        Directory.CreateDirectory(Path.Combine(outputPath, "sections"));
-
-        // Write sections using SectionWriter
-        _logger.Debug("Writing sections...");
-        _sectionWriter.WriteSections(outputPath, course.Sections);
-
-        // Write inforef sections using InforefSectionsWriter
-        InforefSectionsWriter inforefSectionsWriter = new InforefSectionsWriter();
-        inforefSectionsWriter.WriteInforefSections(outputPath, course.Sections);
-
-        // -- Write activity files -- //
-        Directory.CreateDirectory(Path.Combine(outputPath, "files"));
-        Directory.CreateDirectory(Path.Combine(outputPath, "activities"));
-        
-        // Iterate through all sections of the course
-        foreach (var section in course.Sections)
+        /// <summary>
+        /// Writes the specified course to disk, creating the necessary folder structure and files.
+        /// </summary>
+        /// <param name="course">The course object containing data to be written.</param>
+        /// <param name="outputPath">The directory path where the course data will be saved.</param>
+        /// <returns>True if the course was successfully written; false in case of an error.</returns>
+        public bool WriteCourse(Course course, string outputPath)
         {
-            // Iterate through all activities of that section
-            foreach (var activity in section.Activities)
+            _logger.LogDebug($"Writer started for course '{course.FullName}' with ID {course.SystemDefaults.Id}");
+            _logger.LogInformation($"The course will be saved at {outputPath}");
+
+            PrepareCourseDefaults(course);
+
+            try
             {
-                string activityPath = string.Empty;
-                
-                if (activity is TextAndMediaArea textAndMediaArea)
-                {
-                    // Text and Media Area (Label)-specific XML files
-                    activityPath = Path.Combine(outputPath, "activities", $"label_{activity.ActivityId}");
-                    Directory.CreateDirectory(activityPath);
-                    _labelWriter.WriteLabel(activityPath, textAndMediaArea);
-                    _moduleWriterLabel.WriteModule(activityPath, section);
-                }
+                EnsureFolderStructureExists(outputPath);
 
-                if (activity is URL urlObject)
-                {
-                    // URL-specific XML files
-                    activityPath = Path.Combine(outputPath, "activities", $"url_{activity.ActivityId}");
-                    Directory.CreateDirectory(activityPath);
-                    _urlWriter.WriteUrl(activityPath, urlObject);
-                    _moduleWriterUrl.WriteModule(activityPath, course, section, urlObject);
-                }
+                _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
+                _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
+                _sectionFilesWriterService.WriteSectionFiles(course, outputPath); // Files in /sections
+                _activitiesWriterService.WriteActivities(course, outputPath); // Files in /activities
 
-                if (activity is MoodleFile moodleFile)
-                {
-                    // File-specific XML files
-                    activityPath = Path.Combine(outputPath, "activities", $"resource_{activity.ActivityId}");
-                    Directory.CreateDirectory(activityPath);
-                    _fileWriter.WriteFile(activityPath, moodleFile);
-                    _moduleWriterFile.WriteModule(activityPath, course, section, moodleFile);
-                }
-                
-                // General activity XML files
-                _activityCalendarWriter.WriteCalendar(activityPath);
-                _activityCommentsWriter.WriteComments(activityPath);
-                _activityCompetenciesWriter.WriteCompetencies(activityPath);
-                _activityCompletionWriter.WriteCompletion(activityPath);
-                _activityFiltersWriter.WriteFilters(activityPath);
-                _activityGradesWriter.WriteGrade(activityPath);
-                _activityGradehistoryWriter.WriteGradehistory(course, activityPath);
-                _activityInforefWriter.WriteInforefLabel(course, activityPath);
-                _activityRolesWriter.WriteRoles(activityPath);
-                _activityXapistateWriter.WriteState(activityPath);
+                _logger.LogInformation($"Course '{course.FullName}' successfully written to {outputPath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, $"Unexpected error while writing course '{course.FullName}'");
+                return false;
             }
         }
-        return true;
+
+
+        /// <summary>
+        /// Ensures the required folder structure for the Moodle Backup exists by creating necessary directories under the specified output path.
+        /// </summary>
+        /// <param name="outputPath">The root directory where the folder structure will be created.</param>
+        private void EnsureFolderStructureExists(string outputPath)
+        {
+            _fileService.CreateDirectory(outputPath);
+            _fileService.CreateDirectory(Path.Combine(outputPath, "course"));
+            _fileService.CreateDirectory(Path.Combine(outputPath, "sections"));
+            _fileService.CreateDirectory(Path.Combine(outputPath, "activities"));
+            _fileService.CreateDirectory(Path.Combine(outputPath, "files"));
+        }
+
+
+        /// <summary>
+        /// Equip the course with default values for enrolled users and sections if they are not defined
+        /// </summary>
+        /// <param name="course">The course object to populate with default values</param>
+        private void PrepareCourseDefaults(Course course)
+        {
+            if (course.EnrolledUsers.Count == 0)
+            {
+                _logger.LogDebug("No enrolled users found, adding a default user.");
+                course.EnrolledUsers = new List<User> { UserDefaults.GetDefaultUser() };
+            }
+
+            if (course.Sections.Count == 0)
+            {
+                _logger.LogInformation("No sections specified by user, adding default section");
+                course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
+            }
+        }
     }
 }

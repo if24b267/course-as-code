@@ -1,3 +1,5 @@
 Sections:
-  - SectionPath: Sections/Cool First Section
-  - SectionPath: Sections/Another Cool Section
+  - SectionPath: Sections/01-Introduction
+  - SectionPath: Sections/02-Supported-Activities
+  - SectionPath: Sections/03-Quizzes
+  - SectionPath: Sections/04-CS-Basics

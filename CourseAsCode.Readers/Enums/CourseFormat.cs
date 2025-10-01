@@ -1,6 +1,7 @@
-﻿namespace CourseAsCode.Readers.Enums;
-
-public enum CourseFormat
+namespace CourseAsCode.Readers.Enums
 {
-	YAML
+    public enum CourseFormat
+    {
+        YAML,
+    }
 }

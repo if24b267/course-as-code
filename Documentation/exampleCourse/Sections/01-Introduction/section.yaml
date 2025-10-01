@@ -1,0 +1,6 @@
+SectionName: Introduction to Course as Code
+Summary: This section covers basics about Course as Code. What is it? What are its core components and the benefits of using it?
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/what-is-cac.yaml
+  - ActivityFilePath: Activities/cac-components.yaml

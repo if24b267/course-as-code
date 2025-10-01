@@ -1,69 +1,87 @@
-﻿using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
-namespace CourseAsCode.Readers.YAML.Readers;
-
-public class YamlTextMediaAreaReader : TextMediaAreaReader<TextAndMediaArea>
+namespace CourseAsCode.Readers.YAML.Readers
 {
-	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+    public class YamlTextMediaAreaReader : ITextAndMediaAreaReader
+    {
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
 
-	public override TextAndMediaArea? Read(string modelObjectPath)
-	{
-		if (!File.Exists(modelObjectPath))
-		{
-			_logger.Error($"File {modelObjectPath} does not exist.");
-			return null;
-		}
+        public YamlTextMediaAreaReader(IYamlFileReaderHelper yamlFileReaderHelper)
+        {
+            _yamlFileReaderHelper = yamlFileReaderHelper;
+        }
 
-		var yamlFile = YamlFileReaderHelper.DeserializeFromFile<YamlTextMediaArea>(modelObjectPath);
+        // For backward compatibility
+        public YamlTextMediaAreaReader()
+            : this(new YamlFileReaderHelper())
+        {
+        }
 
-		var finalContent = "";
+        public TextAndMediaArea? Read(string modelObjectPath)
+        {
+            if (!File.Exists(modelObjectPath))
+            {
+                _logger.Error($"File {modelObjectPath} does not exist.");
+                return null;
+            }
 
-		foreach (var content in yamlFile.Content)
-		{
-			switch (content.Type)
-			{
-				case TextMediaContentType.MARKDOWN:
-					finalContent += ReadMarkdownFile(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), content.ContentFilePath)));
-					break;
-			}
-		}
+            var yamlFile = _yamlFileReaderHelper.DeserializeFromFile<YamlTextMediaArea>(modelObjectPath);
 
-		return ConvertYamlTextMediaAreaAndContentToMoodleTextMediaArea(yamlFile, finalContent);
-	}
+            var finalContent = "";
 
-	private TextAndMediaArea? ConvertYamlTextMediaAreaAndContentToMoodleTextMediaArea(YamlTextMediaArea yamlTextMediaArea, string content)
-	{
-		var format = yamlTextMediaArea.Format switch
-		{
-			TextMediaFieldFormat.AUTO => FormattingFormat.MoodleAutoFormat,
-			TextMediaFieldFormat.HTML => FormattingFormat.HTML,
-			TextMediaFieldFormat.PLAIN => FormattingFormat.PlainText,
-			TextMediaFieldFormat.MARKDOWN => FormattingFormat.Markdown,
-			_ => FormattingFormat.MoodleAutoFormat
-		};
-		
-		return new TextAndMediaArea()
-		{
-			FormattingFormat = format,
-			ActivityId = ValueKeeper.CurrentActivityId,
-			Name = yamlTextMediaArea.Name,
-			Content = content
-		};
-	}
+            foreach (var content in yamlFile.Content)
+            {
+                // TODO: implement more types
+                switch (content.Type)
+                {
+                    case TextMediaContentType.MARKDOWN:
+                        finalContent += ReadMarkdownFile(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(modelObjectPath), content.ContentFilePath)));
+                        break;
+                }
+            }
 
-	private string? ReadMarkdownFile(string markdownFilePath)
-	{
-		if (!File.Exists(markdownFilePath))
-		{
-			_logger.Error($"File {markdownFilePath} does not exist.");
-			return null;
-		}
+            return ConvertYamlTextMediaAreaAndContentToMoodleTextMediaArea(yamlFile, finalContent);
+        }
 
-		return File.ReadAllText(markdownFilePath);
-	}
+        private TextAndMediaArea? ConvertYamlTextMediaAreaAndContentToMoodleTextMediaArea(YamlTextMediaArea yamlTextMediaArea, string content)
+        {
+            var format = yamlTextMediaArea.Format switch
+            {
+                TextMediaFieldFormat.AUTO => FormattingFormat.MoodleAutoFormat,
+                TextMediaFieldFormat.HTML => FormattingFormat.HTML,
+                TextMediaFieldFormat.PLAIN => FormattingFormat.PlainText,
+                TextMediaFieldFormat.MARKDOWN => FormattingFormat.Markdown,
+                _ => FormattingFormat.MoodleAutoFormat,
+            };
+
+            return new TextAndMediaArea()
+            {
+                FormattingFormat = format,
+                ActivityId = ValueKeeper.CurrentActivityId,
+                Name = yamlTextMediaArea.Name,
+                Content = content,
+
+                ModuleId = ValueKeeper.CurrentModuleId,
+                ModuleName = "label",
+            };
+        }
+
+        private string? ReadMarkdownFile(string markdownFilePath)
+        {
+            _logger.Debug($"Reading markdown file {markdownFilePath}");
+            if (!File.Exists(markdownFilePath))
+            {
+                _logger.Error($"File {markdownFilePath} does not exist.");
+                return null;
+            }
+
+            return File.ReadAllText(markdownFilePath);
+        }
+    }
 }

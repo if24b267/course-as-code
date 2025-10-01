@@ -1,6 +1,7 @@
-﻿namespace CourseAsCode.Readers.YAML.Model;
-
-public class YamlSectionPath
+namespace CourseAsCode.Readers.YAML.Model
 {
-	public string SectionPath { get; set; }
+    public class YamlSectionPath
+    {
+        public string SectionPath { get; set; }
+    }
 }

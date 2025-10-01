@@ -1,60 +1,72 @@
-﻿using CourseAsCode.Model.Activities;
+using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Readers.AbstractClasses;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
+using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
-namespace CourseAsCode.Readers.YAML.Readers;
-
-public class YamlActivityReader : ActivityReader<Activity>
+namespace CourseAsCode.Readers.YAML.Readers
 {
-	private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-	private YamlFileReader _fileReader = new YamlFileReader();
-	private YamlTextMediaAreaReader _textMediaAreaReader = new YamlTextMediaAreaReader();
-	public override Activity? Read(string modelObjectPath)
-	{
-		if (!File.Exists(modelObjectPath))
-		{
-			_logger.Error($"File {modelObjectPath} does not exist.");
-			return null;
-		}
+    public class YamlActivityReader : IActivityReader
+    {
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly IFileReader _fileReader;
+        private readonly ITextAndMediaAreaReader _textMediaAreaReader;
+        private readonly IUrlReader _urlReader;
+        private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
+        private readonly IQuizReader _quizReader;
+        private readonly IAssignmentReader _assignmentReader;
 
-		// TODO: this might error
-		var yamlActivity = YamlFileReaderHelper.DeserializeFromFile<YamlActivity>(modelObjectPath);
+        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader)
+        {
+            _fileReader = fileReader;
+            _textMediaAreaReader = textMediaAreaReader;
+            _urlReader = urlReader;
+            _yamlFileReaderHelper = yamlFileReaderHelper;
+            _quizReader = quizReader;
+            _assignmentReader = assignmentReader;
+        }
 
-		if (yamlActivity == null)
-		{
-			_logger.Error($"Could not deserialize the file {modelObjectPath}.");
-			return null;
-		}
+        public Activity? Read(string modelObjectPath)
+        {
+            _logger.Debug($"Reading Activity from {modelObjectPath}");
+            if (!File.Exists(modelObjectPath))
+            {
+                _logger.Error($"File {modelObjectPath} does not exist.");
+                return null;
+            }
 
-		switch (yamlActivity.Type)
-		{
-			// TODO: do we maybe want this in a different reader? -> problem: we dont follow the interface structure since we dont want to read the file twice
-			case ActivityType.URL:
-				return ConvertYamlActivityToMoodleUrl(yamlActivity);
-			case ActivityType.FILE:
-				return _fileReader.Read(modelObjectPath);
-			case ActivityType.LABEL:
-			case ActivityType.TEXTMEDIAAREA:
-				return _textMediaAreaReader.Read(modelObjectPath);
-		}
+            // TODO: this might error
+            var yamlActivity = _yamlFileReaderHelper.DeserializeFromFile<YamlActivity>(modelObjectPath);
 
+            if (yamlActivity == null)
+            {
+                _logger.Error($"Could not deserialize the file {modelObjectPath}.");
+                return null;
+            }
 
-		return null;
-	}
+            switch (yamlActivity.Type)
+            {
+                // TODO: do we maybe want this in a different reader? -> problem: we dont follow the interface structure since we dont want to read the file twice
+                case ActivityType.URL:
+                    _logger.Debug($"Reading URL activity from {modelObjectPath}");
+                    return _urlReader.Read(modelObjectPath);
+                case ActivityType.FILE:
+                    _logger.Debug($"Reading file activity from {modelObjectPath}");
+                    return _fileReader.Read(modelObjectPath);
+                case ActivityType.LABEL:
+                case ActivityType.TEXTMEDIAAREA:
+                    _logger.Debug($"Reading text media area activity from {modelObjectPath}");
+                    return _textMediaAreaReader.Read(modelObjectPath);
+                case ActivityType.QUIZ:
+                    _logger.Debug($"Reading quiz activity from {modelObjectPath}");
+                    return _quizReader.Read(modelObjectPath);
+                case ActivityType.ASSIGNMENT:
+                    _logger.Debug($"Reading assignment activity from {modelObjectPath}");
+                    return _assignmentReader.Read(modelObjectPath);
+            }
 
-	private URL? ConvertYamlActivityToMoodleUrl(YamlActivity yamlActivity)
-	{
-		// TODO: improve activity reading -> every activity could for example have visible to students set
-		// maybe a different class that reads the non specific parts of the activity
-		return new URL()
-		{
-			ActivityId = ValueKeeper.CurrentActivityId,
-			Name = yamlActivity.Name,
-			Description = yamlActivity.Description,
-			ExternalUrl = yamlActivity.URL
-		};
-	}
+            return null;
+        }
+    }
 }

@@ -1,15 +1,17 @@
-﻿using CourseAsCode.Readers.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace CourseAsCode.Readers.YAML.Model;
+using CourseAsCode.Readers.Enums;
 
-// TODO: add whatever other values should be possible
-public class YamlActivity
+namespace CourseAsCode.Readers.YAML.Model
 {
-	[Required]
-	public ActivityType Type { get; set; }
-	[Required]
-	public string Name { get; set; }
-	public string Description { get; set; }
-	public string URL { get; set; }
+    // TODO: add whatever other values should be possible
+    public class YamlActivity
+    {
+        [Required]
+        public ActivityType Type { get; set; }
+        [Required]
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string URL { get; set; }
+    }
 }

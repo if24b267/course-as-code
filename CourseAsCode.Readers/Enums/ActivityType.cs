@@ -1,10 +1,12 @@
-﻿namespace CourseAsCode.Readers.Enums;
-
-public enum ActivityType
+namespace CourseAsCode.Readers.Enums
 {
-	URL,
-	LABEL,
-	TEXTMEDIAAREA,
-	QUIZ,
-	FILE
+    public enum ActivityType
+    {
+        URL,
+        LABEL,
+        TEXTMEDIAAREA,
+        QUIZ,
+        FILE,
+        ASSIGNMENT
+    }
 }

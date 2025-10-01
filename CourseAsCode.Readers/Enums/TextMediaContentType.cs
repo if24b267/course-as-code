@@ -1,6 +1,7 @@
-﻿namespace CourseAsCode.Readers.Enums;
-
-public enum TextMediaContentType
+namespace CourseAsCode.Readers.Enums
 {
-	MARKDOWN
+    public enum TextMediaContentType
+    {
+        MARKDOWN,
+    }
 }

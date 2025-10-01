@@ -1,0 +1,79 @@
+Questions:
+  - QuestionName: linuxfileperms
+    Category: dragdrop
+    QuestionId: 5
+    QuestionText: "In Linux, file permissions are controlled by three sets of access rights: [[3]], [[4]], and [[5]]. To view the permissions of a file, you can use the [[1]] command. Permissions are typically displayed as a string like `rwxr-xr--`, where each letter represents a different [[6]]."
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    CorrectResponseFeedback: "Correct! The command `ls -l` is used to list files and their permissions in Linux."
+    PartiallyCorrectResponseFeedback: "Partially correct. The command `ls -l` is used to list files and their permissions in Linux."
+    IncorrectResponseFeedback: "Incorrect. The command `ls -l` is used to list files and their permissions in Linux."
+    DragDropAnswers:
+      - Id: 1
+        Text: "ls -l"
+        TextFormat: HTML
+      - Id: 2
+        Text: "chmod"
+        TextFormat: HTML
+      - Id: 3
+        Text: "owner"
+        TextFormat: HTML
+      - Id: 4
+        Text: "group"
+        TextFormat: HTML
+      - Id: 5
+        Text: "other"
+        TextFormat: HTML
+      - Id: 6
+        Text: "permission"
+        TextFormat: HTML
+      - Id: 7
+        Text: "cd"
+        TextFormat: HTML
+      - Id: 8
+        Text: "shutdown"
+        TextFormat: HTML
+      - Id: 9
+        Text: "cat"
+        TextFormat: HTML
+      - Id: 10
+        Text: "nano"
+        TextFormat: HTML
+  - QuestionName: csbasics
+    Category: dragdrop
+    QuestionId: 6
+    QuestionText: <p>The [[1]] is a type of system software that manages [[5]] and software resources, and provides common services for computer programs</p>
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: DRAGANDDROPTEXT
+    DragDropAnswers:
+      - Id: 1
+        Text: "Operating System"
+        TextFormat: HTML
+        Category: A
+      - Id: 2
+        Text: "Compiler"
+        TextFormat: HTML
+        Category: A
+      - Id: 3
+        Text: "Microsoft Word"
+        TextFormat: HTML
+        Category: A
+      - Id: 4
+        Text: "Printer"
+        TextFormat: HTML
+        Category: A
+      - Id: 5
+        Text: "Hardware"
+        TextFormat: HTML
+        Category: B
+      - Id: 6
+        Text: "Internet"
+        TextFormat: HTML
+        Category: B
+      - Id: 7
+        Text: "Printing"
+        TextFormat: HTML
+        Category: B

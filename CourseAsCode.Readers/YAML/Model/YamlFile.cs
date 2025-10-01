@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace CourseAsCode.Readers.YAML.Model;
-
-public class YamlFile : YamlActivity
+namespace CourseAsCode.Readers.YAML.Model
 {
-	[Required]
-	public string FilePath { get; set; }
+    public class YamlFile : YamlActivity
+    {
+        [Required]
+        public string FilePath { get; set; }
+    }
 }

@@ -1,6 +1,7 @@
-﻿namespace CourseAsCode.Readers.YAML.Model;
-
-public class YamlActivityFilePath
+namespace CourseAsCode.Readers.YAML.Model
 {
-	public string ActivityFilePath { get; set; }
+    public class YamlActivityFilePath
+    {
+        public string ActivityFilePath { get; set; }
+    }
 }

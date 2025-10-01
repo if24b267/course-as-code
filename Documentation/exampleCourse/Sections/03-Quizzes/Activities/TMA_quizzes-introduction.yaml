@@ -1,0 +1,6 @@
+Type: label
+Name: Quizzes
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/quizzes-introduction.md

@@ -1,0 +1,919 @@
+Questions:
+  - QuestionName: MCQGradingSumRule
+    Category: Testing
+    QuestionId: 1
+    QuestionText: According to the documentation for `MultipleChoiceQuestion` within the "Quiz" section, what is an absolute necessity regarding `AnswerGrade`s for Moodle to correctly recognize the question?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Hints:
+      - HintText: The documentation emphasizes a critical rule for `AnswerGrade` summation in a particular type of callout box, specifically for positive grades.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: false
+    Answers:
+      - AnswerText: Positive `AnswerGrade`s must sum up to exactly 1.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The documentation states, "It is absolutely necessary that the **positive** `AnswerGrade`s sum up to exactly `1` - otherwise, the question will not be recognized correctly by Moodle."
+      - AnswerText: All negative `AnswerGrade`s combined must not exceed -1.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Negative `AnswerGrade`s can even be values greater than 1, so that the user receives overall point deductions if they answer the question incorrectly.
+      - AnswerText: At least one `AnswerGrade` must be a fraction to ensure Moodle's internal precision.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Using fractions is recommended for irrational numbers for precision, but the core rule is about the sum of positive grades.
+      - AnswerText: The `DefaultMark` of the question must be equal to the sum of all positive `AnswerGrade`s.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The sum of positive `AnswerGrade`s must be 1, regardless of the `DefaultMark` of the question itself.
+
+  - QuestionName: DropdownOptionAggregation
+    Category: Testing
+    QuestionId: 2
+    QuestionText: In a `DropdownQuestion` (referred to as "Matching Question" in Moodle), how are the selectable options for each dropdown menu determined, according to the documentation's explanation (including the 'bug' section)?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Hints:
+      - HintText: Review the examples and the 'bug' description for `DropdownQuestion`. It details how `CorrectAnswer`s and `WrongAnswers` from sub-questions contribute to the options.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: false
+    Answers:
+      - AnswerText: Each sub-question's dropdown menu only lists the `CorrectAnswer` defined for it and any `WrongAnswers` defined directly under that same sub-question.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation explains that options are pooled from all sub-questions.
+      - AnswerText: All `CorrectAnswer`s from all `DropdownSubQuestion`s are pooled and offered as options for every sub-question, but `WrongAnswers` are only shown for the sub-question they were defined for.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Both `CorrectAnswer`s and `WrongAnswers` are pooled from all sub-questions.
+      - AnswerText: The `CorrectAnswer` from each `DropdownSubQuestion` and all specified `WrongAnswers` from *all* `DropdownSubQuestion`s are pooled together, making this entire set of answers available as options in *every* sub-question's dropdown menu.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The documentation states, "every correct answer to a sub-question is also available as an answer option for all other sub-questions... If additional incorrect answer options are provided, they are also available as answer options for **all** sub-questions".
+      - AnswerText: Only the `CorrectAnswer`s are used; `WrongAnswers` serve as distractors that Moodle automatically generates based on similarity.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. `WrongAnswers` are explicitly defined and pooled.
+
+  - QuestionName: QuizActivityCharacteristics
+    Category: Testing
+    QuestionId: 3
+    QuestionText: Based on the "Quiz" section of the provided documentation, which of the following statements about the `Quiz` activity and its components are true?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: MULTIPLECHOICE
+    Hints:
+      - HintText: Consider what a Quiz consists of, its relation to other entities like `SafeExamBrowserSettings`, and how questions are managed within quizzes.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: true
+    Answers:
+      - AnswerText: A `Quiz` itself is an abstract class, and specific implementations like `MultipleChoiceQuiz` must be used.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -0.25
+        Feedback: Incorrect. `Quiz` extends the abstract `Activity` class but is not itself abstract. `Question` is an example of an abstract class for question types.
+      - AnswerText: Every `Quiz` is associated with `SafeExamBrowserSettings`, which are used to configure if and how the Safe Exam Browser is employed for that quiz.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct! The documentation mentions, "Furthermore, every quiz is associated with `SafeExamBrowserSettings`."
+      - AnswerText: The `QuestionText` and `DefaultMark` are properties of the `Quiz` class, not the individual `Question` classes.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -0.25
+        Feedback: Incorrect. `QuestionName`, `QuestionText`, and `DefaultMark` are described as parameters of the abstract parent class `Question`.
+      - AnswerText: A specific question (e.g., a `MultipleChoiceQuestion`) can be included in multiple different quizzes.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct! The text states, "a specific question can also appear in multiple quizzes."
+      - AnswerText: The documentation for `CodeRunnerQuestion` is noted as being the most complete and serves as a template for other question types.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -0.25
+        Feedback: Incorrect. The documentation for `CodeRunnerQuestion` is explicitly marked with a warning as "incomplete and/or incorrect and needs to be revised."
+
+  - QuestionName: DragDropCategoryPurpose
+    Category: Testing
+    QuestionId: 4
+    QuestionText: In the context of a `DragAndDropTextQuestion`, what is the primary purpose of assigning a `Category` to a `TextChoice` element, as explained in the documentation?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Hints:
+      - HintText: The documentation shows an example using categories like "A" and "B" for `TextChoice` elements and explains how this affects the options available for different gaps.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: false
+    Answers:
+      - AnswerText: To automatically group related `TextChoice` elements in the user interface, improving readability for the student.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. While it might visually group them, its primary documented function is more specific to distractor management.
+      - AnswerText: To specify distractors individually per gap, allowing different sets of choices to be presented for different gaps in the `QuestionText`.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The documentation states, "A `TextChoice` can also be assigned to a specific `Category` to specify distractors individually per gap." The example then illustrates this.
+      - AnswerText: To link a `TextChoice` to a general topic or learning objective, which is used for reporting and analytics but not visible to the student.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation focuses on its role in structuring the question's interactive elements.
+      - AnswerText: To indicate that a `TextChoice` element is mandatory and must be used in one of the gaps, unlike uncategorized choices which are optional.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The `Category` is about controlling which choices appear for which gaps, not their mandatory status.
+
+  - QuestionName: SingleChoiceBooleanEffect
+    Category: Testing
+    QuestionId: 5
+    QuestionText: According to the "SingleChoiceQuestion" documentation, what is the consequence if the `AnswerGrade`s for a `MultipleChoiceQuestion` are set so that only one answer option is correct, but the `SingleChoice` boolean is left as `false`?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Hints:
+      - HintText: Review the 'info' box under the "SingleChoiceQuestion" subsection. It clarifies the difference between grading for a single correct answer and the student's ability to select options.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: false
+    Answers:
+      - AnswerText: Moodle will flag the question as having a configuration error, as `SingleChoice` must be `true` if only one answer is graded as correct.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation describes a specific behavior, not an error state.
+      - AnswerText: Although only one answer is correct from a grading perspective, the student will still be able to select multiple answer options during the quiz.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The documentation states, "If the `AnswerGrade`s are set such that only a single answer is correct, but the `SingleChoice` Boolean is left as `false`, only one answer to the question is correct, but the student can still select multiple answer options."
+      - AnswerText: The question will behave as a "True/False" question, regardless of the number of answer options provided.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The number of options and their content remain as defined; the issue is purely about the selection mechanism.
+      - AnswerText: The `SingleChoice` boolean will automatically be set to `true` by Moodle if it detects that only one answer has a positive grade.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The documentation implies these are distinct settings that an author controls.
+
+  - QuestionName: AbstractQuestionProperties
+    Category: Testing
+    QuestionId: 6
+    QuestionText: The documentation mentions an abstract parent class `Question`. Which of the following are listed as parameters stored in this abstract `Question` class, common to all question types?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: MULTIPLECHOICE
+    Hints:
+      - HintText: Look for the 'info' box under the "Question Types" heading, which describes parameters common to all question types found in their abstract parent class.
+        HintTextFormat: MARKDOWN
+        ClearIncorrectResponses: true
+        ShowNumberOfCorrectAnswers: true
+    Answers:
+      - AnswerText: The question's `Name` (for internal representation), its `Text` (the question statement), and whether it is a `Draft` or finished.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct! The documentation states, "...their **name** (for internal representation in the QuestionBank), their **text** (i.e., the question itself...), or general parameters, such as whether the question is a *draft* or a finished question."
+      - AnswerText: The `OpenTime` and `CloseTime` for when the question is available.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. `OpenTime` and `CloseTime` are properties of the `Quiz` activity, not individual questions.
+      - AnswerText: "`ShuffleAnswer`` options and `ChoiceNumbering` preferences."
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. These are specific to `MultipleChoiceQuestion` as shown in its class diagram and description.
+      - AnswerText: The `DefaultMark` for the question.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: "Correct! The UML diagram for `Question` shows `+ DefaultMark: float`, and the text mentions general parameters are in the parent class"
+      - AnswerText: A list of `SubQuestions` if the question is a composite type.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. While some question types have sub-questions (e.g., `DropdownQuestion`), this is not a general property of the abstract `Question` class itself.
+
+  - QuestionName: moodleQuestionTypeMatching
+    Category: dropdown
+    QuestionId: 7
+    QuestionText: <p>Match each Moodle question type to its primary purpose or characteristic as described in the 'Course as Code' data model documentation.</p>
+    QuestionTextFormat: HTML
+    DefaultMark: 4 # 1 mark for each correct match
+    QuestionType: DROPDOWN
+    SubQuestions:
+      - SubQuestionText: <p>MultipleChoiceQuestion</p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Allows single or multiple correct answers from a predefined list, with configurable grading (AnswerGrade) for each option. Positive AnswerGrades must sum to 1.</p>
+      - SubQuestionText: <p>SingleChoiceQuestion</p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>A specialized Multiple Choice Question where only one answer option is correct and selectable, enforced by setting the 'SingleChoice' boolean to true.</p>
+      - SubQuestionText: <p>DropdownQuestion (Matching Question in Moodle)</p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Consists of several sub-questions where each requires selecting a correct answer from a shared list of options, presented in a dropdown menu for each sub-question.</p>
+      - SubQuestionText: <p>DragAndDropTextQuestion</p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>A fill-in-the-blank type where users drag TextChoice items into numbered gaps (e.g., [[1]], [[2]]) within a QuestionText. TextChoices are matched by their ID to the gap number.</p>
+
+  - QuestionName: multipleChoiceGradingDetails
+    Category: dragdrop
+    QuestionId: 8
+    QuestionText: <p>For <strong>MultipleChoiceQuestions</strong>, each <code>MultiChoiceAnswer</code> includes <code>AnswerText</code> and an <code>[[1]]</code>. For the question to be valid in Moodle, the sum of all positive <code>AnswerGrade</code>s must be exactly <code>[[2]]</code>. To penalize incorrect selections, a <code>[[3]]</code> <code>AnswerGrade</code> (e.g., -1/2) can be assigned. A specific boolean flag, <code>[[4]]</code>, when set to true, defines the question as a SingleChoiceQuestion, allowing only one selection.</p>
+    QuestionTextFormat: HTML
+    DefaultMark: 4 # 1 mark per blank
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    CorrectResponseFeedback: <p>Excellent! You've correctly identified the key aspects of MultipleChoiceQuestion grading and the SingleChoice flag.</p>
+    PartiallyCorrectResponseFeedback: <p>You're on the right track! Review the documentation on AnswerGrades and the SingleChoice property.</p>
+    IncorrectResponseFeedback: <p>It seems there's some confusion. Please review the 'MultipleChoiceQuestion' and 'SingleChoiceQuestion' sections carefully.</p>
+    DragDropAnswers:
+      - Id: 1
+        Text: AnswerGrade
+        TextFormat: HTML
+      - Id: 2
+        Text: "1"
+        TextFormat: HTML
+      - Id: 3
+        Text: negative
+        TextFormat: HTML
+      - Id: 4
+        Text: SingleChoice
+        TextFormat: HTML
+      - Id: 5 # Distractor
+        Text: DefaultMark
+        TextFormat: HTML
+      - Id: 6 # Distractor
+        Text: "0"
+        TextFormat: HTML
+      - Id: 7 # Distractor
+        Text: positive
+        TextFormat: HTML
+      - Id: 8 # Distractor
+        Text: ShuffleAnswer
+        TextFormat: HTML
+
+  - QuestionName: dragAndDropStructure
+    Category: dragdrop
+    QuestionId: 9
+    QuestionText: "<p>In a <strong>DragAndDropTextQuestion</strong>, the main <code>QuestionText</code> contains placeholders like <code>[ [ 1 ] ]</code>, <code>[ [ 2 ] ]</code> (displayed with spaces so that they aren't detected by Moodle), etc. Each number in a placeholder corresponds to the <code>[[1]]</code> of a <code>TextChoice</code> element. The actual text to be dragged into the gap is specified in the <code>[[2]]</code> of the respective <code>TextChoice</code>. To organize distractors for different gaps, <code>TextChoice</code> elements can be assigned a <code>[[3]]</code>. If a <code>TextChoice</code> element's ID is not referenced in any placeholder, it serves as a <code>[[4]]</code>.</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 4 # 1 mark per blank
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    CorrectResponseFeedback: <p>Perfect! You understand how DragAndDropTextQuestions are structured.</p>
+    PartiallyCorrectResponseFeedback: <p>Almost there! Double-check the properties of TextChoice elements and how gaps are defined.</p>
+    IncorrectResponseFeedback: <p>Take another look at the 'DragAndDropTextQuestion' section to clarify how placeholders, TextChoices, and categories work.</p>
+    DragDropAnswers:
+      - Id: 1
+        Text: ID
+        TextFormat: HTML
+      - Id: 2
+        Text: Value
+        TextFormat: HTML
+      - Id: 3
+        Text: Category
+        TextFormat: HTML
+      - Id: 4
+        Text: distractor
+        TextFormat: HTML
+      - Id: 5 # Distractor
+        Text: placeholder
+        TextFormat: HTML
+      - Id: 6 # Distractor
+        Text: QuestionText
+        TextFormat: HTML
+      - Id: 7 # Distractor
+        Text: SubQuestion
+        TextFormat: HTML
+      - Id: 8 # Distractor
+        Text: correct answer
+        TextFormat: HTML
+
+  - QuestionName: StandardIOInclude
+    Category: Basics
+    QuestionId: 10
+    QuestionText: |
+      Consider the following C code snippet:
+
+      ```c
+      #include <stdio.h>
+
+      int main() {
+          printf("Hello, C!");
+          return 0;
+      }
+      ```
+
+      What is the primary purpose of the line `#include <stdio.h>`?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Answers:
+      - AnswerText: It defines the `main` function.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The `main` function is defined directly, not included.
+      - AnswerText: It links the program to external files.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. While it involves external files, its primary purpose is more specific to standard libraries.
+      - AnswerText: It provides access to standard input/output functions like `printf`.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! `stdio.h` stands for "standard input/output header" and is essential for functions like `printf` and `scanf`.
+      - AnswerText: It declares all variables used in the program.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Variables are declared within the program's scope, not by `#include`.
+
+  - QuestionName: ValidCVariableNames
+    Category: Variables
+    QuestionId: 11
+    QuestionText: |
+      Which of the following are **valid** variable names in C programming? Select all that apply.
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: MULTIPLECHOICE
+    SingleChoice: false
+    Answers:
+      - AnswerText: "`_my_variable`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct. Variable names can start with an underscore.
+      - AnswerText: "`1stVariable`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -0.3333333333333333
+        Feedback: Incorrect. Variable names cannot start with a digit.
+      - AnswerText: "`variableName123`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct. Variable names can contain letters, numbers, and underscores, but must start with a letter or underscore.
+      - AnswerText: "`my-variable`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -0.3333333333333333
+        Feedback: Incorrect. Hyphens are not allowed in C variable names.
+      - AnswerText: "`if`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -0.3333333333333333
+        Feedback: Incorrect. `if` is a reserved keyword in C.
+
+  - QuestionName: OutputOfArithmetic
+    Category: Operators
+    QuestionId: 12
+    QuestionText: |
+      What will be the output of the following C code snippet?
+
+      ```c
+      #include <stdio.h>
+
+      int main() {
+          int x = 10;
+          int y = 3;
+          int result = x / y;
+          printf("%d\n", result);
+          return 0;
+      }
+      ```
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Answers:
+      - AnswerText: "`3.333333`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Integer division truncates the decimal part.
+      - AnswerText: "`3`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! When dividing two integers in C, the result is an integer, and any fractional part is truncated.
+      - AnswerText: "`4`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The result is 3, not rounded up.
+      - AnswerText: "`10`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. This is not the result of the division.
+
+  - QuestionName: InitializingVariables
+    Category: Variables
+    QuestionId: 13
+    QuestionText: |
+      Which of the following C code snippets correctly declare an integer variable `count` and initialize it with the value `0`? Select all that apply.
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: MULTIPLECHOICE
+    SingleChoice: false
+    Answers:
+      - AnswerText: "`int count = 0;`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct. This is a common and correct way to declare and initialize a variable.
+      - AnswerText: "`int count; count = 0;`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.5
+        Feedback: Correct. This declares the variable first, then assigns the value. Both are valid.
+      - AnswerText: "`integer count = 0;`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -0.25
+        Feedback: Incorrect. The keyword for integer type in C is `int`, not `integer`.
+      - AnswerText: "`count = 0; int count;`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -0.25
+        Feedback: Incorrect. Variables must be declared before they are used or assigned a value.
+
+  - QuestionName: CDataTypesMatching
+    Category: Data Types
+    QuestionId: 14
+    QuestionText: <p>Match each C data type to its most appropriate description.</p>
+    QuestionTextFormat: HTML
+    DefaultMark: 4
+    QuestionType: DROPDOWN
+    SubQuestions:
+      - SubQuestionText: <p><code>int</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Used to store whole numbers (integers).</p>
+      - SubQuestionText: <p><code>float</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Used to store single-precision floating-point numbers.</p>
+      - SubQuestionText: <p><code>char</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Used to store a single character.</p>
+      - SubQuestionText: <p><code>double</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Used to store double-precision floating-point numbers, offering more precision than <code>float</code>.</p>
+        # will be visible as distractors for all sub-questions
+        WrongAnswers:
+          - <p>Used to store true/false values (not a standard C data type).</p>
+          - <p>Used to store large strings of text.</p>
+
+  - QuestionName: COperatorsMatching
+    Category: Operators
+    QuestionId: 15
+    QuestionText: <p>Match each C operator to its function.</p>
+    QuestionTextFormat: HTML
+    DefaultMark: 4
+    QuestionType: DROPDOWN
+    SubQuestions:
+      - SubQuestionText: <p><code>==</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Equality operator (checks if two values are equal).</p>
+      - SubQuestionText: <p><code>=</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Assignment operator (assigns a value to a variable).</p>
+      - SubQuestionText: <p><code>&&</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Logical AND operator.</p>
+      - SubQuestionText: <p><code>||</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Logical OR operator.</p>
+        WrongAnswers:
+          - <p>Bitwise AND operator.</p>
+          - <p>Bitwise OR operator.</p>
+
+  - QuestionName: CProgramStructureCloze
+    Category: Basics
+    QuestionId: 16
+    QuestionText: "<p>Every C program must have a <code>[[1]]</code> function, which is the <code>[[2]]</code> point of the program. Before this, <code>[[3]]</code> directives are often used to include standard <code>[[4]]</code> that provide predefined functions and macros.</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 4
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    DragDropAnswers:
+      - Id: 1
+        Text: "main"
+        TextFormat: HTML
+      - Id: 2
+        Text: "entry"
+        TextFormat: HTML
+      - Id: 3
+        Text: "#include"
+        TextFormat: HTML
+      - Id: 4
+        Text: "libraries"
+        TextFormat: HTML
+      - Id: 5 # Distractor
+        Text: "header"
+        TextFormat: HTML
+      - Id: 6 # Distractor
+        Text: "start"
+        TextFormat: HTML
+      - Id: 7 # Distractor
+        Text: "function"
+        TextFormat: HTML
+      - Id: 8 # Distractor
+        Text: "compilation"
+        TextFormat: HTML
+
+  - QuestionName: PointersCloze
+    Category: Pointers
+    QuestionId: 17
+    QuestionText: "<p>In C, a <code>[[1]]</code> is a variable that stores the <code>[[2]]</code> of another variable. The <code>[[3]]</code> operator (ampersand) is used to get the address of a variable, while the <code>[[4]]</code> operator (asterisk) is used to access the value at the address stored in a pointer.</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 4
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    DragDropAnswers:
+      - Id: 1
+        Text: "pointer"
+        TextFormat: HTML
+      - Id: 2
+        Text: "address"
+        TextFormat: HTML
+      - Id: 3
+        Text: "&"
+        TextFormat: HTML
+      - Id: 4
+        Text: "*"
+        TextFormat: HTML
+      - Id: 5 # Distractor
+        Text: "value"
+        TextFormat: HTML
+      - Id: 6 # Distractor
+        Text: "type"
+        TextFormat: HTML
+      - Id: 7 # Distractor
+        Text: "->"
+        TextFormat: HTML
+      - Id: 8 # Distractor
+        Text: "."
+        TextFormat: HTML
+
+  - QuestionName: ForLoopOutputCloze
+    Category: Control Flow
+    QuestionId: 18
+    QuestionText: |
+      Consider the following C code:
+
+      ```c
+      #include <stdio.h>
+
+      int main() {
+          int i;
+          for (i = 0; i < 5; i++) {
+              // some operations
+          }
+          printf("%d\n", i);
+          return 0;
+      }
+      ```
+
+      For the given C code, the loop will iterate [[1]] times, and the final value printed for `i` will be [[2]].
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 2
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    DragDropAnswers:
+      - Id: "1"
+        Text: 5
+        TextFormat: HTML
+      - Id: "2"
+        Text: 5
+        TextFormat: HTML
+      - Id: "3" # Distractor
+        Text: 4
+        TextFormat: HTML
+      - Id: "4" # Distractor
+        Text: 0
+        TextFormat: HTML
+      - Id: "5" # Distractor
+        Text: 6
+        TextFormat: HTML
+      - Id: "6" # Distractor
+        Text: infinite
+        TextFormat: HTML
+
+  - QuestionName: JavaMainMethod
+    Category: Basics
+    QuestionId: 19
+    QuestionText: |
+      Consider the following Java code snippet:
+
+      ```java
+      public class HelloWorld {
+          public static void main(String[] args) {
+              System.out.println("Hello, Java!");
+          }
+      }
+      ```
+
+      What is the significance of the `public static void main(String[] args)` method signature in a Java application?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Answers:
+      - AnswerText: It's a constructor for the `HelloWorld` class.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Constructors have the same name as the class and no return type.
+      - AnswerText: It is the entry point for the JVM to start program execution.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! This specific signature is recognized by the Java Virtual Machine (JVM) as the starting point of any Java application.
+      - AnswerText: It declares a variable named `main`.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. It's a method declaration, not a variable declaration.
+      - AnswerText: It is used to import external libraries.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. `import` statements are used for that purpose.
+
+  - QuestionName: JavaVariableDeclaration
+    Category: Variables
+    QuestionId: 20
+    QuestionText: |
+      Given the following Java code:
+
+      ```java
+      public class VariableExample {
+          public static void main(String[] args) {
+              // Line X
+              System.out.println(myNumber);
+          }
+      }
+      ```
+
+      Which of the following lines could replace `// Line X` to correctly declare an integer variable `myNumber` and initialize it with the value `50`? Select all that apply.
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: MULTIPLECHOICE
+    SingleChoice: false
+    Answers:
+      - AnswerText: "`int myNumber = 50;`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.3333333333333333
+        Feedback: Correct. This is the standard way to declare and initialize an integer variable in Java.
+      - AnswerText: "`Integer myNumber = 50;`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.3333333333333333
+        Feedback: Correct. This uses the `Integer` wrapper class, which can auto-unbox the primitive `int` value.
+      - AnswerText: "`myNumber = 50; int myNumber;`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: -1
+        Feedback: Incorrect. Variables must be declared before they are used or assigned a value.
+      - AnswerText: "`var myNumber = 50;`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0.3333333333333333
+        Feedback: Correct. Since Java 10, `var` can be used for local variable type inference.
+
+  - QuestionName: JavaOutputStatement
+    Category: Output
+    QuestionId: 21
+    QuestionText: |
+      What will be the output of the following Java code?
+
+      ```java
+      public class OutputTest {
+          public static void main(String[] args) {
+              String name = "Alice";
+              int age = 30;
+              System.out.println("Name: " + name + ", Age: " + age);
+          }
+      }
+      ```
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Answers:
+      - AnswerText: "`Name: name, Age: age`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The values of the variables are concatenated, not their names.
+      - AnswerText: "`Name: Alice, Age: 30`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The `+` operator performs string concatenation, combining the literal strings with the values of `name` and `age`.
+      - AnswerText: "`Name: + name + , Age: + age`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The `+` operator processes the variables.
+      - AnswerText: "`Error: incompatible types`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. Java handles string concatenation with numbers gracefully.
+
+  - QuestionName: ConditionalLogic
+    Category: Control Flow
+    QuestionId: 22
+    QuestionText: |
+      Examine the following Java code:
+
+      ```java
+      public class Conditional {
+          public static void main(String[] args) {
+              int temperature = 25;
+              String message;
+
+              if (temperature > 30) {
+                  message = "It's hot!";
+              } else if (temperature < 20) {
+                  message = "It's cold!";
+              } else {
+                  message = "It's pleasant.";
+              }
+              System.out.println(message);
+          }
+      }
+      ```
+
+      What will be printed to the console when this code is executed?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SINGLECHOICE
+    Answers:
+      - AnswerText: "`It's hot!`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The temperature is 25, which is not greater than 30.
+      - AnswerText: "`It's cold!`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The temperature is 25, which is not less than 20.
+      - AnswerText: "`It's pleasant.`"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: Correct! The temperature (25) falls into the `else` block because it's neither greater than 30 nor less than 20.
+      - AnswerText: Nothing, there is a compilation error.
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: Incorrect. The code is syntactically correct and will compile and run.
+
+  - QuestionName: JavaOOPConcepts
+    Category: OOP
+    QuestionId: 23
+    QuestionText: <p>Match each Object-Oriented Programming (OOP) concept in Java to its description.</p>
+    QuestionTextFormat: HTML
+    DefaultMark: 4
+    QuestionType: DROPDOWN
+    SubQuestions:
+      - SubQuestionText: <p>Encapsulation</p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Bundling data (attributes) and methods (functions) that operate on the data within a single unit (class), and restricting direct access to some of the object's components.</p>
+      - SubQuestionText: <p>Inheritance</p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>A mechanism where one class acquires the properties and behaviors of another class, promoting code reusability.</p>
+      - SubQuestionText: <p>Polymorphism</p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>The ability of an object to take on many forms. In Java, this often refers to method overriding and method overloading.</p>
+      - SubQuestionText: <p>Abstraction</p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Hiding complex implementation details and showing only the essential features of an object.</p>
+
+  - QuestionName: JavaKeywords
+    Category: Keywords
+    QuestionId: 24
+    QuestionText: <p>Match each Java keyword to its primary usage.</p>
+    QuestionTextFormat: HTML
+    DefaultMark: 4
+    QuestionType: DROPDOWN
+    SubQuestions:
+      - SubQuestionText: <p><code>static</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Used to declare class members (variables or methods) that belong to the class itself rather than to any specific object instance.</p>
+      - SubQuestionText: <p><code>final</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Used to declare entities that cannot be changed (variables as constants, methods that cannot be overridden, classes that cannot be inherited).</p>
+      - SubQuestionText: <p><code>super</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Used to refer to the immediate parent class object.</p>
+      - SubQuestionText: <p><code>this</code></p>
+        SubQuestionTextFormat: HTML
+        CorrectAnswer: <p>Used to refer to the current object within a method or constructor.</p>
+
+  - QuestionName: JavaClassStructureCloze
+    Category: Basics
+    QuestionId: 25
+    QuestionText: |
+      Consider the basic structure of a Java class:
+
+      ```java
+      public [[1]] MyClass {
+          // Class members (fields and methods)
+          public static void main(String[] args) {
+              // Application logic
+          }
+      }
+      ```
+
+      In Java, every program is composed of at least one [[2]]. The [[3]] keyword specifies that the class is accessible from any other class. Inside the class, the [[4]] method serves as the application's entry point.
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 4
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    DragDropAnswers:
+      - Id: "1"
+        Text: class
+        TextFormat: HTML
+      - Id: "2"
+        Text: class
+        TextFormat: HTML
+      - Id: "3"
+        Text: public
+        TextFormat: HTML
+      - Id: "4"
+        Text: main
+        TextFormat: HTML
+      - Id: "5" # Distractor
+        Text: interface
+        TextFormat: HTML
+      - Id: "6" # Distractor
+        Text: private
+        TextFormat: HTML
+      - Id: "7" # Distractor
+        Text: function
+        TextFormat: HTML
+      - Id: "8" # Distractor
+        Text: object
+        TextFormat: HTML
+
+  - QuestionName: LoopExecutionCloze
+    Category: Control Flow
+    QuestionId: 26
+    QuestionText: |
+      <p>Analyze the following Java `for` loop:</p>
+
+      <pre><code class="language-java">
+      public class LoopExample {
+          public static void main(String[] args) {
+              int sum = 0;
+              for (int i = 0; i < 3; i++) {
+                  sum += i;
+              }
+              System.out.println(sum);
+          }
+      }
+      </code></pre>
+
+      <p>The `for` loop in this code will execute <code>[[1]]</code> times. The value of `sum` after the loop completes will be <code>[[2]]</code>. The numbers added to `sum` will be <code>[[3]]</code>, <code>[[4]]</code>, and <code>[[5]]</code>.</p>
+    QuestionTextFormat: HTML
+    DefaultMark: 5 # 1 mark per blank
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    DragDropAnswers:
+      - Id: "1"
+        Text: 3
+        TextFormat: HTML
+      - Id: "2"
+        Text: 3
+        TextFormat: HTML
+      - Id: "3"
+        Text: 0
+        TextFormat: HTML
+      - Id: "4"
+        Text: 1
+        TextFormat: HTML
+      - Id: "5"
+        Text: 2
+        TextFormat: HTML
+      - Id: "6" # Distractor
+        Text: 4
+        TextFormat: HTML
+      - Id: "7" # Distractor
+        Text: 6
+        TextFormat: HTML
+      - Id: "8" # Distractor
+        Text: 5
+        TextFormat: HTML
+      - Id: "9" # Distractor
+        Text: 3
+        TextFormat: HTML
+      - Id: "10" # Distractor
+        Text: 10
+        TextFormat: HTML
+
+  - QuestionName: MethodParametersCloze
+    Category: Methods
+    QuestionId: 27
+    QuestionText: |
+      Complete the following method signature to declare a method named `calculateArea` that takes two `double` parameters, `length` and `width`, and returns a `double` value:
+
+      ```java
+      public static [[1]] calculateArea([[2]] length, [[3]] width) {
+          return length * width;
+      }
+      ```
+
+      The return type of the method is [[4]].
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 4
+    ShuffleAnswers: true
+    QuestionType: DRAGANDDROPTEXT
+    DragDropAnswers:
+      - Id: "1"
+        Text: double
+        TextFormat: HTML
+      - Id: "2"
+        Text: double
+        TextFormat: HTML
+      - Id: "3"
+        Text: double
+        TextFormat: HTML
+      - Id: "4"
+        Text: double
+        TextFormat: HTML
+      - Id: "5" # Distractor
+        Text: int
+        TextFormat: HTML
+      - Id: "6" # Distractor
+        Text: void
+        TextFormat: HTML
+      - Id: "7" # Distractor
+        Text: float
+        TextFormat: HTML
+      - Id: "8" # Distractor
+        Text: String
+        TextFormat: HTML

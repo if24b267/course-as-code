@@ -1,0 +1,6 @@
+Type: label
+Name: Assignments
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/assignment.md
