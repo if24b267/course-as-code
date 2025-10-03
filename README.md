@@ -2,54 +2,29 @@
 
 [![Publish & Test CourseAsCode](https://github.com/Davimalu/course-as-code/actions/workflows/test-and-publish.yml/badge.svg?branch=develop)](https://github.com/Davimalu/course-as-code/actions/workflows/test-and-publish.yml)
 
-CourseAsCode is a powerful tool that enables you to define Moodle courses in code (YAML format) and generate Moodle backup (.mbz) files that can be imported into any Moodle installation. This approach brings software development principles to course creation, allowing for version control, collaboration, and automation.
+Course as Code is a tool that enables the creation of Moodle courses through text formats such as YAML or Markdown (hence the name Course as Code). These text files can then be converted into a Moodle backup file (.mbz), which may be imported directly into Moodle as a complete course. This approach allows fully functional Moodle courses to be created and edited using any text editor, while changes and collaboration can be managed efficiently with version control systems like Git.
 
 ## Table of Contents
 
-- [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Moodle Development Environment Setup](#moodle-development-environment-setup)
 - [Quick Start](#quick-start)
-- [Project Structure](#project-structure)
 - [Detailed Usage](#detailed-usage)
   - [Command Line Arguments](#command-line-arguments)
   - [Input Directory Structure](#input-directory-structure)
-  - [YAML Format](#yaml-format)
 - [Supported Activity Types](#supported-activity-types)
-- [Supported Question Types](#supported-question-types)
-- [Examples](#examples)
-- [Development](#development)
-  - [Building from Source](#building-from-source)
-  - [Running Tests](#running-tests)
+  - [Supported Question Types](#supported-question-types)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 
-## Features
-
-- Define Moodle courses in YAML, a human-readable data format
-- Version control your course content with Git or other version control systems
-- Generate complete Moodle backup files (.mbz) ready for import
-- Support for multiple activity types:
-  - Text and Media Areas (Labels)
-  - URLs
-  - Files
-  - Quizzes with various question types
-  - Assignments
-- Support for rich question types:
-  - Multiple Choice (single and multiple answers)
-  - Dropdown (Matching)
-  - Drag and Drop Text (Lückentext)
-  - CodeRunner (programming exercises)
-- Modular architecture allowing for future extensions
-
 ## Requirements
 
-- .NET 8.0 SDK or later
-- Windows, macOS, or Linux operating system
+- .NET 8.0 SDK / Runtime or later
+- **Windows** or **Linux** operating system (macOS *may* work, but is not officially supported)
 
 For deployment:
-- Moodle 4.0 or later
+- Moodle 4.5 or later (earlier versions *may* work, but are not officially supported)
 
 ### Moodle Development Environment Setup
 To set up a local installation of Moodle for development, follow these instructions:
@@ -116,7 +91,7 @@ password: bitnami
 
 ## Installation
 
-### Option 1: Download pre-built binaries
+### Option 1: Download pre-built binaries (Recommended)
 
 1. Go to the [Releases](https://github.com/Davimalu/course-as-code/releases) page
 2. Download the appropriate package for your operating system
@@ -155,16 +130,6 @@ dotnet run --project CourseAsCode/CourseAsCode.csproj -i "/path/to/your/course" 
 
 4. Import the generated `.mbz` file into Moodle via the course restore functionality
 
-## Project Structure
-
-CourseAsCode consists of several projects with distinct responsibilities:
-
-- **CourseAsCode**: Main CLI application and entry point
-- **CourseAsCode.Model**: Internal data model representing Moodle courses and activities
-- **CourseAsCode.Readers**: Components for reading course definitions from various formats
-- **CourseAsCode.Writers**: Components for writing Moodle backup files in the correct format
-- **CourseAsCode.*.Tests**: Test projects for ensuring functionality
-
 ## Detailed Usage
 
 ### Command Line Arguments
@@ -191,72 +156,23 @@ course-directory/
 ├── config.yaml          # Main course configuration
 ├── sections.yaml        # Defines section order and structure
 ├── Questions/           # Question definitions (optional)
-│   ├── questions1.yaml
-│   └── questions2.yaml
+│   ├── quiz-questions1.yaml
+│   └── quiz-questions2.yaml
 └── Sections/            # Individual section content
-    ├── Section1/
+    ├── 01-Introduction/
     │   ├── section.yaml    # Section metadata
     │   └── Activities/     # Section activities
-    │       ├── label1.yaml
-    │       ├── url1.yaml
-    │       ├── file1.yaml
-    │       ├── quiz1.yaml
+    │       ├── QUIZ_quizzes.yaml
+    │       ├── TMA_grade-warning.yaml
+    │       ├── URL_quiz-documentation.yaml
+    │       ├── ASN_course-as-code-summary.yaml
+    │       ├── FILE_moodle-backup-file-yaml
+    │       ├── content/    # Content of activities like Text and Media Areas, e.g. Markdown or HTML files
     │       └── files/      # Files to be included in activities
-    └── Section2/
+    └── 02-Self-Study-1/
         ├── section.yaml
         └── Activities/
             └── ...
-```
-
-### YAML Format
-
-#### config.yaml
-
-Contains the main course configuration:
-
-```yaml
-fullName: "My Course Title"
-shortName: "MYCOURSE"
-format: "topics"  # topics, weekly, social, etc.
-language: "en"
-startDate: "2023-09-01"
-endDate: "2024-01-31"
-```
-
-#### sections.yaml
-
-Defines the order and structure of course sections:
-
-```yaml
-sections:
-  - path: "Sections/Introduction"
-    number: 1
-  - path: "Sections/Topic1"
-    number: 2
-  - path: "Sections/Topic2"
-    number: 3
-```
-
-#### section.yaml
-
-Contains metadata for an individual section:
-
-```yaml
-name: "Introduction to the Course"
-summary: "Welcome to the course. This section introduces the main topics."
-visible: true
-```
-
-#### Activity YAML files
-
-Each activity has its own YAML file with specific properties. For example, a URL activity:
-
-```yaml
-type: "url"
-name: "Course Website"
-intro: "Link to our course website"
-externalUrl: "https://example.com/course"
-display: 0  # 0=automatic, 1=embed, 2=open, 3=popup
 ```
 
 ## Supported Activity Types
@@ -278,9 +194,7 @@ CourseAsCode supports the following activity types:
 5. **Assignment**
    - Tasks for students to complete and submit work
 
-See the [examples](#examples) section for YAML samples of each activity type.
-
-## Supported Question Types
+### Supported Question Types (Quiz activity)
 
 CourseAsCode supports the following question types for quizzes:
 
@@ -298,12 +212,9 @@ CourseAsCode supports the following question types for quizzes:
    - Programming tasks with automated execution and testing
    - Supports various programming languages (Java, C, Python, etc.)
 
-See the [examples](#examples) section for YAML samples of each question type.
-
 ## Examples
 
-The project includes complete examples in the `Documentation/exampleCourse` directory. You can use these as templates for your own courses:
-
+The project includes an example course, featuring all supported features in the `Documentation/exampleCourse` directory. Please use it as a template for your own courses.
 ```bash
 # Copy the example course as a starting point
 cp -r Documentation/exampleCourse my-new-course
@@ -312,57 +223,16 @@ cp -r Documentation/exampleCourse my-new-course
 CourseAsCode -i my-new-course -o my-output
 ```
 
-## Development
-
-### Building from Source
-
-Prerequisites:
-- .NET 8.0 SDK
-- Git
-
-Steps:
-```bash
-# Clone the repository
-git clone https://github.com/Davimalu/course-as-code.git
-cd course-as-code
-
-# Restore dependencies
-dotnet restore
-
-# Build the solution
-dotnet build
-
-# Run the application
-dotnet run --project CourseAsCode/CourseAsCode.csproj -- -i "/path/to/course" -o "/path/to/output"
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-dotnet test
-
-# Run specific test project
-dotnet test CourseAsCode.Readers.Tests
-
-# Run tests with coverage
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-```
-
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Missing files in the generated backup**
-   - Ensure all referenced files exist in the correct locations
-   - Check file paths are correctly specified in the YAML files
+1. **Import errors in Moodle**
+   - Verify the Moodle version you're using is supported by CourseAsCode
+   - Check for syntax errors in your YAML files
+   - Check the application logs for any errors
 
-2. **Import errors in Moodle**
-   - Verify the Moodle version compatibility
-   - Check for syntax errors in YAML files
-   - Examine the application logs for detailed error information
-
-3. **CodeRunner questions not working**
+2. **CodeRunner questions not working**
    - Ensure the target Moodle installation has the CodeRunner plugin installed
    - Verify the question type (e.g., `java_program`, `c_program`) is supported in the target Moodle instance
 
