@@ -89,6 +89,10 @@ user: user
 password: bitnami
 ```
 
+6. Go to **Site Administration** > **Courses** > **Backups** > **Asynchronous backup/restore** and disable `Enable asynchronous backups`.
+
+7. Go to **Site Administration** > **Plugins** > **Install plugins** and install the **CodeRunner** plugin.
+
 ## Installation
 
 ### Option 1: Download pre-built binaries (Recommended)
