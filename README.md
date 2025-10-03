@@ -9,6 +9,7 @@ CourseAsCode is a powerful tool that enables you to define Moodle courses in cod
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
+  - [Moodle Development Environment Setup](#moodle-development-environment-setup)
 - [Quick Start](#quick-start)
 - [Project Structure](#project-structure)
 - [Detailed Usage](#detailed-usage)
@@ -23,7 +24,6 @@ CourseAsCode is a powerful tool that enables you to define Moodle courses in cod
   - [Running Tests](#running-tests)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
-- [License](#license)
 
 ## Features
 
@@ -47,6 +47,72 @@ CourseAsCode is a powerful tool that enables you to define Moodle courses in cod
 
 - .NET 8.0 SDK or later
 - Windows, macOS, or Linux operating system
+
+For deployment:
+- Moodle 4.0 or later
+
+### Moodle Development Environment Setup
+To set up a local installation of Moodle for development, follow these instructions:
+
+1. Create a new file: `docker-compose.yml`
+2. Add the following content to the file:
+
+```yaml
+# Copyright Broadcom, Inc. All Rights Reserved.
+# SPDX-License-Identifier: APACHE-2.0
+
+services:
+  mariadb:
+    image: docker.io/bitnamilegacy/mariadb:latest
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_moodle
+      - MARIADB_DATABASE=bitnami_moodle
+      - MARIADB_CHARACTER_SET=utf8mb4
+      - MARIADB_COLLATE=utf8mb4_unicode_ci
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+  moodle:
+    image: docker.io/bitnamilegacy/moodle:5.0
+    ports:
+      - '80:8080'
+      - '443:8443'
+    environment:
+      - MOODLE_DATABASE_HOST=mariadb
+      - MOODLE_DATABASE_PORT_NUMBER=3306
+      - MOODLE_DATABASE_USER=bn_moodle
+      - MOODLE_DATABASE_NAME=bitnami_moodle
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - 'moodle_data:/bitnami/moodle'
+      - 'moodledata_data:/bitnami/moodledata'
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadb_data:
+    driver: local
+  moodle_data:
+    driver: local
+  moodledata_data:
+    driver: local
+```
+
+3. Start the containers:
+
+```bash
+(sudo) docker compose up -d
+```
+
+4. Moodle is now reachable at `http://localhost`
+5. Log in with the default credentials:
+
+```txt
+user: user
+password: bitnami
+```
 
 ## Installation
 
@@ -199,16 +265,16 @@ CourseAsCode supports the following activity types:
 
 1. **Label (Text and Media Areas)**
    - Rich text content displayed directly on the course page
-   
+
 2. **URL**
    - External links with various display options
-   
+
 3. **File**
    - Uploaded files for students to download
-   
+
 4. **Quiz**
    - Interactive assessments with various question types
-   
+
 5. **Assignment**
    - Tasks for students to complete and submit work
 
@@ -221,13 +287,13 @@ CourseAsCode supports the following question types for quizzes:
 1. **Multiple Choice**
    - Single answer (radio buttons)
    - Multiple answers (checkboxes)
-   
+
 2. **Dropdown (Matching)**
    - Match items from one list with items from another using dropdown menus
-   
+
 3. **Drag and Drop Text (Lückentext)**
    - Fill in gaps in text by dragging words or phrases
-   
+
 4. **CodeRunner**
    - Programming tasks with automated execution and testing
    - Supports various programming languages (Java, C, Python, etc.)
