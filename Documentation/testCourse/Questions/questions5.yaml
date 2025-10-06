@@ -39,3 +39,30 @@ Questions:
         TestCode: "Hello World Output"
         Expected: "Hello, World!"
         UseAsExample: false
+  - QuestionName: coderunner hello world cpp
+    Category: coderunner
+    QuestionId: 9
+    QuestionType: CODERUNNER
+    QuestionText: "<p>Write a complete C++ program that prints exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must include the necessary header files and a main() function. No input is needed.</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    CodeRunnerType: cpp_program
+    AllOrNothing: true
+    Precheck: 0
+    HideCheck: false
+    ShowSource: false
+    AnswerBoxLines: 18
+    AnswerBoxColumns: 100
+    Answer: "#include <iostream>\n\nint main() {\n    std::cout << \"Hello, World!\" << std::endl;\n    return 0;\n}"
+    ValidateOnSave: true
+    DisplayFeedback: true
+    GiveUpAllowed: true
+    CodeRunnerTestCases:
+      - Id: 1
+        TestCode: "Hello World Output"
+        TestType: 0
+        Expected: "Hello, World!"
+        UseAsExample: false
+        Display: "SHOW"
+        HideRestIfFail: false
+        Mark: 1
