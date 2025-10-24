@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Model.Enums.Quizzes;
+using CourseAsCode.Model.Grading;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 
@@ -37,6 +38,9 @@ public class Quiz : Activity
 
     [Description("Method used when several attempts exist")]
     public GradingMethod GradingMethod { get; set; } = QuizDefaults.DEFAULT_GRADING_METHOD;
+
+    [Description("The GradeCategory this quiz belongs to")]
+    public GradeCategory GradeCategory { get; set; } = QuizDefaults.DEFAULT_GRADE_CATEGORY;
 
     [Description("How many points this quiz is worth")]
     public float MaxGrade { get; set; } = QuizDefaults.DEFAULT_MAX_GRADE;

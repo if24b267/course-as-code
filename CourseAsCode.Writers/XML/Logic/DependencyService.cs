@@ -1,5 +1,6 @@
 ﻿using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.GeneralWriter;
