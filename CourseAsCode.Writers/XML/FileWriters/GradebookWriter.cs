@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml;
 using CourseAsCode.Model.Grading;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
@@ -50,7 +51,14 @@ namespace CourseAsCode.Writers.XML.FileWriters
                     }
                     writer.WriteEndElement(); // Close <grade_categories>
 
-                    WriteGradeItems(writer, course);
+                    // Write all grade items of the course
+                    writer.WriteStartElement("grade_items");
+                    foreach (GradeCategory gradeCategory in course.GradeCategories)
+                    {
+                        WriteGradeItem(writer, gradeCategory);
+                    }
+                    writer.WriteEndElement(); // Close <grade_items>
+
                     WriteGradeLetters(writer, course);
                     WriteGradeSettings(writer, course);
 
@@ -82,7 +90,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
         /// writes the `grade_category` section of the gradebook.xml file for a single grade category
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="gradeCategory">GradeCategory to be written.</param>
+        /// <param name="gradeCategory">The GradeCategory for which the grade category should be written.</param>
         private void WriteGradeCategory(XmlWriter writer, GradeCategory gradeCategory)
         {
             WriteStartElementWithAttributes(writer, "grade_category", new Dictionary<string, string>
@@ -112,42 +120,39 @@ namespace CourseAsCode.Writers.XML.FileWriters
         }
 
         /// <summary>
-        /// writes the `grade_items` section of the gradebook.xml file.
+        /// writes the `grade_items` section of the gradebook.xml file for a single grade category.
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the correct document.</param>
-        /// <param name="course">initialized Moodle Course.</param>
-        private void WriteGradeItems(XmlWriter writer, Model.Course course)
+        /// <param name="gradeCategory">The GradeCategory for which the grade item should be written.</param>
+        private void WriteGradeItem(XmlWriter writer, GradeCategory gradeCategory)
         {
-            writer.WriteStartElement("grade_items");
-
             WriteStartElementWithAttributes(writer, "grade_item", new Dictionary<string, string>
             {
                 { "id", _gradeItemIdCounter++.ToString() },
             });
 
-            // TODO: Determine what these values mean once we start implementing the gradebook
             var elements = new Dictionary<string, string>
             {
                 { "categoryid", "$@NULL@$" },
                 { "itemname", "$@NULL@$" },
                 { "itemtype", "course" },
                 { "itemmodule", "$@NULL@$" },
-                { "iteminstance", "3" },
+                { "iteminstance", gradeCategory.GradeCategoryId.ToString() },
                 { "itemnumber", "$@NULL@$" },
                 { "iteminfo", "$@NULL@$" },
                 { "idnumber", "$@NULL@$" },
                 { "calculation", "$@NULL@$" },
                 { "gradetype", "1" },
-                { "grademax", "0.00000" },
-                { "grademin", "0.00000" },
+                { "grademax", gradeCategory.MaxGrade.ToString("F5", CultureInfo.InvariantCulture) },
+                { "grademin", 0.ToString("F5", CultureInfo.InvariantCulture) },
                 { "scaleid", "$@NULL@$" },
                 { "outcomeid", "$@NULL@$" },
-                { "gradepass", "0.00000" },
+                { "gradepass", ((gradeCategory.PassingGrade ?? 0) / 100.0m).ToString("F5", CultureInfo.InvariantCulture) },
                 { "multfactor", "1.00000" },
                 { "plusfactor", "0.00000" },
                 { "aggregationcoef", "0.00000" },
-                { "aggregationcoef2", "0.00000" },
-                { "weightoverride", "0" },
+                { "aggregationcoef2", ((gradeCategory.GradingWeight ?? 0) / 100.0m).ToString("F5", CultureInfo.InvariantCulture) },
+                { "weightoverride", gradeCategory.GradingWeight.HasValue ? "1" : "0" },
                 { "sortorder", "1" },
                 { "display", "0" },
                 { "decimals", "$@NULL@$" },
@@ -165,7 +170,6 @@ namespace CourseAsCode.Writers.XML.FileWriters
             writer.WriteEndElement(); // Close <grade_grades>
 
             writer.WriteEndElement(); // Close <grade_item>
-            writer.WriteEndElement(); // Close <grade_items>
         }
 
         /// <summary>

@@ -22,7 +22,17 @@ namespace CourseAsCode.Model.Grading
 
         [Description("when the grade category was created")]
         public DateTime Created { get; set; }
+
         [Description("when the grade category was last modified")]
         public DateTime Modified { get; set; }
+
+        [Description("the maximum amount of points that can be earned in this grade category")]
+        public int MaxGrade { get; set; }
+
+        [Description("the minimum amount of points that has to be earned in this grade category to pass, null for no passing grade in this category")]
+        public int? PassingGrade { get; set; }
+
+        [Description("the weight of this grade category in the grade calculation of its parent grade category in % of 100, null for default weight")]
+        public int? GradingWeight { get; set; }
     }
 }

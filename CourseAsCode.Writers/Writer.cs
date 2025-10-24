@@ -124,6 +124,8 @@ namespace CourseAsCode.Writers
                 AggregationType = GradeAggregation.Natural,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
+                MaxGrade = 30,
+                PassingGrade = 15,
             });
 
             course.GradeCategories.Add(new GradeCategory()
@@ -134,6 +136,9 @@ namespace CourseAsCode.Writers
                 AggregationType = GradeAggregation.Natural,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
+                MaxGrade = 10,
+                PassingGrade = 5,
+                GradingWeight = 30,
             });
 
             course.GradeCategories.Add(new GradeCategory()
@@ -144,6 +149,9 @@ namespace CourseAsCode.Writers
                 AggregationType = GradeAggregation.Natural,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
+                MaxGrade = 20,
+                PassingGrade = 15,
+                GradingWeight = 70,
             });
         }
 
