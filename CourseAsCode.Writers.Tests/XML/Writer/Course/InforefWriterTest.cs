@@ -51,7 +51,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             // Assert: Verify that the root element is "inforef".
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.That(doc.DocumentElement.Name, Is.Not.Null, "The root element should not be null");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The root element should not be null");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("inforef"));
         }
 

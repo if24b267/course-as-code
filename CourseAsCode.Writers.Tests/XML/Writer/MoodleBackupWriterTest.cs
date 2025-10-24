@@ -85,7 +85,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var informationNode = doc.DocumentElement?.SelectSingleNode("information");
-            Assert.That(informationNode.Name, Is.Not.Null, $"The <information> element is missing");
+            Assert.That(informationNode, Is.Not.Null, $"The <information> element is missing");
 
             var detailsNode = informationNode.SelectSingleNode("details");
             var contentsNode = informationNode.SelectSingleNode("contents");

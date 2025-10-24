@@ -168,7 +168,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
-            Assert.That(doc.DocumentElement.Name, Is.Not.Null, "The XML document should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("question_categories"));
         }
 
