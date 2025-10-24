@@ -9,7 +9,7 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Writer
+namespace CourseAsCode.Writers.XML.FileWriters
 {
     public class FilesWriter : XmlWriterBase
     {
