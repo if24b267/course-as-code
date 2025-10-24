@@ -1,7 +1,12 @@
 using CourseAsCode.Model;
+using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Grading;
+using CourseAsCode.Model.Questions;
+using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -58,6 +63,10 @@ namespace CourseAsCode.Writers
             {
                 EnsureFolderStructureExists(outputPath);
 
+                // TODO: This is only for testing, remove later
+                AddGradingCategories(course);
+                ModifyQuizzesWithGradingInfo(course);
+
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
                 _sectionFilesWriterService.WriteSectionFiles(course, outputPath); // Files in /sections
@@ -105,8 +114,10 @@ namespace CourseAsCode.Writers
                 _logger.LogInformation("No sections specified by user, adding default section");
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
             }
+        }
 
-            // TODO: Remove this temp code
+        private void AddGradingCategories(Course course)
+        {
             course.GradeCategories.Add(new GradeCategory() {
                 GradeCategoryId = 1,
                 Name = "Course Overall",
@@ -134,6 +145,33 @@ namespace CourseAsCode.Writers
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
             });
+        }
+
+        private void ModifyQuizzesWithGradingInfo(Course course)
+        {
+            // Get activity with ID 14
+            var quiz1 = course.Sections[2].Activities
+                .OfType<Quiz>()
+                .FirstOrDefault(a => a.ActivityId == 14);
+
+            // Get activity with ID 16
+            var quiz2 = course.Sections[3].Activities
+                .OfType<Quiz>()
+                .FirstOrDefault(a => a.ActivityId == 16);
+
+            // Get activity with ID 18
+            var quiz3 = course.Sections[3].Activities
+                .OfType<Quiz>()
+                .FirstOrDefault(a => a.ActivityId == 18);
+
+            quiz1.GradeCategory = course.GradeCategories[1];
+            quiz1.GradingWeight = 100;
+
+            quiz2.GradeCategory = course.GradeCategories[2];
+            quiz2.GradingWeight = 25;
+
+            quiz3.GradeCategory = course.GradeCategories[2];
+            quiz3.GradingWeight = 75;
         }
     }
 }
