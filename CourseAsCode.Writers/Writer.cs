@@ -1,5 +1,7 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Defaults;
+using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Grading;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -103,6 +105,35 @@ namespace CourseAsCode.Writers
                 _logger.LogInformation("No sections specified by user, adding default section");
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
             }
+
+            // TODO: Remove this temp code
+            course.GradeCategories.Add(new GradeCategory() {
+                GradeCategoryId = 1,
+                Name = "Course Overall",
+                AggregationType = GradeAggregation.Natural,
+                Created = DateTime.Now,
+                Modified = DateTime.Now,
+            });
+
+            course.GradeCategories.Add(new GradeCategory()
+            {
+                GradeCategoryId = 2,
+                Name = "Theoretical Part",
+                Parent = course.GradeCategories[0],
+                AggregationType = GradeAggregation.Natural,
+                Created = DateTime.Now,
+                Modified = DateTime.Now,
+            });
+
+            course.GradeCategories.Add(new GradeCategory()
+            {
+                GradeCategoryId = 3,
+                Name = "Practical Part",
+                Parent = course.GradeCategories[0],
+                AggregationType = GradeAggregation.Natural,
+                Created = DateTime.Now,
+                Modified = DateTime.Now,
+            });
         }
     }
 }

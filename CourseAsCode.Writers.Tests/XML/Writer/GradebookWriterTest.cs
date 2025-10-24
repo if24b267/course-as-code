@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Writers.XML.FileWriters;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -12,15 +13,17 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private XmlWriterFactoryTest _testFactory;
         private ILogger<GradebookWriter> _testLogger;
         private GradebookWriter _gradebookWriter;
+        private IGeneralHelper _fakeGeneralHelper;
         private Model.Course _dummyCourse;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
         [SetUp]
         public void SetUp()
         {
+            _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
             _testLogger = Substitute.For<ILogger<GradebookWriter>>();
-            _gradebookWriter = new GradebookWriter(_testFactory, _testLogger);
+            _gradebookWriter = new GradebookWriter(_testFactory, _fakeGeneralHelper, _testLogger);
             _dummyCourse = new Model.Course();
         }
 
@@ -98,7 +101,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use a fake XML writer factory that throws an exception when creating the writer
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _gradebookWriter = new GradebookWriter(throwingFactory, _testLogger);
+            _gradebookWriter = new GradebookWriter(throwingFactory, _fakeGeneralHelper, _testLogger);
 
             // Act & Assert: Verify that an exception is thrown
             Assert.Throws<InvalidOperationException>(() =>

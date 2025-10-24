@@ -19,5 +19,10 @@ namespace CourseAsCode.Model.Grading
 
         [Description("enables a specified number of the lowest grades to be excluded from the aggregation")]
         public int? DropLowestGrades { get; set; }
+
+        [Description("when the grade category was created")]
+        public DateTime Created { get; set; }
+        [Description("when the grade category was last modified")]
+        public DateTime Modified { get; set; }
     }
 }
