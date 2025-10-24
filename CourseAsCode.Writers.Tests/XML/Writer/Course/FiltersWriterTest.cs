@@ -54,7 +54,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             // Assert: Verify that the XML root element is "filters"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("filters"));
         }
 
@@ -72,7 +72,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var filterActives = doc.DocumentElement?.SelectSingleNode("filter_actives");
-            Assert.IsNotNull(filterActives, "The <filter_actives> element is missing");
+            Assert.That(filterActives, Is.Not.Null, "The <filter_actives> element is missing");
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var filterConfigs = doc.DocumentElement?.SelectSingleNode("filter_configs");
-            Assert.IsNotNull(filterConfigs, "The <filter_configs> element is missing");
+            Assert.That(filterConfigs, Is.Not.Null, "The <filter_configs> element is missing");
         }
 
         [Test]

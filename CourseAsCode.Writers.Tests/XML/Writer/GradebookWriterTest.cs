@@ -50,7 +50,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "XML should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("gradebook"));
         }
 
@@ -71,11 +71,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var gradeLettersNode = doc.DocumentElement?.SelectSingleNode("grade_letters");
             var gradeSettingsNode = doc.DocumentElement?.SelectSingleNode("grade_settings");
 
-            Assert.IsNotNull(attributesNode, "The <attributes> element is missing");
-            Assert.IsNotNull(gradeCategoriesNode, "The <grade_categories> element is missing");
-            Assert.IsNotNull(gradeItemsNode, "The <grade_items> element is missing");
-            Assert.IsNotNull(gradeLettersNode, "The <grade_letters> element is missing");
-            Assert.IsNotNull(gradeSettingsNode, "The <grade_settings> element is missing");
+            Assert.That(attributesNode, Is.Not.Null, "The <attributes> element is missing");
+            Assert.That(gradeCategoriesNode, Is.Not.Null, "The <grade_categories> element is missing");
+            Assert.That(gradeItemsNode, Is.Not.Null, "The <grade_items> element is missing");
+            Assert.That(gradeLettersNode, Is.Not.Null, "The <grade_letters> element is missing");
+            Assert.That(gradeSettingsNode, Is.Not.Null, "The <grade_settings> element is missing");
         }
 
         [Test]

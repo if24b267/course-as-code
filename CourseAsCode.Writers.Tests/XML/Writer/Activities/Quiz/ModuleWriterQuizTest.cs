@@ -51,7 +51,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             _dummyCourse = new Model.Course
             {
                 BackupMetadata = new BackupMetadata { MoodleVersion = MoodleVersion.Moodle450 },
-                Sections = new List<Section>()
+                Sections = new List<Section>(),
             };
 
             _dummySection = new Section
@@ -59,8 +59,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                 Name = "Test Section",
                 SystemDefaults = new Section.SystemDefaultsSection
                 {
-                    SectionId = 7
-                }
+                    SectionId = 7,
+                },
             };
             _dummyCourse.Sections.Add(_dummySection);
 
@@ -107,8 +107,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             doc.LoadXml(output);
 
             // Assert: The XML root element is <module>
-            Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element.");
-            Assert.That(doc.DocumentElement.Name, Is.EqualTo("module"));
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element.");
+            Assert.That(doc.DocumentElement?.Name, Is.EqualTo("module"));
         }
 
         [Test]

@@ -54,7 +54,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             // Assert: Verify that the root element is "events".
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("events"));
         }
 

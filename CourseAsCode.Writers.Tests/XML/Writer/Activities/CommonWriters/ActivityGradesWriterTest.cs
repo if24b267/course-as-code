@@ -52,7 +52,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             // Assert: Verify that the XML root element is "activity_gradebook"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("activity_gradebook"));
         }
 
@@ -70,7 +70,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var gradeItems = doc.DocumentElement?.SelectSingleNode("grade_items");
-            Assert.IsNotNull(gradeItems, "Missing <grade_items> element");
+            Assert.That(gradeItems, Is.Not.Null, "Missing <grade_items> element");
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var gradeLetters = doc.DocumentElement?.SelectSingleNode("grade_letters");
-            Assert.IsNotNull(gradeLetters, "Missing <grade_letters> element");
+            Assert.That(gradeLetters, Is.Not.Null, "Missing <grade_letters> element");
         }
 
         [Test]

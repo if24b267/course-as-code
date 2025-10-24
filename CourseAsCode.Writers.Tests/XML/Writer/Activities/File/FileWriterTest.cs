@@ -20,7 +20,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
         // Dummy MoodleFile activity
-        private MoodleFile _dummyFile = new MoodleFile()
+        private readonly MoodleFile _dummyFile = new MoodleFile()
         {
             Name = "TestFile",
             ActivityId = 2,
@@ -77,7 +77,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
 
             // Assert: The root element is <activity> and its attributes match the expected values.
             var root = xmlDoc.DocumentElement;
-            Assert.IsNotNull(root, "The XML document should have a root element");
+            Assert.That(root, Is.Not.Null, "No <activity> / root element found");
             Assert.That(root.Name, Is.EqualTo("activity"));
             Assert.That(root.GetAttribute("id"), Is.EqualTo(_dummyFile.ActivityId.ToString()));
             Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyFile.ModuleId.ToString()));
@@ -97,7 +97,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
 
             // Assert: Verify that the <resource> element exists and has the correct "id" attribute.
             var resourceElement = xmlDoc.DocumentElement?.SelectSingleNode("resource") as XmlElement;
-            Assert.IsNotNull(resourceElement, "The <resource> element is missing");
+            Assert.That(resourceElement, Is.Not.Null, "The <resource> element is missing");
             Assert.That(resourceElement.GetAttribute("id"), Is.EqualTo(_dummyFile.ActivityId.ToString()));
         }
 

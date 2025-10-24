@@ -109,8 +109,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             doc.LoadXml(output);
 
             // Assert: The XML root element is <module>
-            Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element.");
-            Assert.That(doc.DocumentElement.Name, Is.EqualTo("module"));
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element.");
+            Assert.That(doc.DocumentElement?.Name, Is.EqualTo("module"));
         }
 
         [Test]
@@ -144,9 +144,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
             var moduleElement = doc.DocumentElement;
 
             // Verify inner elements from the dictionary
-            Assert.That(moduleElement?["modulename"]?.InnerText, Is.EqualTo(_dummyLabel.ModuleName));
+            Assert.That(moduleElement["modulename"]?.InnerText, Is.EqualTo(_dummyLabel.ModuleName));
             Assert.That(moduleElement["sectionid"]?.InnerText, Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
-            Assert.That(moduleElement?["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
+            Assert.That(moduleElement["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
 
             // Inner elements from the mocked helper methods
             Assert.That(moduleElement["added"]?.InnerText, Is.EqualTo("1234567890"));

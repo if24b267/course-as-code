@@ -18,7 +18,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
         // Dummy URL activity object
-        private URL _dummyUrl = new URL
+        private readonly URL _dummyUrl = new URL
         {
             Name = "Test URL",
             Description = "This is a test URL description",
@@ -70,7 +70,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
 
             // Assert: The root element is <activity> and has expected attributes
             var activityElement = xmlDoc.DocumentElement;
-            Assert.IsNotNull(activityElement, "The XML document should have a root element");
+            Assert.That(activityElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(activityElement.Name, Is.EqualTo("activity"));
             Assert.That(activityElement.GetAttribute("id"), Is.EqualTo(_dummyUrl.ActivityId.ToString()));
             Assert.That(activityElement.GetAttribute("moduleid"), Is.EqualTo(_dummyUrl.ModuleId.ToString()));
@@ -90,7 +90,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
 
             // Assert: Verify that <url> element exists and contains its child elements
             var urlElement = xmlDoc.DocumentElement?.SelectSingleNode("url") as XmlElement;
-            Assert.IsNotNull(urlElement, "The <url> element is missing");
+            Assert.That(urlElement, Is.Not.Null, "The <url> element is missing");
             Assert.That(urlElement.GetAttribute("id"), Is.EqualTo(_dummyUrl.ActivityId.ToString()));
 
             // Check some of the child elements for expected content

@@ -11,7 +11,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     {
         private XmlWriterFactoryTest _testFactory;
         private ILogger<BadgesWriter> _testLogger;
-        BadgesWriter _testBadgesWriter;
+        private BadgesWriter _testBadgesWriter;
 
         [SetUp]
         public void SetUp()
@@ -52,7 +52,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: The root element should be "badges"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement);
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("badges"));
         }
 

@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
 
             // Assert: Root element is <course> and contains "id" and "contextid" attributes
             var root = doc.DocumentElement;
-            Assert.IsNotNull(root, "XML should have a root element");
+            Assert.That(root, Is.Not.Null, "XML should have a root element");
             Assert.That(root.Name, Is.EqualTo("course"));
             Assert.That(root.GetAttribute("id"), Is.EqualTo(_dummyCourse.SystemDefaults.Id.ToString()));
             Assert.That(root.GetAttribute("contextid"), Is.EqualTo(GeneralDefaults.COURSECONTEXTID.ToString()));
@@ -91,8 +91,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var shortnameNode = doc.DocumentElement?.SelectSingleNode("shortname");
             var fullnameNode = doc.DocumentElement?.SelectSingleNode("fullname");
 
-            Assert.IsNotNull(shortnameNode, "<shortname> element is missing");
-            Assert.IsNotNull(fullnameNode, "<fullname> element is missing");
+            Assert.That(shortnameNode, Is.Not.Null, "<shortname> element is missing");
+            Assert.That(fullnameNode, Is.Not.Null, "<fullname> element is missing");
             Assert.That(shortnameNode.InnerText, Is.EqualTo(_dummyCourse.ShortName));
             Assert.That(fullnameNode.InnerText, Is.EqualTo(_dummyCourse.FullName));
         }
@@ -108,13 +108,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
 
             // Assert: Verify that the <category> section exists and contains the expected elements
             var categoryNode = doc.DocumentElement?.SelectSingleNode("category");
-            Assert.IsNotNull(categoryNode, "<category> element is missing");
+            Assert.That(categoryNode, Is.Not.Null, "<category> element is missing");
 
             var nameNode = categoryNode["name"];
             var descriptionNode = categoryNode["description"];
 
-            Assert.IsNotNull(nameNode, "Category <name> element is missing");
-            Assert.IsNotNull(descriptionNode, "Category <description> element is missing");
+            Assert.That(nameNode, Is.Not.Null, "Category <name> element is missing");
+            Assert.That(descriptionNode, Is.Not.Null, "Category <description> element is missing");
             Assert.That(nameNode.InnerText, Is.EqualTo(_dummyCourse.SensibleDefaults.CategoryName));
             Assert.That(descriptionNode.InnerText, Is.EqualTo(_dummyCourse.SensibleDefaults.CategoryDescription ?? "$@NULL@$"));
         }
@@ -133,10 +133,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
 
             // Assert: Verify that the <tags> element exists and contains tag elements
             var tagsNode = doc.DocumentElement?.SelectSingleNode("tags");
-            Assert.IsNotNull(tagsNode, "<tags> element should exist when course has tags");
+            Assert.That(tagsNode, Is.Not.Null, "<tags> element should exist when course has tags");
 
             var tagNodes = tagsNode.SelectNodes("tag");
-            Assert.IsNotNull(tagNodes, "No <tag> elements found in <tags> section");
+            Assert.That(tagNodes, Is.Not.Null, "No <tag> elements found in <tags> section");
             Assert.That(tagNodes.Count, Is.EqualTo(_dummyCourse.Tags.Count));
         }
 
@@ -154,7 +154,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
 
             // Assert: Verify that the <tags> element is not present
             var tagsNode = doc.DocumentElement?.SelectSingleNode("tags");
-            Assert.IsNull(tagsNode, "Tags section should be skipped when there are no tags.");
+            Assert.That(tagsNode, Is.Null, "Tags section should be skipped when there are no tags.");
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
 
             // Assert: Verify that <customfields> exists
             var customFieldsNode = doc.DocumentElement?.SelectSingleNode("customfields");
-            Assert.IsNotNull(customFieldsNode, "<customfields> element is missing");
+            Assert.That(customFieldsNode, Is.Not.Null, "<customfields> element is missing");
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
 
             // Assert: Verify that <courseformatoptions> exists
             var optionsNode = doc.DocumentElement?.SelectSingleNode("courseformatoptions");
-            Assert.IsNotNull(optionsNode, "<courseformatoptions> element is missing");
+            Assert.That(optionsNode, Is.Not.Null, "<courseformatoptions> element is missing");
         }
 
         [Test]

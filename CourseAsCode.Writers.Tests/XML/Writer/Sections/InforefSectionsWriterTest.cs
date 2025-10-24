@@ -19,7 +19,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
         // Dummy section
-        private Section _dummySection = new Section
+        private readonly Section _dummySection = new Section
         {
             Name = "Test Section",
             Summary = "This is a test section",
@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             xmlDoc.LoadXml(output);
 
             // Assert: Verify that the XML contains the required elements
-            Assert.IsNotNull(xmlDoc.DocumentElement, "The XML document should have a root element");
+            Assert.That(xmlDoc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(xmlDoc.DocumentElement.Name, Is.EqualTo("inforef"));
         }
 
@@ -91,7 +91,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
                 Arg.Is<object>(o => o.ToString().Contains($"section_{_dummySection.SystemDefaults.SectionId}/inforef.xml")),
                 null,
                 Arg.Any<Func<object, Exception, string>>()!);
-
         }
 
         [Test]
@@ -100,7 +99,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             // Arrange: Configure the fake file service to throw an exception when CreateDirectory is called.
             _fakeFileService
                 .When(fs => fs.CreateDirectory(Arg.Any<string>()))
-                .Do(x => { throw new InvalidOperationException("Test directory failure"); });
+                .Do(_ => throw new InvalidOperationException("Test directory failure"));
 
             // Create a list of sections
             _sections = new List<Section> { _dummySection };
@@ -110,7 +109,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             string output = _testFactory.StringWriter.ToString();
 
             // Assert: Since directory creation failed, no XML should be written.
-            Assert.IsEmpty(output, "Output should be empty because the section was skipped.");
+            Assert.That(output, Is.Empty, "Output should be empty because the section was skipped.");
 
             // Verify that error logs were recorded.
             _testLogger.Received().Log(

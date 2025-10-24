@@ -19,7 +19,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
         // Dummy label activity
-        private TextAndMediaArea _dummyLabel = new TextAndMediaArea
+        private readonly TextAndMediaArea _dummyLabel = new TextAndMediaArea
         {
             ActivityId = 1,
             Name = "Test Label",
@@ -74,7 +74,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
 
             // Assert: The root element is <activity> with correct attributes
             var root = xmlDoc.DocumentElement;
-            Assert.IsNotNull(root, "The XML document should have a root element");
+            Assert.That(root, Is.Not.Null, "The XML document should have a root element");
             Assert.That(root.Name, Is.EqualTo("activity"));
             Assert.That(root.GetAttribute("id"), Is.EqualTo(_dummyLabel.ActivityId.ToString()));
             Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyLabel.ModuleId.ToString()));
@@ -94,12 +94,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Labels
 
             // Assert: Verify that the <label> element exists with the expected child elements.
             var labelElement = xmlDoc.DocumentElement?.SelectSingleNode("label") as XmlElement;
-            Assert.IsNotNull(labelElement, "The <label> element is missing");
+            Assert.That(labelElement, Is.Not.Null, "The <label> element is missing");
             Assert.That(labelElement.GetAttribute("id"), Is.EqualTo(_dummyLabel.ActivityId.ToString()));
 
             // Check that the child elements are written as expected.
             Assert.That(labelElement["name"]?.InnerText, Is.EqualTo(_dummyLabel.Name));
-            Assert.That(labelElement["intro"]?.InnerText, Is.EqualTo(_dummyLabel.Content ?? string.Empty));
+            Assert.That(labelElement["intro"]?.InnerText, Is.EqualTo(_dummyLabel.Content));
             Assert.That(labelElement["introformat"]?.InnerText, Is.EqualTo("4")); // from mocked EnumIntegerToString
             Assert.That(labelElement["timemodified"]?.InnerText, Is.EqualTo("1234567890")); // from mocked general helper
         }

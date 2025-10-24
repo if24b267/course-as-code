@@ -80,7 +80,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             doc.LoadXml(output);
 
             var roleNodes = doc.DocumentElement?.SelectNodes("role");
-            Assert.IsNotNull(roleNodes, "No <role> elements found");
+            Assert.That(roleNodes, Is.Not.Null, "No <role> elements found");
             Assert.That(roleNodes.Count, Is.EqualTo(_dummyCourse.Roles.Count));
 
             // For each role, verify that the attribute and child elements are present and correct
@@ -89,7 +89,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 // Find the <role> element with the expected id attribute
                 var xpath = $"/roles_definition/role[@id='{role.SystemDefaults.RoleId}']";
                 var roleElement = doc.SelectSingleNode(xpath) as XmlElement;
-                Assert.IsNotNull(roleElement, $"Role element with id '{role.SystemDefaults.RoleId}' was not found");
+                Assert.That(roleElement, Is.Not.Null, $"Role element with id '{role.SystemDefaults.RoleId}' was not found");
 
                 // Check the inner elements
                 Assert.That(roleElement["name"]?.InnerText, Is.EqualTo(role.Name ?? string.Empty));

@@ -1,7 +1,6 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using CourseAsCode.Writers.XML.Writer.Course;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -53,7 +52,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             // Assert: Verify that the root element is "course_module_competencies"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("course_module_competencies"));
         }
 
@@ -71,7 +70,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var competenciesNode = doc.DocumentElement?.SelectSingleNode("competencies");
-            Assert.IsNotNull(competenciesNode, "The <competencies> element is missing");
+            Assert.That(competenciesNode, Is.Not.Null, "The <competencies> element is missing");
         }
 
         [Test]

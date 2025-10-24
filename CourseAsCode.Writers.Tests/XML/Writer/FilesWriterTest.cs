@@ -83,7 +83,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: The XML root element should be "files"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("files"));
         }
 
@@ -131,7 +131,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             doc.LoadXml(output);
 
             var fileNode = doc.DocumentElement?.SelectSingleNode("file");
-            Assert.IsNull(fileNode, "No <file> element should be written if file does not exist");
+            Assert.That(fileNode, Is.Null, "No <file> element should be written if file does not exist");
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Configure IFileService: Exists returns true, but OpenRead throws.
             _fileService.Exists(moodleFile.FilePath).Returns(true);
-            _fileService.OpenRead(moodleFile.FilePath).Returns(x => throw new IOException("Simulated OpenRead failure"));
+            _fileService.OpenRead(moodleFile.FilePath).Returns(_ => throw new IOException("Simulated OpenRead failure"));
 
             // Act
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
@@ -190,7 +190,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             doc.LoadXml(output);
 
             var fileNode = doc.DocumentElement?.SelectSingleNode("file");
-            Assert.IsNull(fileNode, "No <file> element should be written if opening the file fails");
+            Assert.That(fileNode, Is.Null, "No <file> element should be written if opening the file fails");
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Configure IFileService: Exists returns true, but OpenRead throws.
             _fileService.Exists(moodleFile.FilePath).Returns(true);
-            _fileService.OpenRead(moodleFile.FilePath).Returns(x => throw new IOException("Simulated OpenRead failure"));
+            _fileService.OpenRead(moodleFile.FilePath).Returns(_ => throw new IOException("Simulated OpenRead failure"));
 
             // Act
             _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
