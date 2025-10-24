@@ -75,7 +75,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert that the root element is <users>.
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("users"));
         }
 
@@ -94,7 +94,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             doc.LoadXml(output);
 
             var userElement = doc.SelectSingleNode($"/users/user[@id='{_dummyCourse.EnrolledUsers[0].SystemDefaults.Id}']") as XmlElement;
-            Assert.IsNotNull(userElement, $"User element with id '{_dummyCourse.EnrolledUsers[0].SystemDefaults.Id}' not found");
+            Assert.That(userElement, Is.Not.Null, $"User element with id '{_dummyCourse.EnrolledUsers[0].SystemDefaults.Id}' not found");
 
             // Check some of the inner elements (full schema validation should be done in the integration tests)
             // The expected values come partly from the dummy user and partly from the fake helpers defined in the setup
@@ -122,12 +122,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             doc.LoadXml(output);
 
             var userElement = doc.SelectSingleNode($"/users/user[@id='{_dummyCourse.EnrolledUsers[0].SystemDefaults.Id}']") as XmlElement;
-            Assert.IsNotNull(userElement, "User element not found");
+            Assert.That(userElement, Is.Not.Null, "User element not found");
 
-            Assert.IsNotNull(userElement.SelectSingleNode("custom_fields"), "custom_fields section missing.");
-            Assert.IsNotNull(userElement.SelectSingleNode("tags"), "tags section missing.");
-            Assert.IsNotNull(userElement.SelectSingleNode("preferences"), "preferences section missing.");
-            Assert.IsNotNull(userElement.SelectSingleNode("roles"), "roles section missing.");
+            Assert.That(userElement.SelectSingleNode("custom_fields"), Is.Not.Null, "custom_fields section missing.");
+            Assert.That(userElement.SelectSingleNode("tags"), Is.Not.Null, "tags section missing.");
+            Assert.That(userElement.SelectSingleNode("preferences"), Is.Not.Null, "preferences section missing.");
+            Assert.That(userElement.SelectSingleNode("roles"), Is.Not.Null, "roles section missing.");
         }
 
         [Test]

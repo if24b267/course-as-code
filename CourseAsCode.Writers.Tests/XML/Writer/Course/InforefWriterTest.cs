@@ -51,7 +51,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             // Assert: Verify that the root element is "inforef".
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement.Name, Is.Not.Null, "The root element should not be null");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("inforef"));
         }
 
@@ -69,7 +69,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var userref = doc.DocumentElement.SelectSingleNode("userref");
-            Assert.IsNotNull(userref, "Missing <userref> element");
+            Assert.That(userref, Is.Not.Null, "Missing <userref> element");
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var roleref = doc.DocumentElement.SelectSingleNode("roleref");
-            Assert.IsNotNull(roleref, "Missing <roleref> element");
+            Assert.That(roleref, Is.Not.Null, "Missing <roleref> element");
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var roleref = doc.DocumentElement.SelectSingleNode("fileref");
-            Assert.IsNotNull(roleref, "Missing <fileref> element");
+            Assert.That(roleref, Is.Not.Null, "Missing <fileref> element");
         }
 
         [Test]

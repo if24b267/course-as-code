@@ -108,7 +108,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             doc.LoadXml(output);
 
             // Assert: The XML root element is <module>
-            Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element.");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element.");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("module"));
         }
 

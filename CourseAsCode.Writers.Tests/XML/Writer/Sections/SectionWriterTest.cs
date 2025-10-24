@@ -18,7 +18,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
         // Dummy section
-        private Section _dummySection = new Section
+        private readonly Section _dummySection = new Section
         {
             Name = "Test Section",
             Summary = "This is a test section",
@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
 
             // Assert: Verify that the output XML is well formed and contains the expected <section> element
             var sectionElement = xmlDoc.DocumentElement;
-            Assert.IsNotNull(sectionElement, "No root element found");
+            Assert.That(sectionElement, Is.Not.Null, "No <section> / root element found");
             Assert.That(sectionElement.Name, Is.EqualTo("section"));
             Assert.That(sectionElement.GetAttribute("id"), Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
         }
@@ -124,7 +124,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             // Simulate directory creation failure
             _fakeFileService
                 .When(x => x.CreateDirectory(Arg.Any<string>()))
-                .Do(x => throw new InvalidOperationException("Test directory failure"));
+                .Do(_ => throw new InvalidOperationException("Test directory failure"));
 
             // Act: Call WriteSections. The exception during directory creation should be caught and logged,
             // and this section should be skipped (i.e. no XML file is created).
@@ -132,7 +132,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Sections
             string output = _testFactory.StringWriter.ToString();
 
             // Assert: Verify that the output is empty because the section was skipped
-            Assert.IsEmpty(output, "Output should be empty because the section was skipped.");
+            Assert.That(output, Is.Empty, "Output should be empty because the section was skipped.");
 
             // Verify that error logs were recorded
             _testLogger.Received().Log(

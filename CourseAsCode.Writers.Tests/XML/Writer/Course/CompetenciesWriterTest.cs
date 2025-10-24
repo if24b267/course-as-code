@@ -54,7 +54,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             // Assert: Verify that the XML root element is "course_competencies".
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("course_competencies"));
         }
 
@@ -72,7 +72,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var competenciesNode = doc.DocumentElement?.SelectSingleNode("competencies");
-            Assert.IsNotNull(competenciesNode, "The <competencies> element is missing");
+            Assert.That(competenciesNode, Is.Not.Null, "The <competencies> element is missing");
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var userCompetenciesNode = doc.DocumentElement?.SelectSingleNode("user_competencies");
-            Assert.IsNotNull(userCompetenciesNode, "The <user_competencies> element is missing");
+            Assert.That(userCompetenciesNode, Is.Not.Null, "The <user_competencies> element is missing");
         }
 
         [Test]

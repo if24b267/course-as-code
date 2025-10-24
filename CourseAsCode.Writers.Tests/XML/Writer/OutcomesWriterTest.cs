@@ -54,7 +54,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: Verify that the root element is "outcomes_definition"
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("outcomes_definition"));
         }
 

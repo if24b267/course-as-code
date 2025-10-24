@@ -1,7 +1,6 @@
 ﻿using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
-using CourseAsCode.Writers.XML.Writer.Course;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -53,7 +52,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             // Assert: The XML root element should be "completions"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("completions"));
         }
 
@@ -71,7 +70,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var completionViewsNode = doc.DocumentElement?.SelectSingleNode("completionviews");
-            Assert.IsNotNull(completionViewsNode, "The <completionviews> element is missing");
+            Assert.That(completionViewsNode, Is.Not.Null, "The <completionviews> element is missing");
         }
 
         [Test]

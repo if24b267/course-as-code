@@ -66,8 +66,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
             var overridesNode = doc.DocumentElement.SelectSingleNode("role_overrides");
             var assignmentsNode = doc.DocumentElement.SelectSingleNode("role_assignments");
 
-            Assert.IsNotNull(overridesNode, "<role_overrides> section is missing");
-            Assert.IsNotNull(assignmentsNode, "<role_assignments> section is missing");
+            Assert.That(overridesNode, Is.Not.Null, "<role_overrides> section should be present");
+            Assert.That(assignmentsNode, Is.Not.Null, "<role_assignments> section should be present");
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
 
             // Assert: Verify that for each enrolled user, an <assignment> element is created inside <role_assignments>.
             var assignmentNodes = doc.DocumentElement?.SelectNodes("role_assignments/assignment");
-            Assert.IsNotNull(assignmentNodes, "No <assignment> elements found");
+            Assert.That(assignmentNodes, Is.Not.Null, "No <assignment> elements found");
             Assert.That(assignmentNodes.Count, Is.EqualTo(_dummyCourse.EnrolledUsers.Count));
         }
 
@@ -107,7 +107,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 var user = _dummyCourse.EnrolledUsers[i];
                 var xpath = $"/roles/role_assignments/assignment[@id='{i}']";
                 var assignmentElement = doc.SelectSingleNode(xpath) as XmlElement;
-                Assert.IsNotNull(assignmentElement, $"Assignment element with id '{i}' not found.");
+                Assert.That(assignmentElement, Is.Not.Null, $"Assignment element with id '{i}' not found.");
 
                 Assert.That(assignmentElement["roleid"]?.InnerText, Is.EqualTo(user.Role.SystemDefaults.RoleId.ToString()));
                 Assert.That(assignmentElement["userid"]?.InnerText, Is.EqualTo(user.SystemDefaults.Id.ToString()));
@@ -160,11 +160,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
         {
             var course = new Model.Course
             {
-                EnrolledUsers = new System.Collections.Generic.List<Model.User>(),
+                EnrolledUsers = new List<User>(),
             };
 
             // Create dummy users with assigned roles
-            var user1 = new Model.User
+            var user1 = new User
             {
                 Username = "user1",
                 SystemDefaults = new User.SystemDefaultsUser() { Id = 201 },
@@ -178,7 +178,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Course
                 },
             };
 
-            var user2 = new Model.User
+            var user2 = new User
             {
                 Username = "user2",
                 SystemDefaults = new User.SystemDefaultsUser() { Id = 202 },

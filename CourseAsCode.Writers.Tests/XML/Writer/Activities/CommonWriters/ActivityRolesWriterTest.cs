@@ -52,7 +52,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             // Assert: Verify that the XML root element is "roles"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("roles"));
         }
 
@@ -70,7 +70,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var roleOverrides = doc.DocumentElement?.SelectSingleNode("role_overrides");
-            Assert.IsNotNull(roleOverrides, "Missing <role_overrides> element");
+            Assert.That(roleOverrides, Is.Not.Null, "Missing <role_overrides> element");
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var roleAssignments = doc.DocumentElement?.SelectSingleNode("role_assignments");
-            Assert.IsNotNull(roleAssignments, "Missing <role_assignments> element");
+            Assert.That(roleAssignments, Is.Not.Null, "Missing <role_assignments> element");
         }
 
         [Test]

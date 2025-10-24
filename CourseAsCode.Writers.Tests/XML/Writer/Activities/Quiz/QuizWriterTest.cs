@@ -68,14 +68,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                         AnswerGrade = 0,
                         AnswerFeedback =
                             "<p>Just seeing an NP somewhere doesn’t make it right.</p>",
-                        AnswerFeedbackFormat = FormattingFormat.HTML
+                        AnswerFeedbackFormat = FormattingFormat.HTML,
                     },
                     new()
                     {
                         AnswerText  = "<p>IP = PSPACE</p>",
                         AnswerTextFormat = FormattingFormat.HTML,
-                        AnswerGrade = 1
-                    }
+                        AnswerGrade = 1,
+                    },
                 },
                 Hints = new List<Hint>
                 {
@@ -83,9 +83,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                     {
                         HintText =
                             "<p>Recall that IP refers to interactive proofs …</p>",
-                        HintTextFormat = FormattingFormat.HTML
-                    }
-                }
+                        HintTextFormat = FormattingFormat.HTML,
+                    },
+                },
             };
 
             var q2 = new MultipleChoiceQuestion
@@ -105,8 +105,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                     new() { AnswerText = "<p>ls</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
                     new() { AnswerText = "<p>cd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
                     new() { AnswerText = "<p>pwd</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f / 3f },
-                    new() { AnswerText = "<p>grep</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 3f }
-                }
+                    new() { AnswerText = "<p>grep</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 3f },
+                },
             };
 
             var q3 = new SingleChoiceQuestion
@@ -123,12 +123,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                 SingleChoice = true,
                 Answers = new List<MultiChoiceAnswer>
                 {
-                    new() { AnswerText = "<p>User home directories</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f, AnswerFeedback = "<p>Hahaha, are you stupid?</p>", AnswerFeedbackFormat = FormattingFormat.HTML},
+                    new() { AnswerText = "<p>User home directories</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f, AnswerFeedback = "<p>Hahaha, are you stupid?</p>", AnswerFeedbackFormat = FormattingFormat.HTML },
                     new() { AnswerText = "<p>System configuration files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
                     new() { AnswerText = "<p>Essential command binaries</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
                     new() { AnswerText = "<p>Device files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = -1f / 4f },
-                    new() { AnswerText = "<p>System log files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f }
-                }
+                    new() { AnswerText = "<p>System log files</p>", AnswerTextFormat = FormattingFormat.HTML, AnswerGrade = 1f },
+                },
             };
 
             // Create a dummy quiz with three questions across two categories and three feedbacks
@@ -151,20 +151,20 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
                     {
                         FeedbackText = "<p>You did it!</p>",
                         GradeBoundary = 100f,
-                        OverallFeedbackFormat = FormattingFormat.HTML
+                        OverallFeedbackFormat = FormattingFormat.HTML,
                     },
                     new QuizFeedback()
                     {
                         FeedbackText  = "<p>Probably should go back to kindergarten</p>",
                         GradeBoundary = 50f,
-                        OverallFeedbackFormat = FormattingFormat.HTML
+                        OverallFeedbackFormat = FormattingFormat.HTML,
                     },
                     new QuizFeedback()
                     {
                         FeedbackText = "<p>Oh, wow that's just sad</p>",
                         GradeBoundary = 0f,
-                        OverallFeedbackFormat = FormattingFormat.HTML
-                    }
+                        OverallFeedbackFormat = FormattingFormat.HTML,
+                    },
                 },
                 ModuleId = 101,
                 ModuleName = "quiz",
@@ -198,7 +198,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Assert: The root element is <activity> with correct attributes
             var root = doc.DocumentElement;
-            Assert.IsNotNull(root, "The XML document should have a root element");
+            Assert.That(root, Is.Not.Null, "The XML document should have a root element");
             Assert.That(root.Name, Is.EqualTo("activity"));
             Assert.That(root.GetAttribute("id"), Is.EqualTo(_dummyQuiz.ActivityId.ToString()));
             Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyQuiz.ModuleId.ToString()));
@@ -218,7 +218,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Assert: The quiz element should be <quiz> with correct id attribute
             var quizNode = doc.DocumentElement?.SelectSingleNode("quiz");
-            Assert.IsNotNull(quizNode, "Missing <quiz> element");
+            Assert.That(quizNode, Is.Not.Null, "Missing <quiz> element");
             Assert.That(quizNode.Attributes?["id"]?.Value, Is.EqualTo(_dummyQuiz.ActivityId.ToString()));
         }
 
@@ -234,11 +234,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Assert: Name and description elements should be present and have correct values
             var nameNode = doc.DocumentElement?.SelectSingleNode("quiz/name");
-            Assert.IsNotNull(nameNode, "Missing <name>");
+            Assert.That(nameNode, Is.Not.Null, "Missing <name>");
             Assert.That(nameNode.InnerText, Is.EqualTo(_dummyQuiz.Name));
 
             var introNode = doc.DocumentElement?.SelectSingleNode("quiz/intro");
-            Assert.IsNotNull(introNode, "Missing <intro>");
+            Assert.That(introNode, Is.Not.Null, "Missing <intro>");
             Assert.That(introNode.InnerText, Is.EqualTo(_dummyQuiz.Description));
         }
 
@@ -254,7 +254,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Assert: The question elements should be <question_instance> with correct id attributes
             var questionNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance");
-            Assert.IsNotNull(questionNodes, "Missing <question> elements");
+            Assert.That(questionNodes, Is.Not.Null, "Missing <question> elements");
             Assert.That(questionNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
 
             // Assert: The IDs of the <question_instance> elements should match the IDs of the questions
@@ -277,7 +277,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Assert: The question reference elements should be <question_reference> with correct id attributes
             var questionRefNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance//question_reference");
-            Assert.IsNotNull(questionRefNodes, "Missing <question_reference> elements");
+            Assert.That(questionRefNodes, Is.Not.Null, "Missing <question_reference> elements");
             Assert.That(questionRefNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
 
             // Assert: The IDs of the <question_reference> elements should match the IDs of the questions
@@ -300,7 +300,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Assert: The <questionbankentryid> elements inside the <question_reference> elements should reference the correct question bank
             var questionBankRefNodes = doc.DocumentElement?.SelectNodes("//quiz//question_instance//question_reference//questionbankentryid");
-            Assert.IsNotNull(questionBankRefNodes, "Missing <questionbankentryid> elements");
+            Assert.That(questionBankRefNodes, Is.Not.Null, "Missing <questionbankentryid> elements");
             Assert.That(questionBankRefNodes.Count, Is.EqualTo(_dummyQuiz.Questions.Count));
 
             // Assert: The IDs (= value) of the <questionbankentryid> elements should match the QuestionBank IDs stored in the questions

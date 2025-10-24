@@ -4,7 +4,6 @@ using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
-using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -18,7 +17,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
         private ILogger<CodeRunnerPluginWriter> _logger;
         private IGeneralHelper _generalHelper;
         private ISequentialIdGenerator _idGenerator;
-        private IQuizHelper _quizHelper;
         private CodeRunnerPluginWriter _codeRunnerWriter;
         private XmlWriter _xmlWriter;
 
@@ -73,10 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             finally
             {
                 // Always close the writer
-                if (_xmlWriter != null)
-                {
-                    _xmlWriter.Close();
-                }
+                _xmlWriter.Close();
             }
         }
 
@@ -102,16 +97,16 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Check main structure
             var pluginNode = doc.SelectSingleNode("//plugin_qtype_coderunner_question");
-            Assert.IsNotNull(pluginNode, "CodeRunner plugin node not found");
+            Assert.That(pluginNode, Is.Not.Null, "CodeRunner Plugin node not found");
 
             var optionsNode = pluginNode.SelectSingleNode("coderunner_options/coderunner_option");
-            Assert.IsNotNull(optionsNode, "CodeRunner options node not found");
+            Assert.That(optionsNode, Is.Not.Null, "CodeRunner options node not found");
 
             var testCasesNode = pluginNode.SelectSingleNode("coderunner_testcases");
-            Assert.IsNotNull(testCasesNode, "CodeRunner testcases node not found");
+            Assert.That(testCasesNode, Is.Not.Null, "CodeRunner testcases node not found");
             Assert.That(testCasesNode.SelectNodes("coderunner_testcase")?.Count, Is.EqualTo(question.TestCases.Count));
 
-            // Reset the XML writer for the next test
+            // Reset the XML writer for the next test | TODO: Wtf is this?
             _xmlWriter = _testFactory.Create("test.xml", new XmlWriterSettings());
             _xmlWriter.WriteStartDocument();
             _xmlWriter.WriteStartElement("root");
@@ -139,7 +134,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Check options content
             var optionNode = doc.SelectSingleNode("//coderunner_option");
-            Assert.IsNotNull(optionNode);
+            Assert.That(optionNode, Is.Not.Null, "CodeRunner options node not found");
 
             Assert.That(optionNode.SelectSingleNode("coderunnertype")?.InnerText, Is.EqualTo(question.CodeRunnerType));
             Assert.That(optionNode.SelectSingleNode("prototypetype")?.InnerText, Is.EqualTo(question.PrototypeType.ToString()));
@@ -152,7 +147,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             Assert.That(optionNode.SelectSingleNode("answerboxcolumns")?.InnerText, Is.EqualTo(question.AnswerBoxColumns.ToString()));
             Assert.That(optionNode.SelectSingleNode("answerpreload")?.InnerText, Is.EqualTo(question.AnswerPreload));
             Assert.That(optionNode.SelectSingleNode("globalextra")?.InnerText, Is.EqualTo(question.GlobalExtra));
-            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText?.Replace("\r\n", "\n"), Is.EqualTo(question.Answer));
+            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText.Replace("\r\n", "\n"), Is.EqualTo(question.Answer));
             Assert.That(optionNode.SelectSingleNode("validateonsave")?.InnerText, Is.EqualTo(question.ValidateOnSave ? "1" : "0"));
             Assert.That(optionNode.SelectSingleNode("templateparams")?.InnerText, Is.EqualTo(question.TemplateParams));
             Assert.That(optionNode.SelectSingleNode("hoisttemplateparams")?.InnerText, Is.EqualTo(question.HoistTemplateParams ? "1" : "0"));
@@ -198,7 +193,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Check test cases
             var testCaseNodes = doc.SelectNodes("//coderunner_testcase");
-            Assert.IsNotNull(testCaseNodes);
+            Assert.That(testCaseNodes, Is.Not.Null, "CodeRunner testcases nodes not found");
             Assert.That(testCaseNodes.Count, Is.EqualTo(question.TestCases.Count));
 
             // Check first test case
@@ -252,7 +247,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
                 QuestionId = 999,
                 QuestionName = "Wrong Type Question",
                 Category = "Test Category",
-                QuestionText = "Test question text"
+                QuestionText = "Test question text",
             };
 
             // Act & Assert
@@ -312,7 +307,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
                         HideRestIfFail = false,
                         Mark = 1.000m,
                         StdIn = "",
-                        Extra = ""
+                        Extra = "",
                     },
                     new CodeRunnerTestCase
                     {
@@ -325,9 +320,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
                         HideRestIfFail = true,
                         Mark = 0.500m,
                         StdIn = "",
-                        Extra = "Some extra data"
-                    }
-                }
+                        Extra = "Some extra data",
+                    },
+                },
             };
         }
     }

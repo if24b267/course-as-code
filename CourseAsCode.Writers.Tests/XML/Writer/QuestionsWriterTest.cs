@@ -168,7 +168,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
-            Assert.IsNotNull(doc.DocumentElement, "The XML document should have a root element");
+            Assert.That(doc.DocumentElement.Name, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("question_categories"));
         }
 
@@ -227,7 +227,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Check base question elements
             var questionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']");
-            Assert.IsNotNull(questionNode, $"Question node with ID {question.QuestionId} not found");
+            Assert.That(questionNode, Is.Not.Null, $"Question node with ID {question.QuestionId} not found");
 
             Assert.That(questionNode.SelectSingleNode("name")?.InnerText, Is.EqualTo(question.QuestionName));
             Assert.That(questionNode.SelectSingleNode("questiontext")?.InnerText, Is.EqualTo(question.QuestionText));
@@ -255,13 +255,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Plugin structure
             var pluginNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/plugin_qtype_coderunner_question");
-            Assert.IsNotNull(pluginNode, "CodeRunner plugin node not found");
+            Assert.That(pluginNode, Is.Not.Null, "CodeRunner node not found");
 
             var optionsNode = pluginNode.SelectSingleNode("coderunner_options/coderunner_option");
-            Assert.IsNotNull(optionsNode, "CodeRunner options node not found");
+            Assert.That(optionsNode, Is.Not.Null, "CodeRunner options node not found");
 
             var testCasesNode = pluginNode.SelectSingleNode("coderunner_testcases");
-            Assert.IsNotNull(testCasesNode, "CodeRunner testcases node not found");
+            Assert.That(testCasesNode, Is.Not.Null, "CodeRunner testcases node not found");
             Assert.That(testCasesNode.SelectNodes("coderunner_testcase")?.Count, Is.EqualTo(question.TestCases.Count));
         }
 
@@ -279,7 +279,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Check options content
             var optionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//coderunner_option");
-            Assert.IsNotNull(optionNode);
+            Assert.That(optionNode, Is.Not.Null);
 
             Assert.That(optionNode.SelectSingleNode("coderunnertype")?.InnerText, Is.EqualTo(question.CodeRunnerType));
             Assert.That(optionNode.SelectSingleNode("prototypetype")?.InnerText, Is.EqualTo(question.PrototypeType.ToString()));
@@ -292,7 +292,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(optionNode.SelectSingleNode("answerboxcolumns")?.InnerText, Is.EqualTo(question.AnswerBoxColumns.ToString()));
             Assert.That(optionNode.SelectSingleNode("answerpreload")?.InnerText, Is.EqualTo(question.AnswerPreload));
             Assert.That(optionNode.SelectSingleNode("globalextra")?.InnerText, Is.EqualTo(question.GlobalExtra));
-            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText?.Replace("\r\n", "\n"), Is.EqualTo(question.Answer));
+            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText.Replace("\r\n", "\n"), Is.EqualTo(question.Answer));
             Assert.That(optionNode.SelectSingleNode("validateonsave")?.InnerText, Is.EqualTo(question.ValidateOnSave ? "1" : "0"));
         }
 
@@ -310,25 +310,25 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Check test cases
             var testCaseNodes = doc.SelectNodes($"//question[@id='{question.QuestionId}']//coderunner_testcase");
-            Assert.IsNotNull(testCaseNodes);
+            Assert.That(testCaseNodes, Is.Not.Null);
             Assert.That(testCaseNodes.Count, Is.EqualTo(question.TestCases.Count));
 
             // Check first test case
             var firstTestCase = question.TestCases[0];
             var firstTestCaseNode = testCaseNodes[0];
-            Assert.That(firstTestCaseNode.SelectSingleNode("testcode")?.InnerText, Is.EqualTo(firstTestCase.TestCode));
-            Assert.That(firstTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(firstTestCase.Expected));
-            Assert.That(firstTestCaseNode.SelectSingleNode("display")?.InnerText, Is.EqualTo(firstTestCase.Display));
-            Assert.That(firstTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(firstTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
+            Assert.That(firstTestCaseNode.SelectSingleNode("testcode").InnerText, Is.EqualTo(firstTestCase.TestCode));
+            Assert.That(firstTestCaseNode.SelectSingleNode("expected").InnerText, Is.EqualTo(firstTestCase.Expected));
+            Assert.That(firstTestCaseNode.SelectSingleNode("display").InnerText, Is.EqualTo(firstTestCase.Display));
+            Assert.That(firstTestCaseNode.SelectSingleNode("mark").InnerText, Is.EqualTo(firstTestCase.Mark.ToString("0.000", CultureInfo.InvariantCulture)));
 
             // Check second test case
             var secondTestCase = question.TestCases[1];
             var secondTestCaseNode = testCaseNodes[1];
-            Assert.That(secondTestCaseNode.SelectSingleNode("testcode")?.InnerText, Is.EqualTo(secondTestCase.TestCode));
-            Assert.That(secondTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(secondTestCase.Expected));
-            Assert.That(secondTestCaseNode.SelectSingleNode("useasexample")?.InnerText, Is.EqualTo(secondTestCase.UseAsExample ? "1" : "0"));
-            Assert.That(secondTestCaseNode.SelectSingleNode("hiderestiffail")?.InnerText, Is.EqualTo(secondTestCase.HideRestIfFail ? "1" : "0"));
-            Assert.That(secondTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(secondTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
+            Assert.That(secondTestCaseNode.SelectSingleNode("testcode").InnerText, Is.EqualTo(secondTestCase.TestCode));
+            Assert.That(secondTestCaseNode.SelectSingleNode("expected").InnerText, Is.EqualTo(secondTestCase.Expected));
+            Assert.That(secondTestCaseNode.SelectSingleNode("useasexample").InnerText, Is.EqualTo(secondTestCase.UseAsExample ? "1" : "0"));
+            Assert.That(secondTestCaseNode.SelectSingleNode("hiderestiffail").InnerText, Is.EqualTo(secondTestCase.HideRestIfFail ? "1" : "0"));
+            Assert.That(secondTestCaseNode.SelectSingleNode("mark").InnerText, Is.EqualTo(secondTestCase.Mark.ToString("0.000", CultureInfo.InvariantCulture)));
         }
 
         [Test]
@@ -345,7 +345,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Hints structure and content
             var hintsNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/question_hints");
-            Assert.IsNotNull(hintsNode, "Hints node not found");
+            Assert.That(hintsNode, Is.Not.Null, "Hints node not found");
 
             var hintNodes = hintsNode.SelectNodes("question_hint");
             Assert.That(hintNodes?.Count, Is.EqualTo(question.Hints.Count));
@@ -377,8 +377,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Empty hints node
             var hintsNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/question_hints");
-            Assert.IsNotNull(hintsNode, "Hints node should exist even if empty");
-            Assert.That(hintsNode.ChildNodes.Count, Is.EqualTo(0), "Hints node should be empty");
+            Assert.That(hintsNode, Is.Not.Null, "Hints node should exist even if empty");
+            Assert.That(hintsNode.ChildNodes.Count, Is.Zero, "Hints node should be empty");
         }
 
         [Test]
@@ -395,7 +395,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
              // Assert: Check base question elements
             var questionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']");
-            Assert.IsNotNull(questionNode, $"Question node with ID {question.QuestionId} not found");
+            Assert.That(questionNode, Is.Not.Null, $"Question node with ID {question.QuestionId} not found");
 
             Assert.That(questionNode.SelectSingleNode("name")?.InnerText, Is.EqualTo(question.QuestionName));
             Assert.That(questionNode.SelectSingleNode("questiontext")?.InnerText, Is.EqualTo(question.QuestionText));
@@ -423,7 +423,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Check plugin_qtype_multichoice_question elements
             var pluginNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/plugin_qtype_multichoice_question");
-            Assert.IsNotNull(pluginNode, "MultiChoice plugin node not found");
+            Assert.That(pluginNode, Is.Not.Null, $"MultiChoice plugin node not found");
 
             // Answers
             var answers = pluginNode.SelectNodes("answers/answer");
@@ -437,7 +437,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Multichoice options
             var multiChoiceNode = pluginNode.SelectSingleNode("multichoice");
-            Assert.IsNotNull(multiChoiceNode, "Multichoice options node not found");
+            Assert.That(multiChoiceNode, Is.Not.Null, $"Multichoice options node not found");
             Assert.That(multiChoiceNode.SelectSingleNode("single")?.InnerText, Is.EqualTo(question.SingleChoice ? "1" : "0"));
             Assert.That(multiChoiceNode.SelectSingleNode("shuffleanswers")?.InnerText, Is.EqualTo(question.ShuffleAnswers ? "1" : "0"));
             Assert.That(multiChoiceNode.SelectSingleNode("correctfeedback")?.InnerText, Is.EqualTo(question.CorrectResponseFeedback));
@@ -462,7 +462,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
              // Assert: Check base question elements
             var questionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']");
-            Assert.IsNotNull(questionNode, $"Question node with ID {question.QuestionId} not found");
+            Assert.That(questionNode, Is.Not.Null, $"Question node with ID {question.QuestionId} not found");
 
             Assert.That(questionNode.SelectSingleNode("name")?.InnerText, Is.EqualTo(question.QuestionName));
             Assert.That(questionNode.SelectSingleNode("questiontext")?.InnerText, Is.EqualTo(question.QuestionText));
@@ -490,14 +490,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Plugin structure
             var pluginNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/plugin_qtype_match_question");
-            Assert.IsNotNull(pluginNode, "Match plugin node not found");
+            Assert.That(pluginNode, Is.Not.Null, "Match plugin node not found");
 
             var matchOptionsNode = pluginNode.SelectSingleNode("matchoptions");
-            Assert.IsNotNull(matchOptionsNode, "Match options node not found");
+            Assert.That(matchOptionsNode, Is.Not.Null, $"Match options node not found");
             Assert.That(matchOptionsNode.SelectSingleNode("shuffleanswers")?.InnerText, Is.EqualTo("1")); // Should always be 1 for dropdown
 
             var matchesNode = pluginNode.SelectSingleNode("matches");
-            Assert.IsNotNull(matchesNode, "Matches node not found");
+            Assert.That(matchesNode, Is.Not.Null, $"Matches node not found");
 
             // Check number of matches: 2 sub-questions + 3 unique wrong answers (A, B, C) = 5 total matches
             var matchNodes = matchesNode.SelectNodes("match");
@@ -522,32 +522,32 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Matches content
             var matchesNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//matches");
-            Assert.IsNotNull(matchesNode);
+            Assert.That(matchesNode, Is.Not.Null);
 
             // SubQuestion 1 match
             var subQ1Match = matchesNode.SelectSingleNode($"match[questiontext='{subQ1.QuestionText}']");
-            Assert.IsNotNull(subQ1Match, "SubQ1 match not found");
+            Assert.That(subQ1Match, Is.Not.Null, "SubQ1 match not found");
             Assert.That(subQ1Match.SelectSingleNode("questiontextformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(subQ1Match.SelectSingleNode("answertext")?.InnerText, Is.EqualTo(subQ1.CorrectAnswer));
 
             // SubQuestion 2 match
             var subQ2Match = matchesNode.SelectSingleNode($"match[questiontext='{subQ2.QuestionText}']");
-            Assert.IsNotNull(subQ2Match, "SubQ2 match not found");
+            Assert.That(subQ2Match, Is.Not.Null, $"SubQ2 match not found");
             Assert.That(subQ2Match.SelectSingleNode("questiontextformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(subQ2Match.SelectSingleNode("answertext")?.InnerText, Is.EqualTo(subQ2.CorrectAnswer));
 
              // Pooled Wrong Answer A (only from SubQ1)
             var poolAMatch = matchesNode.SelectSingleNode("match[questiontext='' and answertext='WrongAnswerA']");
-            Assert.IsNotNull(poolAMatch, "Pooled Answer A match not found");
+            Assert.That(poolAMatch, Is.Not.Null, $"Pooled Answer A match not found");
 
              // Pooled Wrong Answer B (from SubQ1 and SubQ2 - should appear once)
             var poolBMatch = matchesNode.SelectNodes("match[questiontext='' and answertext='WrongAnswerB']");
             Assert.That(poolBMatch?.Count, Is.EqualTo(1), "Pooled Answer B should appear only once");
-            Assert.IsNotNull(poolBMatch[0], "Pooled Answer B match not found");
+            Assert.That(poolBMatch[0], Is.Not.Null, $"Pooled Answer B match not found");
 
              // Pooled Wrong Answer C (only from SubQ2)
             var poolCMatch = matchesNode.SelectSingleNode("match[questiontext='' and answertext='WrongAnswerC']");
-            Assert.IsNotNull(poolCMatch, "Pooled Answer C match not found");
+            Assert.That(poolCMatch, Is.Not.Null, $"Pooled Answer C match not found");
         }
 
         [Test]
@@ -564,7 +564,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Feedback in matchoptions
             var matchOptionsNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//matchoptions");
-            Assert.IsNotNull(matchOptionsNode);
+            Assert.That(matchOptionsNode, Is.Not.Null);
 
             Assert.That(matchOptionsNode.SelectSingleNode("correctfeedback")?.InnerText, Is.EqualTo(question.CorrectResponseFeedback));
             Assert.That(matchOptionsNode.SelectSingleNode("correctfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked HTML
@@ -588,7 +588,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Hints structure and content
             var hintsNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/question_hints");
-            Assert.IsNotNull(hintsNode, "Hints node not found");
+            Assert.That(hintsNode, Is.Not.Null, $"Hints node not found");
 
             var hintNodes = hintsNode.SelectNodes("question_hint");
             Assert.That(hintNodes?.Count, Is.EqualTo(question.Hints.Count));
@@ -620,8 +620,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Empty hints node
             var hintsNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/question_hints");
-            Assert.IsNotNull(hintsNode, "Hints node should exist even if empty");
-            Assert.That(hintsNode.ChildNodes.Count, Is.EqualTo(0), "Hints node should be empty");
+            Assert.That(hintsNode, Is.Not.Null, $"Hints node should exist even if empty");
+            Assert.That(hintsNode.ChildNodes.Count, Is.Zero, "Hints node should be empty");
         }
 
         [Test]
@@ -638,7 +638,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Check base question elements
             var questionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']");
-            Assert.IsNotNull(questionNode, $"Question node with ID {question.QuestionId} not found");
+            Assert.That(questionNode, Is.Not.Null, $"Question node with ID {question.QuestionId} not found");
 
             Assert.That(questionNode.SelectSingleNode("name")?.InnerText, Is.EqualTo(question.QuestionName));
             Assert.That(questionNode.SelectSingleNode("questiontext")?.InnerText, Is.EqualTo(question.QuestionText));
@@ -666,14 +666,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Plugin structure
             var pluginNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']/plugin_qtype_ddwtos_question");
-            Assert.IsNotNull(pluginNode, "ddwtos plugin node not found");
+            Assert.That(pluginNode, Is.Not.Null, $"ddwtos plugin node not found");
 
             var answersNode = pluginNode.SelectSingleNode("answers");
-            Assert.IsNotNull(answersNode, "Answers node not found");
+            Assert.That(answersNode, Is.Not.Null, $"Answers node not found");
             Assert.That(answersNode.SelectNodes("answer")?.Count, Is.EqualTo(question.Answers.Count), "Incorrect number of answer choices");
 
             var ddwtosNode = pluginNode.SelectSingleNode("ddwtos");
-            Assert.IsNotNull(ddwtosNode, "ddwtos options node not found");
+            Assert.That(ddwtosNode, Is.Not.Null, $"ddwtos options node not found");
         }
 
         [Test]
@@ -699,11 +699,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Check specific answer nodes
             var answersNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//plugin_qtype_ddwtos_question/answers");
-            Assert.IsNotNull(answersNode);
+            Assert.That(answersNode, Is.Not.Null);
 
             // Choice 1 (France, Cat A)
             var answer1Node = answersNode.SelectSingleNode($"answer[answertext='{choice1.Value}']");
-            Assert.IsNotNull(answer1Node, $"Answer node for '{choice1.Value}' not found");
+            Assert.That(answer1Node, Is.Not.Null, $"Answer node for '{choice1.Value}' not found");
             Assert.That(answer1Node.SelectSingleNode("answerformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
             Assert.That(answer1Node.SelectSingleNode("fraction")?.InnerText, Is.EqualTo("0.0000000"));
             Assert.That(answer1Node.SelectSingleNode("feedback")?.InnerText, Is.EqualTo(expectedFeedback1));
@@ -711,7 +711,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Choice 2 (London, Cat B)
             var answer2Node = answersNode.SelectSingleNode($"answer[answertext='{choice2.Value}']");
-            Assert.IsNotNull(answer2Node, $"Answer node for '{choice2.Value}' not found");
+            Assert.That(answer2Node, Is.Not.Null, $"Answer node for '{choice2.Value}' not found");
             Assert.That(answer2Node.SelectSingleNode("answerformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
             Assert.That(answer2Node.SelectSingleNode("fraction")?.InnerText, Is.EqualTo("0.0000000"));
             Assert.That(answer2Node.SelectSingleNode("feedback")?.InnerText, Is.EqualTo(expectedFeedback2));
@@ -719,7 +719,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
              // Choice 4 (Germany, Cat A)
             var answer4Node = answersNode.SelectSingleNode($"answer[answertext='{choice4.Value}']");
-            Assert.IsNotNull(answer4Node, $"Answer node for '{choice4.Value}' not found");
+            Assert.That(answer4Node, Is.Not.Null, $"Answer node for '{choice4.Value}' not found");
             Assert.That(answer4Node.SelectSingleNode("answerformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
             Assert.That(answer4Node.SelectSingleNode("fraction")?.InnerText, Is.EqualTo("0.0000000"));
             Assert.That(answer4Node.SelectSingleNode("feedback")?.InnerText, Is.EqualTo(expectedFeedback4));
@@ -750,7 +750,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Check feedback for both answers
             var answersNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//plugin_qtype_ddwtos_question/answers");
-            Assert.IsNotNull(answersNode);
+            Assert.That(answersNode, Is.Not.Null);
 
             var answer1Feedback = answersNode.SelectSingleNode("answer[answertext='Choice1']/feedback")?.InnerText;
             Assert.That(answer1Feedback, Is.EqualTo(expectedFeedback), "PHP Feedback string for Choice1 with null category is incorrect");
@@ -774,7 +774,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Assert: Check ddwtos options node
             var ddwtosNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']//ddwtos");
-            Assert.IsNotNull(ddwtosNode, "ddwtos options node not found");
+            Assert.That(ddwtosNode, Is.Not.Null, $"ddwtos options node not found");
 
             Assert.That(ddwtosNode.SelectSingleNode("shuffleanswers")?.InnerText, Is.EqualTo("0")); // Set to false in arrange
             Assert.That(ddwtosNode.SelectSingleNode("correctfeedback")?.InnerText, Is.EqualTo(question.CorrectResponseFeedback));
@@ -960,16 +960,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
 
         /// <summary>
-        /// Creates a basic drag-and-drop text question with specified parameters
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <param name="withHints">Indicates whether the question should include hints</param>
-        /// <param name="withFeedback">Indicates whether the question should include feedback for responses</param>
-        /// <param name="questionReady">Indicates whether the question is considered ready for use</param>
-        /// <returns>A <see cref="DragAndDropTextQuestion"/> object initialized with specified settings and default structure</returns>
-
-        /// <summary>
         /// Creates a basic CodeRunner question with predefined parameters and structure
         /// </summary>
         /// <param name="id">The unique identifier for the question</param>
@@ -1031,7 +1021,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                         HideRestIfFail = false,
                         Mark = 1.000m,
                         StdIn = "",
-                        Extra = ""
+                        Extra = "",
                     },
                     new CodeRunnerTestCase
                     {
@@ -1044,11 +1034,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                         HideRestIfFail = true,
                         Mark = 0.500m,
                         StdIn = "",
-                        Extra = "Some extra data"
-                    }
+                        Extra = "Some extra data",
+                    },
                 },
                 Hints = null,
-                Tags = new List<string> { $"Tag_CR_{id}" }
+                Tags = new List<string> { $"Tag_CR_{id}" },
             };
 
             if (withHints)
@@ -1074,6 +1064,16 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             return crq;
         }
+
+
+        /// <summary>
+        /// Creates a basic drag-and-drop text question with specified parameters
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withHints">Indicates whether the question should include hints</param>
+        /// <param name="withFeedback">Indicates whether the question should include feedback for responses</param>
+        /// <returns>A <see cref="DragAndDropTextQuestion"/> object initialized with specified settings and default structure</returns>
         private DragAndDropTextQuestion CreateBasicDragDropTextQuestion(int id, string category, bool withHints = false, bool withFeedback = false)
         {
             var ddtq = new DragAndDropTextQuestion

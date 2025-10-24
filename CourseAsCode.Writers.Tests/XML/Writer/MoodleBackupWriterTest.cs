@@ -85,15 +85,15 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var informationNode = doc.DocumentElement?.SelectSingleNode("information");
-            Assert.IsNotNull(informationNode, "The <information> element is missing");
+            Assert.That(informationNode.Name, Is.Not.Null, $"The <information> element is missing");
 
             var detailsNode = informationNode.SelectSingleNode("details");
             var contentsNode = informationNode.SelectSingleNode("contents");
             var settingsNode = informationNode.SelectSingleNode("settings");
 
-            Assert.IsNotNull(detailsNode, "The <details> element is missing");
-            Assert.IsNotNull(contentsNode, "The <contents> element is missing");
-            Assert.IsNotNull(settingsNode, "The <settings> element is missing");
+            Assert.That(detailsNode, Is.Not.Null, $"The <details> element is missing");
+            Assert.That(contentsNode, Is.Not.Null, $"The <contents> element is missing");
+            Assert.That(settingsNode, Is.Not.Null, $"The <settings> element is missing");
         }
 
         [Test]

@@ -54,7 +54,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Assert: The root element should be "groups"
             var doc = new XmlDocument();
             doc.LoadXml(output);
-            Assert.IsNotNull(doc.DocumentElement, "XML should have a root element");
+            Assert.That(doc.DocumentElement, Is.Not.Null, "XML should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("groups"));
         }
 
@@ -72,7 +72,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var groupCustomFieldsNode = doc.DocumentElement?.SelectSingleNode("groupcustomfields");
-            Assert.IsNotNull(groupCustomFieldsNode, "The <groupcustomfields> element is missing");
+            Assert.That(groupCustomFieldsNode, Is.Not.Null, "The <groupcustomfields> element is missing");
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var doc = new XmlDocument();
             doc.LoadXml(output);
             var groupingsNode = doc.DocumentElement?.SelectSingleNode("groupings");
-            Assert.IsNotNull(groupingsNode, "The <groupings> element is missing");
+            Assert.That(groupingsNode, Is.Not.Null, "The <groupings> element is missing");
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             doc.LoadXml(output);
             var groupingsNode = doc.DocumentElement?.SelectSingleNode("groupings");
             var groupingCustomFieldsNode = groupingsNode?.SelectSingleNode("groupingcustomfields");
-            Assert.IsNotNull(groupingCustomFieldsNode, "The <groupingcustomfields> element is missing within <groupings>");
+            Assert.That(groupingCustomFieldsNode, Is.Not.Null, "The <groupingcustomfields> element is missing within <groupings>");
         }
 
         [Test]

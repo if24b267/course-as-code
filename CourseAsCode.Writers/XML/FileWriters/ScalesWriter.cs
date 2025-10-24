@@ -2,7 +2,7 @@ using System.Xml;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Writer
+namespace CourseAsCode.Writers.XML.FileWriters
 {
     public class ScalesWriter : XmlWriterBase
     {
