@@ -57,7 +57,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
                 { "scaleid", "$@NULL@$" },
                 { "outcomeid", "$@NULL@$" },
                 { "gradepass", (quiz.GradeToPass ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
-                { "multfactor", (quiz.GradeMultiplicator ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
+                { "multfactor", (quiz.GradeMultiplicator ?? 1).ToString("F5", CultureInfo.InvariantCulture) },
                 { "plusfactor", (quiz.GradeOffset ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
                 { "aggregationcoef", 0.ToString("F5", CultureInfo.InvariantCulture) },
                 { "aggregationcoef2", ((quiz.GradingWeight ?? 0) / 100.0m).ToString("F5", CultureInfo.InvariantCulture) },
