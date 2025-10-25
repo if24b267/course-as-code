@@ -27,6 +27,7 @@ In this example, the *Grade Item* `Final Exam` in the *Grade Category* `Theoreti
 A number of settings can be configured for each Grade Item. These can also be set for [Grade Categories](Grade_Categories.md) — in which case, all Grade Items within that [Grade category](./Grade_Categories.md) will inherit its settings unless they are overridden on the Grade Item level.
 
 The following settings are available:
+
 - **Item name**
     - Allows you to set a custom name for the Grade Item in the gradebook. If not set, the name of the activity is displayed instead.
 - **Item info**
