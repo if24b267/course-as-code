@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Xml;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Grading;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -12,6 +13,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
         private const string DEFAULT_GRADEBOOK_RELATIVE_PATH = "gradebook.xml";
 
         private readonly IGeneralHelper _generalHelper;
+        private readonly ILogger<GradebookWriter> _logger;
 
         private int _gradeItemIdCounter = 1;
         private int _gradeSettingIdCounter = 1;
@@ -27,6 +29,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 
@@ -113,6 +116,11 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 { "timemodified", _generalHelper.DateTimeToUnixTimestamp(gradeCategory.Modified) },
                 { "hidden", "0" },
             };
+
+            if (gradeCategory.AggregationType != GradeAggregation.Natural)
+            {
+                _logger.LogWarning($"You are using an aggregation type other than 'Natural' for grade category '{gradeCategory.Name}'. Make sure this aggregation type is enabled in your Moodle instance.");
+            }
 
             WriteElements(writer, elements);
 
