@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Xml;
-using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Grading;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -106,7 +106,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 { "parent", gradeCategory.Parent != null ? gradeCategory.Parent.GradeCategoryId.ToString() : "$@NULL@$" },
                 { "depth", GetGradeCategoryDepth(GetGradeCategoryPath(gradeCategory)).ToString() }, // TODO: Doing the path calculation twice is not ideal
                 { "path", GetGradeCategoryPath(gradeCategory) },
-                { "fullname", gradeCategory.Name },
+                { "fullname", gradeCategory.GradeName },
                 { "aggregation", _generalHelper.EnumIntegerToString(gradeCategory.AggregationType) },
                 { "keephigh", "0" },
                 { "droplow", gradeCategory.DropLowestGrades != null ? gradeCategory.DropLowestGrades.ToString() : "0" },
@@ -119,7 +119,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
 
             if (gradeCategory.AggregationType != GradeAggregation.Natural)
             {
-                _logger.LogWarning($"You are using an aggregation type other than 'Natural' for grade category '{gradeCategory.Name}'. Make sure this aggregation type is enabled in your Moodle instance.");
+                _logger.LogWarning($"You are using an aggregation type other than 'Natural' for grade category '{gradeCategory.GradeName}'. Make sure this aggregation type is enabled in your Moodle instance.");
             }
 
             WriteElements(writer, elements);
@@ -142,31 +142,31 @@ namespace CourseAsCode.Writers.XML.FileWriters
             var elements = new Dictionary<string, string>
             {
                 { "categoryid", "$@NULL@$" },
-                { "itemname", "$@NULL@$" },
+                { "itemname", gradeCategory.GradeName ?? "$@NULL@$" },
                 { "itemtype", GetGradeCategoryDepth(GetGradeCategoryPath(gradeCategory)) == 1 ? "course" : "category" },
                 { "itemmodule", "$@NULL@$" },
                 { "iteminstance", gradeCategory.GradeCategoryId.ToString() },
                 { "itemnumber", "$@NULL@$" },
-                { "iteminfo", "$@NULL@$" },
+                { "iteminfo", gradeCategory.GradeInfo ?? "$@NULL@$" },
                 { "idnumber", "$@NULL@$" },
                 { "calculation", "$@NULL@$" },
-                { "gradetype", "1" },
+                { "gradetype", _generalHelper.EnumIntegerToString(gradeCategory.GradeType) },
                 { "grademax", gradeCategory.MaxGrade.ToString("F5", CultureInfo.InvariantCulture) },
                 { "grademin", 0.ToString("F5", CultureInfo.InvariantCulture) },
                 { "scaleid", "$@NULL@$" },
                 { "outcomeid", "$@NULL@$" },
-                { "gradepass", (gradeCategory.PassingGrade ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
-                { "multfactor", "1.00000" },
-                { "plusfactor", "0.00000" },
+                { "gradepass", (gradeCategory.GradeToPass ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
+                { "multfactor", (gradeCategory.GradeMultiplicator ?? 1).ToString("F5", CultureInfo.InvariantCulture) },
+                { "plusfactor", (gradeCategory.GradeOffset ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
                 { "aggregationcoef", "0.00000" },
                 { "aggregationcoef2", ((gradeCategory.GradingWeight ?? 0) / 100.0m).ToString("F5", CultureInfo.InvariantCulture) },
                 { "weightoverride", gradeCategory.GradingWeight.HasValue ? "1" : "0" },
                 { "sortorder", "1" },
                 { "display", "0" },
-                { "decimals", "$@NULL@$" },
-                { "hidden", "0" },
-                { "locked", "0" },
-                { "locktime", "0" },
+                { "decimals", gradeCategory.GradeDecimalPoints != null ? gradeCategory.GradeDecimalPoints.ToString() : "$@NULL@$" },
+                { "hidden", gradeCategory.GradeHiddenUntil != null ? _generalHelper.DateTimeToUnixTimestamp(gradeCategory.GradeHiddenUntil.Value) : gradeCategory.GradeHidden ? _generalHelper.DateTimeToUnixTimestamp(DateTime.Now) : "0" },
+                { "locked", gradeCategory.GradingLocked ? _generalHelper.DateTimeToUnixTimestamp(DateTime.Now) : "0" },
+                { "locktime", gradeCategory.GradingLockedAfter != null ? _generalHelper.DateTimeToUnixTimestamp(gradeCategory.GradingLockedAfter.Value) : "0" },
                 { "needsupdate", "0" },
                 { "timecreated", "1731353585" },
                 { "timemodified", "1731353585" },

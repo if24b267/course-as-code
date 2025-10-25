@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace CourseAsCode.Model.Enums
+namespace CourseAsCode.Model.Enums.Grading
 {
     /// <summary>
     /// The aggregation determines how grades in a category are combined. See <see href="https://docs.moodle.org/500/en/Grade_aggregation"/> for more information.

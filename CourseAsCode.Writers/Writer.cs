@@ -1,12 +1,8 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Enums.Quizzes;
+using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Grading;
-using CourseAsCode.Model.Questions;
-using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -120,37 +116,37 @@ namespace CourseAsCode.Writers
         {
             course.GradeCategories.Add(new GradeCategory() {
                 GradeCategoryId = 1,
-                Name = "Course Overall",
+                GradeName = "Course Overall",
                 AggregationType = GradeAggregation.Natural,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 MaxGrade = 30,
-                PassingGrade = 15,
+                GradeToPass = 15,
             });
 
             course.GradeCategories.Add(new GradeCategory()
             {
                 GradeCategoryId = 2,
-                Name = "Theoretical Part",
+                GradeName = "Theoretical Part",
                 Parent = course.GradeCategories[0],
                 AggregationType = GradeAggregation.Natural,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 MaxGrade = 10,
-                PassingGrade = 5,
+                GradeToPass = 5,
                 GradingWeight = 30,
             });
 
             course.GradeCategories.Add(new GradeCategory()
             {
                 GradeCategoryId = 3,
-                Name = "Practical Part",
+                GradeName = "Practical Part",
                 Parent = course.GradeCategories[0],
                 AggregationType = GradeAggregation.Natural,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 MaxGrade = 20,
-                PassingGrade = 15,
+                GradeToPass = 15,
                 GradingWeight = 70,
             });
         }
@@ -174,6 +170,9 @@ namespace CourseAsCode.Writers
 
             quiz1.GradeCategory = course.GradeCategories[1];
             quiz1.GradingWeight = 100;
+            quiz1.GradingLocked = true;
+            quiz1.GradeName = "Different from the Activities name";
+            quiz1.GradeMultiplicator = 2.0f;
 
             quiz2.GradeCategory = course.GradeCategories[2];
             quiz2.GradingWeight = 25;

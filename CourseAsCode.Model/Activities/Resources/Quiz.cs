@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel;
 using CourseAsCode.Model.Defaults.Activities.Resources;
+using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Grading;
+using CourseAsCode.Model.Grading.Interfaces;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 
 namespace CourseAsCode.Model.Activities.Resources
 {
-    public class Quiz : Activity
+    public class Quiz : Activity, IGradeable
     {
         // ────────────────────────────────────────────────────────────────────────────
         // Timing
@@ -28,11 +30,47 @@ namespace CourseAsCode.Model.Activities.Resources
         public int GracePeriod { get; set; } = QuizDefaults.DEFAULT_GRACE_PERIOD;
 
         // ────────────────────────────────────────────────────────────────────────────
-        // Grading / attempts
+        // IGradeable
         // ────────────────────────────────────────────────────────────────────────────
-        [Description("Minimum required grade (0‑10) to pass the quiz")]
-        public float GradeToPass { get; set; } = QuizDefaults.DEFAULT_GRADE_TO_PASS;
+        [Description("the name with which the quiz will be displayed in the gradebook")]
+        public string? GradeName { get; set; } = QuizDefaults.DEFAULT_GRADE_NAME;
 
+        [Description("general information about the quiz grade item; optional and will NOT be displayed in the gradebook")]
+        public string? GradeInfo { get; set; } = QuizDefaults.DEFAULT_GRADE_INFO;
+
+        [Description("The GradeCategory this quiz belongs to")]
+        public GradeCategory GradeCategory { get; set; } = QuizDefaults.DEFAULT_GRADE_CATEGORY;
+
+        [Description("Minimum required grade (0‑10) to pass the quiz")]
+        public float? GradeToPass { get; set; } = QuizDefaults.DEFAULT_GRADE_TO_PASS;
+
+        [Description("how the quiz is graded")]
+        public GradeType GradeType { get; set; } = QuizDefaults.DEFAULT_GRADE_TYPE;
+
+        [Description("specifies the number of decimal points to display for the grade | has no effect on grade calculations, which are made with an accuracy of 5 decimal places")]
+        public int? GradeDecimalPoints { get; set; } = QuizDefaults.DEFAULT_GRADE_DECIMAL_POINTS;
+
+        [Description("Factor by which the grade for this activity will be multiplied, with a maximum value of the maximum grade | For example, if the multiplicator is 2 and the maximum grade is 100, then all grades less than 50 are doubled, and all grades 50 and above are changed to 100")]
+        public float? GradeMultiplicator { get; set; } = QuizDefaults.DEFAULT_GRADE_MULTIPLICATOR;
+
+        [Description("Number that will be added to every grade for this activity, after the Multiplicator is applied. (can be negative)")]
+        public float? GradeOffset { get; set; } = QuizDefaults.DEFAULT_GRADE_OFFSET;
+
+        [Description("whether this activity should be hidden from students in the gradebook")]
+        public bool GradeHidden { get; set; } = QuizDefaults.DEFAULT_HIDE_GRADE;
+
+        [Description("An optional date after which the activity will no longer be hidden in the gradebook (i.e. a grades release date)")]
+        public DateTime? GradeHiddenUntil { get; set; } = QuizDefaults.DEFAULT_GRADE_HIDDEN_UNTIL;
+
+        [Description("Whether or not to lock the grading for this activity. A locked grade item doesn't accept changes to its settings or grades from its related module")]
+        public bool GradingLocked { get; set; } = QuizDefaults.DEFAULT_LOCKED_GRADE;
+
+        [Description("A date after which the locking will be effective, usually after the grades release date.")]
+        public DateTime? GradingLockedAfter { get; set; } = QuizDefaults.DEFAULT_GRADE_LOCKED_UNTIL;
+
+        // ────────────────────────────────────────────────────────────────────────────
+        // Attempts
+        // ────────────────────────────────────────────────────────────────────────────
         [Description("Number of allowed attempts – 0 means unlimited")]
         public int AllowedAttempts { get; set; } = QuizDefaults.DEFAULT_ALLOWED_ATTEMPTS;
 
@@ -41,9 +79,6 @@ namespace CourseAsCode.Model.Activities.Resources
 
         [Description("How many points this quiz is worth")]
         public float MaxGrade { get; set; } = QuizDefaults.DEFAULT_MAX_GRADE;
-
-        [Description("The GradeCategory this quiz belongs to")]
-        public GradeCategory GradeCategory { get; set; } = QuizDefaults.DEFAULT_GRADE_CATEGORY;
 
         [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
         public int? GradingWeight { get; set; } = null;
