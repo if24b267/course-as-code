@@ -59,9 +59,9 @@ namespace CourseAsCode.Writers
             {
                 EnsureFolderStructureExists(outputPath);
 
-                // TODO: This is only for testing, remove later
-                AddGradingCategories(course);
-                ModifyQuizzesWithGradingInfo(course);
+                // --- Uncomment the following lines to test the grading functionality | Only works with exampleCourse --- //
+                // AddGradingCategories(course);
+                // ModifyQuizzesWithGradingInfo(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
@@ -112,6 +112,11 @@ namespace CourseAsCode.Writers
             }
         }
 
+
+        /// <summary>
+        /// Temporary method to add grading categories to the course | can be removed once grading is implemented in the Readers
+        /// </summary>
+        /// <param name="course">The course to which grading categories will be added</param>
         private void AddGradingCategories(Course course)
         {
             course.GradeCategories.Add(new GradeCategory() {
@@ -151,6 +156,11 @@ namespace CourseAsCode.Writers
             });
         }
 
+
+        /// <summary>
+        /// Temporary method to modify the grading information of the quizzes in the course | can be removed once grading is implemented in the Readers
+        /// </summary>
+        /// <param name="course">The course containing the quizzes to be modified</param>
         private void ModifyQuizzesWithGradingInfo(Course course)
         {
             // Get activity with ID 14
