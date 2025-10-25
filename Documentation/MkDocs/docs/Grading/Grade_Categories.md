@@ -16,7 +16,7 @@ Grade Categories are used to manage activities that can be graded within the gra
 In the example above, `Course Overall`, `Theoretical Part`, and `Practical Part` are all Grade Categories. As you can see, Grade Categories can be arranged hierarchically. `Theoretical Part` and `Practical Part` are children of `Course Overall`. The depth of these hierarchies is theoretically unlimited.
 
 ## Weighting
-Each Grade Category can be given a weight, which is used to calculate how much its score contributes to the grade calculation of the parent category. In this example, the `Theoretical Part` counts for more than the `Practical Part`. So, if a user were to score `50/100 points` in the `Theoretical Part` and `80/100 points` in the `Practical Part`, this would result in an overall score of - depending on the calculation method, we'll assume the default one for this example -
+Each Grade Category can be given a weight, which is used to calculate how much its score contributes to the grade calculation of the parent category. In this example, the `Theoretical Part` counts for more than the `Practical Part`. So, if a user were to score `50/100 points` in the `Theoretical Part` and `80/100 points` in the `Practical Part`, this would result in an overall score of - depending on the calculation method, we'll assume the default one for this example:
 
 ```
 50/100 = 50% | 0.5 (grade) * 0.6 (weight) = 0.3
@@ -81,7 +81,7 @@ In addition to weighting, you can also define how the individual Grade Items (ac
 -   **Natural (Default)**
     - The sum of all grade values scaled by weight.
 
-A more detailed description is available in the [Moodle Documentation](https://docs.moodle.org/500/en/Gradebook_uses).
+A more detailed description is available in the [Moodle Documentation](https://docs.moodle.org/500/en/Grade_aggregation).
 
 ## Knockout Criteria (Must-Pass)
 For each Grade Category, you can set a `GradeToPass`, which is a minimum score that must be achieved through the activities in that category for it to be considered passed. This allows you to specify that certain sub-sections of a course must be passed individually. A student would therefore fail if they do not pass a specific Grade Category, even if they have achieved enough points overall.
