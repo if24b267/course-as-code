@@ -135,7 +135,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
             {
                 { "categoryid", "$@NULL@$" },
                 { "itemname", "$@NULL@$" },
-                { "itemtype", "course" },
+                { "itemtype", GetGradeCategoryDepth(GetGradeCategoryPath(gradeCategory)) == 1 ? "course" : "category" },
                 { "itemmodule", "$@NULL@$" },
                 { "iteminstance", gradeCategory.GradeCategoryId.ToString() },
                 { "itemnumber", "$@NULL@$" },
@@ -147,7 +147,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 { "grademin", 0.ToString("F5", CultureInfo.InvariantCulture) },
                 { "scaleid", "$@NULL@$" },
                 { "outcomeid", "$@NULL@$" },
-                { "gradepass", ((gradeCategory.PassingGrade ?? 0) / 100.0m).ToString("F5", CultureInfo.InvariantCulture) },
+                { "gradepass", (gradeCategory.PassingGrade ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
                 { "multfactor", "1.00000" },
                 { "plusfactor", "0.00000" },
                 { "aggregationcoef", "0.00000" },
