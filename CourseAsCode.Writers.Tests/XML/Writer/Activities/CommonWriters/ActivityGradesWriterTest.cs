@@ -3,6 +3,8 @@ using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -14,21 +16,61 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters
     {
         private XmlWriterFactoryTest _testFactory;
         private IGeneralHelper _generalHelper;
+        private IXmlHelper _xmlHelper;
         private ILogger<ActivityGradesWriter> _testLogger;
         private ActivityGradesWriter _activityGradesWriter;
+        private IGradeItemStrategyResolver _strategyResolver;
+        private QuizGradeItemStrategy _quizStrategy;
+        private DefaultGradeItemStrategy _defaultStrategy;
 
         [SetUp]
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest();
             _generalHelper = Substitute.For<IGeneralHelper>();
+            _xmlHelper = Substitute.For<IXmlHelper>();
             _testLogger = Substitute.For<ILogger<ActivityGradesWriter>>();
 
             // Setup default mock behaviors
             _generalHelper.EnumIntegerToString(Arg.Any<Enum>()).Returns("1");
             _generalHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("1234567890");
 
-            _activityGradesWriter = new ActivityGradesWriter(_testFactory, _generalHelper, _testLogger);
+            // Setup XmlHelper to actually write elements using the Writer provided by the factory (pass-through behavior)
+            _xmlHelper.When(x => x.WriteElements(Arg.Any<XmlWriter>(), Arg.Any<Dictionary<string, string>>()))
+                .Do(callInfo =>
+                {
+                    var writer = callInfo.ArgAt<XmlWriter>(0);
+                    var elements = callInfo.ArgAt<Dictionary<string, string>>(1);
+
+                    foreach (var element in elements)
+                    {
+                        writer.WriteElementString(element.Key, element.Value);
+                    }
+                });
+
+            _xmlHelper.When(x => x.WriteElementWithAttributes(Arg.Any<XmlWriter>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()))
+                .Do(callInfo =>
+                {
+                    var writer = callInfo.ArgAt<XmlWriter>(0);
+                    var elementName = callInfo.ArgAt<string>(1);
+                    var attributes = callInfo.ArgAt<Dictionary<string, string>>(2);
+
+                    writer.WriteStartElement(elementName);
+                    foreach (var attribute in attributes)
+                    {
+                        writer.WriteAttributeString(attribute.Key, attribute.Value);
+                    }
+                });
+
+            // Create strategies
+            _quizStrategy = new QuizGradeItemStrategy(_generalHelper, _xmlHelper);
+            _defaultStrategy = new DefaultGradeItemStrategy();
+
+            // Create and configure the resolver
+            _strategyResolver = new GradeItemStrategyResolver(_quizStrategy, _defaultStrategy);
+
+            // Create the writer with the resolver
+            _activityGradesWriter = new ActivityGradesWriter(_testFactory, _strategyResolver, _testLogger);
         }
 
         [Test]
