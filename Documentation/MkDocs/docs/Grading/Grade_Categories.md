@@ -26,7 +26,7 @@ Each Grade Category can be given a weight, which is used to calculate how much i
 
 `124/200 points` or `62%`.
 
-!!! tip
+!!! info
     The sum of the weights of all child Grade Categories must always add up to exactly 100%.
 
     !!! example "Valid Distribution"
@@ -60,7 +60,7 @@ Each Grade Category can be given a weight, which is used to calculate how much i
         This would be an invalid distribution, as 60 + 40 + 10 = 110%.
 
 ## Grade Aggregation
-In addition to weighting, you can also define how the individual Grade Items (activities) within a Grade Category are calculated together. The following aggregation methods are available:
+In addition to weighting, you can also define how the individual [Grade Items](./Grade_Items.md) (activities) within a Grade Category are calculated together. The following aggregation methods are available:
 
 -   **Mean of grades**
     - The sum of all grades divided by the total number of grades.
