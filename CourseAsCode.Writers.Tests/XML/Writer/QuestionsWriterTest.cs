@@ -4,11 +4,7 @@ using System.Xml;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions;
-using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
-using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
-using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Helper;
@@ -116,7 +112,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_GeneratesValidXml()
         {
             // Arrange
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
@@ -158,7 +154,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_RootElementIsQuestionCategories()
         {
             // Arrange
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
@@ -176,9 +172,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_CreatesCorrectNumberOfCategories()
         {
             // Arrange
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(2, "CatB"));
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(3, "CatB")); // Same category as Q2
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(1, "CatA"));
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(2, "CatB"));
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(3, "CatB")); // Same category as Q2
 
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
@@ -197,9 +193,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_CreatesCorrectNumberOfBankEntries()
         {
             // Arrange
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(2, "CatB"));
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(3, "CatB")); // Same category as Q2
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(1, "CatA"));
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(2, "CatB"));
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(3, "CatB")); // Same category as Q2
 
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
@@ -217,7 +213,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesCodeRunnerBaseElementsCorrectly()
         {
             // Arrange
-            var question = CreateBasicCodeRunnerQuestion(60, "CodeRunnerCat");
+            var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(60, "CodeRunnerCat");
             _course.Questions.Add(question);
 
             // Act
@@ -245,7 +241,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesCodeRunnerPluginStructureCorrectly()
         {
             // Arrange
-            var question = CreateBasicCodeRunnerQuestion(61, "CodeRunnerStructCat");
+            var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(61, "CodeRunnerStructCat");
             _course.Questions.Add(question);
 
             // Act
@@ -269,7 +265,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesCodeRunnerOptionsCorrectly()
         {
             // Arrange
-            var question = CreateBasicCodeRunnerQuestion(62, "CodeRunnerOptionsCat");
+            var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(62, "CodeRunnerOptionsCat");
             _course.Questions.Add(question);
 
             // Act
@@ -300,7 +296,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesCodeRunnerTestCasesCorrectly()
         {
             // Arrange
-            var question = CreateBasicCodeRunnerQuestion(63, "CodeRunnerTestCat");
+            var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(63, "CodeRunnerTestCat");
             _course.Questions.Add(question);
 
             // Act
@@ -335,7 +331,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesCodeRunnerHintsCorrectly()
         {
             // Arrange
-            var question = CreateBasicCodeRunnerQuestion(64, "CodeRunnerHintsCat", withHints: true);
+            var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(64, "CodeRunnerHintsCat", withHints: true);
             _course.Questions.Add(question);
 
             // Act
@@ -367,7 +363,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_HandlesCodeRunnerWithNoHintsCorrectly()
         {
             // Arrange
-            var question = CreateBasicCodeRunnerQuestion(65, "CodeRunnerNoHintsCat", withHints: false);
+            var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(65, "CodeRunnerNoHintsCat", withHints: false);
             _course.Questions.Add(question);
 
             // Act
@@ -385,7 +381,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesMultiChoiceBaseElementsCorrectly()
         {
             // Arrange
-            var question = CreateBasicMultiChoiceQuestion(10, "TestCat");
+            var question = FakeQuestionFactory.CreateBasicMultiChoiceQuestion(10, "TestCat");
             _course.Questions.Add(question);
 
              // Act
@@ -413,7 +409,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesMultiChoicePluginElementsCorrectly()
         {
             // Arrange
-            var question = CreateBasicMultiChoiceQuestion(11, "MCat");
+            var question = FakeQuestionFactory.CreateBasicMultiChoiceQuestion(11, "MCat");
             _course.Questions.Add(question);
 
             // Act
@@ -452,7 +448,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDropdownBaseElementsCorrectly()
         {
             // Arrange
-            var question = CreateBasicDropdownQuestion(20, "DropdownCat");
+            var question = FakeQuestionFactory.CreateBasicDropdownQuestion(20, "DropdownCat");
             _course.Questions.Add(question);
 
              // Act
@@ -480,7 +476,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDropdownPluginStructureCorrectly()
         {
             // Arrange
-            var question = CreateBasicDropdownQuestion(21, "DDCat");
+            var question = FakeQuestionFactory.CreateBasicDropdownQuestion(21, "DDCat");
             _course.Questions.Add(question);
 
             // Act
@@ -509,7 +505,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDropdownSubQuestionsAndAnswerPoolCorrectly()
         {
             // Arrange
-            var question = CreateBasicDropdownQuestion(22, "DDCatPool");
+            var question = FakeQuestionFactory.CreateBasicDropdownQuestion(22, "DDCatPool");
             _course.Questions.Add(question);
 
             var subQ1 = question.SubQuestions[0];
@@ -554,7 +550,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDropdownFeedbackCorrectly()
         {
             // Arrange
-            var question = CreateBasicDropdownQuestion(23, "DDCatFeedback", withFeedback: true);
+            var question = FakeQuestionFactory.CreateBasicDropdownQuestion(23, "DDCatFeedback", withFeedback: true);
             _course.Questions.Add(question);
 
             // Act
@@ -578,7 +574,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDropdownHintsCorrectly()
         {
             // Arrange
-            var question = CreateBasicDropdownQuestion(24, "DDCatHints", withHints: true);
+            var question = FakeQuestionFactory.CreateBasicDropdownQuestion(24, "DDCatHints", withHints: true);
             _course.Questions.Add(question);
 
             // Act
@@ -610,7 +606,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_HandlesDropdownWithNoHintsCorrectly()
         {
             // Arrange
-            var question = CreateBasicDropdownQuestion(25, "DDCatNoHints", withHints: false);
+            var question = FakeQuestionFactory.CreateBasicDropdownQuestion(25, "DDCatNoHints", withHints: false);
             _course.Questions.Add(question);
 
             // Act
@@ -628,7 +624,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDragDropTextBaseElementsCorrectly()
         {
             // Arrange
-            var question = CreateBasicDragDropTextQuestion(50, "DDTBaseCat");
+            var question = FakeQuestionFactory.CreateBasicDragDropTextQuestion(50, "DDTBaseCat");
             _course.Questions.Add(question);
 
             // Act
@@ -656,7 +652,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDragDropTextPluginStructureCorrectly()
         {
             // Arrange
-            var question = CreateBasicDragDropTextQuestion(51, "DDTStructCat");
+            var question = FakeQuestionFactory.CreateBasicDragDropTextQuestion(51, "DDTStructCat");
             _course.Questions.Add(question);
 
             // Act
@@ -680,7 +676,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDragDropTextAnswersAndFeedbackCorrectly()
         {
             // Arrange
-            var question = CreateBasicDragDropTextQuestion(52, "DDTAnsCat");
+            var question = FakeQuestionFactory.CreateBasicDragDropTextQuestion(52, "DDTAnsCat");
             _course.Questions.Add(question);
 
             var choice1 = question.Answers.First(c => c.ID == 1); // Category A -> Group 1
@@ -730,7 +726,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_HandlesDragDropTextWithNoCategoriesCorrectly()
         {
             // Arrange
-            var question = CreateBasicDragDropTextQuestion(56, "DDTNoCat");
+            var question = FakeQuestionFactory.CreateBasicDragDropTextQuestion(56, "DDTNoCat");
 
             // Override answers to have no categories
             question.Answers = new List<TextChoice>
@@ -763,7 +759,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_WritesDragDropTextOptionsCorrectly()
         {
             // Arrange
-            var question = CreateBasicDragDropTextQuestion(53, "DDTOptionsCat", withFeedback: true, withHints: true);
+            var question = FakeQuestionFactory.CreateBasicDragDropTextQuestion(53, "DDTOptionsCat", withFeedback: true, withHints: true);
             question.ShuffleAnswers = false; // Override default shuffle
             _course.Questions.Add(question);
 
@@ -790,7 +786,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         public void WriteQuestions_LogsDebugOnSuccess()
         {
             // Arrange
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
@@ -810,7 +806,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
             _questionsWriter = new QWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper, _fakeTagsWriter, new List<IQuestionPluginWriter>());
-            _course.Questions.Add(CreateBasicMultiChoiceQuestion(1, "CatA"));
+            _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act & Assert: Verify that an exception is thrown
             Assert.Throws<InvalidOperationException>(() =>
@@ -823,316 +819,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 Arg.Is<object>(o => o.ToString().Contains("questions.xml")),
                 Arg.Any<Exception>(),
                 Arg.Any<Func<object, Exception, string>>()!);
-        }
-
-
-        /// <summary>
-        /// Creates a basic multiple-choice question with predefined parameters and structure
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <returns>A <see cref="MultipleChoiceQuestion"/> object initialized with default values and structure</returns>
-        private MultipleChoiceQuestion CreateBasicMultiChoiceQuestion(int id, string category)
-        {
-            return new MultipleChoiceQuestion
-            {
-                QuestionId = id,
-                Category = category,
-                QuestionName = $"MCQ_{id}",
-                QuestionText = $"<p>MCQ Text {id}</p>",
-                QuestionTextFormat = FormattingFormat.HTML,
-                GeneralFeedback = $"General Feedback {id}",
-                GeneralFeedbackFormat = FormattingFormat.HTML,
-                DefaultMark = 1.5f,
-                HintPenalty = 0.1f,
-                ChoiceNumbering = NumberingFormat.AlphabeticLower,
-                ShuffleAnswers = true,
-                SingleChoice = true,
-                CorrectResponseFeedback = "Correct MCQ",
-                CorrectResponseFeedbackFormat = FormattingFormat.HTML,
-                PartiallyCorrectResponseFeedback = "Partially Correct MCQ",
-                PartiallyCorrectResponseFeedbackFormat = FormattingFormat.HTML,
-                IncorrectResponseFeedback = "Incorrect MCQ",
-                IncorrectResponseFeedbackFormat = FormattingFormat.HTML,
-                ShowStandardInstructions = true,
-                QuestionReady = true,
-                Answers = new List<MultiChoiceAnswer>
-                {
-                    new MultiChoiceAnswer
-                    {
-                        AnswerText = $"<p>Answer {id}-1 Correct</p>",
-                        AnswerTextFormat = FormattingFormat.HTML,
-                        AnswerGrade = 1f,
-                        AnswerFeedback = "Feedback Correct",
-                        AnswerFeedbackFormat = FormattingFormat.HTML,
-                    },
-                    new MultiChoiceAnswer
-                    {
-                        AnswerText = $"<p>Answer {id}-2 Wrong</p>",
-                        AnswerTextFormat = FormattingFormat.HTML,
-                        AnswerGrade = 0f,
-                        AnswerFeedback = "Feedback Wrong",
-                        AnswerFeedbackFormat = FormattingFormat.HTML,
-                    },
-                },
-                Hints = null, // TODO: Add support for hints as feedback as in CreateBasicDropdownQuestion
-                Tags = new List<string> { $"Tag{id}" },
-            };
-        }
-
-
-        /// <summary>
-        /// Creates a basic dropdown question with predefined structure and configuration
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <param name="withHints">Indicates whether the question includes hints</param>
-        /// <param name="withFeedback">Indicates whether the question provides general feedback</param>
-        /// <returns>A <see cref="DropdownQuestion"/> object with initialized values and structure</returns>
-        private DropdownQuestion CreateBasicDropdownQuestion(int id, string category, bool withHints = false, bool withFeedback = false)
-        {
-            var dq = new DropdownQuestion
-            {
-                QuestionId = id,
-                Category = category,
-                QuestionName = $"Dropdown_{id}",
-                QuestionText = $"<p>Dropdown Text {id}</p>",
-                QuestionTextFormat = FormattingFormat.HTML,
-                GeneralFeedback = $"General Feedback DD {id}",
-                GeneralFeedbackFormat = FormattingFormat.HTML,
-                DefaultMark = 2.0f,
-                HintPenalty = 0.25f,
-                QuestionReady = true,
-                SubQuestions = new List<DropdownSubQuestion>
-                {
-                    new DropdownSubQuestion
-                    {
-                        QuestionText = "SubQ 1 Text",
-                        QuestionTextFormat = FormattingFormat.PlainText,
-                        CorrectAnswer = "CorrectAnswer1",
-                        WrongAnswers = ["WrongAnswerA", "WrongAnswerB"],
-                    },
-                    new DropdownSubQuestion
-                    {
-                        QuestionText = "SubQ 2 Text",
-                        QuestionTextFormat = FormattingFormat.HTML,
-                        CorrectAnswer = "CorrectAnswer2",
-                        WrongAnswers = ["WrongAnswerB", "WrongAnswerC"], // "WrongAnswerB" is shared
-                    },
-                },
-                Hints = null, // Hints are added below
-                Tags = new List<string> { $"TagDD{id}" },
-            };
-
-            if (withFeedback)
-            {
-                dq.CorrectResponseFeedback = "DD Correct";
-                dq.CorrectResponseFeedbackFormat = FormattingFormat.HTML;
-                dq.PartiallyCorrectResponseFeedback = "DD Partial";
-                dq.PartiallyCorrectResponseFeedbackFormat = FormattingFormat.PlainText;
-                dq.IncorrectResponseFeedback = "DD Incorrect";
-                dq.IncorrectResponseFeedbackFormat = FormattingFormat.HTML;
-            }
-
-            if (withHints)
-            {
-                dq.Hints = new List<Hint>
-                {
-                    new Hint
-                    {
-                        HintText = "Hint 1 Text",
-                        HintTextFormat = FormattingFormat.HTML,
-                        ShowNumberOfCorrectAnswers = true,
-                        ClearIncorrectResponses = false,
-                    },
-                    new Hint
-                    {
-                        HintText = "Hint 2 Text",
-                        HintTextFormat = FormattingFormat.PlainText,
-                        ShowNumberOfCorrectAnswers = false,
-                        ClearIncorrectResponses = true,
-                    },
-                };
-            }
-
-            return dq;
-        }
-
-
-        /// <summary>
-        /// Creates a basic CodeRunner question with predefined parameters and structure
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <param name="withHints">Indicates whether the question should include hints</param>
-        /// <returns>A <see cref="CodeRunnerQuestion"/> object initialized with default values and structure</returns>
-        private CodeRunnerQuestion CreateBasicCodeRunnerQuestion(int id, string category, bool withHints = false)
-        {
-            var crq = new CodeRunnerQuestion
-            {
-                QuestionId = id,
-                Category = category,
-                QuestionName = $"CodeRunner_{id}",
-                QuestionText = "<p>Write a program that outputs \"Hello, World!\"</p>",
-                QuestionTextFormat = FormattingFormat.HTML,
-                GeneralFeedback = "<p>Remember to include the appropriate main method.</p>",
-                GeneralFeedbackFormat = FormattingFormat.HTML,
-                DefaultMark = 1.0f,
-                HintPenalty = 0.1f,
-                QuestionReady = true,
-                CodeRunnerType = "java_program",
-                PrototypeType = 0,
-                AllOrNothing = true,
-                PenaltyRegime = "10, 20, ...",
-                Precheck = 0,
-                HideCheck = 0,
-                ShowSource = 0,
-                AnswerBoxLines = 18,
-                AnswerBoxColumns = 100,
-                AnswerPreload = "",
-                GlobalExtra = "",
-                Answer = "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
-                ValidateOnSave = true,
-                TemplateParams = "",
-                HoistTemplateParams = true,
-                ExtractCodeFromJson = true,
-                TemplateParamsLang = "None",
-                TemplateParamsEvalPerTry = false,
-                TemplateParamsEvald = "{}",
-                TwigAll = false,
-                UiParameters = "",
-                Attachments = 0,
-                AttachmentsRequired = 0,
-                MaxFileSize = 10240,
-                FilenamesRegex = "",
-                FilenamesExplain = "",
-                DisplayFeedback = true,
-                GiveUpAllowed = false,
-                TestCases = new List<CodeRunnerTestCase>
-                {
-                    new CodeRunnerTestCase
-                    {
-                        Id = 1,
-                        TestCode = "Hello World Test",
-                        TestType = 0,
-                        Expected = "Hello, World!",
-                        UseAsExample = false,
-                        Display = "SHOW",
-                        HideRestIfFail = false,
-                        Mark = 1.000m,
-                        StdIn = "",
-                        Extra = "",
-                    },
-                    new CodeRunnerTestCase
-                    {
-                        Id = 2,
-                        TestCode = "Empty Input Test",
-                        TestType = 0,
-                        Expected = "Hello, World!",
-                        UseAsExample = true,
-                        Display = "HIDE_IF_FAIL",
-                        HideRestIfFail = true,
-                        Mark = 0.500m,
-                        StdIn = "",
-                        Extra = "Some extra data",
-                    },
-                },
-                Hints = null,
-                Tags = new List<string> { $"Tag_CR_{id}" },
-            };
-
-            if (withHints)
-            {
-                crq.Hints = new List<Hint>
-                {
-                    new Hint
-                    {
-                        HintText = "CodeRunner Hint 1",
-                        HintTextFormat = FormattingFormat.HTML,
-                        ShowNumberOfCorrectAnswers = true,
-                        ClearIncorrectResponses = false,
-                    },
-                    new Hint
-                    {
-                        HintText = "CodeRunner Hint 2",
-                        HintTextFormat = FormattingFormat.PlainText,
-                        ShowNumberOfCorrectAnswers = false,
-                        ClearIncorrectResponses = true,
-                    },
-                };
-            }
-
-            return crq;
-        }
-
-
-        /// <summary>
-        /// Creates a basic drag-and-drop text question with specified parameters
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <param name="withHints">Indicates whether the question should include hints</param>
-        /// <param name="withFeedback">Indicates whether the question should include feedback for responses</param>
-        /// <returns>A <see cref="DragAndDropTextQuestion"/> object initialized with specified settings and default structure</returns>
-        private DragAndDropTextQuestion CreateBasicDragDropTextQuestion(int id, string category, bool withHints = false, bool withFeedback = false)
-        {
-            var ddtq = new DragAndDropTextQuestion
-            {
-                QuestionId = id,
-                Category = category,
-                QuestionName = $"DragDrop_{id}",
-                QuestionText = "The capital of [[1]] is Paris. The capital of the UK is [[2]]. The capital of Austria is [[3]].",
-                QuestionTextFormat = FormattingFormat.HTML,
-                GeneralFeedback = $"General Feedback DDT {id}",
-                GeneralFeedbackFormat = FormattingFormat.HTML,
-                DefaultMark = 3.0f,
-                HintPenalty = 0.3333333f,
-                QuestionReady = true,
-                ShuffleAnswers = true,
-                Answers = new List<TextChoice>
-                {
-                    new TextChoice { ID = 1, Value = "France", Category = "A", ValueFormat = FormattingFormat.PlainText },
-                    new TextChoice { ID = 2, Value = "London", Category = "B", ValueFormat = FormattingFormat.HTML },
-                    new TextChoice { ID = 3, Value = "Vienna", Category = "A", ValueFormat = FormattingFormat.PlainText },
-                    new TextChoice { ID = 4, Value = "Germany", Category = "A", ValueFormat = FormattingFormat.HTML }, // Distractor in group A
-                    new TextChoice { ID = 5, Value = "Madrid", Category = "B", ValueFormat = FormattingFormat.PlainText }, // Distractor in group B
-                },
-                Hints = null, // Hints are added below
-                Tags = new List<string> { $"TagDDT{id}" },
-            };
-
-            if (withFeedback)
-            {
-                ddtq.CorrectResponseFeedback = "DDT Correct";
-                ddtq.CorrectResponseFeedbackFormat = FormattingFormat.HTML;
-                ddtq.PartiallyCorrectResponseFeedback = "DDT Partial";
-                ddtq.PartiallyCorrectResponseFeedbackFormat = FormattingFormat.PlainText;
-                ddtq.IncorrectResponseFeedback = "DDT Incorrect";
-                ddtq.IncorrectResponseFeedbackFormat = FormattingFormat.Markdown;
-            }
-
-            if (withHints)
-            {
-                ddtq.Hints = new List<Hint>
-                {
-                    new Hint
-                    {
-                        HintText = "DDT Hint 1",
-                        HintTextFormat = FormattingFormat.HTML,
-                        ShowNumberOfCorrectAnswers = true,
-                        ClearIncorrectResponses = false,
-                    },
-                    new Hint
-                    {
-                        HintText = "DDT Hint 2",
-                        HintTextFormat = FormattingFormat.PlainText,
-                        ShowNumberOfCorrectAnswers = false,
-                        ClearIncorrectResponses = true,
-                    },
-                };
-            }
-
-            return ddtq;
         }
     }
 }

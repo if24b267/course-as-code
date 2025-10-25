@@ -49,9 +49,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                     }
 
 
-                    // For the Quiz activity, reference the question categories
+                    // For the Quiz activity, reference the question categories and Grading Item
                     if (activityInstace is Model.Activities.Resources.Quiz quiz)
                     {
+                        // question_categoryref
                         writer.WriteStartElement("question_categoryref");
 
                         foreach (var categoryGrouping in quiz.Questions.GroupBy(q => q.Category))
@@ -64,6 +65,15 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                         }
 
                         writer.WriteEndElement(); // Close <question_categoryref>
+
+                        // grade_itemref
+                        writer.WriteStartElement("grade_itemref");
+
+                        writer.WriteStartElement("grade_item");
+                        writer.WriteElementString("id", quiz.ActivityId.ToString());
+                        writer.WriteEndElement(); // Close </grade_item>
+
+                        writer.WriteEndElement(); // Close <grade_itemref>
                     }
 
 

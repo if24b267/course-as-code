@@ -1,6 +1,8 @@
 ﻿using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
@@ -214,7 +216,7 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 _activityCompetenciesWriter.WriteCompetencies(activityPath);
                 _activityCompletionWriter.WriteCompletion(activityPath);
                 _activityFiltersWriter.WriteFilters(activityPath);
-                _activityGradesWriter.WriteGrade(activityPath);
+                _activityGradesWriter.WriteGrade(activity, activityPath);
                 _activityGradehistoryWriter.WriteGradeHistory(course, activityPath);
                 _activityInforefWriter.WriteInforefLabel(course, activityPath, activity);
                 _activityRolesWriter.WriteRoles(activityPath);

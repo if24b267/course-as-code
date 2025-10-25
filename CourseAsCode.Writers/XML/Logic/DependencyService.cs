@@ -1,5 +1,9 @@
 ﻿using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.GeneralWriter;
@@ -43,6 +47,7 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<IUserHelper, UserHelper>();
             services.AddSingleton<IQuizHelper, QuizHelper>();
             services.AddSingleton<ITagsWriter, TagsWriter>();
+            services.AddSingleton<IXmlHelper, XmlHelper>();
 
             // Plugins for the QuestionWriter
             services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
@@ -82,7 +87,6 @@ namespace CourseAsCode.Writers.XML.Logic
 
             // -- Activity Writers --
             // Common Activity Writers
-            services.AddSingleton<ActivityGradesWriter>();
             services.AddSingleton<ActivityGradehistoryWriter>();
             services.AddSingleton<ActivityInforefWriter>();
             services.AddSingleton<ActivityRolesWriter>();
@@ -92,6 +96,12 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<ActivityCompetenciesWriter>();
             services.AddSingleton<ActivityCompletionWriter>();
             services.AddSingleton<ActivityFiltersWriter>();
+
+            // Activity Grades Writers
+            services.AddTransient<ActivityGradesWriter>();
+            services.AddTransient<IGradeItemStrategyResolver, GradeItemStrategyResolver>();
+            services.AddTransient<QuizGradeItemStrategy>();
+            services.AddTransient<DefaultGradeItemStrategy>();
 
             // Specific Activity Writers
             services.AddSingleton<LabelWriter>();

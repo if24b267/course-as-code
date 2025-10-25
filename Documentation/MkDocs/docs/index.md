@@ -29,7 +29,7 @@ rectangle "Moodle Backup File\nbackup-moodle2-course-ID-YYYYMMDD-HHMM.mbz" as Ba
 Description -up-> Reader : interprets
 Reader -right-> Model : stores in
 Model -right-> Writer : reads from
-Backup -up-> Writer: writes
+Writer -down-> Backup: writes
 
 @enduml
 ```
