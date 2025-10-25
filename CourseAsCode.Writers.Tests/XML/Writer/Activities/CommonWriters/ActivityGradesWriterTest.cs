@@ -2,6 +2,7 @@
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters;
+using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
