@@ -17,16 +17,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         private UrlWriter _urlWriter;
         private const string DEFAULT_DUMMY_OUTPUT_PATH = "dummyPath";
 
-        // Dummy URL activity object
-        private readonly URL _dummyUrl = new URL
-        {
-            Name = "Test URL",
-            Description = "This is a test URL description",
-            ExternalUrl = "https://example.com",
-            ModuleId = 101,
-            ModuleName = "url",
-        };
-
         [SetUp]
         public void SetUp()
         {
@@ -46,8 +36,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         [Test]
         public void WriteUrl_CreatesValidXml()
         {
+            // Arrange
+            URL dummyUrl = FakeUrlFactory.CreateBasicUrl(1);
+
             // Act
-            _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl);
+            _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, dummyUrl);
             string output = _testFactory.StringWriter.ToString();
 
             // Assert: Loading the XML should not throw an exception (well-formed XML)
@@ -61,8 +54,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         [Test]
         public void WriteUrl_RootElementIsActivity_HasCorrectAttributes()
         {
+            // Arrange
+            URL dummyUrl = FakeUrlFactory.CreateBasicUrl(1);
+
             // Act
-            _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl);
+            _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, dummyUrl);
             string output = _testFactory.StringWriter.ToString();
 
             var xmlDoc = new XmlDocument();
@@ -72,17 +68,20 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             var activityElement = xmlDoc.DocumentElement;
             Assert.That(activityElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(activityElement.Name, Is.EqualTo("activity"));
-            Assert.That(activityElement.GetAttribute("id"), Is.EqualTo(_dummyUrl.ActivityId.ToString()));
-            Assert.That(activityElement.GetAttribute("moduleid"), Is.EqualTo(_dummyUrl.ModuleId.ToString()));
-            Assert.That(activityElement.GetAttribute("modulename"), Is.EqualTo(_dummyUrl.ModuleName));
+            Assert.That(activityElement.GetAttribute("id"), Is.EqualTo(dummyUrl.ActivityId.ToString()));
+            Assert.That(activityElement.GetAttribute("moduleid"), Is.EqualTo(dummyUrl.ModuleId.ToString()));
+            Assert.That(activityElement.GetAttribute("modulename"), Is.EqualTo(dummyUrl.ModuleName));
             Assert.That(activityElement.GetAttribute("contextid"), Is.EqualTo("0")); // from mocked EnumIntegerToString
         }
 
         [Test]
         public void WriteUrl_ContainsUrlElementWithRequiredElements()
         {
+            // Arrange
+            URL dummyUrl = FakeUrlFactory.CreateBasicUrl(1);
+
             // Act
-            _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl);
+            _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, dummyUrl);
             string output = _testFactory.StringWriter.ToString();
 
             var xmlDoc = new XmlDocument();
@@ -91,20 +90,23 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
             // Assert: Verify that <url> element exists and contains its child elements
             var urlElement = xmlDoc.DocumentElement?.SelectSingleNode("url") as XmlElement;
             Assert.That(urlElement, Is.Not.Null, "The <url> element is missing");
-            Assert.That(urlElement.GetAttribute("id"), Is.EqualTo(_dummyUrl.ActivityId.ToString()));
+            Assert.That(urlElement.GetAttribute("id"), Is.EqualTo(dummyUrl.ActivityId.ToString()));
 
             // Check some of the child elements for expected content
             // Full Schema Validation should be done in integration tests
-            Assert.That(urlElement["name"]?.InnerText, Is.EqualTo(_dummyUrl.Name));
-            Assert.That(urlElement["intro"]?.InnerText, Is.EqualTo(_dummyUrl.Description ?? string.Empty));
-            Assert.That(urlElement["externalurl"]?.InnerText, Is.EqualTo(_dummyUrl.ExternalUrl));
+            Assert.That(urlElement["name"]?.InnerText, Is.EqualTo(dummyUrl.Name));
+            Assert.That(urlElement["intro"]?.InnerText, Is.EqualTo(dummyUrl.Description ?? string.Empty));
+            Assert.That(urlElement["externalurl"]?.InnerText, Is.EqualTo(dummyUrl.ExternalUrl));
         }
 
         [Test]
         public void WriteUrl_LogsDebugOnSuccess()
         {
+            // Arrange
+            URL dummyUrl = FakeUrlFactory.CreateBasicUrl(1);
+
             // Act
-            _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl);
+            _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, dummyUrl);
 
             // Assert: Verify that a debug log was recorded
             _testLogger.Received().Log(
@@ -118,13 +120,16 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Url
         [Test]
         public void WriteUrl_LogsErrorOnException()
         {
+            // Arrange
+            URL dummyUrl = FakeUrlFactory.CreateBasicUrl(1);
+
             // Arrange: Use a throwing XML writer factory to simulate an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
             _urlWriter = new UrlWriter(throwingFactory, _testLogger, _fakeGeneralHelper);
 
             // Act & Assert: Verify that an exception is thrown and error log is recorded
             Assert.Throws<InvalidOperationException>(() =>
-                _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, _dummyUrl));
+                _urlWriter.WriteUrl(DEFAULT_DUMMY_OUTPUT_PATH, dummyUrl));
 
             _testLogger.Received().Log(
                 LogLevel.Error,
