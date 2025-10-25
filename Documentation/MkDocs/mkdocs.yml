@@ -68,4 +68,7 @@ nav:
         - CodeRunner: MoodleBackupFile/QuestionTypes/CodeRunner.md
         - Dropdown: MoodleBackupFile/QuestionTypes/Dropdown.md
         - Matching: MoodleBackupFile/QuestionTypes/DragAndDropText.md
-        
+  - Grading:
+      - Overview: Grading/Overview.md
+      - Grade Categories: Grading/Grade_Categories.md
+      - Grade Items: Grading/Grade_Items.md
