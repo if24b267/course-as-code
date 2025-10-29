@@ -1,0 +1,95 @@
+discs: 
+towersOfHanoi(5, A, C) |
+  towersOfHanoi(4, A, B) |
+    towersOfHanoi(3, A, C) |
+      towersOfHanoi(2, A, B) |
+        towersOfHanoi(1, A, C) |
+          --> Moving disk 1 from rod A to rod C
+        |
+        --> Moving disk 2 from rod A to rod B
+        towersOfHanoi(1, C, B) |
+          --> Moving disk 1 from rod C to rod B
+        |
+      |
+      --> Moving disk 3 from rod A to rod C
+      towersOfHanoi(2, B, C) |
+        towersOfHanoi(1, B, A) |
+          --> Moving disk 1 from rod B to rod A
+        |
+        --> Moving disk 2 from rod B to rod C
+        towersOfHanoi(1, A, C) |
+          --> Moving disk 1 from rod A to rod C
+        |
+      |
+    |
+    --> Moving disk 4 from rod A to rod B
+    towersOfHanoi(3, C, B) |
+      towersOfHanoi(2, C, A) |
+        towersOfHanoi(1, C, B) |
+          --> Moving disk 1 from rod C to rod B
+        |
+        --> Moving disk 2 from rod C to rod A
+        towersOfHanoi(1, B, A) |
+          --> Moving disk 1 from rod B to rod A
+        |
+      |
+      --> Moving disk 3 from rod C to rod B
+      towersOfHanoi(2, A, B) |
+        towersOfHanoi(1, A, C) |
+          --> Moving disk 1 from rod A to rod C
+        |
+        --> Moving disk 2 from rod A to rod B
+        towersOfHanoi(1, C, B) |
+          --> Moving disk 1 from rod C to rod B
+        |
+      |
+    |
+  |
+  --> Moving disk 5 from rod A to rod C
+  towersOfHanoi(4, B, C) |
+    towersOfHanoi(3, B, A) |
+      towersOfHanoi(2, B, C) |
+        towersOfHanoi(1, B, A) |
+          --> Moving disk 1 from rod B to rod A
+        |
+        --> Moving disk 2 from rod B to rod C
+        towersOfHanoi(1, A, C) |
+          --> Moving disk 1 from rod A to rod C
+        |
+      |
+      --> Moving disk 3 from rod B to rod A
+      towersOfHanoi(2, C, A) |
+        towersOfHanoi(1, C, B) |
+          --> Moving disk 1 from rod C to rod B
+        |
+        --> Moving disk 2 from rod C to rod A
+        towersOfHanoi(1, B, A) |
+          --> Moving disk 1 from rod B to rod A
+        |
+      |
+    |
+    --> Moving disk 4 from rod B to rod C
+    towersOfHanoi(3, A, C) |
+      towersOfHanoi(2, A, B) |
+        towersOfHanoi(1, A, C) |
+          --> Moving disk 1 from rod A to rod C
+        |
+        --> Moving disk 2 from rod A to rod B
+        towersOfHanoi(1, C, B) |
+          --> Moving disk 1 from rod C to rod B
+        |
+      |
+      --> Moving disk 3 from rod A to rod C
+      towersOfHanoi(2, B, C) |
+        towersOfHanoi(1, B, A) |
+          --> Moving disk 1 from rod B to rod A
+        |
+        --> Moving disk 2 from rod B to rod C
+        towersOfHanoi(1, A, C) |
+          --> Moving disk 1 from rod A to rod C
+        |
+      |
+    |
+  |
+|
+31 move(s) in total.
