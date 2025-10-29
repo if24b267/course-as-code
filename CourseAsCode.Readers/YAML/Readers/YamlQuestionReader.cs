@@ -6,6 +6,7 @@ using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Readers.Enums;
+using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 
@@ -23,12 +24,33 @@ namespace CourseAsCode.Readers.YAML.Readers
                 return null;
             }
 
+            var baseDir = Path.GetDirectoryName(modelObjectPath);
+
             var questionList = fileReaderHelper.DeserializeFromFile<YamlQuestionList>(modelObjectPath);
 
             var finalQuestionList = new List<Question>();
 
             foreach (YamlQuestion yamlQuestion in questionList.Questions)
             {
+                if (yamlQuestion.QuestionType == QuestionType.CODERUNNER)
+                {
+                    yamlQuestion.QuestionText = PathUtils.InlineIfFile(yamlQuestion.QuestionText, baseDir);
+                    yamlQuestion.AnswerPreload = PathUtils.InlineIfFile(yamlQuestion.AnswerPreload, baseDir);
+                    yamlQuestion.Answer = PathUtils.InlineIfFile(yamlQuestion.Answer, baseDir);
+
+                    foreach (YamlCodeRunnerTestCase yamlQuestionCodeRunnerTestCase in yamlQuestion.CodeRunnerTestCases)
+                    {
+                        if (yamlQuestion.CodeRunnerTestCases == null)
+                        {
+                            continue;
+                        }
+
+                        yamlQuestionCodeRunnerTestCase.Expected =
+                            PathUtils.InlineIfFile(yamlQuestionCodeRunnerTestCase.Expected, baseDir);
+                        yamlQuestionCodeRunnerTestCase.StdIn =
+                            PathUtils.InlineIfFile(yamlQuestionCodeRunnerTestCase.StdIn, baseDir);
+                    }
+                }
                 var question = ConvertYamlQuestionToMoodleQuestion(yamlQuestion);
                 if (finalQuestionList.Any(questionFromList => questionFromList.QuestionId == question.QuestionId))
                 {
@@ -86,6 +108,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 ShowSource = yamlQuestion.ShowSource ? 1 : 0,
                 AnswerBoxLines = yamlQuestion.AnswerBoxLines,
                 AnswerBoxColumns = yamlQuestion.AnswerBoxColumns,
+                AnswerPreload = yamlQuestion.AnswerPreload,
                 Answer = yamlQuestion.Answer,
                 ValidateOnSave = yamlQuestion.ValidateOnSave,
                 DisplayFeedback = yamlQuestion.DisplayFeedback,
