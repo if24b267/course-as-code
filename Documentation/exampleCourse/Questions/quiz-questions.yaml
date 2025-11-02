@@ -917,3 +917,46 @@ Questions:
       - Id: "8" # Distractor
         Text: String
         TextFormat: HTML
+
+  - QuestionName: CPPHelloWorld
+    Category: Programming
+    QuestionId: 28
+    QuestionText: |
+      Write a complete C++ program that prints "Hello, World!" to the console.
+
+      Your program must:
+      - Include the necessary header files
+      - Have a proper main() function
+      - Use standard C++ output mechanisms
+      - Print exactly: Hello, World!
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: CODERUNNER
+    CodeRunnerType: cpp_program
+    AllOrNothing: true
+    Precheck: 0
+    HideCheck: false
+    ShowSource: false
+    AnswerBoxLines: 20
+    AnswerBoxColumns: 100
+    Answer: |
+      #include <iostream>
+
+      int main() {
+          std::cout << "Hello, World!" << std::endl;
+          return 0;
+      }
+    ValidateOnSave: true
+    DisplayFeedback: true
+    GiveUpAllowed: false
+    CodeRunnerTestCases:
+      - Id: 1
+        TestCode: "Basic Hello World Output Test"
+        TestType: 0
+        Expected: "Hello, World!"
+        UseAsExample: true
+        Display: "SHOW"
+        HideRestIfFail: false
+        Mark: 1.000
+        StdIn: ""
+        Extra: ""

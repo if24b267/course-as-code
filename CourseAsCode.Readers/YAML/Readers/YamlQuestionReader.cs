@@ -108,6 +108,8 @@ namespace CourseAsCode.Readers.YAML.Readers
                 Display = yamlTestCase.Display,
                 HideRestIfFail = yamlTestCase.HideRestIfFail,
                 Mark = yamlTestCase.Mark,
+                StdIn = yamlTestCase.StdIn,
+                Extra = yamlTestCase.Extra
             }).ToList();
         }
 
