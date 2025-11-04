@@ -566,7 +566,7 @@ namespace CourseAsCode.Writers
                     _activityCompetenciesWriter.WriteCompetencies(activityPath);
                     _activityCompletionWriter.WriteCompletion(activityPath);
                     _activityFiltersWriter.WriteFilters(activityPath);
-                    _activityGradesWriter.WriteGrade(activityPath);
+                    _activityGradesWriter.WriteGrade(activityPath, activity.GradeItems);
                     _activityGradehistoryWriter.WriteGradeHistory(course, activityPath);
                     _activityInforefWriter.WriteInforefLabel(course, activityPath, activity);
                     _activityRolesWriter.WriteRoles(activityPath);

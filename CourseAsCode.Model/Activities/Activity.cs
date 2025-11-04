@@ -38,5 +38,6 @@ namespace CourseAsCode.Model.Activities
         public DateTime TimeCreated { get; set; } = ActivityDefaults.DEFAULT_TIME_CREATED;
         [Description("the date and time that the file was last modified")]
         public DateTime TimeModified { get; set; } = ActivityDefaults.DEFAULT_TIME_MODIFIED;
+        public List<Grade> GradeItems { get; set; } = new();
     }
 }
