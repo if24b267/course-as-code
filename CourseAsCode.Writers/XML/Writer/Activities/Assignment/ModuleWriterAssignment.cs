@@ -16,16 +16,6 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
         private readonly IGeneralHelper _generalHelper;
         private readonly ITagsWriter _tagsWriter;
 
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="ModuleWriterAssignment"/> class
-        /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
-        /// <param name="logger">Logger instance specific to <see cref="ModuleWriterAssignment"/></param>
-        /// <param name="generalHelper">General Helper providing various helper methods</param>
-        /// <param name="moodleVersionHelper">Helper method providing specific helper methods focused on Moodle version management</param>
-        /// <param name="tagsWriter">Helper method providing specific helper methods focused on tag management</param>
-        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
         public ModuleWriterAssignment(IXmlWriterFactory xmlWriterFactory, IMoodleVersionHelper moodleVersionHelper, IGeneralHelper generalHelper, ILogger<ModuleWriterAssignment> logger, ITagsWriter tagsWriter)
             : base(xmlWriterFactory, logger)
         {
@@ -34,19 +24,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
             _tagsWriter = tagsWriter ?? throw new ArgumentNullException(nameof(tagsWriter));
         }
 
-
-        /// <summary>
-        /// Writes the module.xml file for a label activity.
-        /// </summary>
-        /// <param name="outputPath">The directory where module.xml will be saved.</param>
-        /// <param name="course">The course model.</param>
-        /// <param name="section">The section model.</param>
-        /// <param name="activityObject">The activity object to write.</param>
         public void WriteModule(string outputPath, Model.Course course, Section section, Activity activityObject)
         {
             try
             {
-                // Cast the activityObject to Assignment
                 if (activityObject is not Model.Activities.Resources.Assignment assignmentObject)
                 {
                     throw new InvalidCastException("The provided activity is not of type Assignment");
@@ -63,6 +44,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
                     writer.WriteAttributeString("version", _moodleVersionHelper.GetMoodleVersionStringFromEnum(course.BackupMetadata.MoodleVersion));
 
                     WriteGeneralInformationToModules(writer, outputPath, course, section, assignmentObject);
+                    WritePlagiarismTurnitinSimModule(writer, assignmentObject);
 
                     writer.WriteEndElement(); // Close <module>
                     writer.WriteEndDocument();
@@ -77,10 +59,6 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
             }
         }
 
-        /// <summary>
-        /// Writes the general information elements into the module tag.
-        /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
         private void WriteGeneralInformationToModules(XmlWriter writer, string outputPath, Model.Course course, Section section, Model.Activities.Resources.Assignment assignmentObject)
         {
             var elements = new Dictionary<string, string>
@@ -91,7 +69,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
                 { "idnumber", "$@NULL@$" },
                 { "added", _generalHelper.DateTimeToUnixTimestamp(assignmentObject.TimeCreated) },
                 { "score", "0" },
-                { "indent", "0" },
+                { "indent", "1" },
                 { "visible", assignmentObject.VisibleToStudents ? "1" : "0" },
                 { "visibleoncoursepage", assignmentObject.VisibleToStudents ? "1" : "0" },
                 { "visibleold", assignmentObject.VisibleToStudents ? "1" : "0" },
@@ -110,6 +88,41 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
             WriteElements(writer, elements);
 
             _tagsWriter.WriteTags(writer, assignmentObject.Tags, outputPath);
+        }
+
+        private void WritePlagiarismTurnitinSimModule(XmlWriter writer, Model.Activities.Resources.Assignment assignmentObject)
+        {
+            writer.WriteStartElement("plugin_plagiarism_turnitinsim_module");
+
+            writer.WriteStartElement("turnitinsim_mods");
+            writer.WriteStartElement("turnitinsim_mod");
+            writer.WriteAttributeString("id", assignmentObject.ActivityId.ToString());
+
+            var turnitinElements = new Dictionary<string, string>
+            {
+                { "turnitinenabled", "0" },
+                { "reportgeneration", "0" },
+                { "queuedrafts", "0" },
+                { "addtoindex", "0" },
+                { "excludequotes", "0" },
+                { "excludebiblio", "0" },
+                { "accessstudents", "0" },
+            };
+            WriteElements(writer, turnitinElements);
+
+            writer.WriteEndElement(); // Close <turnitinsim_mod>
+            writer.WriteEndElement(); // Close <turnitinsim_mods>
+
+            writer.WriteStartElement("turnitinsim_subs");
+            writer.WriteStartElement("turnitinsim_sub");
+            writer.WriteAttributeString("id", "");
+            writer.WriteEndElement(); // Close <turnitinsim_sub>
+            writer.WriteEndElement(); // Close <turnitinsim_subs>
+
+            writer.WriteStartElement("turnitinsim_usrs");
+            writer.WriteEndElement(); // Close <turnitinsim_usrs>
+
+            writer.WriteEndElement(); // Close <plugin_plagiarism_turnitinsim_module>
         }
     }
 }
