@@ -29,6 +29,10 @@ namespace CourseAsCode.Model
 		public List<User> EnrolledUsers { get; set; } = CourseDefaults.DEFAULT_ENROLLED_USERS;
 		[Description("All the questions available in this course for quizzes, i.e. the question bank")]
 		public List<Question> Questions { get; set; } = new();
+		[Description("list of scales that are available in the course")]
+		public List<Scale> Scales { get; set; } = CourseDefaults.DEFAULT_SCALES;
+		[Description("list of course completions for this course")]
+		public List<CourseCompletion> Completions { get; set; } = CompletionDefaults.DEFAULT_COMPLETIONS;
 
         public BackupMetadata BackupMetadata { get; set; } = new BackupMetadata();
         public SensibleDefaultsCourse SensibleDefaults { get; set; } = new SensibleDefaultsCourse();

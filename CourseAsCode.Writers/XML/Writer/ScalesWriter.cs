@@ -8,12 +8,6 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_SCALES_RELATIVE_PATH = "scales.xml";
 
-
-        /// <summary>
-        /// Creates a new instance of the ScalesWriter class
-        /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
-        /// <param name="logger">Logger instance specific to ScalesWriter</param>
         public ScalesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<ScalesWriter> logger)
             : base(xmlWriterFactory, logger)
         {
@@ -28,10 +22,17 @@ namespace CourseAsCode.Writers.XML.Writer
                 using (XmlWriter writer = CreateXmlWriter(filePath))
                 {
                     writer.WriteStartDocument();
-
                     writer.WriteStartElement("scales_definition");
-                    writer.WriteEndElement(); // Close <scales_definition>
 
+                    if (course.Scales != null)
+                    {
+                        foreach (var scale in course.Scales)
+                        {
+                            WriteSingleScale(writer, scale);
+                        }
+                    }
+
+                    writer.WriteEndElement(); // </scales_definition>
                     writer.WriteEndDocument();
                 }
 
@@ -42,6 +43,35 @@ namespace CourseAsCode.Writers.XML.Writer
                 LogError(e, $"Error writing {DEFAULT_SCALES_RELATIVE_PATH}");
                 throw;
             }
+        }
+
+        private void WriteSingleScale(XmlWriter writer, Model.Scale scale)
+        {
+            WriteStartElementWithAttributes(writer, "scale", new Dictionary<string, string>
+            {
+                { "id", scale.Id.ToString() }
+            });
+
+            WriteScaleElements(writer, scale);
+
+            writer.WriteEndElement(); // </scale>
+            LogTrace($"Added scale {scale.Id}: '{scale.Name}' to {DEFAULT_SCALES_RELATIVE_PATH}");
+        }
+
+        private void WriteScaleElements(XmlWriter writer, Model.Scale scale)
+        {
+            var elements = new Dictionary<string, string>
+            {
+                { "courseid", scale.CourseId.ToString() },
+                { "userid", scale.UserId.ToString() },
+                { "name", scale.Name ?? string.Empty },
+                { "scale", scale.ScaleValues ?? string.Empty },
+                { "description", scale.Description ?? string.Empty },
+                { "descriptionformat", scale.DescriptionFormat.ToString() },
+                { "timemodified", scale.TimeModified.ToString() }
+            };
+
+            WriteElements(writer, elements);
         }
     }
 }

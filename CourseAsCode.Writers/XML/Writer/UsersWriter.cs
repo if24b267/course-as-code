@@ -123,7 +123,19 @@ namespace CourseAsCode.Writers.XML.Writer
         private void WriteCustomFieldsSection(XmlWriter writer, User user)
         {
             writer.WriteStartElement("custom_fields");
-            writer.WriteEndElement();
+            if (user.CustomFields != null)
+            {
+                foreach (var field in user.CustomFields)
+                {
+                    writer.WriteStartElement("custom_field");
+                    writer.WriteAttributeString("id", field.Id.ToString());
+                    writer.WriteElementString("field_name", field.FieldName ?? string.Empty);
+                    writer.WriteElementString("field_type", field.FieldType ?? string.Empty);
+                    writer.WriteElementString("field_data", field.FieldData ?? string.Empty);
+                    writer.WriteEndElement(); // </custom_field>
+                }
+            }
+            writer.WriteEndElement(); // </custom_fields>
         }
 
         private void WriteTagsSection(XmlWriter writer, User user)
