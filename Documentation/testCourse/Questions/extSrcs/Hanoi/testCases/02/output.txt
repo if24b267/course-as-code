@@ -1,0 +1,11 @@
+discs: 
+towersOfHanoi(2, A, C) |
+  towersOfHanoi(1, A, B) |
+    --> Moving disk 1 from rod A to rod B
+  |
+  --> Moving disk 2 from rod A to rod C
+  towersOfHanoi(1, B, C) |
+    --> Moving disk 1 from rod B to rod C
+  |
+|
+3 move(s) in total.

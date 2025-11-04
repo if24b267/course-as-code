@@ -34,6 +34,7 @@ namespace CourseAsCode.Readers.YAML.Model
         public bool HideCheck { get; set; } = false;
         public int AnswerBoxLines { get; set; } = 18;
         public int AnswerBoxColumns { get; set; } = 100;
+        public string AnswerPreload { get; set; } = string.Empty;
         public string Answer { get; set; } = string.Empty;
         public bool ValidateOnSave { get; set; } = true;
         public bool DisplayFeedback { get; set; } = true;
