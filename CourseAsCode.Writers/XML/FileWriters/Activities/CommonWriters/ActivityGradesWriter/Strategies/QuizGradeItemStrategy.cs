@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
-using System.Xml;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 
 namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies
 {
@@ -13,21 +13,19 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
     public class QuizGradeItemStrategy : IGradeItemStrategy
     {
         private readonly IGeneralHelper _generalHelper;
-        private readonly IXmlHelper _xmlHelper;
 
-        public QuizGradeItemStrategy(IGeneralHelper generalHelper, IXmlHelper xmlHelper)
+        public QuizGradeItemStrategy(IGeneralHelper generalHelper)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
-            _xmlHelper = xmlHelper ?? throw new ArgumentNullException(nameof(xmlHelper));
         }
 
 
         /// <summary>
         /// Writes the grade_item element for a Quiz activity
         /// </summary>
-        /// <param name="writer">The XmlWriter instance, initialized on the correct document</param>
+        /// <param name="xmlService">The XML helper to use for writing</param>
         /// <param name="activity">The activity to write the grade item for</param>
-        public void WriteGradeItems(XmlWriter writer, Activity activity)
+        public void WriteGradeItems(IXmlService xmlService, Activity activity)
         {
             // This strategy is only applicable to Quiz activities
             if (activity is not Quiz quiz)
@@ -35,7 +33,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
                 return;
             }
 
-            _xmlHelper.WriteElementWithAttributes(writer, "grade_item", new Dictionary<string, string>
+            xmlService.WriteElementWithAttributes("grade_item", new Dictionary<string, string>
             {
                 { "id", activity.ActivityId.ToString() },
             });
@@ -73,8 +71,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
                 { "timemodified", _generalHelper.DateTimeToUnixTimestamp(quiz.TimeModified) },
             };
 
-            _xmlHelper.WriteElements(writer, gradeItemElements);
-            writer.WriteEndElement(); // Close <grade_item>
+            xmlService.WriteElements(gradeItemElements);
+            xmlService.CloseElement(); // Close <grade_item>
         }
     }
 }

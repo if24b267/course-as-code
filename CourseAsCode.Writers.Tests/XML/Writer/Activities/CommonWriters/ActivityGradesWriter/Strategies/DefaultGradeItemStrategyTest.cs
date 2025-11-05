@@ -1,7 +1,6 @@
-﻿using System.Xml;
-using CourseAsCode.Writers.Tests.Fakes;
+﻿using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
-using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.ActivityGradesWriter.Strategies
@@ -10,42 +9,20 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
     public class DefaultGradeItemStrategyTests
     {
         private DefaultGradeItemStrategy _strategy;
-        private IXmlHelper _xmlHelper;
-        private XmlWriterFactoryTest _testFactory;
+        private IXmlService _xmlService;
 
         [SetUp]
         public void SetUp()
         {
+            // Substitutes for Dependencies
             _strategy = new DefaultGradeItemStrategy();
-            _xmlHelper = Substitute.For<IXmlHelper>();
-            _testFactory = new XmlWriterFactoryTest();
+            _xmlService = Substitute.For<IXmlService>();
+        }
 
-            // Set up XmlHelper to pass through the calls to the mocked writer from the factory
-            _xmlHelper.When(x => x.WriteElements(Arg.Any<XmlWriter>(), Arg.Any<Dictionary<string, string>>()))
-                .Do(callInfo =>
-                {
-                    var writer = callInfo.ArgAt<XmlWriter>(0);
-                    var elements = callInfo.ArgAt<Dictionary<string, string>>(1);
-
-                    foreach (var element in elements)
-                    {
-                        writer.WriteElementString(element.Key, element.Value);
-                    }
-                });
-
-            _xmlHelper.When(x => x.WriteElementWithAttributes(Arg.Any<XmlWriter>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()))
-                .Do(callInfo =>
-                {
-                    var writer = callInfo.ArgAt<XmlWriter>(0);
-                    var elementName = callInfo.ArgAt<string>(1);
-                    var attributes = callInfo.ArgAt<Dictionary<string, string>>(2);
-
-                    writer.WriteStartElement(elementName);
-                    foreach (var attribute in attributes)
-                    {
-                        writer.WriteAttributeString(attribute.Key, attribute.Value);
-                    }
-                });
+        [TearDown]
+        public void TearDown()
+        {
+            _xmlService.Dispose();
         }
 
         [Test]
@@ -53,25 +30,48 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
         {
             // Arrange
             var urlActivity = FakeUrlFactory.CreateBasicUrl(1);
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, urlActivity);
-            var output = _testFactory.StringWriter.ToString();
+            _strategy.WriteGradeItems(_xmlService, urlActivity);
 
             // Assert
-            Assert.That(output, Is.Empty);
+            _xmlService.DidNotReceive().WriteElementWithAttributes(
+                Arg.Any<string>(),
+                Arg.Any<Dictionary<string, string>>());
+            _xmlService.DidNotReceive().WriteElements(
+                Arg.Any<Dictionary<string, string>>());
+            _xmlService.DidNotReceive().WriteElement(Arg.Any<string>());
+            _xmlService.DidNotReceive().CloseElement();
         }
 
         [Test]
-        public void WriteGradeItems_DoesNotThrow_WithAnyActivityType()
+        public void WriteGradeItems_DoesNotThrow_WithUrlActivity()
+        {
+            // Arrange
+            var urlActivity = FakeUrlFactory.CreateBasicUrl(1);
+
+            // Act & Assert
+            Assert.DoesNotThrow(() => _strategy.WriteGradeItems(_xmlService, urlActivity));
+        }
+
+        [Test]
+        public void WriteGradeItems_DoesNotThrow_WithQuizActivity()
         {
             // Arrange
             var quiz = FakeQuizFactory.CreateBasicQuiz(1);
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act & Assert
-            Assert.DoesNotThrow(() => _strategy.WriteGradeItems(writer, quiz));
+            Assert.DoesNotThrow(() => _strategy.WriteGradeItems(_xmlService, quiz));
+        }
+
+        [Test]
+        public void WriteGradeItems_DoesNotThrow_WithAssignmentActivity()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+
+            // Act & Assert
+            Assert.DoesNotThrow(() => _strategy.WriteGradeItems(_xmlService, assignment));
         }
     }
 }

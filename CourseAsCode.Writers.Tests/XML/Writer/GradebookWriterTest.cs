@@ -1,8 +1,8 @@
-﻿using System.Xml;
-using CourseAsCode.Model.Enums.Grading;
+﻿using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -11,7 +11,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     [TestFixture]
     public class GradebookWriterTest
     {
-        private XmlWriterFactoryTest _testFactory;
+        private IXmlService _xmlService;
+        private IXmlServiceFactory _xmlServiceFactory;
         private IGeneralHelper _generalHelper;
         private ILogger<GradebookWriter> _testLogger;
         private GradebookWriter _gradebookWriter;
@@ -19,56 +20,45 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         [SetUp]
         public void SetUp()
         {
-            _testFactory = new XmlWriterFactoryTest();
+            // Substitutes for dependencies
+            _xmlService = Substitute.For<IXmlService>();
+            _xmlServiceFactory = Substitute.For<IXmlServiceFactory>();
             _generalHelper = Substitute.For<IGeneralHelper>();
             _testLogger = Substitute.For<ILogger<GradebookWriter>>();
 
+            // Set up the factory to return the mocked Xml Service
+            _xmlServiceFactory.Create(Arg.Any<string>()).Returns(_xmlService);
+
             // Setup default mock behaviors
-            _generalHelper.EnumIntegerToString(Arg.Any<Enum>()).Returns("13");
+            _generalHelper.EnumIntegerToString(Arg.Any<Enum>()).Returns("1");
             _generalHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("1234567890");
 
-            _gradebookWriter = new GradebookWriter(_testFactory, _generalHelper, _testLogger);
+            _gradebookWriter = new GradebookWriter(_generalHelper, _xmlServiceFactory, _testLogger);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _xmlService.Dispose();
         }
 
         [Test]
-        public void WriteGradebook_GeneratesValidXml()
+        public void WriteGradebook_CreatesXmlServiceWithCorrectPath()
         {
             // Arrange
             var course = Fakes.FakeCourseFactory.CreateBasicCourse();
-            var dummyOutputPath = "dummyPath";
+            var outputPath = "test/output/path";
 
             // Act
-            _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
-
-            // Assert: Loading the XML should not throw an exception (well-formed XML)
-            Assert.DoesNotThrow(() =>
-            {
-                var doc = new XmlDocument();
-                doc.LoadXml(output);
-            });
-        }
-
-        [Test]
-        public void WriteGradebook_RootElementIsGradebook()
-        {
-            // Arrange
-            var course = Fakes.FakeCourseFactory.CreateBasicCourse();
-            var dummyOutputPath = "dummyPath";
-
-            // Act
-            _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
+            _gradebookWriter.WriteGradebook(course, outputPath);
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
-            Assert.That(doc.DocumentElement.Name, Is.EqualTo("gradebook"));
+            _xmlServiceFactory.Received(1).Create(Arg.Is<string>(path =>
+                path.EndsWith("gradebook.xml")));
         }
 
         [Test]
-        public void WriteGradebook_ContainsAllRequiredElements()
+        public void WriteGradebook_WritesRootGradebookElement()
         {
             // Arrange
             var course = Fakes.FakeCourseFactory.CreateBasicCourse();
@@ -76,23 +66,47 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-
-            var requiredElements = new[] { "attributes", "grade_categories", "grade_items", "grade_letters", "grade_settings" };
-
-            foreach (var elementName in requiredElements)
-            {
-                var element = doc.DocumentElement?.SelectSingleNode(elementName);
-                Assert.That(element, Is.Not.Null, $"The <{elementName}> element is missing");
-            }
+            _xmlService.Received(1).WriteElement("gradebook");
         }
 
         [Test]
-        public void WriteGradebook_WithSingleGradeCategory_WritesGradeCategory()
+        public void WriteGradebook_WritesAllRequiredSections()
+        {
+            // Arrange
+            var course = Fakes.FakeCourseFactory.CreateBasicCourse();
+            var dummyOutputPath = "dummyPath";
+
+            // Act
+            _gradebookWriter.WriteGradebook(course, dummyOutputPath);
+
+            // Assert
+            _xmlService.Received(1).WriteElement("attributes");
+            _xmlService.Received(1).WriteElement("grade_categories");
+            _xmlService.Received(1).WriteElement("grade_items");
+            _xmlService.Received(1).WriteElement("grade_letters");
+            _xmlService.Received(1).WriteElement("grade_settings");
+        }
+
+        [Test]
+        public void WriteGradebook_ClosesAllOpenedElements()
+        {
+            // Arrange
+            var course = Fakes.FakeCourseFactory.CreateBasicCourse();
+            var dummyOutputPath = "dummyPath";
+
+            // Act
+            _gradebookWriter.WriteGradebook(course, dummyOutputPath);
+
+            // Assert
+            // Should close: attributes, grade_categories, grade_items, grade_letters,
+            // grade_setting, grade_settings, gradebook = 7 elements
+            _xmlService.Received(7).CloseElement();
+        }
+
+        [Test]
+        public void WriteGradebook_WithSingleGradeCategory_WritesGradeCategoryElement()
         {
             // Arrange
             var course = Fakes.FakeCourseFactory.CreateBasicCourse();
@@ -102,14 +116,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var gradeCategoryNode = doc.DocumentElement?.SelectSingleNode("grade_categories/grade_category");
-            Assert.That(gradeCategoryNode, Is.Not.Null, "The <grade_category> element is missing");
-            Assert.That(gradeCategoryNode.Attributes["id"].Value, Is.EqualTo("1"));
+            _xmlService.Received(1).WriteElementWithAttributes("grade_category",
+                Arg.Is<Dictionary<string, string>>(dict => dict["id"] == "1"));
         }
 
         [Test]
@@ -124,17 +134,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var categoryNodes = doc.DocumentElement?.SelectNodes("grade_categories/grade_category");
-            Assert.That(categoryNodes?.Count, Is.EqualTo(3));
+            _xmlService.Received(3).WriteElementWithAttributes("grade_category", Arg.Any<Dictionary<string, string>>());
         }
 
         [Test]
-        public void WriteGradebook_WithSingleGradeCategory_WritesGradeItem()
+        public void WriteGradebook_WithSingleGradeCategory_WritesGradeItemElement()
         {
             // Arrange
             var course = Fakes.FakeCourseFactory.CreateBasicCourse();
@@ -144,13 +150,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var gradeItemNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item");
-            Assert.That(gradeItemNode, Is.Not.Null, "The <grade_item> element is missing");
+            _xmlService.Received(1).WriteElementWithAttributes("grade_item",
+                Arg.Is<Dictionary<string, string>>(dict => dict["id"] == "1"));
         }
 
         [Test]
@@ -164,25 +167,22 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var gradeCategoryNode = doc.DocumentElement?.SelectSingleNode("grade_categories/grade_category");
-
-            var requiredElements = new[]
-            {
-                "parent", "depth", "path", "fullname", "aggregation",
-                "keephigh", "droplow", "aggregateonlygraded", "aggregateoutcomes",
-                "timecreated", "timemodified", "hidden",
-            };
-
-            foreach (var elementName in requiredElements)
-            {
-                var element = gradeCategoryNode?.SelectSingleNode(elementName);
-                Assert.That(element, Is.Not.Null, $"The <{elementName}> element is missing in grade_category");
-            }
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("parent") &&
+                dict.ContainsKey("depth") &&
+                dict.ContainsKey("path") &&
+                dict.ContainsKey("fullname") &&
+                dict.ContainsKey("aggregation") &&
+                dict.ContainsKey("keephigh") &&
+                dict.ContainsKey("droplow") &&
+                dict.ContainsKey("aggregateonlygraded") &&
+                dict.ContainsKey("aggregateoutcomes") &&
+                dict.ContainsKey("timecreated") &&
+                dict.ContainsKey("timemodified") &&
+                dict.ContainsKey("hidden")
+            ));
         }
 
         [Test]
@@ -196,28 +196,39 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var gradeItemNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item");
-
-            var requiredElements = new[]
-            {
-                "categoryid", "itemname", "itemtype", "itemmodule", "iteminstance",
-                "itemnumber", "iteminfo", "idnumber", "calculation", "gradetype",
-                "grademax", "grademin", "scaleid", "outcomeid", "gradepass",
-                "multfactor", "plusfactor", "aggregationcoef", "aggregationcoef2",
-                "weightoverride", "sortorder", "display", "decimals", "hidden",
-                "locked", "locktime", "needsupdate", "timecreated", "timemodified",
-            };
-
-            foreach (var elementName in requiredElements)
-            {
-                var element = gradeItemNode?.SelectSingleNode(elementName);
-                Assert.That(element, Is.Not.Null, $"The <{elementName}> element is missing in grade_item");
-            }
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("categoryid") &&
+                dict.ContainsKey("itemname") &&
+                dict.ContainsKey("itemtype") &&
+                dict.ContainsKey("itemmodule") &&
+                dict.ContainsKey("iteminstance") &&
+                dict.ContainsKey("itemnumber") &&
+                dict.ContainsKey("iteminfo") &&
+                dict.ContainsKey("idnumber") &&
+                dict.ContainsKey("calculation") &&
+                dict.ContainsKey("gradetype") &&
+                dict.ContainsKey("grademax") &&
+                dict.ContainsKey("grademin") &&
+                dict.ContainsKey("scaleid") &&
+                dict.ContainsKey("outcomeid") &&
+                dict.ContainsKey("gradepass") &&
+                dict.ContainsKey("multfactor") &&
+                dict.ContainsKey("plusfactor") &&
+                dict.ContainsKey("aggregationcoef") &&
+                dict.ContainsKey("aggregationcoef2") &&
+                dict.ContainsKey("weightoverride") &&
+                dict.ContainsKey("sortorder") &&
+                dict.ContainsKey("display") &&
+                dict.ContainsKey("decimals") &&
+                dict.ContainsKey("hidden") &&
+                dict.ContainsKey("locked") &&
+                dict.ContainsKey("locktime") &&
+                dict.ContainsKey("needsupdate") &&
+                dict.ContainsKey("timecreated") &&
+                dict.ContainsKey("timemodified")
+            ));
         }
 
         [Test]
@@ -232,13 +243,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var parentNode = doc.DocumentElement?.SelectSingleNode("grade_categories/grade_category/parent");
-            Assert.That(parentNode?.InnerText, Is.EqualTo("$@NULL@$"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict["parent"] == "$@NULL@$"
+            ));
         }
 
         [Test]
@@ -246,7 +255,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange
             var course = Fakes.FakeCourseFactory.CreateBasicCourse();
-            var parentCategory = FakeGradeCategoryFactory.CreateBasicGradeCategory(1, "Parent Category");
+            var parentCategory = FakeGradeCategoryFactory.CreateBasicGradeCategory(5, "Parent Category");
             var childCategory = FakeGradeCategoryFactory.CreateBasicGradeCategory(2, "Child Category");
             childCategory.Parent = parentCategory;
             course.GradeCategories.Add(parentCategory);
@@ -255,15 +264,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var categoryNodes = doc.DocumentElement?.SelectNodes("grade_categories/grade_category");
-            var childNode = categoryNodes?[1]; // Second category is the child
-            var parentNode = childNode?.SelectSingleNode("parent");
-            Assert.That(parentNode?.InnerText, Is.EqualTo("1"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("parent") && dict["parent"] == "5"
+            ));
         }
 
         [Test]
@@ -277,13 +282,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var depthNode = doc.DocumentElement?.SelectSingleNode("grade_categories/grade_category/depth");
-            Assert.That(depthNode?.InnerText, Is.EqualTo("1"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("depth") && dict["depth"] == "1"
+            ));
         }
 
         [Test]
@@ -297,13 +300,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var pathNode = doc.DocumentElement?.SelectSingleNode("grade_categories/grade_category/path");
-            Assert.That(pathNode?.InnerText, Is.EqualTo("/5/"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("path") && dict["path"] == "/5/"
+            ));
         }
 
         [Test]
@@ -320,14 +321,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var categoryNodes = doc.DocumentElement?.SelectNodes("grade_categories/grade_category");
-            var childDepthNode = categoryNodes?[1]?.SelectSingleNode("depth");
-            Assert.That(childDepthNode?.InnerText, Is.EqualTo("2"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("depth") && dict["depth"] == "2"
+            ));
         }
 
         [Test]
@@ -347,14 +345,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var categoryNodes = doc.DocumentElement?.SelectNodes("grade_categories/grade_category");
-            var grandchildPathNode = categoryNodes?[2]?.SelectSingleNode("path");
-            Assert.That(grandchildPathNode?.InnerText, Is.EqualTo("/4/2/1/"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("path") && dict["path"] == "/4/2/1/"
+            ));
         }
 
         [Test]
@@ -369,13 +364,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var dropLowNode = doc.DocumentElement?.SelectSingleNode("grade_categories/grade_category/droplow");
-            Assert.That(dropLowNode?.InnerText, Is.EqualTo("2"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("droplow") && dict["droplow"] == "2"
+            ));
         }
 
         [Test]
@@ -390,13 +383,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var dropLowNode = doc.DocumentElement?.SelectSingleNode("grade_categories/grade_category/droplow");
-            Assert.That(dropLowNode?.InnerText, Is.EqualTo("0"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("droplow") && dict["droplow"] == "0"
+            ));
         }
 
         [Test]
@@ -432,13 +423,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var itemTypeNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/itemtype");
-            Assert.That(itemTypeNode?.InnerText, Is.EqualTo("course"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("itemtype") && dict["itemtype"] == "course"
+            ));
         }
 
         [Test]
@@ -455,14 +444,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var itemNodes = doc.DocumentElement?.SelectNodes("grade_items/grade_item");
-            var childItemTypeNode = itemNodes?[1]?.SelectSingleNode("itemtype");
-            Assert.That(childItemTypeNode?.InnerText, Is.EqualTo("category"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("itemtype") && dict["itemtype"] == "category"
+            ));
         }
 
         [Test]
@@ -476,13 +462,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var gradeMaxNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/grademax");
-            Assert.That(gradeMaxNode?.InnerText, Is.EqualTo("150.00000"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("grademax") && dict["grademax"] == "150.00000"
+            ));
         }
 
         [Test]
@@ -496,13 +480,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var gradePassNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/gradepass");
-            Assert.That(gradePassNode?.InnerText, Is.EqualTo("75.00000"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("gradepass") && dict["gradepass"] == "75.00000"
+            ));
         }
 
         [Test]
@@ -517,15 +499,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var aggregationCoef2Node = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/aggregationcoef2");
-            Assert.That(aggregationCoef2Node?.InnerText, Is.EqualTo("0.70000"));
-            var weightOverrideNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/weightoverride");
-            Assert.That(weightOverrideNode?.InnerText, Is.EqualTo("1"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("aggregationcoef2") && dict["aggregationcoef2"] == "0.70000" &&
+                dict.ContainsKey("weightoverride") && dict["weightoverride"] == "1"
+            ));
         }
 
         [Test]
@@ -540,16 +519,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var aggregationCoef2Node = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/aggregationcoef2");
-            Assert.That(aggregationCoef2Node?.InnerText, Is.EqualTo("0.00000"));
-            var weightOverrideNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/weightoverride");
-            Assert.That(weightOverrideNode?.InnerText, Is.EqualTo("0"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("aggregationcoef2") && dict["aggregationcoef2"] == "0.00000" &&
+                dict.ContainsKey("weightoverride") && dict["weightoverride"] == "0"
+            ));
         }
+
 
         [Test]
         public void WriteGradebook_GradeItem_WithGradeHidden_WritesCurrentTimestamp()
@@ -565,13 +542,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var hiddenNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/hidden");
-            Assert.That(hiddenNode?.InnerText, Is.EqualTo("9876543210"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("hidden") && dict["hidden"] == "9876543210"
+            ));
         }
 
         [Test]
@@ -588,13 +563,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var hiddenNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/hidden");
-            Assert.That(hiddenNode?.InnerText, Is.EqualTo("1735689600"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("hidden") && dict["hidden"] == "1735689600"
+            ));
             _generalHelper.Received(1).DateTimeToUnixTimestamp(specificDate);
         }
 
@@ -611,13 +584,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var lockedNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/locked");
-            Assert.That(lockedNode?.InnerText, Is.EqualTo("9876543210"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("locked") && dict["locked"] == "9876543210"
+            ));
         }
 
         [Test]
@@ -632,13 +603,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var decimalsNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/decimals");
-            Assert.That(decimalsNode?.InnerText, Is.EqualTo("3"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("decimals") && dict["decimals"] == "3"
+            ));
         }
 
         [Test]
@@ -653,13 +622,25 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Act
             _gradebookWriter.WriteGradebook(course, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var decimalsNode = doc.DocumentElement?.SelectSingleNode("grade_items/grade_item/decimals");
-            Assert.That(decimalsNode?.InnerText, Is.EqualTo("$@NULL@$"));
+            _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(dict =>
+                dict.ContainsKey("decimals") && dict["decimals"] == "$@NULL@$"
+            ));
+        }
+
+        [Test]
+        public void WriteGradebook_DisposesXmlService()
+        {
+            // Arrange
+            var course = Fakes.FakeCourseFactory.CreateBasicCourse();
+            var dummyOutputPath = "dummyPath";
+
+            // Act
+            _gradebookWriter.WriteGradebook(course, dummyOutputPath);
+
+            // Assert
+            _xmlService.Received(1).Dispose();
         }
     }
 }

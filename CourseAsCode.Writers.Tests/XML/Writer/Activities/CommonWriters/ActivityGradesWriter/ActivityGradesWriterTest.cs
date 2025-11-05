@@ -1,7 +1,7 @@
-﻿using System.Xml;
-using CourseAsCode.Model.Activities;
+﻿using CourseAsCode.Model.Activities;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -10,7 +10,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
     [TestFixture]
     public class ActivityGradesWriterTests
     {
-        private XmlWriterFactoryTest _testFactory;
+        private IXmlService _xmlService;
+        private IXmlServiceFactory _xmlServiceFactory;
         private IGradeItemStrategyResolver _mockStrategyResolver;
         private IGradeItemStrategy _mockStrategy;
         private ILogger<Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.ActivityGradesWriter> _testLogger;
@@ -19,56 +20,48 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
         [SetUp]
         public void SetUp()
         {
-            _testFactory = new XmlWriterFactoryTest();
+            // Substitutes for dependencies
+            _xmlService = Substitute.For<IXmlService>();
+            _xmlServiceFactory = Substitute.For<IXmlServiceFactory>();
             _mockStrategyResolver = Substitute.For<IGradeItemStrategyResolver>();
             _mockStrategy = Substitute.For<IGradeItemStrategy>();
             _testLogger = Substitute.For<ILogger<Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.ActivityGradesWriter>>();
 
+            // Set up the factory to return the mocked Xml Service
+            _xmlServiceFactory.Create(Arg.Any<string>()).Returns(_xmlService);
+
             // Setup resolver to return the mock strategy
             _mockStrategyResolver.GetStrategy(Arg.Any<Activity>()).Returns(_mockStrategy);
 
-            _activityGradesWriter = new Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.ActivityGradesWriter(_testFactory, _mockStrategyResolver, _testLogger);
+            _activityGradesWriter = new Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.ActivityGradesWriter(
+                _mockStrategyResolver,
+                _xmlServiceFactory,
+                _testLogger);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _xmlService.Dispose();
         }
 
         [Test]
-        public void WriteGrade_GeneratesValidXml()
+        public void WriteGrade_CreatesXmlServiceWithCorrectPath()
         {
             // Arrange
             var quiz = FakeQuizFactory.CreateBasicQuiz(1);
-            var dummyOutputPath = "dummyPath";
+            var outputPath = "test/output/path";
 
             // Act
-            _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
-
-            // Assert: Loading the XML should not throw an exception (well-formed XML)
-            Assert.DoesNotThrow(() =>
-            {
-                var doc = new XmlDocument();
-                doc.LoadXml(output);
-            });
-        }
-
-        [Test]
-        public void WriteGrade_RootElementIsActivityGradebook()
-        {
-            // Arrange
-            var quiz = FakeQuizFactory.CreateBasicQuiz(1);
-            var dummyOutputPath = "dummyPath";
-
-            // Act
-            _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
+            _activityGradesWriter.WriteGrade(quiz, outputPath);
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
-            Assert.That(doc.DocumentElement.Name, Is.EqualTo("activity_gradebook"));
+            _xmlServiceFactory.Received(1).Create(Arg.Is<string>(path =>
+                path.EndsWith("grades.xml")));
         }
 
         [Test]
-        public void WriteGrade_ContainsGradeItemsElement()
+        public void WriteGrade_WritesRootActivityGradebookElement()
         {
             // Arrange
             var quiz = FakeQuizFactory.CreateBasicQuiz(1);
@@ -76,17 +69,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
 
             // Act
             _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var gradeItemsNode = doc.DocumentElement?.SelectSingleNode("grade_items");
-            Assert.That(gradeItemsNode, Is.Not.Null, "The <grade_items> element is missing");
+            _xmlService.Received(1).WriteElement("activity_gradebook");
         }
 
         [Test]
-        public void WriteGrade_ContainsGradeLettersElement()
+        public void WriteGrade_WritesGradeItemsElement()
         {
             // Arrange
             var quiz = FakeQuizFactory.CreateBasicQuiz(1);
@@ -94,13 +83,38 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
 
             // Act
             _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
-            var output = _testFactory.StringWriter.ToString();
 
             // Assert
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            var gradeLettersNode = doc.DocumentElement?.SelectSingleNode("grade_letters");
-            Assert.That(gradeLettersNode, Is.Not.Null, "The <grade_letters> element is missing");
+            _xmlService.Received(1).WriteElement("grade_items");
+        }
+
+        [Test]
+        public void WriteGrade_WritesGradeLettersElement()
+        {
+            // Arrange
+            var quiz = FakeQuizFactory.CreateBasicQuiz(1);
+            var dummyOutputPath = "dummyPath";
+
+            // Act
+            _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
+
+            // Assert
+            _xmlService.Received(1).WriteElement("grade_letters");
+        }
+
+        [Test]
+        public void WriteGrade_ClosesAllElements()
+        {
+            // Arrange
+            var quiz = FakeQuizFactory.CreateBasicQuiz(1);
+            var dummyOutputPath = "dummyPath";
+
+            // Act
+            _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
+
+            // Assert
+            // Should close: grade_items, grade_letters, activity_gradebook = 3 elements
+            _xmlService.Received(3).CloseElement();
         }
 
         [Test]
@@ -128,7 +142,37 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
 
             // Assert
-            _mockStrategy.Received(1).WriteGradeItems(Arg.Any<XmlWriter>(), quiz);
+            _mockStrategy.Received(1).WriteGradeItems(_xmlService, quiz);
+        }
+
+        [Test]
+        public void WriteGrade_PassesXmlServiceToStrategy()
+        {
+            // Arrange
+            var quiz = FakeQuizFactory.CreateBasicQuiz(1);
+            var dummyOutputPath = "dummyPath";
+
+            // Act
+            _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
+
+            // Assert
+            _mockStrategy.Received(1).WriteGradeItems(
+                Arg.Is<IXmlService>(s => s == _xmlService),
+                quiz);
+        }
+
+        [Test]
+        public void WriteGrade_DisposesXmlService()
+        {
+            // Arrange
+            var quiz = FakeQuizFactory.CreateBasicQuiz(1);
+            var dummyOutputPath = "dummyPath";
+
+            // Act
+            _activityGradesWriter.WriteGrade(quiz, dummyOutputPath);
+
+            // Assert
+            _xmlService.Received(1).Dispose();
         }
     }
 }

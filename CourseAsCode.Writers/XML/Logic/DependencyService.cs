@@ -1,6 +1,5 @@
 ﻿using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters;
-using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
@@ -37,6 +36,7 @@ namespace CourseAsCode.Writers.XML.Logic
         {
             // General XML services and helpers
             services.AddSingleton<IXmlWriterFactory, DefaultXmlWriterFactory>();
+            services.AddTransient<IXmlServiceFactory, XmlServiceFactory>();
             services.AddSingleton<IGeneralHelper, GeneralHelper>();
             services.AddSingleton<IMoodleVersionHelper, MoodleVersionHelper>();
             services.AddSingleton<ICourseHelper, CourseHelper>();
@@ -47,7 +47,6 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<IUserHelper, UserHelper>();
             services.AddSingleton<IQuizHelper, QuizHelper>();
             services.AddSingleton<ITagsWriter, TagsWriter>();
-            services.AddSingleton<IXmlHelper, XmlHelper>();
 
             // Plugins for the QuestionWriter
             services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
@@ -68,7 +67,7 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<CourseWriter>();
             services.AddSingleton<FilesWriter>();
             services.AddSingleton<GradehistoryWriter>();
-            services.AddSingleton<GradebookWriter>();
+            services.AddTransient<GradebookWriter>();
             services.AddSingleton<GroupsWriter>();
             services.AddSingleton<MoodleBackupWriter>();
             services.AddSingleton<OutcomesWriter>();

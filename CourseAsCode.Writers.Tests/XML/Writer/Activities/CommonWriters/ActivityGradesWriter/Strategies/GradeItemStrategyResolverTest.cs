@@ -18,10 +18,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
         public void SetUp()
         {
             var generalHelper = Substitute.For<IGeneralHelper>();
-            var xmlHelper = Substitute.For<IXmlHelper>();
 
-            _quizStrategy = new QuizGradeItemStrategy(generalHelper, xmlHelper);
-            _assignmentStrategy = new AssignmentGradeItemStrategy(generalHelper, xmlHelper);
+            _quizStrategy = new QuizGradeItemStrategy(generalHelper);
+            _assignmentStrategy = new AssignmentGradeItemStrategy(generalHelper);
             _defaultStrategy = new DefaultGradeItemStrategy();
             _resolver = new GradeItemStrategyResolver(_quizStrategy, _assignmentStrategy, _defaultStrategy);
         }
