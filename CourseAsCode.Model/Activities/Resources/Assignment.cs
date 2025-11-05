@@ -60,28 +60,28 @@ namespace CourseAsCode.Model.Activities.Resources
         // ────────────────────────────────────────────────────────────────────────────
         // IGradeable
         // ────────────────────────────────────────────────────────────────────────────
-        [Description("the name with which the quiz will be displayed in the gradebook")]
+        [Description("the name with which the assignment will be displayed in the gradebook")]
         public string? GradeName { get; set; } = AssignmentDefaults.DEFAULT_GRADE_NAME;
 
-        [Description("general information about the quiz grade item; optional and will NOT be displayed in the gradebook")]
+        [Description("general information about the assignment grade item; optional and will NOT be displayed in the gradebook")]
         public string? GradeInfo { get; set; } = AssignmentDefaults.DEFAULT_GRADE_INFO;
 
-        [Description("The GradeCategory this quiz belongs to")]
+        [Description("The GradeCategory this assignment belongs to")]
         public GradeCategory GradeCategory { get; set; } = AssignmentDefaults.DEFAULT_GRADE_CATEGORY;
 
-        [Description("the minimum amount of points that can be earned in this assignment | only applicable when using the 'Value' GradeType")]
+        [Description("the minimum amount of points that CAN be earned in this assignment | only applicable when using the 'Value' GradeType")]
         public float? MinGrade { get; set; } = AssignmentDefaults.DEFAULT_GRADE_MINIMUM;
 
-        [Description("the maximum amount of points that can be earned for this assignment | only applicable when using the 'Value' GradeType")]
+        [Description("the maximum amount of points that CAN be earned for this assignment | only applicable when using the 'Value' GradeType")]
         public float MaxGrade { get; set; } = AssignmentDefaults.DEFAULT_GRADE_MAXIMUM;
 
-        [Description("The minimum number of points that has to be earned in this assignment to pass, null for no passing grade")]
+        [Description("The minimum number of points that HAS to be earned in this assignment to pass, null for no passing grade")]
         public float? GradeToPass { get; set; } = AssignmentDefaults.DEFAULT_GRADE_TO_PASS;
 
-        [Description("how the quiz is graded")]
+        [Description("how the assignment is graded")]
         public GradeType GradeType { get; set; } = AssignmentDefaults.DEFAULT_GRADE_TYPE;
 
-        [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
+        [Description("The weight of this assignment in the grade calculation of its GradeCategory in % of 100, null for default weight")]
         public int? GradingWeight { get; set; } = AssignmentDefaults.DEFAULT_GRADE_WEIGHT;
 
         [Description("specifies the number of decimal points to display for the grade | has no effect on grade calculations, which are made with an accuracy of 5 decimal places")]
@@ -90,7 +90,7 @@ namespace CourseAsCode.Model.Activities.Resources
         [Description("Factor by which the grade for this activity will be multiplied, with a maximum value of the maximum grade | For example, if the multiplicator is 2 and the maximum grade is 100, then all grades less than 50 are doubled, and all grades 50 and above are changed to 100")]
         public float? GradeMultiplicator { get; set; } = AssignmentDefaults.DEFAULT_GRADE_MULTIPLICATOR;
 
-        [Description("Number that will be added to every grade for this activity, after the Multiplicator is applied. (can be negative)")]
+        [Description("Number that will be added to the grade of this activity, after the Multiplicator is applied. (can be negative)")]
         public float? GradeOffset { get; set; } = AssignmentDefaults.DEFAULT_GRADE_OFFSET;
 
         [Description("whether this activity should be hidden from students in the gradebook")]

@@ -11,8 +11,8 @@ namespace CourseAsCode.Model.Defaults.Grading
         public static readonly int? DEFAULT_DROP_LOWEST_GRADES = null;
         public static readonly DateTime DEFAULT_CREATED = DateTime.Now;
         public static readonly DateTime DEFAULT_MODIFIED = DateTime.Now;
-        public static readonly int? DEFAULT_MINIMUM_GRADE = null;
-        public const int DEFAULT_MAXIMUM_GRADE = 100;
+        public static readonly float? DEFAULT_MINIMUM_GRADE = null;
+        public const float DEFAULT_MAXIMUM_GRADE = 100f;
         public static readonly int? DEFAULT_GRADING_WEIGHT = null;
 
         // ────────────────────────────────────────────────────────────────────────────

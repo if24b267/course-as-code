@@ -23,7 +23,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
 
 
         /// <summary>
-        /// Writes the grade_item element for an Assignemnt activity
+        /// Writes the grade_item element for an Assignment activity
         /// </summary>
         /// <param name="writer">The XmlWriter instance, initialized on the correct document</param>
         /// <param name="activity">The activity to write the grade item for</param>
