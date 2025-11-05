@@ -101,7 +101,7 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddTransient<ActivityGradesWriter>();
             services.AddTransient<IGradeItemStrategyResolver, GradeItemStrategyResolver>();
             services.AddTransient<QuizGradeItemStrategy>();
-            services.AddTransient<AssignmentGradeItemStreatgy>();
+            services.AddTransient<AssignmentGradeItemStrategy>();
             services.AddTransient<DefaultGradeItemStrategy>();
 
             // Specific Activity Writers

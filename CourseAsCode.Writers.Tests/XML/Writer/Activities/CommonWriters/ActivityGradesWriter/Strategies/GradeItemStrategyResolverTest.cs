@@ -10,7 +10,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
     public class GradeItemStrategyResolverTests
     {
         private QuizGradeItemStrategy _quizStrategy;
-        private AssignmentGradeItemStreatgy _assignmentStrategy;
+        private AssignmentGradeItemStrategy _assignmentStrategy;
         private DefaultGradeItemStrategy _defaultStrategy;
         private GradeItemStrategyResolver _resolver;
 
@@ -21,7 +21,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             var xmlHelper = Substitute.For<IXmlHelper>();
 
             _quizStrategy = new QuizGradeItemStrategy(generalHelper, xmlHelper);
-            _assignmentStrategy = new AssignmentGradeItemStreatgy(generalHelper, xmlHelper);
+            _assignmentStrategy = new AssignmentGradeItemStrategy(generalHelper, xmlHelper);
             _defaultStrategy = new DefaultGradeItemStrategy();
             _resolver = new GradeItemStrategyResolver(_quizStrategy, _assignmentStrategy, _defaultStrategy);
         }

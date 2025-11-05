@@ -10,12 +10,12 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
     /// <summary>
     /// Strategy for writing grade items for Assignment activities
     /// </summary>
-    public class AssignmentGradeItemStreatgy : IGradeItemStrategy
+    public class AssignmentGradeItemStrategy : IGradeItemStrategy
     {
         private readonly IGeneralHelper _generalHelper;
         private readonly IXmlHelper _xmlHelper;
 
-        public AssignmentGradeItemStreatgy(IGeneralHelper generalHelper, IXmlHelper xmlHelper)
+        public AssignmentGradeItemStrategy(IGeneralHelper generalHelper, IXmlHelper xmlHelper)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _xmlHelper = xmlHelper ?? throw new ArgumentNullException(nameof(xmlHelper));

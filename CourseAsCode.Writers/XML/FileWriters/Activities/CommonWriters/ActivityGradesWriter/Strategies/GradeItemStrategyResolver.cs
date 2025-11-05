@@ -16,7 +16,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
         /// <param name="assignmentStrategy">The strategy to use for Assignment activities</param>
         /// <param name="defaultStrategy">The default strategy to use for other activity types</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public GradeItemStrategyResolver(QuizGradeItemStrategy quizStrategy, AssignmentGradeItemStreatgy assignmentStrategy, DefaultGradeItemStrategy defaultStrategy)
+        public GradeItemStrategyResolver(QuizGradeItemStrategy quizStrategy, AssignmentGradeItemStrategy assignmentStrategy, DefaultGradeItemStrategy defaultStrategy)
         {
             _defaultStrategy = defaultStrategy ?? throw new ArgumentNullException(nameof(defaultStrategy));
 

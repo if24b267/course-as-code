@@ -151,7 +151,7 @@ namespace CourseAsCode.Writers
                 AggregationType = GradeAggregation.Natural,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
-                MaxGrade = 20,
+                MaxGrade = 70,
                 GradeToPass = 15,
                 DropLowestGrades = 1,
                 GradingWeight = 70,
