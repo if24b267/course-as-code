@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Activities;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 
 namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces
 {
@@ -11,6 +12,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
         /// <summary>
         /// Writes the grade items section for a specific activity type
         /// </summary>
-        void WriteGradeItems(XmlWriter writer, Activity activity);
+        /// <param name="xmlHelper">XmlHelper instance initialized on the correct document</param>
+        void WriteGradeItems(IXmlHelper xmlHelper, Activity activity);
     }
 }

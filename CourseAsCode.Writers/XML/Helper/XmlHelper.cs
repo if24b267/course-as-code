@@ -1,75 +1,152 @@
-﻿using System.Xml;
+﻿using System.ComponentModel;
+using System.Xml;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Helper
 {
     public class XmlHelper : IXmlHelper
     {
+        [Description("The XmlWriter initialized on the document that will be written to")]
+        private XmlWriter _xmlWriter;
         private readonly ILogger<XmlHelper> _logger;
-        private readonly IXmlWriterFactory _xmlWriterFactory;
 
+        private bool documentStarted = false;
+        private bool documentEnded = false;
+        private int openElements = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlHelper"/> class.
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory used to create XmlWriter instances</param>
+        /// <param name="writer">XmlWriter initialized on the document that will be written to</param>
         /// <param name="logger">Logger used for logging messages</param>
-        /// <exception cref="ArgumentNullException">Thrown if xmlWriterFactory or logger is null.</exception>
-        public XmlHelper(IXmlWriterFactory xmlWriterFactory, ILogger<XmlHelper> logger)
+        /// <exception cref="ArgumentNullException">Thrown if XmlWriter or logger is null.</exception>
+        public XmlHelper(XmlWriter writer, ILogger<XmlHelper> logger)
         {
-            _xmlWriterFactory = xmlWriterFactory ?? throw new ArgumentNullException(nameof(xmlWriterFactory));
+            _xmlWriter = writer ?? throw new ArgumentNullException(nameof(writer));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-
         /// <summary>
-        /// The settings used for creating XmlWriter instances.
+        /// Writes the start tag for the specified XML element to the file to which XmlHelper is initialized
         /// </summary>
-        private readonly XmlWriterSettings Settings = new()
+        /// <param name="elementName">Name of the XML tag</param>
+        public void WriteElement(string elementName)
         {
-            Indent = true,
-            NewLineOnAttributes = false,
-            OmitXmlDeclaration = false,
-        };
+            if (!documentStarted)
+            {
+                StartDocument();
+                documentStarted = true;
+            }
+
+            _xmlWriter.WriteStartElement(elementName); openElements++;
+        }
 
         /// <summary>
-        /// Writes all key-value pairs from the provided dictionary as XML tags to the file to which the XmlWriter is initialized.
+        /// Writes the end tag for the current XML element to the file to which XmlHelper is initialized
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
+        public void CloseElement()
+        {
+            if (openElements <= 0)
+            {
+                _logger.LogWarning("XmlHelper: There are no open elements in the XML document. Cannot close an element.");
+                return;
+            }
+
+            _xmlWriter.WriteEndElement(); openElements--;
+        }
+
+        /// <summary>
+        /// Writes all key-value pairs from the provided dictionary as XML tags to the file to which XmlHelper is initialized
+        /// </summary>
         /// <param name="elements">Dictionary (key-value pairs) representing XML tag names and their values.</param>
-        public void WriteElements(XmlWriter writer, Dictionary<string, string> elements)
+        public void WriteElements(Dictionary<string, string> elements)
         {
+            if (!documentStarted)
+            {
+                StartDocument();
+                documentStarted = true;
+            }
+
             foreach (var element in elements)
             {
-                writer.WriteElementString(element.Key, element.Value);
+                _xmlWriter.WriteElementString(element.Key, element.Value);
             }
         }
 
         /// <summary>
-        /// Writes a single XML tag with the provided attributes to the file to which the XmlWriter is initialized.
+        /// Writes a single XML tag with the provided attributes to the file to which XmlHelper is initialized
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document.</param>
         /// <param name="elementName">Name of the XML tag.</param>
         /// <param name="attributes">Dictionary (key-value pairs) representing the XML tag attributes' names and values.</param>
-        public void WriteElementWithAttributes(XmlWriter writer, string elementName, Dictionary<string, string> attributes)
+        public void WriteElementWithAttributes(string elementName, Dictionary<string, string> attributes)
         {
-            writer.WriteStartElement(elementName);
+            if (!documentStarted)
+            {
+                StartDocument();
+                documentStarted = true;
+            }
+
+            _xmlWriter.WriteStartElement(elementName); openElements++;
             foreach (var attribute in attributes)
             {
-                writer.WriteAttributeString(attribute.Key, attribute.Value);
+                _xmlWriter.WriteAttributeString(attribute.Key, attribute.Value);
             }
         }
 
         /// <summary>
-        /// Creates an XmlWriter instance using the injected factory.
+        /// Writes whitespace inside the current XML element to the file to which XmlHelper is initialized
         /// </summary>
-        /// <param name="filePath">The file path where the XML content will be written.</param>
-        /// <returns>An XmlWriter instance initialized with the current settings.</returns>
-        public XmlWriter CreateXmlWriter(string filePath)
+        public void WriteWhitespace(string whitespace = " ")
         {
-            return _xmlWriterFactory.Create(filePath, Settings);
+            if (openElements <= 0)
+            {
+                _logger.LogWarning("XmlHelper: There are no open elements in the XML document. Cannot write whitespace.");
+                return;
+            }
+
+            _xmlWriter.WriteWhitespace(whitespace);
+        }
+
+        /// <summary>
+        /// Starts the XML document by writing the XML declaration to the file to which the XmlWriter is initialized
+        /// </summary>
+        private void StartDocument()
+        {
+            _xmlWriter.WriteStartDocument();
+        }
+
+        /// <summary>
+        /// Ends the XML document by properly closing the XML document and disposing of any resources used by the XmlWriter
+        /// </summary>
+        private void EndCoument()
+        {
+            if (documentEnded)
+            {
+                return;
+            }
+
+            documentEnded = true;
+            _xmlWriter.WriteEndDocument();
+            _xmlWriter.Dispose();
+        }
+
+        /// <summary>
+        /// Closes the XML document and releases resources used by the XmlWriter
+        /// </summary>
+        public void Dispose()
+        {
+            if (openElements > 0)
+            {
+                _logger.LogWarning("XmlHelper: There are still open elements in the XML document that need to be closed. Closing them now...");
+                for (int i = 0; i < openElements; i++)
+                {
+                    _xmlWriter.WriteEndElement();
+                }
+            }
+
+            EndCoument();
+            GC.SuppressFinalize(this);
         }
     }
 }

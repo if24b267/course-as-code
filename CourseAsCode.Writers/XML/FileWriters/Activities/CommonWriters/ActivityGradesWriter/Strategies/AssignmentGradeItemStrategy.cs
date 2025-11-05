@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Xml;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
@@ -13,21 +12,19 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
     public class AssignmentGradeItemStrategy : IGradeItemStrategy
     {
         private readonly IGeneralHelper _generalHelper;
-        private readonly IXmlHelper _xmlHelper;
 
-        public AssignmentGradeItemStrategy(IGeneralHelper generalHelper, IXmlHelper xmlHelper)
+        public AssignmentGradeItemStrategy(IGeneralHelper generalHelper)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
-            _xmlHelper = xmlHelper ?? throw new ArgumentNullException(nameof(xmlHelper));
         }
 
 
         /// <summary>
         /// Writes the grade_item element for an Assignment activity
         /// </summary>
-        /// <param name="writer">The XmlWriter instance, initialized on the correct document</param>
+        /// <param name="xmlHelper">The XmlHelper instance to use for writing XML elements</param>
         /// <param name="activity">The activity to write the grade item for</param>
-        public void WriteGradeItems(XmlWriter writer, Activity activity)
+        public void WriteGradeItems(IXmlHelper xmlHelper, Activity activity)
         {
             // This strategy is only applicable to Assignment activities
             if (activity is not Assignment assignment)
@@ -35,7 +32,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
                 return;
             }
 
-            _xmlHelper.WriteElementWithAttributes(writer, "grade_item", new Dictionary<string, string>
+            xmlHelper.WriteElementWithAttributes("grade_item", new Dictionary<string, string>
             {
                 { "id", activity.ActivityId.ToString() },
             });
@@ -73,8 +70,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
                 { "timemodified", _generalHelper.DateTimeToUnixTimestamp(assignment.TimeModified) },
             };
 
-            _xmlHelper.WriteElements(writer, gradeItemElements);
-            writer.WriteEndElement(); // Close <grade_item>
+            xmlHelper.WriteElements(gradeItemElements);
+            xmlHelper.CloseElement(); // Close <grade_item>
         }
     }
 }
