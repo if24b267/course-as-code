@@ -60,9 +60,9 @@ namespace CourseAsCode.Writers
                 EnsureFolderStructureExists(outputPath);
 
                 // --- Uncomment the following lines to test the grading functionality | Only works with exampleCourse --- //
-                AddGradingCategories(course);
-                ModifyQuizzesWithGradingInfo(course);
-                ModifyAssignmentWithGradingInfo(course);
+                // AddGradingCategories(course);
+                // ModifyQuizzesWithGradingInfo(course);
+                // ModifyAssignmentWithGradingInfo(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
