@@ -119,7 +119,7 @@ namespace CourseAsCode.Writers.XML.Logic
         /// <summary>
         /// Ends the XML document by properly closing the XML document and disposing of any resources used by the XmlWriter
         /// </summary>
-        private void EndCoument()
+        private void EndDocument()
         {
             if (documentEnded)
             {
@@ -145,7 +145,7 @@ namespace CourseAsCode.Writers.XML.Logic
                 }
             }
 
-            EndCoument();
+            EndDocument();
             GC.SuppressFinalize(this);
         }
     }
