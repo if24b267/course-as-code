@@ -112,9 +112,9 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 { "droplow", gradeCategory.DropLowestGrades != null ? gradeCategory.DropLowestGrades.ToString() : "0" },
                 { "aggregateonlygraded", "1" },
                 { "aggregateoutcomes", "0" },
-                { "timecreated", _generalHelper.DateTimeToUnixTimestamp(gradeCategory.Created) },
-                { "timemodified", _generalHelper.DateTimeToUnixTimestamp(gradeCategory.Modified) },
-                { "hidden", "0" },
+                { "timecreated", _generalHelper.DateTimeToUnixTimestamp(gradeCategory.Created ?? DateTime.Now) },
+                { "timemodified", _generalHelper.DateTimeToUnixTimestamp(gradeCategory.Modified ?? DateTime.Now) },
+                { "hidden", gradeCategory.GradeHidden ? "1" : "0" },
             };
 
             if (gradeCategory.AggregationType != GradeAggregation.Natural)
@@ -152,7 +152,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 { "calculation", "$@NULL@$" },
                 { "gradetype", _generalHelper.EnumIntegerToString(gradeCategory.GradeType) },
                 { "grademax", gradeCategory.MaxGrade.ToString("F5", CultureInfo.InvariantCulture) },
-                { "grademin", 0.ToString("F5", CultureInfo.InvariantCulture) },
+                { "grademin", (gradeCategory.MinGrade ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
                 { "scaleid", "$@NULL@$" },
                 { "outcomeid", "$@NULL@$" },
                 { "gradepass", (gradeCategory.GradeToPass ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
@@ -168,8 +168,8 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 { "locked", gradeCategory.GradingLocked ? _generalHelper.DateTimeToUnixTimestamp(DateTime.Now) : "0" },
                 { "locktime", gradeCategory.GradingLockedAfter != null ? _generalHelper.DateTimeToUnixTimestamp(gradeCategory.GradingLockedAfter.Value) : "0" },
                 { "needsupdate", "0" },
-                { "timecreated", "1731353585" },
-                { "timemodified", "1731353585" },
+                { "timecreated", _generalHelper.DateTimeToUnixTimestamp(gradeCategory.Created ?? DateTime.Now) },
+                { "timemodified", _generalHelper.DateTimeToUnixTimestamp(gradeCategory.Modified ?? DateTime.Now) },
             };
 
             WriteElements(writer, elements);
