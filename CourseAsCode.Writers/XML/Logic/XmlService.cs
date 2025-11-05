@@ -1,27 +1,27 @@
 ﻿using System.ComponentModel;
 using System.Xml;
-using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Helper
+namespace CourseAsCode.Writers.XML.Logic
 {
-    public class XmlHelper : IXmlHelper
+    public class XmlService : IXmlService
     {
         [Description("The XmlWriter initialized on the document that will be written to")]
         private XmlWriter _xmlWriter;
-        private readonly ILogger<XmlHelper> _logger;
+        private readonly ILogger<XmlService> _logger;
 
         private bool documentStarted = false;
         private bool documentEnded = false;
         private int openElements = 0;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlHelper"/> class.
+        /// Initializes a new instance of the <see cref="XmlService"/> class.
         /// </summary>
         /// <param name="writer">XmlWriter initialized on the document that will be written to</param>
         /// <param name="logger">Logger used for logging messages</param>
         /// <exception cref="ArgumentNullException">Thrown if XmlWriter or logger is null.</exception>
-        public XmlHelper(XmlWriter writer, ILogger<XmlHelper> logger)
+        public XmlService(XmlWriter writer, ILogger<XmlService> logger)
         {
             _xmlWriter = writer ?? throw new ArgumentNullException(nameof(writer));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

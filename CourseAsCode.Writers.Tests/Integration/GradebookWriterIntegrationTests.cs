@@ -20,10 +20,13 @@ namespace CourseAsCode.Writers.Tests.Integration
         private string _outputPath;
 
         // Dependencies needed for GradebookWriter
-        private IXmlWriterFactory _xmlWriterFactory;
+        private IXmlServiceFactory _xmlServiceFactory;
         private IGeneralHelper _generalHelper;
+
         private ILogger<GeneralHelper> _generalHelperLogger;
-        private ILogger<GradebookWriter> _logger;
+        private ILogger<GradebookWriter> _gradebookLogger;
+        private ILogger<XmlServiceFactory> _xmlServiceFactoryLogger;
+        private ILogger<XmlService> _xmlServiceLogger;
 
         [SetUp]
         public void SetUp()
@@ -37,11 +40,13 @@ namespace CourseAsCode.Writers.Tests.Integration
 
             // --- Initialize Dependencies ---
             // Use real implementations for integration testing
-            _xmlWriterFactory = new DefaultXmlWriterFactory();
-            _logger = NullLogger<GradebookWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _xmlServiceFactoryLogger = NullLogger<XmlServiceFactory>.Instance;
+            _xmlServiceLogger = NullLogger<XmlService>.Instance;
+            _gradebookLogger = NullLogger<GradebookWriter>.Instance; // Use NullLogger to avoid log output during tests
             _generalHelperLogger = NullLogger<GeneralHelper>.Instance;
             _generalHelper = new GeneralHelper(_generalHelperLogger);
 
+            _xmlServiceFactory = new XmlServiceFactory(_xmlServiceFactoryLogger, _xmlServiceLogger);
             _dummyCourse = new Course
             {
                 FullName = "Test Course",
@@ -54,7 +59,7 @@ namespace CourseAsCode.Writers.Tests.Integration
         public void WriteGradebook_GeneratesValidXml()
         {
             // Arrange
-            var writer = new GradebookWriter(_xmlWriterFactory, _generalHelper, _logger);
+            var writer = new GradebookWriter(_generalHelper, _xmlServiceFactory, _gradebookLogger);
 
             // Act
             writer.WriteGradebook(_dummyCourse, _outputPath);

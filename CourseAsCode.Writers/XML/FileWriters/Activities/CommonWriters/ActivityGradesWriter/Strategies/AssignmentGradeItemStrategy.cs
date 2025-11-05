@@ -3,6 +3,7 @@ using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 
 namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies
 {
@@ -22,9 +23,9 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
         /// <summary>
         /// Writes the grade_item element for an Assignment activity
         /// </summary>
-        /// <param name="xmlHelper">The XmlHelper instance to use for writing XML elements</param>
+        /// <param name="xmlService">The XmlHelper instance to use for writing XML elements</param>
         /// <param name="activity">The activity to write the grade item for</param>
-        public void WriteGradeItems(IXmlHelper xmlHelper, Activity activity)
+        public void WriteGradeItems(IXmlService xmlService, Activity activity)
         {
             // This strategy is only applicable to Assignment activities
             if (activity is not Assignment assignment)
@@ -32,7 +33,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
                 return;
             }
 
-            xmlHelper.WriteElementWithAttributes("grade_item", new Dictionary<string, string>
+            xmlService.WriteElementWithAttributes("grade_item", new Dictionary<string, string>
             {
                 { "id", activity.ActivityId.ToString() },
             });
@@ -70,8 +71,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
                 { "timemodified", _generalHelper.DateTimeToUnixTimestamp(assignment.TimeModified) },
             };
 
-            xmlHelper.WriteElements(gradeItemElements);
-            xmlHelper.CloseElement(); // Close <grade_item>
+            xmlService.WriteElements(gradeItemElements);
+            xmlService.CloseElement(); // Close <grade_item>
         }
     }
 }

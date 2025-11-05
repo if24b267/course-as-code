@@ -1,6 +1,5 @@
 ﻿using CourseAsCode.Model.Activities;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
-using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +10,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
         private const string DEFAULT_GRADES_RELATIVE_PATH = "grades.xml";
 
         private readonly IGradeItemStrategyResolver _gradeItemStrategyResolver;
-        private readonly IXmlHelperFactory _xmlHelperFactory;
+        private readonly IXmlServiceFactory _xmlServiceFactory;
         private readonly ILogger<ActivityGradesWriter> _logger;
 
 
@@ -19,12 +18,12 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
         /// Creates a new instance of the <see cref="ActivityGradesWriter"/> class
         /// </summary>
         /// <param name="gradeItemStrategyResolver">Strategy resolver for determining the strategy to use for writing the grades.xml file</param>
-        /// <param name="xmlHelperFactory">Factory for creating XmlHelpers for writing XML files</param>
+        /// <param name="xmlServiceFactory">Factory for creating XmlHelpers for writing XML files</param>
         /// <param name="logger">Logger instance specific to <see cref="ActivityGradesWriter"/></param>
-        public ActivityGradesWriter(IGradeItemStrategyResolver gradeItemStrategyResolver, IXmlHelperFactory xmlHelperFactory, ILogger<ActivityGradesWriter> logger)
+        public ActivityGradesWriter(IGradeItemStrategyResolver gradeItemStrategyResolver, IXmlServiceFactory xmlServiceFactory, ILogger<ActivityGradesWriter> logger)
         {
             _gradeItemStrategyResolver = gradeItemStrategyResolver ?? throw new ArgumentNullException(nameof(gradeItemStrategyResolver));
-            _xmlHelperFactory = xmlHelperFactory ?? throw new ArgumentNullException(nameof(xmlHelperFactory));
+            _xmlServiceFactory = xmlServiceFactory ?? throw new ArgumentNullException(nameof(xmlServiceFactory));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -40,7 +39,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_GRADES_RELATIVE_PATH));
 
-                using (var xmlHelper = _xmlHelperFactory.Create(filePath))
+                using (var xmlHelper = _xmlServiceFactory.Create(filePath))
                 {
                     xmlHelper.WriteElement("activity_gradebook");
 
@@ -68,12 +67,12 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
         /// <summary>
         /// Writes the `grade_items` section of the grades.xml file required for an activity
         /// </summary>
-        /// <param name="xmlHelper">XML helper initialized on the correct document.</param>
+        /// <param name="xmlService">XML helper initialized on the correct document.</param>
         /// <param name="activity">The activity for which the section is being written.</param>
-        private void WriteGradeItems(IXmlHelper xmlHelper, Activity activity)
+        private void WriteGradeItems(IXmlService xmlService, Activity activity)
         {
             IGradeItemStrategy strategy = _gradeItemStrategyResolver.GetStrategy(activity);
-            strategy.WriteGradeItems(xmlHelper, activity);
+            strategy.WriteGradeItems(xmlService, activity);
         }
     }
 }

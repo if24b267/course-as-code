@@ -36,7 +36,7 @@ namespace CourseAsCode.Writers.XML.Logic
         {
             // General XML services and helpers
             services.AddSingleton<IXmlWriterFactory, DefaultXmlWriterFactory>();
-            services.AddTransient<IXmlHelperFactory, XmlHelperFactory>();
+            services.AddTransient<IXmlServiceFactory, XmlServiceFactory>();
             services.AddSingleton<IGeneralHelper, GeneralHelper>();
             services.AddSingleton<IMoodleVersionHelper, MoodleVersionHelper>();
             services.AddSingleton<ICourseHelper, CourseHelper>();

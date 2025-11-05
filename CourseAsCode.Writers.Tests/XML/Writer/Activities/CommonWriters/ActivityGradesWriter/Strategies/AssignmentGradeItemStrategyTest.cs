@@ -1,7 +1,7 @@
-﻿using System.Xml;
-using CourseAsCode.Writers.Tests.Fakes;
+﻿using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using NSubstitute;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.ActivityGradesWriter.Strategies
@@ -10,48 +10,27 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
     public class AssignmentGradeItemStrategyTest
     {
         private IGeneralHelper _generalHelper;
-        private IXmlHelper _xmlHelper;
-        private XmlWriterFactoryTest _testFactory;
+        private IXmlService _xmlService;
         private AssignmentGradeItemStrategy _strategy;
 
         [SetUp]
         public void SetUp()
         {
+            // Substitutes for Dependencies
             _generalHelper = Substitute.For<IGeneralHelper>();
-            _xmlHelper = Substitute.For<IXmlHelper>();
-            _testFactory = new XmlWriterFactoryTest();
-            _strategy = new AssignmentGradeItemStrategy(_generalHelper, _xmlHelper);
+            _xmlService = Substitute.For<IXmlService>();
 
             // Setup default mock behaviors
             _generalHelper.EnumIntegerToString(Arg.Any<Enum>()).Returns("1");
             _generalHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("1234567890");
 
-            // Set up XmlHelper to pass through the calls to the mocked writer from the factory
-            _xmlHelper.When(x => x.WriteElements(Arg.Any<XmlWriter>(), Arg.Any<Dictionary<string, string>>()))
-                .Do(callInfo =>
-                {
-                    var writer = callInfo.ArgAt<XmlWriter>(0);
-                    var elements = callInfo.ArgAt<Dictionary<string, string>>(1);
+            _strategy = new AssignmentGradeItemStrategy(_generalHelper);
+        }
 
-                    foreach (var element in elements)
-                    {
-                        writer.WriteElementString(element.Key, element.Value);
-                    }
-                });
-
-            _xmlHelper.When(x => x.WriteElementWithAttributes(Arg.Any<XmlWriter>(), Arg.Any<string>(), Arg.Any<Dictionary<string, string>>()))
-                .Do(callInfo =>
-                {
-                    var writer = callInfo.ArgAt<XmlWriter>(0);
-                    var elementName = callInfo.ArgAt<string>(1);
-                    var attributes = callInfo.ArgAt<Dictionary<string, string>>(2);
-
-                    writer.WriteStartElement(elementName);
-                    foreach (var attribute in attributes)
-                    {
-                        writer.WriteAttributeString(attribute.Key, attribute.Value);
-                    }
-                });
+        [TearDown]
+        public void TearDown()
+        {
+            _xmlService.Dispose();
         }
 
         [Test]
@@ -60,15 +39,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             // Arrange
             int assignmentId = 123;
             var assignment = FakeAssignmentFactory.CreateBasicAssignment(assignmentId);
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElementWithAttributes(
-                Arg.Any<XmlWriter>(),
-                "grade_item",
+            _xmlService.Received(1).WriteElementWithAttributes("grade_item",
                 Arg.Is<Dictionary<string, string>>(d => d["id"] == assignmentId.ToString()));
         }
 
@@ -77,14 +53,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
         {
             // Arrange
             var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d =>
                     d.ContainsKey("categoryid") &&
                     d.ContainsKey("itemname") &&
@@ -92,6 +66,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
                     d.ContainsKey("itemmodule") &&
                     d.ContainsKey("iteminstance") &&
                     d.ContainsKey("itemnumber") &&
+                    d.ContainsKey("iteminfo") &&
+                    d.ContainsKey("idnumber") &&
                     d.ContainsKey("calculation") &&
                     d.ContainsKey("gradetype") &&
                     d.ContainsKey("grademax") &&
@@ -121,14 +97,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             // Arrange
             var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
             assignment.GradeName = "Custom Grade Name";
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d => d["itemname"] == "Custom Grade Name"));
         }
 
@@ -139,15 +113,28 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
             assignment.GradeName = null;
             assignment.Name = "Fallback Name";
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d => d["itemname"] == "Fallback Name"));
+        }
+
+        [Test]
+        public void WriteGradeItems_WritesGradeInfoWhenAvailable()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            assignment.GradeInfo = "Important grading information";
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["iteminfo"] == "Important grading information"));
         }
 
         [Test]
@@ -156,15 +143,88 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             // Arrange
             var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
             assignment.MaxGrade = 100.12345f;
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d => d["grademax"] == "100.12345"));
+        }
+
+        [Test]
+        public void WriteGradeItems_FormatsMinGradeCorrectly()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            assignment.MinGrade = 10.5f;
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["grademin"] == "10.50000"));
+        }
+
+        [Test]
+        public void WriteGradeItems_UsesZeroForNullMinGrade()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            assignment.MinGrade = null;
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["grademin"] == "0.00000"));
+        }
+
+        [Test]
+        public void WriteGradeItems_FormatsGradeToPassCorrectly()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            assignment.GradeToPass = 60.5f;
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["gradepass"] == "60.50000"));
+        }
+
+        [Test]
+        public void WriteGradeItems_FormatsGradeMultiplicatorCorrectly()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            assignment.GradeMultiplicator = 1.5f;
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["multfactor"] == "1.50000"));
+        }
+
+        [Test]
+        public void WriteGradeItems_FormatsGradeOffsetCorrectly()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            assignment.GradeOffset = 5.5f;
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["plusfactor"] == "5.50000"));
         }
 
         [Test]
@@ -173,14 +233,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             // Arrange
             var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
             assignment.GradingWeight = 75;
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d =>
                     d["weightoverride"] == "1" &&
                     d["aggregationcoef2"] == "0.75000"));
@@ -192,14 +250,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             // Arrange
             var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
             assignment.GradingWeight = null;
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d =>
                     d["weightoverride"] == "0" &&
                     d["aggregationcoef2"] == "0.00000"));
@@ -213,15 +269,13 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             var specificDate = new DateTime(2025, 1, 1);
             assignment.GradeHiddenUntil = specificDate;
             _generalHelper.DateTimeToUnixTimestamp(specificDate).Returns("1735689600");
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
             _generalHelper.Received(1).DateTimeToUnixTimestamp(specificDate);
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d => d["hidden"] == "1735689600"));
         }
 
@@ -233,15 +287,29 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             assignment.GradeHidden = true;
             assignment.GradeHiddenUntil = null;
             _generalHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("9876543210");
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d => d["hidden"] == "9876543210"));
+        }
+
+        [Test]
+        public void WriteGradeItems_HandlesGradeNotHidden()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            assignment.GradeHidden = false;
+            assignment.GradeHiddenUntil = null;
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["hidden"] == "0"));
         }
 
         [Test]
@@ -251,15 +319,46 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
             var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
             assignment.GradingLocked = true;
             _generalHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("9876543210");
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, assignment);
+            _strategy.WriteGradeItems(_xmlService, assignment);
 
             // Assert
-            _xmlHelper.Received(1).WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.Received(1).WriteElements(
                 Arg.Is<Dictionary<string, string>>(d => d["locked"] == "9876543210"));
+        }
+
+        [Test]
+        public void WriteGradeItems_HandlesGradingNotLocked()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            assignment.GradingLocked = false;
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["locked"] == "0"));
+        }
+
+        [Test]
+        public void WriteGradeItems_HandlesGradingLockedAfter()
+        {
+            // Arrange
+            var assignment = FakeAssignmentFactory.CreateBasicAssignment(1);
+            var lockDate = new DateTime(2025, 6, 1);
+            assignment.GradingLockedAfter = lockDate;
+            _generalHelper.DateTimeToUnixTimestamp(lockDate).Returns("1748736000");
+
+            // Act
+            _strategy.WriteGradeItems(_xmlService, assignment);
+
+            // Assert
+            _generalHelper.Received(1).DateTimeToUnixTimestamp(lockDate);
+            _xmlService.Received(1).WriteElements(
+                Arg.Is<Dictionary<string, string>>(d => d["locktime"] == "1748736000"));
         }
 
         [Test]
@@ -267,19 +366,17 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.CommonWriters.Activit
         {
             // Arrange
             var urlActivity = FakeUrlFactory.CreateBasicUrl(1);
-            using var writer = _testFactory.Create("dummy.xml", new XmlWriterSettings());
 
             // Act
-            _strategy.WriteGradeItems(writer, urlActivity);
+            _strategy.WriteGradeItems(_xmlService, urlActivity);
 
             // Assert
-            _xmlHelper.DidNotReceive().WriteElementWithAttributes(
-                Arg.Any<XmlWriter>(),
+            _xmlService.DidNotReceive().WriteElementWithAttributes(
                 Arg.Any<string>(),
                 Arg.Any<Dictionary<string, string>>());
-            _xmlHelper.DidNotReceive().WriteElements(
-                Arg.Any<XmlWriter>(),
+            _xmlService.DidNotReceive().WriteElements(
                 Arg.Any<Dictionary<string, string>>());
+            _xmlService.DidNotReceive().CloseElement();
         }
     }
 }

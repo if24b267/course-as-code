@@ -1,6 +1,6 @@
 ﻿using CourseAsCode.Model.Activities;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
-using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 
 namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies
 {
@@ -12,9 +12,9 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
         /// <summary>
         /// Writes the grade_item element for the given activity
         /// </summary>
-        /// <param name="xmlHelper">The XML helper to use for writing</param>
+        /// <param name="xmlService">The XML helper to use for writing</param>
         /// <param name="activity">The activity to write the grade item for</param>
-        public void WriteGradeItems(IXmlHelper xmlHelper, Activity activity)
+        public void WriteGradeItems(IXmlService xmlService, Activity activity)
         {
             // No grade items to write for this activity type
         }

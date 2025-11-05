@@ -1,6 +1,6 @@
-﻿namespace CourseAsCode.Writers.XML.Helper.Interfaces
+﻿namespace CourseAsCode.Writers.XML.Logic.Interfaces
 {
-    public interface IXmlHelper : IDisposable
+    public interface IXmlService : IDisposable
     {
         /// <summary>
         /// Writes the start tag for the specified XML element to the file to which XmlHelper is initialized

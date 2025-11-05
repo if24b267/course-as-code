@@ -12,7 +12,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
         private const string DEFAULT_GRADEBOOK_RELATIVE_PATH = "gradebook.xml";
 
         private readonly IGeneralHelper _generalHelper;
-        private readonly IXmlHelperFactory _xmlHelperFactory;
+        private readonly IXmlServiceFactory _xmlServiceFactory;
         private readonly ILogger<GradebookWriter> _logger;
 
         private int _gradeItemIdCounter = 1;
@@ -23,12 +23,12 @@ namespace CourseAsCode.Writers.XML.FileWriters
         /// Creates a new instance of the GradebookWriter class
         /// </summary>
         /// <param name="generalHelper">Instance of the GeneralHelper</param>
-        /// <param name="xmlHelperFactory">Factory for creating XmlHelpers for writing XML files</param>
+        /// <param name="xmlServiceFactory">Factory for creating XmlHelpers for writing XML files</param>
         /// <param name="logger">Logger instance specific to GradebookWriter</param>
-        public GradebookWriter(IGeneralHelper generalHelper, IXmlHelperFactory xmlHelperFactory, ILogger<GradebookWriter> logger)
+        public GradebookWriter(IGeneralHelper generalHelper, IXmlServiceFactory xmlServiceFactory, ILogger<GradebookWriter> logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
-            _xmlHelperFactory = xmlHelperFactory ?? throw new ArgumentNullException(nameof(xmlHelperFactory));
+            _xmlServiceFactory = xmlServiceFactory ?? throw new ArgumentNullException(nameof(xmlServiceFactory));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -39,7 +39,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_GRADEBOOK_RELATIVE_PATH));
 
-                using (var xmlHelper = _xmlHelperFactory.Create(filePath))
+                using (var xmlHelper = _xmlServiceFactory.Create(filePath))
                 {
                     xmlHelper.WriteElement("gradebook");
 
@@ -79,22 +79,22 @@ namespace CourseAsCode.Writers.XML.FileWriters
         /// <summary>
         /// writes the `attributes` section of the gradebook.xml file.
         /// </summary>
-        /// <param name="xmlHelper">XML helper initialized on the correct document.</param>
+        /// <param name="xmlService">XML helper initialized on the correct document.</param>
         /// <param name="course">initialized Moodle Course.</param>
-        private void WriteAttributes(IXmlHelper xmlHelper, Model.Course course)
+        private void WriteAttributes(IXmlService xmlService, Model.Course course)
         {
-            xmlHelper.WriteElement("attributes");
-            xmlHelper.CloseElement(); // Close <attributes>
+            xmlService.WriteElement("attributes");
+            xmlService.CloseElement(); // Close <attributes>
         }
 
         /// <summary>
         /// writes the `grade_category` section of the gradebook.xml file for a single grade category
         /// </summary>
-        /// <param name="xmlHelper">XML helper initialized on the correct document.</param>
+        /// <param name="xmlService">XML helper initialized on the correct document.</param>
         /// <param name="gradeCategory">The GradeCategory for which the grade category should be written.</param>
-        private void WriteGradeCategory(IXmlHelper xmlHelper, GradeCategory gradeCategory)
+        private void WriteGradeCategory(IXmlService xmlService, GradeCategory gradeCategory)
         {
-            xmlHelper.WriteElementWithAttributes("grade_category", new Dictionary<string, string>
+            xmlService.WriteElementWithAttributes("grade_category", new Dictionary<string, string>
             {
                 { "id", gradeCategory.GradeCategoryId.ToString() },
             });
@@ -120,21 +120,21 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 _logger.LogWarning($"You are using an aggregation type other than 'Natural' for grade category '{gradeCategory.GradeName}'. Make sure this aggregation type is enabled in your Moodle instance.");
             }
 
-            xmlHelper.WriteElements(elements);
+            xmlService.WriteElements(elements);
 
-            xmlHelper.CloseElement(); // Close <grade_category>
+            xmlService.CloseElement(); // Close <grade_category>
         }
 
         /// <summary>
         /// writes the `grade_items` section of the gradebook.xml file for a single grade category.
         /// </summary>
-        /// <param name="xmlHelper">XML helper initialized on the correct document.</param>
+        /// <param name="xmlService">XML helper initialized on the correct document.</param>
         /// <param name="gradeCategory">The GradeCategory for which the grade item should be written.</param>
-        private void WriteGradeItem(IXmlHelper xmlHelper, GradeCategory gradeCategory)
+        private void WriteGradeItem(IXmlService xmlService, GradeCategory gradeCategory)
         {
             _logger.LogDebug("Writing grade item for grade category '{GradeName}'", gradeCategory.GradeName);
 
-            xmlHelper.WriteElementWithAttributes("grade_item", new Dictionary<string, string>
+            xmlService.WriteElementWithAttributes("grade_item", new Dictionary<string, string>
             {
                 { "id", _gradeItemIdCounter++.ToString() },
             });
@@ -172,35 +172,35 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 { "timemodified", _generalHelper.DateTimeToUnixTimestamp(gradeCategory.Modified ?? DateTime.Now) },
             };
 
-            xmlHelper.WriteElements(elements);
+            xmlService.WriteElements(elements);
 
-            xmlHelper.WriteElement("grade_grades");
-            xmlHelper.CloseElement(); // Close <grade_grades>
+            xmlService.WriteElement("grade_grades");
+            xmlService.CloseElement(); // Close <grade_grades>
 
-            xmlHelper.CloseElement(); // Close <grade_item>
+            xmlService.CloseElement(); // Close <grade_item>
         }
 
         /// <summary>
         /// writes the `grade_letters` section of the gradebook.xml file.
         /// </summary>
-        /// <param name="xmlHelper">XML helper initialized on the correct document.</param>
+        /// <param name="xmlService">XML helper initialized on the correct document.</param>
         /// <param name="course">initialized Moodle Course.</param>
-        private void WriteGradeLetters(IXmlHelper xmlHelper, Model.Course course)
+        private void WriteGradeLetters(IXmlService xmlService, Model.Course course)
         {
-            xmlHelper.WriteElement("grade_letters");
-            xmlHelper.CloseElement(); // Close grade_letters
+            xmlService.WriteElement("grade_letters");
+            xmlService.CloseElement(); // Close grade_letters
         }
 
         /// <summary>
         /// writes the `grade_settings` section of the gradebook.xml file.
         /// </summary>
-        /// <param name="xmlHelper">XML helper initialized on the correct document.</param>
+        /// <param name="xmlService">XML helper initialized on the correct document.</param>
         /// <param name="course">initialized Moodle Course.</param>
-        private void WriteGradeSettings(IXmlHelper xmlHelper, Model.Course course)
+        private void WriteGradeSettings(IXmlService xmlService, Model.Course course)
         {
-            xmlHelper.WriteElement("grade_settings");
+            xmlService.WriteElement("grade_settings");
 
-            xmlHelper.WriteElementWithAttributes("grade_setting", new Dictionary<string, string>
+            xmlService.WriteElementWithAttributes("grade_setting", new Dictionary<string, string>
             {
                 { "id", _gradeSettingIdCounter++.ToString() },
             });
@@ -212,10 +212,10 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 { "value", "1" },
             };
 
-            xmlHelper.WriteElements(elements);
+            xmlService.WriteElements(elements);
 
-            xmlHelper.CloseElement(); // Close <grade_setting>
-            xmlHelper.CloseElement(); // Close <grade_settings>
+            xmlService.CloseElement(); // Close <grade_setting>
+            xmlService.CloseElement(); // Close <grade_settings>
         }
 
 
