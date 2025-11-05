@@ -51,9 +51,6 @@ namespace CourseAsCode.Model.Activities.Resources
         // ────────────────────────────────────────────────────────────────────────────
         // Grading Settings
         // ────────────────────────────────────────────────────────────────────────────
-        [Description("Maximum grade for the assignment")]
-        public int Grade { get; set; } = AssignmentDefaults.DEFAULT_GRADE;
-
         [Description("Whether completion requires submission")]
         public bool CompletionSubmit { get; set; } = AssignmentDefaults.DEFAULT_COMPLETION_SUBMIT;
 
@@ -72,14 +69,19 @@ namespace CourseAsCode.Model.Activities.Resources
         [Description("The GradeCategory this quiz belongs to")]
         public GradeCategory GradeCategory { get; set; } = AssignmentDefaults.DEFAULT_GRADE_CATEGORY;
 
-        [Description("Minimum required grade (0‑10) to pass the quiz")]
+        [Description("the minimum amount of points that can be earned in this assignment | only applicable when using the 'Value' GradeType")]
+        public float? MinGrade { get; set; } = AssignmentDefaults.DEFAULT_GRADE_MINIMUM;
+
+        [Description("the maximum amount of points that can be earned for this assignment | only applicable when using the 'Value' GradeType")]
+        public float MaxGrade { get; set; } = AssignmentDefaults.DEFAULT_GRADE_MAXIMUM;
+
+        [Description("The minimum number of points that has to be earned in this assignment to pass, null for no passing grade")]
         public float? GradeToPass { get; set; } = AssignmentDefaults.DEFAULT_GRADE_TO_PASS;
 
         [Description("how the quiz is graded")]
         public GradeType GradeType { get; set; } = AssignmentDefaults.DEFAULT_GRADE_TYPE;
 
-        [Description(
-            "The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
+        [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
         public int? GradingWeight { get; set; } = AssignmentDefaults.DEFAULT_GRADE_WEIGHT;
 
         [Description("specifies the number of decimal points to display for the grade | has no effect on grade calculations, which are made with an accuracy of 5 decimal places")]

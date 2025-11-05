@@ -53,7 +53,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.Activity
                 { "calculation", "$@NULL@$" },
                 { "gradetype", _generalHelper.EnumIntegerToString(quiz.GradeType) },
                 { "grademax", quiz.MaxGrade.ToString("F5", CultureInfo.InvariantCulture) },
-                { "grademin", 0.ToString("F5", CultureInfo.InvariantCulture) },
+                { "grademin", (quiz.MinGrade ?? 0).ToString("F5", CultureInfo.InvariantCulture) },
                 { "scaleid", "$@NULL@$" },
                 { "outcomeid", "$@NULL@$" },
                 { "gradepass", (quiz.GradeToPass ?? 0).ToString("F5", CultureInfo.InvariantCulture) },

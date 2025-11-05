@@ -25,14 +25,6 @@ namespace CourseAsCode.Model.Grading
         [Description("when the grade category was last modified")]
         public DateTime? Modified { get; set; } = GradeCategoryDefaults.DEFAULT_MODIFIED;
 
-        [Description(
-            "the minimum amount of points that can be earned in this grade category | only applicable when using the 'Value' GradeType")]
-        public int? MinGrade { get; set; } = GradeCategoryDefaults.DEFAULT_MINIMUM_GRADE;
-
-        [Description(
-            "the maximum amount of points that can be earned in this grade category | only applicable when using the 'Value' GradeType")]
-        public int MaxGrade { get; set; } = GradeCategoryDefaults.DEFAULT_MAXIMUM_GRADE;
-
         // ────────────────────────────────────────────────────────────────────────────
         // IGradeable | Serves as a default for all activities in that Grade Category
         // ────────────────────────────────────────────────────────────────────────────
@@ -41,6 +33,12 @@ namespace CourseAsCode.Model.Grading
 
         [Description("general information about the grade category; optional and will NOT be displayed in the gradebook")]
         public string? GradeInfo { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_INFO;
+
+        [Description("the minimum amount of points that can be earned in this grade category | only applicable when using the 'Value' GradeType")]
+        public float? MinGrade { get; set; } = GradeCategoryDefaults.DEFAULT_MINIMUM_GRADE;
+
+        [Description("the maximum amount of points that can be earned in this grade category | only applicable when using the 'Value' GradeType")]
+        public float MaxGrade { get; set; } = GradeCategoryDefaults.DEFAULT_MAXIMUM_GRADE;
 
         [Description("the minimum amount of points that has to be earned in this grade category to pass, null for no passing grade in this category")]
         public float? GradeToPass { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_TO_PASS;

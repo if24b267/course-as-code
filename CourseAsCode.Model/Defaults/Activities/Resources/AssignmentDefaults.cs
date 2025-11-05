@@ -22,7 +22,6 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources
         public static readonly DateTime? DEFAULT_ALLOW_SUBMISSIONS_FROM_DATE = null;
 
         // Grading Settings
-        public const int DEFAULT_GRADE = 100;
         public const bool DEFAULT_COMPLETION_SUBMIT = true;
         public const bool DEFAULT_REQUIRE_SUBMISSION_STATEMENT = false;
 
@@ -56,6 +55,8 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources
             Modified = DateTime.Now,
         };
         public const float DEFAULT_GRADE_TO_PASS = 0.0f;
+        public static readonly int? DEFAULT_GRADE_MINIMUM = null;
+        public const float DEFAULT_GRADE_MAXIMUM = 100f;
         public static readonly int? DEFAULT_GRADE_WEIGHT = null;
         public const GradeType DEFAULT_GRADE_TYPE = GradeType.Value;
         public static readonly int? DEFAULT_GRADE_DECIMAL_POINTS = null;

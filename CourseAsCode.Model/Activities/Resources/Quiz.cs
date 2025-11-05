@@ -41,7 +41,13 @@ namespace CourseAsCode.Model.Activities.Resources
         [Description("The GradeCategory this quiz belongs to")]
         public GradeCategory GradeCategory { get; set; } = QuizDefaults.DEFAULT_GRADE_CATEGORY;
 
-        [Description("Minimum required grade (0‑10) to pass the quiz")]
+        [Description("the minimum amount of points that can be earned in this quiz | only applicable when using the 'Value' GradeType")]
+        public float? MinGrade { get; set; } = QuizDefaults.DEFAULT_MIN_GRADE;
+
+        [Description("the maximum amount of points that can be earned for this quiz | only applicable when using the 'Value' GradeType")]
+        public float MaxGrade { get; set; } = QuizDefaults.DEFAULT_MAX_GRADE;
+
+        [Description("The minimum number of points that has to be earned in this quiz to pass, null for no passing grade")]
         public float? GradeToPass { get; set; } = QuizDefaults.DEFAULT_GRADE_TO_PASS;
 
         [Description("how the quiz is graded")]
@@ -79,9 +85,6 @@ namespace CourseAsCode.Model.Activities.Resources
 
         [Description("Method used when several attempts exist")]
         public GradingMethod GradingMethod { get; set; } = QuizDefaults.DEFAULT_GRADING_METHOD;
-
-        [Description("How many points this quiz is worth")]
-        public float MaxGrade { get; set; } = QuizDefaults.DEFAULT_MAX_GRADE;
 
         [Description("Automatically insert page breaks after this many questions – 0 = all questions on one single page")]
         public int NewPageThreshold { get; set; } = QuizDefaults.DEFAULT_NEW_PAGE_THRESHOLD;

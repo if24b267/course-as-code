@@ -42,6 +42,7 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources
         public const int DEFAULT_ALLOWED_ATTEMPTS = 0;
         public const GradingMethod DEFAULT_GRADING_METHOD = GradingMethod.HighestGrade;
 
+        public static readonly float? DEFAULT_MIN_GRADE = null;
         public const float DEFAULT_MAX_GRADE = 10.0f;
         public const int DEFAULT_NEW_PAGE_THRESHOLD = 0;
         public const bool DEFAULT_SHUFFLE_QUESTIONS = false;

@@ -57,7 +57,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 CutoffDate = yamlAssignment.CutoffDate ?? AssignmentDefaults.DEFAULT_CUTOFF_DATE,
                 GradingDueDate = yamlAssignment.GradingDueDate ?? AssignmentDefaults.DEFAULT_GRADING_DUE_DATE,
                 AllowSubmissionsFromDate = yamlAssignment.AllowSubmissionsFromDate ?? AssignmentDefaults.DEFAULT_ALLOW_SUBMISSIONS_FROM_DATE,
-                Grade = yamlAssignment.Grade ?? AssignmentDefaults.DEFAULT_GRADE,
+                MaxGrade = yamlAssignment.Grade ?? AssignmentDefaults.DEFAULT_GRADE_MAXIMUM,
                 CompletionSubmit = yamlAssignment.CompletionSubmit ?? AssignmentDefaults.DEFAULT_COMPLETION_SUBMIT,
                 RequireSubmissionStatement =
                     yamlAssignment.RequireSubmissionStatement ??

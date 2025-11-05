@@ -14,6 +14,12 @@ namespace CourseAsCode.Model.Grading.Interfaces
         [Description("general information about the grade item; optional and will NOT be displayed in the gradebook")]
         string? GradeInfo { get; set; }
 
+        [Description("the minimum amount of points that can be earned for this grade item | only applicable when using the 'Value' GradeType")]
+        float? MinGrade { get; set; }
+
+        [Description("the maximum amount of points that can be earned for this grade item | only applicable when using the 'Value' GradeType")]
+        float MaxGrade { get; set; }
+
         [Description("Minimum required grade (in points) to pass the activity")]
         float? GradeToPass { get; set; }
 
