@@ -33,9 +33,6 @@ namespace CourseAsCode.Model.Grading
             "the maximum amount of points that can be earned in this grade category | only applicable when using the 'Value' GradeType")]
         public int MaxGrade { get; set; } = GradeCategoryDefaults.DEFAULT_MAXIMUM_GRADE;
 
-        [Description("the weight of this grade category in the grade calculation of its parent grade category in % of 100, null for default weight")]
-        public int? GradingWeight { get; set; } = GradeCategoryDefaults.DEFAULT_GRADING_WEIGHT;
-
         // ────────────────────────────────────────────────────────────────────────────
         // IGradeable | Serves as a default for all activities in that Grade Category
         // ────────────────────────────────────────────────────────────────────────────
@@ -50,6 +47,9 @@ namespace CourseAsCode.Model.Grading
 
         [Description("how activities in this Grade Category will be graded")]
         public GradeType GradeType { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_TYPE;
+
+        [Description("the weight of this grade category in the grade calculation of its parent grade category in % of 100, null for default weight")]
+        public int? GradingWeight { get; set; } = GradeCategoryDefaults.DEFAULT_GRADING_WEIGHT;
 
         [Description("specifies the number of decimal points to display for the grades in this Grade Category | has no effect on grade calculations, which are made with an accuracy of 5 decimal places")]
         public int? GradeDecimalPoints { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_DECIMAL_POINTS;

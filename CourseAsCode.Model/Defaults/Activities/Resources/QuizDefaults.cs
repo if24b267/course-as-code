@@ -28,6 +28,7 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources
             Modified = DateTime.Now,
         };
         public const float DEFAULT_GRADE_TO_PASS = 0.0f;
+        public static readonly int? DEFAULT_GRADE_WEIGHT = null;
         public const GradeType DEFAULT_GRADE_TYPE = GradeType.Value;
         public static readonly int? DEFAULT_GRADE_DECIMAL_POINTS = null;
         public static readonly float? DEFAULT_GRADE_MULTIPLICATOR = null;

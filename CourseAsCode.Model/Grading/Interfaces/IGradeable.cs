@@ -20,6 +20,9 @@ namespace CourseAsCode.Model.Grading.Interfaces
         [Description("how the activity is graded")]
         GradeType GradeType { get; set; }
 
+        [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
+        int? GradingWeight { get; set; }
+
         [Description("specifies the number of decimal points to display for the grade | has no effect on grade calculations, which are made with an accuracy of 5 decimal places")]
         int? GradeDecimalPoints { get; set; }
 

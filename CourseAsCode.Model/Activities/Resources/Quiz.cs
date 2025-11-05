@@ -47,6 +47,9 @@ namespace CourseAsCode.Model.Activities.Resources
         [Description("how the quiz is graded")]
         public GradeType GradeType { get; set; } = QuizDefaults.DEFAULT_GRADE_TYPE;
 
+        [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
+        public int? GradingWeight { get; set; } = QuizDefaults.DEFAULT_GRADE_WEIGHT;
+
         [Description("specifies the number of decimal points to display for the grade | has no effect on grade calculations, which are made with an accuracy of 5 decimal places")]
         public int? GradeDecimalPoints { get; set; } = QuizDefaults.DEFAULT_GRADE_DECIMAL_POINTS;
 
@@ -79,9 +82,6 @@ namespace CourseAsCode.Model.Activities.Resources
 
         [Description("How many points this quiz is worth")]
         public float MaxGrade { get; set; } = QuizDefaults.DEFAULT_MAX_GRADE;
-
-        [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
-        public int? GradingWeight { get; set; } = null;
 
         [Description("Automatically insert page breaks after this many questions – 0 = all questions on one single page")]
         public int NewPageThreshold { get; set; } = QuizDefaults.DEFAULT_NEW_PAGE_THRESHOLD;
