@@ -7,29 +7,34 @@ namespace CourseAsCode.Model.Grading
 {
     public class GradeCategory : IGradeable
     {
-        [Description("Unique identifier for the grade category, used to reference the category in files")]
-        public int GradeCategoryId { get; set; }
+        [Description("Unique identifier for the grade category, used to reference the category in other files")]
+        public int GradeCategoryId { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_CATEGORY_ID;
 
         [Description("how grades within the category are aggregated")]
-        public GradeAggregation AggregationType { get; set; }
+        public GradeAggregation AggregationType { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_AGGREGATION;
 
         [Description("The parent grade category, if any")]
-        public GradeCategory? Parent { get; set; }
+        public GradeCategory? Parent { get; set; } = GradeCategoryDefaults.DEFAULT_PARENT_CATEGORY;
 
         [Description("enables a specified number of the lowest grades to be excluded from the aggregation")]
-        public int? DropLowestGrades { get; set; }
+        public int? DropLowestGrades { get; set; } = GradeCategoryDefaults.DEFAULT_DROP_LOWEST_GRADES;
 
         [Description("when the grade category was created")]
-        public DateTime Created { get; set; }
+        public DateTime? Created { get; set; } = GradeCategoryDefaults.DEFAULT_CREATED;
 
         [Description("when the grade category was last modified")]
-        public DateTime Modified { get; set; }
+        public DateTime? Modified { get; set; } = GradeCategoryDefaults.DEFAULT_MODIFIED;
 
-        [Description("the maximum amount of points that can be earned in this grade category")]
-        public int MaxGrade { get; set; }
+        [Description(
+            "the minimum amount of points that can be earned in this grade category | only applicable when using the 'Value' GradeType")]
+        public int? MinGrade { get; set; } = GradeCategoryDefaults.DEFAULT_MINIMUM_GRADE;
+
+        [Description(
+            "the maximum amount of points that can be earned in this grade category | only applicable when using the 'Value' GradeType")]
+        public int MaxGrade { get; set; } = GradeCategoryDefaults.DEFAULT_MAXIMUM_GRADE;
 
         [Description("the weight of this grade category in the grade calculation of its parent grade category in % of 100, null for default weight")]
-        public int? GradingWeight { get; set; }
+        public int? GradingWeight { get; set; } = GradeCategoryDefaults.DEFAULT_GRADING_WEIGHT;
 
         // ────────────────────────────────────────────────────────────────────────────
         // IGradeable | Serves as a default for all activities in that Grade Category

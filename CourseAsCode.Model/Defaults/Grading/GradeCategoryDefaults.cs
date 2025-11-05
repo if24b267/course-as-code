@@ -1,9 +1,20 @@
 ﻿using CourseAsCode.Model.Enums.Grading;
+using CourseAsCode.Model.Grading;
 
 namespace CourseAsCode.Model.Defaults.Grading
 {
     public class GradeCategoryDefaults
     {
+        public const int DEFAULT_GRADE_CATEGORY_ID = 1;
+        public const GradeAggregation DEFAULT_GRADE_AGGREGATION = GradeAggregation.Natural;
+        public const GradeCategory? DEFAULT_PARENT_CATEGORY = null;
+        public static readonly int? DEFAULT_DROP_LOWEST_GRADES = null;
+        public static readonly DateTime DEFAULT_CREATED = DateTime.Now;
+        public static readonly DateTime DEFAULT_MODIFIED = DateTime.Now;
+        public static readonly int? DEFAULT_MINIMUM_GRADE = null;
+        public const int DEFAULT_MAXIMUM_GRADE = 100;
+        public static readonly int? DEFAULT_GRADING_WEIGHT = null;
+
         // ────────────────────────────────────────────────────────────────────────────
         // IGradeable
         // ────────────────────────────────────────────────────────────────────────────

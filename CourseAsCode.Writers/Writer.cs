@@ -147,12 +147,15 @@ namespace CourseAsCode.Writers
                 GradeCategoryId = 3,
                 GradeName = "Practical Part",
                 Parent = course.GradeCategories[0],
-                AggregationType = GradeAggregation.Natural,
+                AggregationType = GradeAggregation.MeanOfGrades,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 MaxGrade = 20,
                 GradeToPass = 15,
+                DropLowestGrades = 1,
                 GradingWeight = 70,
+                GradeHidden = true,
+                GradingLocked = true,
             });
         }
 
@@ -185,10 +188,12 @@ namespace CourseAsCode.Writers
             quiz1.GradeMultiplicator = 2.0f;
 
             quiz2.GradeCategory = course.GradeCategories[2];
-            quiz2.GradingWeight = 25;
+            quiz2.GradingWeight = 15;
 
             quiz3.GradeCategory = course.GradeCategories[2];
-            quiz3.GradingWeight = 75;
+            quiz3.GradingWeight = 35;
+            quiz3.GradeToPass = 10;
+            quiz3.GradeHiddenUntil = DateTime.Now.AddDays(10);
         }
     }
 }
