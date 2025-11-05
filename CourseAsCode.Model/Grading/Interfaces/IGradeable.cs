@@ -14,11 +14,20 @@ namespace CourseAsCode.Model.Grading.Interfaces
         [Description("general information about the grade item; optional and will NOT be displayed in the gradebook")]
         string? GradeInfo { get; set; }
 
+        [Description("the minimum amount of points that can be earned for this grade item | only applicable when using the 'Value' GradeType")]
+        float? MinGrade { get; set; }
+
+        [Description("the maximum amount of points that can be earned for this grade item | only applicable when using the 'Value' GradeType")]
+        float MaxGrade { get; set; }
+
         [Description("Minimum required grade (in points) to pass the activity")]
         float? GradeToPass { get; set; }
 
         [Description("how the activity is graded")]
         GradeType GradeType { get; set; }
+
+        [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
+        int? GradingWeight { get; set; }
 
         [Description("specifies the number of decimal points to display for the grade | has no effect on grade calculations, which are made with an accuracy of 5 decimal places")]
         int? GradeDecimalPoints { get; set; }

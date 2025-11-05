@@ -41,11 +41,20 @@ namespace CourseAsCode.Model.Activities.Resources
         [Description("The GradeCategory this quiz belongs to")]
         public GradeCategory GradeCategory { get; set; } = QuizDefaults.DEFAULT_GRADE_CATEGORY;
 
-        [Description("Minimum required grade (0‑10) to pass the quiz")]
+        [Description("the minimum amount of points that can be earned in this quiz | only applicable when using the 'Value' GradeType")]
+        public float? MinGrade { get; set; } = QuizDefaults.DEFAULT_MIN_GRADE;
+
+        [Description("the maximum amount of points that can be earned for this quiz | only applicable when using the 'Value' GradeType")]
+        public float MaxGrade { get; set; } = QuizDefaults.DEFAULT_MAX_GRADE;
+
+        [Description("The minimum number of points that has to be earned in this quiz to pass, null for no passing grade")]
         public float? GradeToPass { get; set; } = QuizDefaults.DEFAULT_GRADE_TO_PASS;
 
         [Description("how the quiz is graded")]
         public GradeType GradeType { get; set; } = QuizDefaults.DEFAULT_GRADE_TYPE;
+
+        [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
+        public int? GradingWeight { get; set; } = QuizDefaults.DEFAULT_GRADE_WEIGHT;
 
         [Description("specifies the number of decimal points to display for the grade | has no effect on grade calculations, which are made with an accuracy of 5 decimal places")]
         public int? GradeDecimalPoints { get; set; } = QuizDefaults.DEFAULT_GRADE_DECIMAL_POINTS;
@@ -76,12 +85,6 @@ namespace CourseAsCode.Model.Activities.Resources
 
         [Description("Method used when several attempts exist")]
         public GradingMethod GradingMethod { get; set; } = QuizDefaults.DEFAULT_GRADING_METHOD;
-
-        [Description("How many points this quiz is worth")]
-        public float MaxGrade { get; set; } = QuizDefaults.DEFAULT_MAX_GRADE;
-
-        [Description("The weight of this quiz in the grade calculation of its GradeCategory in % of 100, null for default weight")]
-        public int? GradingWeight { get; set; } = null;
 
         [Description("Automatically insert page breaks after this many questions – 0 = all questions on one single page")]
         public int NewPageThreshold { get; set; } = QuizDefaults.DEFAULT_NEW_PAGE_THRESHOLD;

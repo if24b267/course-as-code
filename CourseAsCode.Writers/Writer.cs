@@ -62,6 +62,7 @@ namespace CourseAsCode.Writers
                 // --- Uncomment the following lines to test the grading functionality | Only works with exampleCourse --- //
                 // AddGradingCategories(course);
                 // ModifyQuizzesWithGradingInfo(course);
+                // ModifyAssignmentWithGradingInfo(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
@@ -134,7 +135,7 @@ namespace CourseAsCode.Writers
                 GradeCategoryId = 2,
                 GradeName = "Theoretical Part",
                 Parent = course.GradeCategories[0],
-                AggregationType = GradeAggregation.Natural,
+                AggregationType = GradeAggregation.MeanOfGrades,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 MaxGrade = 10,
@@ -147,10 +148,10 @@ namespace CourseAsCode.Writers
                 GradeCategoryId = 3,
                 GradeName = "Practical Part",
                 Parent = course.GradeCategories[0],
-                AggregationType = GradeAggregation.MeanOfGrades,
+                AggregationType = GradeAggregation.Natural,
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
-                MaxGrade = 20,
+                MaxGrade = 70,
                 GradeToPass = 15,
                 DropLowestGrades = 1,
                 GradingWeight = 70,
@@ -182,7 +183,6 @@ namespace CourseAsCode.Writers
                 .FirstOrDefault(a => a.ActivityId == 18);
 
             quiz1.GradeCategory = course.GradeCategories[1];
-            quiz1.GradingWeight = 100;
             quiz1.GradingLocked = true;
             quiz1.GradeName = "Different from the Activities name";
             quiz1.GradeMultiplicator = 2.0f;
@@ -194,6 +194,27 @@ namespace CourseAsCode.Writers
             quiz3.GradingWeight = 35;
             quiz3.GradeToPass = 10;
             quiz3.GradeHiddenUntil = DateTime.Now.AddDays(10);
+        }
+
+
+        /// <summary>
+        /// Temporary method to modify the grading information of the assignments in the course | can be removed once grading is implemented in the Readers
+        /// </summary>
+        /// <param name="course">The course containing the assignments to be modified</param>
+        private void ModifyAssignmentWithGradingInfo(Course course)
+        {
+            // Get activity with ID 10
+            var assignment1 = course.Sections[1].Activities
+                .OfType<Assignment>()
+                .FirstOrDefault(a => a.ActivityId == 10);
+
+            assignment1.GradeCategory = course.GradeCategories[2];
+            assignment1.GradingWeight = 50;
+            assignment1.GradingLocked = true;
+            assignment1.GradeName = "Documentation Report";
+            assignment1.GradeOffset = 1.0f;
+            assignment1.BlindMarking = true;
+            assignment1.HideGrader = true;
         }
     }
 }

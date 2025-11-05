@@ -28,6 +28,7 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources
             Modified = DateTime.Now,
         };
         public const float DEFAULT_GRADE_TO_PASS = 0.0f;
+        public static readonly int? DEFAULT_GRADE_WEIGHT = null;
         public const GradeType DEFAULT_GRADE_TYPE = GradeType.Value;
         public static readonly int? DEFAULT_GRADE_DECIMAL_POINTS = null;
         public static readonly float? DEFAULT_GRADE_MULTIPLICATOR = null;
@@ -41,6 +42,7 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources
         public const int DEFAULT_ALLOWED_ATTEMPTS = 0;
         public const GradingMethod DEFAULT_GRADING_METHOD = GradingMethod.HighestGrade;
 
+        public static readonly float? DEFAULT_MIN_GRADE = null;
         public const float DEFAULT_MAX_GRADE = 10.0f;
         public const int DEFAULT_NEW_PAGE_THRESHOLD = 0;
         public const bool DEFAULT_SHUFFLE_QUESTIONS = false;

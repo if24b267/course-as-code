@@ -86,7 +86,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
                 { "allowsubmissionsfromdate", assignment.AllowSubmissionsFromDate.HasValue
                     ? _generalHelper.DateTimeToUnixTimestamp(assignment.AllowSubmissionsFromDate.Value)
                     : "1745445600" },
-                { "grade", assignment.Grade != 0 ? assignment.Grade.ToString() : "100" },
+                { "grade", assignment.MaxGrade != 0 ? assignment.MaxGrade.ToString() : "100" },
                 { "timemodified", assignment.TimeModified != default
                     ? _generalHelper.DateTimeToUnixTimestamp(assignment.TimeModified)
                     : "1745515519" },
@@ -107,7 +107,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Assignment
                 { "activity", sensibleDefaults.Activity ?? "" },
                 { "activityformat", sensibleDefaults.ActivityFormat?.ToString() ?? "1" },
                 { "timelimit", sensibleDefaults.TimeLimit?.ToString() ?? "0" },
-                { "submissionattachments", sensibleDefaults.SubmissionAttachments?.ToString() ?? "0" }
+                { "submissionattachments", sensibleDefaults.SubmissionAttachments?.ToString() ?? "0" },
             };
 
             WriteElements(writer, assignmentElements);
