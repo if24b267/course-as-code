@@ -17,6 +17,7 @@ using CourseAsCode.Writers.XML.Writer.Activities.File;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
+using CourseAsCode.Writers.XML.Writer.Activities.Wiki;
 using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Sections;
@@ -114,6 +115,8 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<ModuleWriterFile>();
             services.AddSingleton<ModuleWriterQuiz>();
             services.AddSingleton<QuizWriter>();
+            services.AddSingleton<WikiWriter>();
+            services.AddSingleton<ModuleWriterWiki>();
 
             // Register the main writer and its dependencies
             services.AddSingleton<IActivitiesWriterService, ActivitiesWriterService>();

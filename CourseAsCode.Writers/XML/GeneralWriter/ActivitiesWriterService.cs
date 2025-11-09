@@ -11,6 +11,7 @@ using CourseAsCode.Writers.XML.Writer.Activities.File;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
+using CourseAsCode.Writers.XML.Writer.Activities.Wiki;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.GeneralWriter
@@ -53,6 +54,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             private readonly ModuleWriterQuiz _moduleWriterQuiz;
             private readonly QuizWriter _quizWriter;
 
+            // Wiki Activity Writers
+            private readonly WikiWriter _wikiWriter;
+            private readonly ModuleWriterWiki _moduleWriterWiki;
+
 
             public ActivitiesWriterService(
                 ILogger<ActivitiesWriterService> logger,
@@ -76,7 +81,9 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 FileWriter fileWriter,
                 ModuleWriterFile moduleWriterFile,
                 ModuleWriterQuiz moduleWriterQuiz,
-                QuizWriter quizWriter)
+                QuizWriter quizWriter,
+                WikiWriter wikiWriter,
+                ModuleWriterWiki moduleWriterWiki)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
@@ -113,6 +120,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 // Quiz Activity Writers
                 _moduleWriterQuiz = moduleWriterQuiz ?? throw new ArgumentNullException(nameof(moduleWriterQuiz));
                 _quizWriter = quizWriter ?? throw new ArgumentNullException(nameof(quizWriter));
+
+                // Wiki Activity Writers
+                _wikiWriter = wikiWriter ?? throw new ArgumentNullException(nameof(wikiWriter));
+                _moduleWriterWiki = moduleWriterWiki ?? throw new ArgumentNullException(nameof(moduleWriterWiki));
             }
 
 
@@ -167,6 +178,13 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
 
                             _quizWriter.WriteQuiz(activityPath, quiz);
                             _moduleWriterQuiz.WriteModule(activityPath, course, section, quiz);
+                        }
+                        else if (activity is Wiki wiki)
+                        {
+                            activityPath = CreateActivityDirectory(outputPath, activity, "wiki");
+
+                            _wikiWriter.WriteWiki(activityPath, wiki);
+                            _moduleWriterWiki.WriteModule(activityPath, course, section, wiki);
                         }
                         else
                         {
