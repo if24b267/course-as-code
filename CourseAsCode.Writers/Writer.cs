@@ -23,6 +23,7 @@ using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Sections;
 using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using CourseAsCode.Writers.XML.Writer.Activities.Pages;
+using CourseAsCode.Writers.XML.Writer.Activities.Scheduler;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -105,6 +106,10 @@ namespace CourseAsCode.Writers
         private readonly PageWriter _pageWriter;
         private readonly ModuleWriterPage _moduleWriterPage;
 
+        // Scheduler Activity Writers
+        private readonly SchedulerWriter _schedulerWriter;
+        private readonly ModuleWriterScheduler _moduleWriterScheduler;
+
         // -- Additional Dependencies -- //
         private readonly ILogger<Writer> _logger;
 
@@ -161,6 +166,8 @@ namespace CourseAsCode.Writers
             ModuleWriterFolder moduleWriterFolder,
             PageWriter pageWriter,
             ModuleWriterPage moduleWriterPage,
+            SchedulerWriter schedulerWriter,
+            ModuleWriterScheduler moduleWriterScheduler,
             ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
@@ -237,6 +244,10 @@ namespace CourseAsCode.Writers
             // Page Activity Writers
             _pageWriter = pageWriter ?? throw new ArgumentNullException(nameof(pageWriter));
             _moduleWriterPage = moduleWriterPage ?? throw new ArgumentNullException(nameof(moduleWriterPage));
+
+            // Scheduler Activity Writers
+            _schedulerWriter = schedulerWriter ?? throw new ArgumentNullException(nameof(schedulerWriter));
+            _moduleWriterScheduler = moduleWriterScheduler ?? throw new ArgumentNullException(nameof(moduleWriterScheduler));
 
             // -- Additional Dependencies Assignment -- //
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -621,6 +632,12 @@ namespace CourseAsCode.Writers
                         activityPath = CreatePageActivity(course, outputPath, activity, page, section);
                     }
 
+                    // Scheduler-specific XML files
+                    if (activity is CourseAsCode.Model.Activities.Resources.Scheduler scheduler)
+                    {
+                        activityPath = CreateSchedulerActivity(course, outputPath, activity, scheduler, section);
+                    }
+
                     // Skip if activityPath is null (i.e. directory creation failed)
                     if (activityPath == null)
                     {
@@ -790,6 +807,18 @@ namespace CourseAsCode.Writers
         }
 
         /// <summary>
+        /// writes the XML files specific to the Scheduler activity
+        /// </summary>
+        private string? CreateSchedulerActivity(Course course, string outputPath, Activity activity, CourseAsCode.Model.Activities.Resources.Scheduler scheduler, Section section)
+        {
+            return CreateActivity(outputPath, activity, "scheduler", activityPath =>
+            {
+                _schedulerWriter.WriteScheduler(activityPath, scheduler);
+                _moduleWriterScheduler.WriteModule(activityPath, course, section, scheduler);
+            });
+        }
+
+        /// <summary>
         /// Creates an activity directory using the specified prefix and processes it via the given action.
         /// </summary>
         /// <param name="outputPath">The base output directory.</param>
@@ -900,6 +929,8 @@ namespace CourseAsCode.Writers
             services.AddSingleton<ModuleWriterFolder>();
             services.AddSingleton<PageWriter>();
             services.AddSingleton<ModuleWriterPage>();
+            services.AddSingleton<SchedulerWriter>();
+            services.AddSingleton<ModuleWriterScheduler>();
 
             services.AddSingleton<IWriter, Writer>();
         }
