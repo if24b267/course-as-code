@@ -1,7 +1,9 @@
 using System.Xml;
+using System.Linq;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Helper.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
@@ -9,18 +11,17 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
     public class ActivityInforefWriter : XmlWriterBase
     {
         private const string DEFAULT_INFOREF_RELATIVE_PATH = "inforef.xml";
+        private readonly IFileHelper _fileHelper;
 
-        public ActivityInforefWriter(IXmlWriterFactory xmlWriterFactory, ILogger<ActivityInforefWriter> logger)
+        public ActivityInforefWriter(IXmlWriterFactory xmlWriterFactory, ILogger<ActivityInforefWriter> logger, IFileHelper fileHelper)
             : base(xmlWriterFactory, logger)
         {
+            _fileHelper = fileHelper ?? throw new ArgumentNullException(nameof(fileHelper));
         }
 
         /// <summary>
-        /// Writes the inforef.xml file for an activity, referencing users and grade items from the data model.
+        /// Writes the inforef.xml file for an activity, referencing users, files and grade items from the data model.
         /// </summary>
-        /// <param name="course">The course model containing enrolled users</param>
-        /// <param name="outputPath">The output directory path</param>
-        /// <param name="activityInstace">The activity to which this inforef.xml file belongs</param>
         public void WriteInforefLabel(Model.Course course, string outputPath, Activity activityInstace)
         {
             try
@@ -44,6 +45,18 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                         }
                     }
                     writer.WriteEndElement(); // </userref>
+
+                    // File references (new)
+                    writer.WriteStartElement("fileref");
+                    // GetFileIdsForActivity returns IEnumerable<int>, implement it in IFileHelper/FileHelper
+                    var fileIds = _fileHelper.GetFileIdsForActivity(course, activityInstace) ?? Enumerable.Empty<int>();
+                    foreach (var fid in fileIds)
+                    {
+                        writer.WriteStartElement("file");
+                        writer.WriteElementString("id", fid.ToString());
+                        writer.WriteEndElement(); // </file>
+                    }
+                    writer.WriteEndElement(); // </fileref>
 
                     // Grade item references
                     writer.WriteStartElement("grade_itemref");

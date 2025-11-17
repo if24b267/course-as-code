@@ -11,6 +11,7 @@ using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
+using CourseAsCode.Writers.XML.Writer.Activities.Folder;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
@@ -95,6 +96,10 @@ namespace CourseAsCode.Writers
         private readonly FeedbackWriter _feedbackWriter;
         private readonly ModuleWriterFeedback _moduleWriterFeedback;
 
+        // Folder Activity Writers
+        private readonly FolderWriter _folderWriter;
+        private readonly ModuleWriterFolder _moduleWriterFolder;
+
         // -- Additional Dependencies -- //
         private readonly ILogger<Writer> _logger;
 
@@ -147,6 +152,8 @@ namespace CourseAsCode.Writers
             ModuleWriterChoice moduleWriterChoice,
             FeedbackWriter feedbackWriter,
             ModuleWriterFeedback moduleWriterFeedback,
+            FolderWriter folderWriter,
+            ModuleWriterFolder moduleWriterFolder,
             ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
@@ -215,6 +222,10 @@ namespace CourseAsCode.Writers
             // Feedback Activity Writers
             _feedbackWriter = feedbackWriter ?? throw new ArgumentNullException(nameof(feedbackWriter));
             _moduleWriterFeedback = moduleWriterFeedback ?? throw new ArgumentNullException(nameof(moduleWriterFeedback));
+
+            // Folder Activity Writers
+            _folderWriter = folderWriter ?? throw new ArgumentNullException(nameof(folderWriter));
+            _moduleWriterFolder = moduleWriterFolder ?? throw new ArgumentNullException(nameof(moduleWriterFolder));
 
             // -- Additional Dependencies Assignment -- //
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -587,6 +598,12 @@ namespace CourseAsCode.Writers
                         activityPath = CreateFeedbackActivity(course, outputPath, activity, feedback, section);
                     }
 
+                    // Folder-specific XML files
+                    if (activity is CourseAsCode.Model.Activities.Resources.Folder folder)
+                    {
+                        activityPath = CreateFolderActivity(course, outputPath, activity, folder, section);
+                    }
+
                     // Skip if activityPath is null (i.e. directory creation failed)
                     if (activityPath == null)
                     {
@@ -724,6 +741,22 @@ namespace CourseAsCode.Writers
         }
 
         /// <summary>
+        /// writes the XML files specific to the Folder activity
+        /// </summary>
+        /// /// <returns>
+        /// <para> the path to the directory where the files for that activity were written </para>
+        /// <para> null if the directory couldn't be created</para>
+        /// </returns>
+        private string? CreateFolderActivity(Course course, string outputPath, Activity activity, CourseAsCode.Model.Activities.Resources.Folder folder, Section section)
+        {
+            return CreateActivity(outputPath, activity, "folder", activityPath =>
+            {
+                _folderWriter.WriteFolder(activityPath, folder);
+                _moduleWriterFolder.WriteModule(activityPath, course, section, folder);
+            });
+        }
+
+        /// <summary>
         /// Creates an activity directory using the specified prefix and processes it via the given action.
         /// </summary>
         /// <param name="outputPath">The base output directory.</param>
@@ -830,6 +863,8 @@ namespace CourseAsCode.Writers
             services.AddSingleton<ModuleWriterChoice>();
             services.AddSingleton<FeedbackWriter>();
             services.AddSingleton<ModuleWriterFeedback>();
+            services.AddSingleton<FolderWriter>();
+            services.AddSingleton<ModuleWriterFolder>();
 
             services.AddSingleton<IWriter, Writer>();
         }
