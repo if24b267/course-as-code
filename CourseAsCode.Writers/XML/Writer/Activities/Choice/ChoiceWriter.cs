@@ -4,7 +4,6 @@ using System.Xml;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
-
 using ChoiceModel = CourseAsCode.Model.Activities.Choice.Choice;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Choice

@@ -20,6 +20,7 @@ using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Sections;
+using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -90,6 +91,10 @@ namespace CourseAsCode.Writers
         private readonly ChoiceWriter _choiceWriter;
         private readonly ModuleWriterChoice _moduleWriterChoice;
 
+        // Feedback Activity Writers
+        private readonly FeedbackWriter _feedbackWriter;
+        private readonly ModuleWriterFeedback _moduleWriterFeedback;
+
         // -- Additional Dependencies -- //
         private readonly ILogger<Writer> _logger;
 
@@ -140,6 +145,8 @@ namespace CourseAsCode.Writers
             QuizWriter quizWriter,
             ChoiceWriter choiceWriter,
             ModuleWriterChoice moduleWriterChoice,
+            FeedbackWriter feedbackWriter,
+            ModuleWriterFeedback moduleWriterFeedback,
             ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
@@ -204,6 +211,10 @@ namespace CourseAsCode.Writers
             // Choice Activity Writers (assignments)
             _choiceWriter = choiceWriter ?? throw new ArgumentNullException(nameof(choiceWriter));
             _moduleWriterChoice = moduleWriterChoice ?? throw new ArgumentNullException(nameof(moduleWriterChoice));
+
+            // Feedback Activity Writers
+            _feedbackWriter = feedbackWriter ?? throw new ArgumentNullException(nameof(feedbackWriter));
+            _moduleWriterFeedback = moduleWriterFeedback ?? throw new ArgumentNullException(nameof(moduleWriterFeedback));
 
             // -- Additional Dependencies Assignment -- //
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -570,6 +581,12 @@ namespace CourseAsCode.Writers
                         activityPath = CreateChoiceActivity(course, outputPath, activity, choice, section);
                     }
 
+                    // Feedback-specific XML files
+                    if (activity is CourseAsCode.Model.Activities.Resources.Feedback feedback)
+                    {
+                        activityPath = CreateFeedbackActivity(course, outputPath, activity, feedback, section);
+                    }
+
                     // Skip if activityPath is null (i.e. directory creation failed)
                     if (activityPath == null)
                     {
@@ -690,6 +707,21 @@ namespace CourseAsCode.Writers
             });
         }
 
+        /// <summary>
+        /// writes the XML files specific to the Feedback activity
+        /// </summary>
+        /// /// <returns>
+        /// <para> the path to the directory where the files for that activity were written </para>
+        /// <para> null if the directory couldn't be created</para>
+        /// </returns>
+        private string? CreateFeedbackActivity(Course course, string outputPath, Activity activity, CourseAsCode.Model.Activities.Resources.Feedback feedback, Section section)
+        {
+            return CreateActivity(outputPath, activity, "feedback", activityPath =>
+            {
+                _feedbackWriter.WriteFeedback(activityPath, feedback);
+                _moduleWriterFeedback.WriteModule(activityPath, course, section, feedback);
+            });
+        }
 
         /// <summary>
         /// Creates an activity directory using the specified prefix and processes it via the given action.
@@ -794,6 +826,10 @@ namespace CourseAsCode.Writers
             services.AddSingleton<ModuleWriterQuiz>();
             services.AddSingleton<QuizWriter>();
             services.AddSingleton<ITagsWriter, TagsWriter>();
+            services.AddSingleton<ChoiceWriter>();
+            services.AddSingleton<ModuleWriterChoice>();
+            services.AddSingleton<FeedbackWriter>();
+            services.AddSingleton<ModuleWriterFeedback>();
 
             services.AddSingleton<IWriter, Writer>();
         }
