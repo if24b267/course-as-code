@@ -22,6 +22,7 @@ using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Sections;
 using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
+using CourseAsCode.Writers.XML.Writer.Activities.Pages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -100,6 +101,10 @@ namespace CourseAsCode.Writers
         private readonly FolderWriter _folderWriter;
         private readonly ModuleWriterFolder _moduleWriterFolder;
 
+        // Page Activity Writers
+        private readonly PageWriter _pageWriter;
+        private readonly ModuleWriterPage _moduleWriterPage;
+
         // -- Additional Dependencies -- //
         private readonly ILogger<Writer> _logger;
 
@@ -154,6 +159,8 @@ namespace CourseAsCode.Writers
             ModuleWriterFeedback moduleWriterFeedback,
             FolderWriter folderWriter,
             ModuleWriterFolder moduleWriterFolder,
+            PageWriter pageWriter,
+            ModuleWriterPage moduleWriterPage,
             ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
@@ -226,6 +233,10 @@ namespace CourseAsCode.Writers
             // Folder Activity Writers
             _folderWriter = folderWriter ?? throw new ArgumentNullException(nameof(folderWriter));
             _moduleWriterFolder = moduleWriterFolder ?? throw new ArgumentNullException(nameof(moduleWriterFolder));
+
+            // Page Activity Writers
+            _pageWriter = pageWriter ?? throw new ArgumentNullException(nameof(pageWriter));
+            _moduleWriterPage = moduleWriterPage ?? throw new ArgumentNullException(nameof(moduleWriterPage));
 
             // -- Additional Dependencies Assignment -- //
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -604,6 +615,12 @@ namespace CourseAsCode.Writers
                         activityPath = CreateFolderActivity(course, outputPath, activity, folder, section);
                     }
 
+                    // Page-specific XML files
+                    if (activity is CourseAsCode.Model.Activities.Resources.Page page)
+                    {
+                        activityPath = CreatePageActivity(course, outputPath, activity, page, section);
+                    }
+
                     // Skip if activityPath is null (i.e. directory creation failed)
                     if (activityPath == null)
                     {
@@ -757,6 +774,22 @@ namespace CourseAsCode.Writers
         }
 
         /// <summary>
+        /// writes the XML files specific to the Page activity
+        /// </summary>
+        /// /// <returns>
+        /// <para> the path to the directory where the files for that activity were written </para>
+        /// <para> null if the directory couldn't be created</para>
+        /// </returns>
+        private string? CreatePageActivity(Course course, string outputPath, Activity activity, CourseAsCode.Model.Activities.Resources.Page page, Section section)
+        {
+            return CreateActivity(outputPath, activity, "page", activityPath =>
+            {
+                _pageWriter.WritePage(activityPath, page);
+                _moduleWriterPage.WriteModule(activityPath, course, section, page);
+            });
+        }
+
+        /// <summary>
         /// Creates an activity directory using the specified prefix and processes it via the given action.
         /// </summary>
         /// <param name="outputPath">The base output directory.</param>
@@ -865,6 +898,8 @@ namespace CourseAsCode.Writers
             services.AddSingleton<ModuleWriterFeedback>();
             services.AddSingleton<FolderWriter>();
             services.AddSingleton<ModuleWriterFolder>();
+            services.AddSingleton<PageWriter>();
+            services.AddSingleton<ModuleWriterPage>();
 
             services.AddSingleton<IWriter, Writer>();
         }
