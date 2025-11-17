@@ -18,6 +18,7 @@ using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Plugins;
+using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Sections;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -85,6 +86,10 @@ namespace CourseAsCode.Writers
         private readonly ModuleWriterQuiz _moduleWriterQuiz;
         private readonly QuizWriter _quizWriter;
 
+        // Choice Activity Writers 
+        private readonly ChoiceWriter _choiceWriter;
+        private readonly ModuleWriterChoice _moduleWriterChoice;
+
         // -- Additional Dependencies -- //
         private readonly ILogger<Writer> _logger;
 
@@ -133,6 +138,8 @@ namespace CourseAsCode.Writers
             ModuleWriterFile moduleWriterFile,
             ModuleWriterQuiz moduleWriterQuiz,
             QuizWriter quizWriter,
+            ChoiceWriter choiceWriter,
+            ModuleWriterChoice moduleWriterChoice,
             ILogger<Writer> logger)
         {
             // -- General Writers Assignment -- //
@@ -193,6 +200,10 @@ namespace CourseAsCode.Writers
             // Quiz Activity Writers
             _moduleWriterQuiz = moduleWriterQuiz ?? throw new ArgumentNullException(nameof(moduleWriterQuiz));
             _quizWriter = quizWriter ?? throw new ArgumentNullException(nameof(quizWriter));
+
+            // Choice Activity Writers (assignments)
+            _choiceWriter = choiceWriter ?? throw new ArgumentNullException(nameof(choiceWriter));
+            _moduleWriterChoice = moduleWriterChoice ?? throw new ArgumentNullException(nameof(moduleWriterChoice));
 
             // -- Additional Dependencies Assignment -- //
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -553,6 +564,12 @@ namespace CourseAsCode.Writers
                         activityPath = CreateQuizActivity(course, outputPath, activity, quiz, section);
                     }
 
+                    // Choice-specific XML files
+                    if (activity is CourseAsCode.Model.Activities.Choice.Choice choice)
+                    {
+                        activityPath = CreateChoiceActivity(course, outputPath, activity, choice, section);
+                    }
+
                     // Skip if activityPath is null (i.e. directory creation failed)
                     if (activityPath == null)
                     {
@@ -654,6 +671,22 @@ namespace CourseAsCode.Writers
             {
                 _quizWriter.WriteQuiz(activityPath, quiz);
                 _moduleWriterQuiz.WriteModule(activityPath, course, section, quiz);
+            });
+        }
+
+        /// <summary>
+        /// writes the XML files specific to the Choice activity
+        /// </summary>
+        /// /// <returns>
+        /// <para> the path to the directory where the files for that activity were written </para>
+        /// <para> null if the directory couldn't be created</para>
+        /// </returns>
+        private string? CreateChoiceActivity(Course course, string outputPath, Activity activity, CourseAsCode.Model.Activities.Choice.Choice choice, Section section)
+        {
+            return CreateActivity(outputPath, activity, "choice", activityPath =>
+            {
+                _choiceWriter.WriteChoice(activityPath, choice);
+                _moduleWriterChoice.WriteModule(activityPath, course, section, choice);
             });
         }
 
