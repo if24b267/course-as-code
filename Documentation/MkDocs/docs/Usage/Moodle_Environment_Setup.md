@@ -51,7 +51,7 @@ volumes:
 ```bash
 (sudo) docker compose up -d
 ```
-4. Moodle is now reachable at `http://localhost`
+4. Moodle is now reachable at [`http://localhost`](http://localhost)
 5. Log in with the default credentials:
 ```txt
 user: user
