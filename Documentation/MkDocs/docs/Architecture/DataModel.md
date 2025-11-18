@@ -15,6 +15,7 @@ For information on how the individual activities are implemented, see [Activitie
         ```
 
 ## Basic Structure
+<div class="annotate" markdown>
 - First off, there are several data fields that describe and define the Moodle course itself. For instance, it has a **name**, a **short name**, a **start date**, an **end date**, and much more #(1)
 - Since a Moodle course doesn't exist independently on the file system but can only be saved and imported as a Moodle Backup file (`.mbz`), some data about this backup file also needs to be stored, such as the **backup file's name**, the **Moodle version** it was created with, and so on. #(2)
 - Users who participate in a course (whether as a student, lecturer, or administrator) are referred to as **enrolled** in the course. Information about each user participating in the course, such as their **name**, **email address**, etc., must be stored. #(3)
@@ -33,6 +34,7 @@ For information on how the individual activities are implemented, see [Activitie
 
 - Aside from this meta-information, the structure of a Moodle course is quite simple:  
 It consists of multiple **Sections**, which in turn can contain any number of different [**activities**](../Activities/Overview.md).
+</div>
 
 1. This basic data is stored in `CourseAsCode.Model/Course.cs`.
 2. This metadata is stored in `CourseAsCode.Model/BackupMetadata.cs`.
