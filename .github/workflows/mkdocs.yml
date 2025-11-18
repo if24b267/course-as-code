@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch the whole history for the mkdocs-git-authors-plugin
 
       - name: Configure Git Credentials
         run: |
@@ -36,7 +38,8 @@ jobs:
           pip install --upgrade pip
           pip install mkdocs-material
           pip install mkdocs_puml
-          
+          pip install mkdocs-git-authors-plugin
+
       - name: Deploy MkDocs
         run: mkdocs gh-deploy --force
         working-directory: Documentation/MkDocs

@@ -100,9 +100,10 @@ See [moodle docs](https://moodledev.io/docs/5.0/apis/subsystems/files#file-areas
 
 ## FileArea
 Within a component, files are further categorized into file areas, which are uniquely identified by a
+
 - a `contextid` (see [Context](#Context))
-- a full `component` name, see [above](#Component)
-- a file area type, e.g. `intro` or 'post'
+- a full `component` name (see [Component](#Component))
+- a file area type, e.g. `intro` or `post`
 - a unique `itemid`
 
 | Value in Data Model | Value in Moodle XML | Description                                                                                                   |
