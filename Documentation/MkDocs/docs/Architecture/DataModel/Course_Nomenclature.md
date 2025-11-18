@@ -1,5 +1,5 @@
 # Course-specific Nomenclature
-The basic information about a Moodle course is stored in `CourseAsCode.Model/Course.cs`. Here as well, an attempt has been made to explain most properties clearly using Data Annotations. However, some properties, especially those defined with enums, may be more difficult to understand. The following documentation explains some of these more complex terms:
+The basic information about a Moodle course is stored in `CourseAsCode.Model/Course.cs`. An attempt has been made to explain most properties clearly using Data Annotations directly in the code. However, some properties, especially those defined with enums, may be more difficult to understand. The following documentation explains some of these more complex terms:
 
 ## CourseFormat
 The course format refers to the layout of a course. 
@@ -24,13 +24,15 @@ The [latest announcements block](https://docs.moodle.org/405/en/Latest_announcem
 | 1                   | 1                   | only the most recent announcement is displayed in the latest announcements block  |
 | 2                   | 2                   | the two most recent announcements are displayed in the latest announcements block |
 | ...                 | ...                 | ...                                                                               |
-
-The default value for this field is `3`.  
+!!! info
+    The default value for this field is `3`.  
 
 See [moodle docs](https://docs.moodle.org/405/en/Announcements_forum) for more information
 
 ## CourseIdNumber  
-Warning: Not to be confused with the `Id` field!
+
+!!! Warning
+    Not to be confused with the `Id` field!
 
 The ID number can be used to match this course against an external system's ID, as a course catalogue ID or in the certificate module as a printed field.  
 Unlike the `Id` field, the `CourseIdNumber` is optional.
@@ -41,7 +43,8 @@ See [moodle docs](https://docs.moodle.org/405/en/Course_settings#Course_ID_numbe
 The default maximum upload size for student submissions for all activities in this course  
 Can still be modified manually for each activity.
 
-Values need to be specified in bytes. Use [MB to Bytes Conversion](https://www.gbmb.org/mb-to-bytes) and [KB to Bytes Conversion](https://www.gbmb.org/kb-to-bytes).
+!!! tip
+    Values need to be specified in bytes. Use [MB to Bytes Conversion](https://www.gbmb.org/mb-to-bytes) and [KB to Bytes Conversion](https://www.gbmb.org/kb-to-bytes).
 
 | Value in Data Model | Value in Moodle XML | Description                                            |
 |---------------------|---------------------|--------------------------------------------------------|
@@ -55,7 +58,8 @@ See [moodle docs](https://docs.moodle.org/405/en/File_upload_size) for more info
 ## Theme  
 A single moodle course can use a different theme than the default theme of the whole moodle site (has to be enabled in administrator settings). If the course should use a custom theme, it should be specified here.
 
-The value must match the name of a theme in the Moodle installation, see [moodle docs](https://moodledev.io/docs/4.4/apis/plugintypes/theme#getting-your-theme-to-appear-correctly-in-theme-selector)  
+!!! warning
+    The value must match the name of a theme in the Moodle installation, see [moodle docs](https://moodledev.io/docs/4.4/apis/plugintypes/theme#getting-your-theme-to-appear-correctly-in-theme-selector)  
 
 | Value in Data Model | Value in Moodle XML | Description                                                                                                            |
 |---------------------|---------------------|------------------------------------------------------------------------------------------------------------------------|
@@ -100,7 +104,9 @@ Using this setting, the teacher can force the course to use a specific language 
 
 ### CategoryName  
 Course categories are used to organize courses into descriptive categories, making them easier to find for teachers and students. The default course category on a new Moodle site is `Category 1`.  
-A course can (and must) only be in one category at a time.
+
+!!! warning
+    A course can (and must) only be in one category at a time.
 
 See [moodle docs](https://docs.moodle.org/405/en/Course_categories) for more information
 
