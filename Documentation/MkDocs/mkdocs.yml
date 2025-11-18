@@ -20,6 +20,9 @@ theme:
     - navigation.top # Show back to top button
     - navigation.tabs
     - navigation.expand
+    - navigation.sections
+    - navigation.indexes
+    - navigation.path # Show the path to the current page using breadcrumbs
     - search.suggest # suggest search terms while typing
     - search.highlight # highlights search terms in the text
     - navigation.footer
@@ -76,7 +79,7 @@ nav:
       - Overview: Architecture/Overview.md
       - Reader: Architecture/Reader.md
       - Internal Data Model:
-        - General: Architecture/DataModel/DataModel.md
+        - Architecture/DataModel/index.md
         - Nomenclature: Architecture/DataModel/Nomenclature.md
       - Writer: Architecture/Writer.md
   - Activities:

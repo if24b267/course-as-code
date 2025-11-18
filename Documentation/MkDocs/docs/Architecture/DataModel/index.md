@@ -1,8 +1,8 @@
 # Data Model
-This page explains the **internal data model** used to store the data read by the [Reader](Reader.md). It is essentially an alternative way (alternative to [Moodle backup files](../MoodleBackupFile/General.md)) to save a Moodle course, along with all its associated parameters.
+This page explains the **internal data model** used to store the data read by the [Reader](/docs/Architecture/Reader.md). It is essentially an alternative way (alternative to [Moodle backup files](/docs/MoodleBackupFile/General.md) to save a Moodle course, along with all its associated parameters.
 
 We will explain the basic structure of a Moodle course in the internal data model - that is, the fundamental elements that make up a course, such as metadata, sections, enrolled users, etc.  
-For information on how the individual activities are implemented, see [Activities](../Activities/Overview.md)!
+For information on how the individual activities are implemented, see [Activities](/docs/Activities/Overview.md)!
 
 !!! tip
     Almost every property in the source code of the models has a **Description Attribute** that explains what is stored in the property and how its values affect the Moodle course.
@@ -247,4 +247,4 @@ Understanding the data models of the individual activities is straightforward, a
         public FormattingFormat FormattingFormat { get; set; } = AssignmentDefaults.DEFAULT_FORMATTING_FORMAT;
     ```
 
-For more detailed information on the individual activities, please refer to [activities](../Activities/Overview.md).
+For more detailed information on the individual activities, please refer to [activities](/docs/Activities/Overview.md).
