@@ -2,16 +2,26 @@ site_name: Course as Code
 site_url: https://davimalu.github.io/course-as-code/
 repo_url: https://github.com/Davimalu/course-as-code
 repo_name: davimalu/course-as-code
+copyright: Created by [Davimalu](https://github.com/Davimalu), [lkalchhauser](https://github.com/lkalchhauser), [david051202](https://github.com/david051202), [if24b270](https://github.com/if24b270) and [xSulo](xSulo)
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Davimalu/course-as-code/
 
 theme:
   name: material
+  language: en
+  icon: material/simple-moodle
   features:
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
+    - navigation.top # Show back to top button
     - navigation.tabs
     - navigation.expand
-    - search.suggest
+    - search.suggest # suggest search terms while typing
+    - search.highlight # highlights search terms in the text
     - navigation.footer
     - toc.follow
     - content.code.copy # Enable code copy button
@@ -19,11 +29,13 @@ theme:
   palette:
     # Palette toggle for light mode
     - scheme: default
+      primary: green
       toggle:
         icon: material/brightness-7 
         name: Switch to dark mode
     # Palette toggle for dark mode
     - scheme: slate
+      primary: teal
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
