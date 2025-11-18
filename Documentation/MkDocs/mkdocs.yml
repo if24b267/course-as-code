@@ -57,7 +57,7 @@ nav:
       - Reader: Architecture/Reader.md
       - Data Model: Architecture/DataModel.md
       - Writer: Architecture/Writer.md
-  - Activites:
+  - Activities:
       - Overview: Activities/Overview.md
       - Assignment: Activities/Assignment.md
       - Moodle File: Activities/Moodle_File.md

@@ -159,7 +159,7 @@ This class diagram visually represents the basic structure of a Moodle course as
     * `SystemDefaults` contains parameters for which a default value can almost always be used, as it's highly unlikely that a user would want to modify them.
 
 !!! info
-    The `SensibleDefaults` and `SystemDefaults` subclasses currently exist for almost all classes. However, we are in the process of dismantling this structure and will instead store all properties directly in the class. We have found that this architectural decision is more detrimental than helpful, as you can never know from memory if a particular property is stored in `SensibleDefaults` or `SystemDefaults`, which leads to a lot of trial and error.
+    The `SensibleDefaults` and `SystemDefaults` subclasses currently exist for almost all classes. However, we are in the process of dismantling this structure and will instead store all properties directly in the class. We have found that this architectural decision is more detrimental than helpful, as you can never know from memory if a particular property is stored in `SensibleDefaults` or `SystemDefaults`, which leads to a lot of trial and error.  
     In the future, we may use data annotations to mark which properties would fall into the `SensibleDefaults` or `SystemDefaults` categories.
 
 ## Activities
@@ -246,3 +246,5 @@ Understanding the data models of the individual activities is straightforward, a
         [Description("Format of the introduction text (e.g., HTML, PlainText)")]
         public FormattingFormat FormattingFormat { get; set; } = AssignmentDefaults.DEFAULT_FORMATTING_FORMAT;
     ```
+
+For more detailed information on the individual activities, please refer to [activities](../Activities/Overview.md).
