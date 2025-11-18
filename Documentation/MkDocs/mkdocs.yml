@@ -52,6 +52,13 @@ plugins:
 
 nav:
   - Home: index.md
+  - Usage:
+      - Overview: Usage/Overview.md
+      - Moodle Environment Setup: Usage/Moodle_Environment_Setup.md
+      - Course As Code Setup: Usage/Course_As_Code_Setup.md
+      - Creating a Course: Usage/Creating_A_Course.md
+      - Exporting a Course: Usage/Exporting_A_Course.md
+      - Importing a Course: Usage/Importing_A_Course.md
   - Architecture:
       - Overview: Architecture/Overview.md
       - Reader: Architecture/Reader.md
