@@ -65,6 +65,7 @@ plugins:
         dark: catppuccin/frappe
   - search:
   - document-dates:
+      position: bottom
 
 nav:
   - Home: index.md
