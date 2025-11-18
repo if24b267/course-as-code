@@ -81,7 +81,9 @@ nav:
       - Reader: Architecture/Reader.md
       - Internal Data Model:
         - Architecture/DataModel/index.md
-        - Nomenclature: Architecture/DataModel/Nomenclature.md
+        - General Concepts: Architecture/DataModel/Nomenclature.md
+        - Course-specific Concepts: Architecture/DataModel/Course_Nomenclature.md
+        - User-specific Concepts: Architecture/DataModel/User_Nomenclature.md
       - Writer: Architecture/Writer.md
   - Activities:
       - Overview: Activities/Overview.md
