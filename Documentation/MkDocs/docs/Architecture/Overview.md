@@ -34,7 +34,8 @@ Writer -down-> Backup: writes
 @enduml
 ```
 
-Detaillierte Informationen zu den einzelnen Bestandteilen findest du auf den nachfolgenden Seiten:
-- [Reader](./Reader.md)
-- [Internal Data Model](./DataModel.md)
-- [Writer](./Writer.md)
+More detailed information on the individual components can be found on the following pages:
+
+* [Reader](./Reader.md)
+* [Internal Data Model](./DataModel.md)
+* [Writer](./Writer.md)
