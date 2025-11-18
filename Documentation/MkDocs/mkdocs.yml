@@ -53,6 +53,7 @@ markdown_extensions:
   - pymdownx.superfences
   - admonition
   - pymdownx.details
+  - tables
 
 plugins:
   - plantuml:
@@ -74,7 +75,9 @@ nav:
   - Architecture:
       - Overview: Architecture/Overview.md
       - Reader: Architecture/Reader.md
-      - Data Model: Architecture/DataModel.md
+      - Internal Data Model:
+        - General: Architecture/DataModel/DataModel.md
+        - Nomenclature: Architecture/DataModel/Nomenclature.md
       - Writer: Architecture/Writer.md
   - Activities:
       - Overview: Activities/Overview.md
