@@ -57,6 +57,13 @@ nav:
       - Reader: Architecture/Reader.md
       - Data Model: Architecture/DataModel.md
       - Writer: Architecture/Writer.md
+  - Activites:
+      - Overview: Activities/Overview.md
+      - Assignment: Activities/Assignment.md
+      - Moodle File: Activities/Moodle_File.md
+      - Text and Media Area: Activities/Text_and_Media_Area.md
+      - URL: Activities/URL.md
+      - Quiz: Activities/Quiz.md
   - Moodle Backup File (.mbz):
       - General: MoodleBackupFile/General.md
       - Base Structure: MoodleBackupFile/Base_Structure.md
