@@ -2,16 +2,28 @@ site_name: Course as Code
 site_url: https://davimalu.github.io/course-as-code/
 repo_url: https://github.com/Davimalu/course-as-code
 repo_name: davimalu/course-as-code
+copyright: Created by Davimalu, lkalchhauser, david051202, if24b270 and xSulo for InnoLab 1-3
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Davimalu/course-as-code/
 
 theme:
   name: material
+  language: en
+  icon: material/simple-moodle
   features:
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
+    - navigation.top # Show back to top button
     - navigation.tabs
     - navigation.expand
-    - search.suggest
+    - navigation.indexes
+    - navigation.path # Show the path to the current page using breadcrumbs
+    - search.suggest # suggest search terms while typing
+    - search.highlight # highlights search terms in the text
     - navigation.footer
     - toc.follow
     - content.code.copy # Enable code copy button
@@ -19,11 +31,13 @@ theme:
   palette:
     # Palette toggle for light mode
     - scheme: default
+      primary: green
       toggle:
         icon: material/brightness-7 
         name: Switch to dark mode
     # Palette toggle for dark mode
     - scheme: slate
+      primary: teal
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -41,6 +55,7 @@ markdown_extensions:
   - pymdownx.superfences
   - admonition
   - pymdownx.details
+  - tables
 
 plugins:
   - plantuml:
@@ -49,14 +64,38 @@ plugins:
         light: catppuccin/latte-white
         dark: catppuccin/frappe
   - search:
+  - document-dates:
+      position: bottom
 
 nav:
   - Home: index.md
+  - Usage:
+      - Overview: Usage/Overview.md
+      - Moodle Environment Setup: Usage/Moodle_Environment_Setup.md
+      - Course As Code Setup: Usage/Course_As_Code_Setup.md
+      - Creating a Course: Usage/Creating_A_Course.md
+      - Exporting a Course: Usage/Exporting_A_Course.md
+      - Importing a Course: Usage/Importing_A_Course.md
   - Architecture:
       - Overview: Architecture/Overview.md
       - Reader: Architecture/Reader.md
-      - Data Model: Architecture/DataModel.md
+      - Internal Data Model:
+        - Architecture/DataModel/index.md
+        - General Concepts: Architecture/DataModel/Nomenclature.md
+        - Course-specific Concepts: Architecture/DataModel/Course_Nomenclature.md
+        - User-specific Concepts: Architecture/DataModel/User_Nomenclature.md
       - Writer: Architecture/Writer.md
+  - Activities:
+      - Overview: Activities/Overview.md
+      - Assignment: Activities/Assignment.md
+      - Moodle File: Activities/Moodle_File.md
+      - Text and Media Area: Activities/Text_and_Media_Area.md
+      - URL: Activities/URL.md
+      - Quiz: Activities/Quiz.md
+  - Grading:
+      - Overview: Grading/Overview.md
+      - Grade Categories: Grading/Grade_Categories.md
+      - Grade Items: Grading/Grade_Items.md
   - Moodle Backup File (.mbz):
       - General: MoodleBackupFile/General.md
       - Base Structure: MoodleBackupFile/Base_Structure.md
@@ -68,7 +107,3 @@ nav:
         - CodeRunner: MoodleBackupFile/QuestionTypes/CodeRunner.md
         - Dropdown: MoodleBackupFile/QuestionTypes/Dropdown.md
         - Matching: MoodleBackupFile/QuestionTypes/DragAndDropText.md
-  - Grading:
-      - Overview: Grading/Overview.md
-      - Grade Categories: Grading/Grade_Categories.md
-      - Grade Items: Grading/Grade_Items.md
