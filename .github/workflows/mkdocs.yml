@@ -38,7 +38,7 @@ jobs:
           pip install --upgrade pip
           pip install mkdocs-material
           pip install mkdocs_puml
-          pip install mkdocs-git-authors-plugin
+          pip install mkdocs-document-dates
 
       - name: Deploy MkDocs
         run: mkdocs gh-deploy --force

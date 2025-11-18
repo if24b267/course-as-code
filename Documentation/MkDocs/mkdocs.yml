@@ -64,7 +64,7 @@ plugins:
         light: catppuccin/latte-white
         dark: catppuccin/frappe
   - search:
-  - git-authors:
+  - document-dates:
 
 nav:
   - Home: index.md
