@@ -83,7 +83,7 @@ See [moodle docs #1](https://docs.moodle.org/405/en/Activity_completion) and [mo
 ![ShowActivityCompletionConditions = True](../../assets/ShowActivityCompletionConditionsTrue.png)
 ![ShowActivityCompletionConditions = True](../../assets/ShowActivityCompletionConditionsFalse.png)
 
-### UsesLegacyFiles  
+## UsesLegacyFiles  
 Moodle uses a "new" file system since version 2.0. This setting tells Moodle if this backup uses the new or old file system
 
 | Value in Data Model | Value in Moodle XML | Description                                       |
@@ -93,7 +93,7 @@ Moodle uses a "new" file system since version 2.0. This setting tells Moodle if 
 
 See [moodle docs](https://docs.moodle.org/405/en/Legacy_course_files) for more information
 
-### CourseLanguage  
+## CourseLanguage  
 By default, Moodle detects a user's language from their browser setting and displays the course in the corresponding language.  
 Using this setting, the teacher can force the course to use a specific language setting  
 
@@ -102,7 +102,7 @@ Using this setting, the teacher can force the course to use a specific language 
 | `Null`              | ` `                 | don't force a language                           |
 | English             | en                  | force the course page to be displayed in English |
 
-### CategoryName  
+## CategoryName  
 Course categories are used to organize courses into descriptive categories, making them easier to find for teachers and students. The default course category on a new Moodle site is `Category 1`.  
 
 !!! warning
@@ -110,7 +110,7 @@ Course categories are used to organize courses into descriptive categories, maki
 
 See [moodle docs](https://docs.moodle.org/405/en/Course_categories) for more information
 
-### CustomFields
+## CustomFields
 Custom fields can be used to create field types to be used for custom fields. Instances of these field types can be added to the respective areas that implement Custom fields API.  
 
 See [moodle docs](https://moodledev.io/docs/4.4/apis/plugintypes/customfield) for more information
@@ -120,7 +120,7 @@ See [moodle docs](https://moodledev.io/docs/4.4/apis/plugintypes/customfield) fo
 | `Null`              | ` `                 | Course does not use any custom fields |
 | TBD                 | TBD                 | TBD                                   |
 
-### PdfExportFont
+## PdfExportFont
 Used to specify a custom font for PDF Exports. Only relevant for languages with non-latin scripts (e.g. Arabic, Chinese, Japanese, Korean, etc.) to ensure that the text is displayed correctly in the PDF.
 
 See [moodle docs](https://docs.moodle.org/405/en/Language_settings#Enable_PDF_fonts) for more information
