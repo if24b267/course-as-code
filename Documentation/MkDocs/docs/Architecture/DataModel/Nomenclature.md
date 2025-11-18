@@ -21,7 +21,7 @@ See [moodle docs](https://docs.moodle.org/405/en/Groups#Group_modes) for more in
 In Moodle, users can have different permissions in different places. For example, a user might be a Teacher in one course, and a Student in another, and so have different permissions in each place. These places are called contexts. 
 Contexts are hierarchical, meaning they form a tree-like structure, with permissions inheriting downwards unless overridden.
 
-![Context Tree](assets/Moodle-contexts-1.jpg)
+![Context Tree](../../assets/Moodle-contexts.jpg)
 
 | Value in Data Model | Value in Moodle XML | Description                                                                                      |
 |---------------------|---------------------|--------------------------------------------------------------------------------------------------|

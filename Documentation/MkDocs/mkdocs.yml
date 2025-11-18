@@ -20,7 +20,6 @@ theme:
     - navigation.top # Show back to top button
     - navigation.tabs
     - navigation.expand
-    - navigation.sections
     - navigation.indexes
     - navigation.path # Show the path to the current page using breadcrumbs
     - search.suggest # suggest search terms while typing
