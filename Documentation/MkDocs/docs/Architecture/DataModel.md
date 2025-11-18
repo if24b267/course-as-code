@@ -16,9 +16,13 @@ For information on how the individual activities are implemented, see [Activitie
 
 ## Basic Structure
 - First off, there are several data fields that describe and define the Moodle course itself. For instance, it has a **name**, a **short name**, a **start date**, an **end date**, and much more (1)
+{ .annotate }
 - Since a Moodle course doesn't exist independently on the file system but can only be saved and imported as a Moodle Backup file (`.mbz`), some data about this backup file also needs to be stored, such as the **backup file's name**, the **Moodle version** it was created with, and so on. (2)
+{ .annotate }
 - Users who participate in a course (whether as a student, lecturer, or administrator) are referred to as **enrolled** in the course. Information about each user participating in the course, such as their **name**, **email address**, etc., must be stored. (3)
+{ .annotate }
     - There are various ways a user on the Moodle learning platform can participate in a specific course. The main idea is that they must be added to the course somehow, and the way this happens is called the **Enrolment Method**. (4)
+    { .annotate }
 
         !!! example
             - `Manual Enrolment` means an administrator (or another authorized person) manually adds a person to the course.
@@ -27,13 +31,13 @@ For information on how the individual activities are implemented, see [Activitie
 
     - Enrolment Methods are associated with both **users** and the **course**. A course supports certain Enrolment Methods (e.g., it allows or disallows self-enrolments), and for each user, the Enrolment Method through which they were added to the course is stored.
     - Additionally, each user is assigned a **role** that determines their permissions. (5)
+    { .annotate }
 
         !!! example
             Examples of roles include [`Student`](https://docs.moodle.org/500/en/Student_role), [`Teacher`](https://docs.moodle.org/500/en/Teacher_role), [`Administrator`](https://docs.moodle.org/500/en/Site_administrators), etc.
 
 - Aside from this meta-information, the structure of a Moodle course is quite simple:  
 It consists of multiple **Sections**, which in turn can contain any number of different [**activities**](../Activities/Overview.md).
-{ .annotate }
 
 1.  This basic data is stored in `CourseAsCode.Model/Course.cs`.
 2.  This metadata is stored in `CourseAsCode.Model/BackupMetadata.cs`.
