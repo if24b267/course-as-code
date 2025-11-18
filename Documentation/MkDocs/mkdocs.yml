@@ -71,6 +71,10 @@ nav:
       - Text and Media Area: Activities/Text_and_Media_Area.md
       - URL: Activities/URL.md
       - Quiz: Activities/Quiz.md
+  - Grading:
+      - Overview: Grading/Overview.md
+      - Grade Categories: Grading/Grade_Categories.md
+      - Grade Items: Grading/Grade_Items.md
   - Moodle Backup File (.mbz):
       - General: MoodleBackupFile/General.md
       - Base Structure: MoodleBackupFile/Base_Structure.md
@@ -82,7 +86,3 @@ nav:
         - CodeRunner: MoodleBackupFile/QuestionTypes/CodeRunner.md
         - Dropdown: MoodleBackupFile/QuestionTypes/Dropdown.md
         - Matching: MoodleBackupFile/QuestionTypes/DragAndDropText.md
-  - Grading:
-      - Overview: Grading/Overview.md
-      - Grade Categories: Grading/Grade_Categories.md
-      - Grade Items: Grading/Grade_Items.md

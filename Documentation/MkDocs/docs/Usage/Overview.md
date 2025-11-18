@@ -1,5 +1,5 @@
 # Usage
-In this section, we will explain step-by-step how you can use `Course as Code` to create a Moodle course in a textual format (`YAML`/`Markdown`), convert it into a Moodle backup file (`.mbz`) with `Course as Code`, and then import it into your locally hosted Moodle instance.
+In this section, we will explain step-by-step how you can use `Course as Code` to create a Moodle course in a textual format (`YAML`/`Markdown`), convert it into a Moodle backup file (`.mbz`) with **Course as Code**, and then import it into your locally hosted Moodle instance.
 
 1.  [Setting up a local Moodle Environment](./Moodle_Environment_Setup.md)
 2.  [Setting up Course as Code](./Course_As_Code_Setup.md)

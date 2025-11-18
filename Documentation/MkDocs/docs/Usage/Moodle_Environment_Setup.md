@@ -1,11 +1,10 @@
 # Setting up a local Moodle Environment
-First, we need a local Moodle instance that you can use to test and preview your exported courses. We use `Docker` for this with an image from Bitnami [[hub.docker.com](https://hub.docker.com/r/bitnami/moodle)].
+First, we need a local Moodle instance that you can use to test and preview your exported courses. We use Docker for this with an image from Bitnami [[hub.docker.com](https://hub.docker.com/r/bitnami/moodle)].
 
 To set up a local installation of Moodle for development, follow these instructions:
 
 1. Create a new file: `docker-compose.yml`
 2. Add the following content to the file:
-
 ```yaml
 # Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
@@ -48,21 +47,15 @@ volumes:
   moodledata_data:
     driver: local
 ```
-
 3. Start the containers:
-
 ```bash
 (sudo) docker compose up -d
 ```
-
 4. Moodle is now reachable at `http://localhost`
 5. Log in with the default credentials:
-
 ```txt
 user: user
 password: bitnami
 ```
-
 6. Go to **Site Administration** > **Courses** > **Backups** > **Asynchronous backup/restore** and disable `Enable asynchronous backups`.
-
 7. Go to **Site Administration** > **Plugins** > **Install plugins** and install the [**CodeRunner** plugin](https://moodle.org/plugins/qtype_coderunner).
