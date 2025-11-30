@@ -29,6 +29,7 @@ public class WikiDefaults
     public const bool DEFAULT_READ_ONLY = false;
 
     // Version
+    public const int DEFAULT_VERSION_ID = 1;
     public const string DEFAULT_VERSION_CONTENT = "";
     public const WikiFormat DEFAULT_CONTENT_FORMAT = WikiFormat.Html;
     public const int DEFAULT_VERSION_NUMBER = 0;
