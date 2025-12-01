@@ -24,6 +24,7 @@ namespace CourseAsCode.Readers.YAML.Model
         public bool EnableCompletionTracking { get; set; }
         public int NumberOfAnnouncements { get; set; }
         public string ForcedLanguage { get; set; }
+        public string GradeGatoriesPath { get; set; }
         public bool ShowActivityDates { get; set; }
         public bool ShowCompletionConditions { get; set; }
         public List<string> QuestionListPaths { get; set; }

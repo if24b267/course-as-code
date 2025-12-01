@@ -1,6 +1,8 @@
 using System.Text.Json;
 
 using CourseAsCode.Model;
+using CourseAsCode.Model.Defaults;
+using CourseAsCode.Model.Defaults.Grading;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
@@ -22,18 +24,20 @@ namespace CourseAsCode.Readers
         private readonly IServiceProvider _serviceProvider;
         private readonly IYamlFileReaderHelper _yamlReader;
         private readonly IQuestionReader _questionReader;
+        private readonly IGradeCategoriesReader _gradeCategoriesReader;
 
-        public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader, IQuestionReader questionReader)
+        public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader, IQuestionReader questionReader, IGradeCategoriesReader iGradeCategoriesReader)
         {
             _sectionReader = sectionReader;
             _serviceProvider = serviceProvider;
             _yamlReader = yamlReader;
             _questionReader = questionReader;
+            _gradeCategoriesReader = iGradeCategoriesReader;
         }
 
         // For backward compatibility
         public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
-            : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()))
+            : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()), new YamlIGradeCategoriesReader())
         {
         }
 
@@ -77,6 +81,8 @@ namespace CourseAsCode.Readers
 
             var yamlYamlCourse = _yamlReader.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
             var yamlSectionsDefinition = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
+
+            var gradeCategories = _gradeCategoriesReader.Read(Path.Combine(coursePath, yamlYamlCourse.GradeGatoriesPath));
 
             List<Section> sections = [];
             ValueKeeper.Questions = [];
@@ -127,6 +133,7 @@ namespace CourseAsCode.Readers
                 CourseLanguage = courseLanguage,
                 Sections = sections,
                 Questions = ValueKeeper.Questions,
+                GradeCategories = gradeCategories ?? [],
 
                 // TODO: maybe add a helper class where you can get the default SensibleDefaults class
                 SensibleDefaults = new Course.SensibleDefaultsCourse
@@ -180,6 +187,7 @@ namespace CourseAsCode.Readers
             services.AddSingleton<ICourseReader, CourseReader>();
             services.AddSingleton<IWikiReader, YamlWikiReader>();
             services.AddSingleton<IWikiPageReader, YamlWikiPageReader>();
+            services.AddSingleton<IGradeCategoriesReader, YamlIGradeCategoriesReader>();
         }
     }
 }
