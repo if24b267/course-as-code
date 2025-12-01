@@ -4,6 +4,7 @@ using CourseAsCode.Model;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Defaults.Grading;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Grading;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
@@ -84,9 +85,16 @@ namespace CourseAsCode.Readers
             var yamlYamlCourse = _yamlReader.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
             var yamlSectionsDefinition = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 
-            var gradeCategories = _gradeCategoriesReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradeCategoriesPath)));
-            var gradingInfos =
-                _gradingInfosReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradingInfosPath)));
+            List<GradeCategory> gradeCategories = [];
+            List<YamlGradingInfo> gradingInfos = [];
+
+
+            if (yamlYamlCourse.GradeCategoriesPath != null)
+            {
+                gradeCategories = _gradeCategoriesReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradeCategoriesPath)));
+                gradingInfos =
+                    _gradingInfosReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradingInfosPath)));
+            }
 
             List<Section> sections = [];
             ValueKeeper.Questions = [];
