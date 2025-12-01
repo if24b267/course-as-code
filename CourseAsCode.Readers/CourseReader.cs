@@ -25,19 +25,21 @@ namespace CourseAsCode.Readers
         private readonly IYamlFileReaderHelper _yamlReader;
         private readonly IQuestionReader _questionReader;
         private readonly IGradeCategoriesReader _gradeCategoriesReader;
+        private readonly IYamlGradingInfosReader _gradingInfosReader;
 
-        public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader, IQuestionReader questionReader, IGradeCategoriesReader iGradeCategoriesReader)
+        public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader, IQuestionReader questionReader, IGradeCategoriesReader gradeCategoriesReader, IYamlGradingInfosReader gradingInfosReader)
         {
             _sectionReader = sectionReader;
             _serviceProvider = serviceProvider;
             _yamlReader = yamlReader;
             _questionReader = questionReader;
-            _gradeCategoriesReader = iGradeCategoriesReader;
+            _gradeCategoriesReader = gradeCategoriesReader;
+            _gradingInfosReader = gradingInfosReader;
         }
 
         // For backward compatibility
         public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
-            : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()), new YamlGradeCategoriesReader(new YamlFileReaderHelper()))
+            : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()), new YamlGradeCategoriesReader(new YamlFileReaderHelper()), new YamlGradingInfosReader(new YamlFileReaderHelper()))
         {
         }
 
@@ -83,12 +85,15 @@ namespace CourseAsCode.Readers
             var yamlSectionsDefinition = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 
             var gradeCategories = _gradeCategoriesReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradeCategoriesPath)));
+            var gradingInfos =
+                _gradingInfosReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradingInfosPath)));
 
             List<Section> sections = [];
             ValueKeeper.Questions = [];
             ValueKeeper.CurrentActivityId = 1;
             ValueKeeper.CurrentSectionId = 1;
             ValueKeeper.GradeCategories = gradeCategories;
+            ValueKeeper.GradingInfos = gradingInfos;
 
             if (yamlYamlCourse.QuestionListPaths != null)
             {
@@ -189,6 +194,7 @@ namespace CourseAsCode.Readers
             services.AddSingleton<IWikiReader, YamlWikiReader>();
             services.AddSingleton<IWikiPageReader, YamlWikiPageReader>();
             services.AddSingleton<IGradeCategoriesReader, YamlGradeCategoriesReader>();
+            services.AddSingleton<IYamlGradingInfosReader, YamlGradingInfosReader>();
         }
     }
 }

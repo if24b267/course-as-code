@@ -9,8 +9,9 @@ namespace CourseAsCode.Readers.YAML.Model
         public bool BlindMarking { get; set; } = AssignmentDefaults.DEFAULT_BLIND_MARKING;
         public string? GradeName { get; set; } = QuizDefaults.DEFAULT_GRADE_NAME;
         public float? GradeMultiplicator { get; set; } = QuizDefaults.DEFAULT_GRADE_MULTIPLICATOR;
-        public float? GradingWeight { get; set; } = QuizDefaults.DEFAULT_GRADE_WEIGHT;
+        public int? GradingWeight { get; set; } = QuizDefaults.DEFAULT_GRADE_WEIGHT;
         public float? GradeToPass { get; set; } = QuizDefaults.DEFAULT_GRADE_TO_PASS;
+        public bool GradeHidden { get; set; }
         public DateTime GradeHiddenUntil { get; set; } = DateTime.Now;
         public float? GradeOffset { get; set; } = AssignmentDefaults.DEFAULT_GRADE_OFFSET;
         public bool HideGrader { get; set; } = AssignmentDefaults.DEFAULT_HIDE_GRADER;

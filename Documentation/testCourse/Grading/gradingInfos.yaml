@@ -1,12 +1,23 @@
 GradingInfos:
-  - GradeCategoryId:
-    PathToActivity:
-    GradingLocked:
-    BlindMarking:
-    GradeName:
-    GradeMultiplicator:
-    GradingWeight:
-    GradeToPass:
-    GradeHiddenUntil:
-    GradeOffset:
-    HideGrader:
+  - GradeCategoryId: 2
+    PathToActivity: "../../Sections/Quiz Section/Activities/quiz1.yaml"
+    GradingLocked: true
+    GradeName: "Different from the Activities name"
+    GradeMultiplicator: 2.0
+  - GradeCategoryId: 3
+    PathToActivity: "../../Sections/Quiz Section/Activities/quiz2.yaml"
+    GradingWeight: 15
+  - GradeCategoryId: 3
+    PathToActivity: "../../Sections/Quiz Section/Activities/quiz3.yaml"
+    GradeName: "Quiz 3 Grading"
+    GradingWeight: 35
+    GradeToPass: 10
+    GradeHiddenUntil: 31-08-2026 23:59
+  - GradeCategoryId: 3
+    PathToActivity: "../../Sections/Assignment Section/Activities/assignment1.yaml"
+    GradingLocked: true
+    BlindMarking: true
+    GradeName: "Documentation Report"
+    GradingWeight: 50
+    GradeOffset: 1.0
+    HideGrader: true

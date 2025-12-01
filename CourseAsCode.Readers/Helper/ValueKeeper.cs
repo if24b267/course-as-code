@@ -1,5 +1,6 @@
 using CourseAsCode.Model.Grading;
 using CourseAsCode.Model.Questions;
+using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.Helper
 {
@@ -21,5 +22,6 @@ namespace CourseAsCode.Readers.Helper
 
         public static List<Question> Questions { get; set; }
         public static List<GradeCategory> GradeCategories { get; set; }
+        public static List<YamlGradingInfo> GradingInfos { get; set; }
     }
 }

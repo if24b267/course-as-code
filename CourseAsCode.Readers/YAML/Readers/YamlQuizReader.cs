@@ -26,7 +26,16 @@ namespace CourseAsCode.Readers.YAML.Readers
 
             var yamlQuiz = _yamlFileReaderHelper.DeserializeFromFile<YamlQuiz>(modelObjectPath);
 
-            return ConvertYamlQuizToMoodleQuiz(yamlQuiz);
+            var moodleQuiz = ConvertYamlQuizToMoodleQuiz(yamlQuiz);
+
+            var grading = ValueKeeper.GradingInfos.FirstOrDefault(gi => gi.PathToActivity == modelObjectPath);
+
+            if (grading != null)
+            {
+                moodleQuiz = AddGradingToMoodleQuiz(moodleQuiz, grading);
+            }
+
+            return moodleQuiz;
         }
 
         private Quiz ConvertYamlQuizToMoodleQuiz(YamlQuiz yamlQuiz)
@@ -54,6 +63,29 @@ namespace CourseAsCode.Readers.YAML.Readers
                 ModuleId = ValueKeeper.CurrentModuleId,
                 ModuleName = "quiz",
             };
+        }
+
+        private Quiz AddGradingToMoodleQuiz(Quiz moodleQuiz, YamlGradingInfo gradingInfo)
+        {
+            var gradeCategory =
+                ValueKeeper.GradeCategories.FirstOrDefault(gc => gc.GradeCategoryId == gradingInfo.GradeCategoryId);
+
+            if (gradeCategory == null)
+            {
+                return moodleQuiz;
+            }
+
+            moodleQuiz.GradingLocked = gradingInfo.GradingLocked;
+            moodleQuiz.GradeName = gradingInfo.GradeName;
+            moodleQuiz.GradeMultiplicator = gradingInfo.GradeMultiplicator;
+            moodleQuiz.GradingWeight = gradingInfo.GradingWeight;
+            moodleQuiz.GradeToPass = gradingInfo.GradeToPass;
+            moodleQuiz.GradeHiddenUntil = gradingInfo.GradeHiddenUntil;
+            moodleQuiz.GradeOffset = gradingInfo.GradeOffset;
+            moodleQuiz.GradeHidden = gradingInfo.GradeHidden;
+            moodleQuiz.GradeCategory = gradeCategory;
+
+            return moodleQuiz;
         }
 
         private List<Question?> GetQuestionsFromValueKeeperByIdList(int[] questionIds)
