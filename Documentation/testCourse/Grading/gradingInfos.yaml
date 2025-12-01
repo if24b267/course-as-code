@@ -1,0 +1,12 @@
+GradingInfos:
+  - GradeCategoryId:
+    PathToActivity:
+    GradingLocked:
+    BlindMarking:
+    GradeName:
+    GradeMultiplicator:
+    GradingWeight:
+    GradeToPass:
+    GradeHiddenUntil:
+    GradeOffset:
+    HideGrader:

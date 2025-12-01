@@ -5,10 +5,15 @@ using YamlDotNet.Core;
 
 namespace CourseAsCode.Readers.YAML.Readers
 {
-    public class YamlIGradeCategoriesReader : IGradeCategoriesReader
+    public class YamlGradeCategoriesReader : IGradeCategoriesReader
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IYamlFileReaderHelper _yamlReaderHelper;
+
+        public YamlGradeCategoriesReader(IYamlFileReaderHelper yamlReaderHelper)
+        {
+            _yamlReaderHelper = yamlReaderHelper;
+        }
 
         public List<GradeCategory>? Read(string modelObjectPath)
         {
@@ -28,7 +33,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 if (validationResults.Any())
                 {
                     var errors = string.Join(", ", validationResults.Select(r => r.ErrorMessage));
-                    _logger.Warn($"Validation warnings for URL '{modelObjectPath}': {errors}");
+                    _logger.Warn($"Validation warnings for GradeCategories '{modelObjectPath}': {errors}");
                 }
 
                 var moodleGradeCategories = ConvertYamlGradeCategoriesToMoodleGradeCategories(yamlGradeCategories);
@@ -56,7 +61,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 var moodleGradeCategory = new GradeCategory()
                 {
                     GradeCategoryId = yamlGradeCategory.GradeCategoryId,
-                    AggregationType = yamlGradeCategory.AggregrationType,
+                    AggregationType = yamlGradeCategory.AggregationType,
                     Parent = parent,
                     DropLowestGrades = yamlGradeCategory.DropLowestGrades,
                     GradeName = yamlGradeCategory.GradeName,

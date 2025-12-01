@@ -8,7 +8,7 @@ namespace CourseAsCode.Readers.YAML.Model
     {
         [Required]
         public int GradeCategoryId { get; set; }
-        public GradeAggregation AggregrationType { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_AGGREGATION;
+        public GradeAggregation AggregationType { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_AGGREGATION;
         public int? ParentGradeCategoryId { get; set; }
         public int? DropLowestGrades { get; set; } = GradeCategoryDefaults.DEFAULT_DROP_LOWEST_GRADES;
         public string? GradeName { get; set; } = GradeCategoryDefaults.DEFAULT_GRADE_NAME;

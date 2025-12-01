@@ -37,7 +37,7 @@ namespace CourseAsCode.Readers
 
         // For backward compatibility
         public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
-            : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()), new YamlIGradeCategoriesReader())
+            : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()), new YamlGradeCategoriesReader(new YamlFileReaderHelper()))
         {
         }
 
@@ -82,12 +82,13 @@ namespace CourseAsCode.Readers
             var yamlYamlCourse = _yamlReader.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
             var yamlSectionsDefinition = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 
-            var gradeCategories = _gradeCategoriesReader.Read(Path.Combine(coursePath, yamlYamlCourse.GradeGatoriesPath));
+            var gradeCategories = _gradeCategoriesReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradeCategoriesPath)));
 
             List<Section> sections = [];
             ValueKeeper.Questions = [];
             ValueKeeper.CurrentActivityId = 1;
             ValueKeeper.CurrentSectionId = 1;
+            ValueKeeper.GradeCategories = gradeCategories;
 
             if (yamlYamlCourse.QuestionListPaths != null)
             {
@@ -187,7 +188,7 @@ namespace CourseAsCode.Readers
             services.AddSingleton<ICourseReader, CourseReader>();
             services.AddSingleton<IWikiReader, YamlWikiReader>();
             services.AddSingleton<IWikiPageReader, YamlWikiPageReader>();
-            services.AddSingleton<IGradeCategoriesReader, YamlIGradeCategoriesReader>();
+            services.AddSingleton<IGradeCategoriesReader, YamlGradeCategoriesReader>();
         }
     }
 }
