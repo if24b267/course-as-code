@@ -17,6 +17,7 @@ namespace CourseAsCode.Readers.Tests
         private IUrlReader _mockUrlReader;
         private ISectionReader _mockSectionReader;
         private ICourseReader _courseReader;
+        private IWikiReader _mockWikiReader;
 
         [SetUp]
         public void Setup()
@@ -27,6 +28,7 @@ namespace CourseAsCode.Readers.Tests
             _mockTextMediaReader = Substitute.For<ITextAndMediaAreaReader>();
             _mockUrlReader = Substitute.For<IUrlReader>();
             _mockSectionReader = Substitute.For<ISectionReader>();
+            _mockWikiReader = Substitute.For<IWikiReader>();
 
             // Create service collection and register mocks
             var services = new ServiceCollection();
@@ -35,6 +37,7 @@ namespace CourseAsCode.Readers.Tests
             services.AddSingleton(_mockUrlReader);
             services.AddSingleton(_mockActivityReader);
             services.AddSingleton(_mockSectionReader);
+            services.AddSingleton(_mockWikiReader);
 
             var mockServiceProvider = Substitute.For<IServiceProvider>();
             mockServiceProvider.GetService(typeof(ISectionReader)).Returns(_mockSectionReader);
@@ -145,7 +148,7 @@ Name: Test URL
 ";
             var filePath = CreateTestYamlFile("malformed.yaml", yamlContent);
 
-            var reader = new YamlActivityReader(_mockFileReader, _mockTextMediaReader, _mockUrlReader, new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()));
+            var reader = new YamlActivityReader(_mockFileReader, _mockTextMediaReader, _mockUrlReader, new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()), _mockWikiReader);
 
             // Act & Assert
             Assert.Throws<YamlDotNet.Core.YamlException>(() => reader.Read(filePath));
