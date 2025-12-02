@@ -1,117 +1,5 @@
 # [Quiz](https://docs.moodle.org/500/en/Quiz_activity)
 
-!!! note
-    The [Quiz activity](https://docs.moodle.org/500/en/Quiz_activity) is by far the most extensive activity supported by **Course as Code**, as a quiz can, in turn, contain various question types, all of which require their own structure within the data model. 
-
-```puml
-@startuml
-package Quizzes <<Frame>> {
-    abstract class Activity {
-        + Name: string
-        + Description: string
-        + VisibleToStudents: bool
-        + DisplayDescription: bool
-        ...
-    }
-    
-    class Quiz extends Activity {
-        + OpenTime: DateTime
-        + CloseTime: DateTime
-        + TimeLimit: int
-        ...
-    }
-    
-    class SafeExamBrowserSettings extends Quiz {
-        + RequireSEB: enum
-        + ShowDownloadButton: bool
-        + EnableQuit: bool
-        + EnableReload: bool
-        ...
-    }
-    
-    abstract class Question {
-        + QuestionName: string
-        + QuestionText: string
-        + QuestionReady: bool
-        + DefaultMark: float
-        ...
-    }
-    
-    class MultipleChoiceQuestion extends Question {
-        + ShuffleAnswer: bool
-        + ChoiceNumbering: enum
-        + ShowStandardInstructions: bool
-        + SingleChoice: bool
-    }
-    
-    class SingleChoiceQuestion extends MultipleChoiceQuestion {
-        + SingleChoice = true
-    }
-    
-    class MultiChoiceAnswer {
-        + AnswerText: string
-        + AnswerGrade: string
-        + AnswerFeedback: string
-        ...
-    }
-    
-    class DropdownQuestion extends Question {
-        + SubQuestions: List<DropdownSubQuestion>
-    }
-    
-    class DropdownSubQuestion {
-        + QuestionText: string
-        + CorrectAnswer: string
-        + WrongAnswers: List<string>
-    }
-    
-    class DragAndDropTextQuestion extends Question {
-        + ShuffleAnswers: bool
-    }
-    
-    class TextChoice {
-        + ID: int
-        + Value: string
-        + Category: string
-    }
-    
-    class CodeRunnerQuestion extends Question {
-        + CodeRunnerType: string
-        + AnswerBoxLines: string
-        + AnswerBoxColumns: string
-        + Answer: string
-        ...
-    }
-    
-    class CodeRunnerTestCase {
-        + TestCode: string
-        + Expected: string
-        ...
-    }
-}
-
-' A quiz contains multiple questions
-Question "0..*" --o "0..*" Quiz : contains
-
-MultipleChoiceQuestion "1..*" *-- "1..*" MultiChoiceAnswer : contains
-DropdownQuestion "1" *-- "1..*" DropdownSubQuestion : contains
-DragAndDropTextQuestion "1" *-- "1..*" TextChoice : contains
-CodeRunnerQuestion "1" *-- "1..*" CodeRunnerTestCase : contains
-
-@enduml
-```
-
-As with all other activities discussed so far, the Quiz is also an activity that extends the abstract `Activity` class. A quiz broadly consists of two elements:
-
-- The **Quiz activity itself** and parameters that describe it in more detail (e.g., `OpenTime`, `CloseTime`, `GradeToPass`, `AllowedAttempts`, etc.)
-- A series of **questions of various types**
-
-The parameters that define the quiz's metadata are the properties of the `Quiz` class (refer to the **Description Attributes** in the Model class for a precise description of all available parameters).
-
-Furthermore, every quiz is associated with `SafeExamBrowserSettings`. The [Safe Exam Browser (SEB)](https://safeexambrowser.org/about_overview_en.html) is a specialized browser that blocks access to many OS functions and other websites to make cheating more difficult for students. For each quiz, it can be configured whether SEB is required to conduct the quiz and how SEB should be configured for that specific quiz - this information is stored in the `SafeExamBrowserSettings` class.
-
-The core of every quiz are the quiz questions that students must answer. A quiz can contain any number of questions of any type, and a specific question can also appear in multiple quizzes.
-
 ### Question Types
 
 !!! info
@@ -236,6 +124,125 @@ A `TextChoice` can also be assigned to a specific `Category` to specify distract
 <hr>
 
 #### [CodeRunnerQuestion](https://docs.moodle.org/500/en/CodeRunner_question_type)
+CodeRunner questions require students to write and run code in order to solve a programming task. They rely on the Moodle CodeRunner plugin, which must be installed on the Moodle instance for this question type to function.
 
-!!! warning
-    The documentation for CodeRunnerQuestions is currently incomplete and/or incorrect and needs to be revised.
+A CodeRunner question evaluates the student’s code by running it against one or more test cases. The question can be defined entirely inline inside the YAML file, or—especially for larger tasks—split into multiple external files.
+![Image of a CodeRunner question](../assets/CodeRunnerQuestion.png)
+
+<hr>
+##### Overview
+
+A `CodeRunnerQuestion` consists of the following core elements: 
+
+Question metadata
+
+- `QuestionType: CODERUNNER`
+- `QuestionText` (+ optional `QuestionTextFormat` for HTML formatting)
+- `CodeRunnerType` (defines the execution environment, e.g., `c_program`, `cpp_program`, `java_program`)
+
+Student answer configuration
+
+- `AnswerPreload` — optional starter code shown to students
+- `Answer` — the model solution used by Moodle to validate test cases
+
+Test cases
+
+- Each test case defines input/output or expected evaluation results
+
+<hr>
+##### Simple Inline CodeRunner Question
+The simplest form of a CodeRunner question defines everything directly in the YAML file.
+
+!!! example
+    The code could look like this:
+    ```
+    - QuestionName: coderunner hello world c
+      Category: coderunner
+      QuestionId: 7
+      QuestionType: CODERUNNER
+      QuestionText: "<p>Write a complete C program that prints the following text exactly:</p>\n<p>Hello, World!</p>\n<p>Your program must include the necessary #include statements and a main() function. No input is needed.</p>"
+      QuestionTextFormat: HTML
+      CodeRunnerType: c_program
+      Answer: "#include <stdio.h>\n\nint main() {\n    printf(\"Hello, World!\\n\");\n    return 0;\n}"
+      CodeRunnerTestCases:
+        - Id: 1
+          TestCode: "Hello World Output"
+          TestType: 0
+          Expected: "Hello, World!"
+          UseAsExample: false
+          Display: "SHOW"
+          HideRestIfFail: false
+          Mark: 1
+    ```
+
+<hr>
+##### Complex CodeRunner Questions (Using External Files)
+For larger programming tasks, it is often preferable to split the question into multiple files rather than embedding everything inside the YAML file. This makes the question easier to read and maintain.
+
+!!! example
+    The folder structure may look like this:
+    ```
+    Questions/
+      ├─ question.yaml                   (main file)
+      └─ extSrcs/                        (contains the extra sources for all questions)
+           └─ MyQuestion/                (folder for this specific question)
+                ├─ question.html         (or .md, used as the QuestionText)
+                ├─ answer.c              (or .cpp / .java, used as the Answer)
+                ├─ answer_preload.c      (or .cpp / .java, used as the AnswerPreload)
+                ├─ ...                   
+                └─ testCases/
+                     ├─ 1/               (one folder per test case)
+                     │   ├─ input.txt    (standard input for the test)
+                     │   └─ output.txt   (expected output for successful completion)
+                     ├─ 2/
+                     │   ├─ input.txt
+                     │   └─ output.txt
+                     ├─ ...
+    ```
+
+<hr>
+##### Linking External Files
+You can refer to external files using relative paths inside question.yaml.
+
+!!! example
+    The same example as before, with the only difference that the question uses external files:
+    ```
+    - QuestionName: coderunner hello world c
+      Category: coderunner
+      QuestionId: 7
+      QuestionType: CODERUNNER
+      QuestionText: ./extSrcs/AgeOfEmpires/aoe_angabe.html
+      QuestionTextFormat: HTML
+      CodeRunnerType: c_program
+      AnswerPreload: ./extSrcs/AgeOfEmpires/aoe_answer_preload.java
+      Answer: ./extSrcs/AgeOfEmpires/aoe_answer.java
+      CodeRunnerTestCases:
+        - Id: 1
+          TestCode: "Hello World Output"
+          TestType: 0
+          Expected: ./extSrcs/AgeOfEmpires/testCases/1/output.txt
+          UseAsExample: false
+          Display: "SHOW"
+          HideRestIfFail: false
+          Mark: 1
+          StdIn: ./extSrcs/AgeOfEmpires/testCases/1/input.txt
+        -  Id: 2
+        ...
+    ```
+    
+    **Notes**
+    >- `QuestionText` may point to either `.md` or `.html`.
+    - `AnswerPreload` is optional and provides starter code for students.
+    - Every test case must have an `Expected` output and can optionally provide input via `StdIn`. 
+
+<hr>
+##### When Should External Files Be Used?
+Use external files when:
+
+- the question text contains extensive formatting
+- the solution code is long or multi-file
+- you want to preload larger starter templates
+- you want to organize many test cases cleanly
+- you want your repository to reflect realistic project structure
+
+Inline YAML definitions should be reserved for short and simple tasks.
