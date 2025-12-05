@@ -1,8 +1,4 @@
-﻿using CourseAsCode.Model.Questions.Types;
-using CourseAsCode.Model.Questions.Types.CodeRunner;
-using CourseAsCode.Model.Questions.Types.DragAndDropText;
-using CourseAsCode.Model.Questions.Types.Dropdown;
-using CourseAsCode.Writers.Interfaces;
+﻿using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;

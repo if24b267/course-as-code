@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using CourseAsCode.Model.Questions;
+﻿using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
@@ -8,19 +7,21 @@ using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
-    public class DragDropTextStrategy : XmlWriterBase, IQuestionStrategy
+    public class DragDropTextStrategy : IQuestionStrategy
     {
+        private readonly ILogger<DragDropTextStrategy> _logger;
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="DragDropTextStrategy"/> class
+        /// Creates a new instance of the strategy for writing Drag and Drop onto Text questions
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to <see cref="DragDropTextStrategy"/></param>
-        public DragDropTextStrategy(IXmlWriterFactory xmlWriterFactory, ILogger<DragDropTextStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
-            : base(xmlWriterFactory, logger)
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, ascending IDs</param>
+        public DragDropTextStrategy(ILogger<DragDropTextStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
         }
@@ -51,7 +52,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 int answerId = _sequentialIdGenerator.GetNextAnswerId();
                 xmlService.WriteElementWithAttributes("answer", new Dictionary<string, string>
                 {
-                    { "id", answerId.ToString() }
+                    { "id", answerId.ToString() },
                 });
 
                 // The <feedback> tag contains a PHP serialized object that is responsible for mapping the answers to a specific category (drag group)
@@ -82,7 +83,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
             int ddwtosId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
             xmlService.WriteElementWithAttributes("ddwtos", new Dictionary<string, string>
             {
-                { "id", ddwtosId.ToString() }
+                { "id", ddwtosId.ToString() },
             });
 
             var ddwtosElements = new Dictionary<string, string>

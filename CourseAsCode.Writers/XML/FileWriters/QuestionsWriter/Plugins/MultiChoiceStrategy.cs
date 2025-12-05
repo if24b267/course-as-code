@@ -9,22 +9,20 @@ using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
-    public class MultiChoiceStrategy : XmlWriterBase, IQuestionStrategy
+    public class MultiChoiceStrategy : IQuestionStrategy
     {
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
         private readonly IQuizHelper _quizHelper;
 
         /// <summary>
-        /// Creates a new instance of the MultiChoicePluginWriter class
+        /// Creates a new instance of the strategy for writing multiple choice questions
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to MultiChoicePluginWriter</param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique IDs</param>
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, asecnding IDs</param>
         /// <param name="quizHelper">Quiz Helper providing utility methods for quizzes</param>
-        public MultiChoiceStrategy(IXmlWriterFactory xmlWriterFactory, ILogger<MultiChoiceStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
-            : base(xmlWriterFactory, logger)
+        public MultiChoiceStrategy(ILogger<MultiChoiceStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
@@ -53,7 +51,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 int answerId = _sequentialIdGenerator.GetNextAnswerId();
                 xmlService.WriteElementWithAttributes("answer", new Dictionary<string, string>
                 {
-                    { "id", answerId.ToString() }
+                    { "id", answerId.ToString() },
                 });
 
                 xmlService.WriteElements(new Dictionary<string, string>
@@ -74,7 +72,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
             int multichoiceId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
             xmlService.WriteElementWithAttributes("multichoice", new Dictionary<string, string>
             {
-                { "id", multichoiceId.ToString() }
+                { "id", multichoiceId.ToString() },
             });
 
             var multichoiceElements = new Dictionary<string, string>

@@ -4,7 +4,7 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces
 {
     /// <summary>
-    /// Defines the contract for writing the plugin-specific XML data for a question type
+    /// Defines the strategy interface for writing different types of Moodle questions.
     /// </summary>
     public interface IQuestionStrategy
     {

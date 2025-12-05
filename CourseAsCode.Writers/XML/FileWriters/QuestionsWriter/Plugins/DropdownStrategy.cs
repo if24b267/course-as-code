@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using CourseAsCode.Model.Questions;
+﻿using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
@@ -8,21 +7,21 @@ using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
-    public class DropdownStrategy : XmlWriterBase, IQuestionStrategy
+    public class DropdownStrategy : IQuestionStrategy
     {
+        private readonly ILogger<DropdownStrategy> _logger;
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="DropdownStrategy"/> class
+        /// Creates a new instance of the strategy for writing dropdown (matching) questions
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to <see cref="DropdownStrategy"/></param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique IDs</param>
-        public DropdownStrategy(IXmlWriterFactory xmlWriterFactory, ILogger<DropdownStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
-            : base(xmlWriterFactory, logger)
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, asecnding IDs</param>
+        public DropdownStrategy(ILogger<DropdownStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
         }
@@ -46,7 +45,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
             int matchOptionsId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
             xmlService.WriteElementWithAttributes("matchoptions", new Dictionary<string, string>
             {
-                { "id", matchOptionsId.ToString() }
+                { "id", matchOptionsId.ToString() },
             });
 
             var matchOptionsElements = new Dictionary<string, string>
@@ -76,7 +75,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 int matchId = _sequentialIdGenerator.GetNextAnswerId();
                 xmlService.WriteElementWithAttributes("match", new Dictionary<string, string>
                 {
-                    { "id", matchId.ToString() }
+                    { "id", matchId.ToString() },
                 });
 
                 xmlService.WriteElements(new Dictionary<string, string>
@@ -101,7 +100,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 int poolMatchId = _sequentialIdGenerator.GetNextAnswerId();
                 xmlService.WriteElementWithAttributes("match", new Dictionary<string, string>
                 {
-                    { "id", poolMatchId.ToString() }
+                    { "id", poolMatchId.ToString() },
                 });
 
                 xmlService.WriteElements(new Dictionary<string, string>

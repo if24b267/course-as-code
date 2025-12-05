@@ -7,17 +7,16 @@ using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
-    public class CodeRunnerStrategy : XmlWriterBase, IQuestionStrategy
+    public class CodeRunnerStrategy : IQuestionStrategy
     {
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
 
         /// <summary>
         /// Creates a new instance of the strategy for writing CodeRunner questions
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to CodeRunnerPluginWriter</param>
-        public CodeRunnerStrategy(IXmlWriterFactory xmlWriterFactory, ILogger<CodeRunnerStrategy> logger, ISequentialIdGenerator sequentialIdGenerator)
-            : base(xmlWriterFactory, logger)
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, ascending IDs</param>
+        public CodeRunnerStrategy(ILogger<CodeRunnerStrategy> logger, ISequentialIdGenerator sequentialIdGenerator)
         {
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
         }
@@ -42,7 +41,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 
             xmlService.WriteElementWithAttributes("coderunner_option", new Dictionary<string, string>
             {
-                { "id", optionId.ToString() }
+                { "id", optionId.ToString() },
             });
 
             var optionElements = new Dictionary<string, string>
@@ -103,7 +102,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 int testCaseId = _sequentialIdGenerator.GetNextCodeRunnerTestCaseId();
                 xmlService.WriteElementWithAttributes("coderunner_testcase", new Dictionary<string, string>
                 {
-                    { "id", testCaseId.ToString() }
+                    { "id", testCaseId.ToString() },
                 });
 
                 var testCaseElements = new Dictionary<string, string>
