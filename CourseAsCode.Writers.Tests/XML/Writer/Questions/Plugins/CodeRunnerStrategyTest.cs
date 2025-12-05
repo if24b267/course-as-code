@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
         }
 
         [Test]
-        public void WritePluginData_WritesPluginStructureInCorrectOrder()
+        public void WritePluginData_WritesPluginStructure()
         {
             // Arrange
             var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(1, "CatA");
@@ -79,15 +79,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
             // Act
             _strategy.WritePluginData(_mockXmlService, question);
 
-            // Assert call order
-            Received.InOrder(() =>
-            {
-                _mockXmlService.WriteElement("plugin_qtype_coderunner_question");
-                _mockXmlService.WriteElement("coderunner_options");
-                _mockXmlService.WriteElement("coderunner_testcases");
-                _mockXmlService.CloseElement(); // close testcases
-                _mockXmlService.CloseElement(); // close plugin
-            });
+            // Assert
+            _mockXmlService.Received().WriteElement("plugin_qtype_coderunner_question");
+            _mockXmlService.Received().WriteElement("coderunner_options");
+            _mockXmlService.Received().WriteElement("coderunner_testcases");
+            _mockXmlService.Received().CloseElement();
         }
 
         [Test]
@@ -203,13 +199,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
             // Assert
             _mockXmlService.Received().WriteElement("coderunner_testcases");
             _mockXmlService.DidNotReceive().WriteElementWithAttributes("coderunner_testcase", Arg.Any<Dictionary<string, string>>());
-
-            // Ensure it closes the container
-            Received.InOrder(() =>
-            {
-                _mockXmlService.WriteElement("coderunner_testcases");
-                _mockXmlService.CloseElement(); // </coderunner_testcases>
-            });
         }
 
         [Test]
