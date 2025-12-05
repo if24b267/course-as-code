@@ -12,6 +12,6 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces
         /// </summary>
         /// <param name="question">The question to resolve the strategy for</param>
         /// <returns>The <see cref="IQuestionStrategy"/> instance to use for writing the question</returns>
-        IQuestionStrategy ResolveStrategy(Question question);
+        IQuestionStrategy? ResolveStrategy(Question question);
     }
 }

@@ -7,7 +7,7 @@ using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.FileWriters.Questions.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 {
     public class MultiChoiceStrategy : IQuestionStrategy
     {

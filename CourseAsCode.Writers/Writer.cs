@@ -1,8 +1,10 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Grading;
+using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -63,6 +65,9 @@ namespace CourseAsCode.Writers
                 // AddGradingCategories(course);
                 // ModifyQuizzesWithGradingInfo(course);
                 // ModifyAssignmentWithGradingInfo(course);
+
+                // --- Uncomment the following line to test the description question type | Only works with exampleCourse --- //
+                AddDescriptionQuestionToQuiz(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
@@ -215,6 +220,37 @@ namespace CourseAsCode.Writers
             assignment1.GradeOffset = 1.0f;
             assignment1.BlindMarking = true;
             assignment1.HideGrader = true;
+        }
+
+
+        /// <summary>
+        /// Temporary method to add a question of type "Description" to the 'Graded test about quizzes' quiz | can be removed once that question type is implemented in the Readers
+        /// </summary>
+        /// <param name="course">The course containing the assignments to be modified</param>
+        private void AddDescriptionQuestionToQuiz(Course course)
+        {
+            // Get quiz with ID 14
+            var quiz = course.Sections[2].Activities
+                .OfType<Quiz>()
+                .FirstOrDefault(a => a.ActivityId == 14);
+
+            var descriptionQuestion = new DescriptionQuestion
+            {
+                QuestionId = 50,
+                QuestionName = "Instructions for the quiz",
+                QuestionTextFormat = FormattingFormat.Markdown,
+                QuestionText = """
+                               ### This quiz tests your knowledge of the quiz feature in Course As Code.
+
+                               **Make sure you have read the documentation carefully!**  
+                               [https://davimalu.github.io/course-as-code/Activities/Quiz/](https://davimalu.github.io/course-as-code/Activities/Quiz/)
+                               """,
+                Category = "Introduction",
+                DefaultMark = 0, // If this isn't set, the Description Question will be worth 1 point that the student won't be able to get (as DefaultMark = 1 is the default value)
+            };
+
+            quiz.Questions.Add(descriptionQuestion);
+            course.Questions.Add(descriptionQuestion);
         }
     }
 }
