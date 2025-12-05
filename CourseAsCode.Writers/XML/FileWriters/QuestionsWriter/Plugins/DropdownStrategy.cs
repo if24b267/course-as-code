@@ -31,21 +31,23 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         /// <summary>
         /// Writes the `plugin_qtype_match_question` element of questions.xml for dropdown (matching) questions
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlService">The XML Service to use to write XML elements</param>
         /// <param name="question">the question to save</param>
-        public void WritePluginData(XmlWriter writer, Question question)
+        public void WritePluginData(IXmlService xmlService, Question question)
         {
             if (question is not DropdownQuestion dropdownQuestion)
             {
                 throw new ArgumentException($"Incorrect question type passed to {nameof(DropdownStrategy)}. Expected {nameof(DropdownQuestion)} but got {question.GetType().Name}.");
             }
 
-            writer.WriteStartElement("plugin_qtype_match_question");
+            xmlService.WriteElement("plugin_qtype_match_question");
 
             // Match Options ------------------------------------------------------
-            writer.WriteStartElement("matchoptions");
             int matchOptionsId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
-            writer.WriteAttributeString("id", matchOptionsId.ToString());
+            xmlService.WriteElementWithAttributes("matchoptions", new Dictionary<string, string>
+            {
+                { "id", matchOptionsId.ToString() }
+            });
 
             var matchOptionsElements = new Dictionary<string, string>
             {
@@ -58,12 +60,12 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 { "incorrectfeedbackformat", _generalHelper.EnumIntegerToString(dropdownQuestion.IncorrectResponseFeedbackFormat) },
                 { "shownumcorrect", (dropdownQuestion.Hints?.Any(h => h.ShowNumberOfCorrectAnswers) ?? false) ? "1" : "0" }, // Determine if hints require showing the number of correct answers | TODO: Check if this is correct
             };
-            WriteElements(writer, matchOptionsElements);
-            writer.WriteEndElement(); // </matchoptions>
+            xmlService.WriteElements(matchOptionsElements);
+            xmlService.CloseElement(); // </matchoptions>
 
 
             // Matches (Sub-questions and Answer Pool) ---------------------------
-            writer.WriteStartElement("matches");
+            xmlService.WriteElement("matches");
 
             // Use HashSet to efficiently collect all additional answer options (the wrong answers)
             var additionalAnswerOptions = new HashSet<string>();
@@ -72,16 +74,18 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
             foreach (var subQuestion in dropdownQuestion.SubQuestions)
             {
                 int matchId = _sequentialIdGenerator.GetNextAnswerId();
-                writer.WriteStartElement("match");
-                writer.WriteAttributeString("id", matchId.ToString());
+                xmlService.WriteElementWithAttributes("match", new Dictionary<string, string>
+                {
+                    { "id", matchId.ToString() }
+                });
 
-                WriteElements(writer, new Dictionary<string, string>
+                xmlService.WriteElements(new Dictionary<string, string>
                 {
                     { "questiontext", subQuestion.QuestionText },
                     { "questiontextformat", _generalHelper.EnumIntegerToString(subQuestion.QuestionTextFormat) },
                     { "answertext", subQuestion.CorrectAnswer },
                 });
-                writer.WriteEndElement(); // </match>
+                xmlService.CloseElement(); // </match>
 
                 // Add all wrong answers for this sub-question to the pool
                 foreach (var wrongAnswer in subQuestion.WrongAnswers)
@@ -95,20 +99,22 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
             foreach (var answerOption in additionalAnswerOptions)
             {
                 int poolMatchId = _sequentialIdGenerator.GetNextAnswerId();
-                writer.WriteStartElement("match");
-                writer.WriteAttributeString("id", poolMatchId.ToString());
+                xmlService.WriteElementWithAttributes("match", new Dictionary<string, string>
+                {
+                    { "id", poolMatchId.ToString() }
+                });
 
-                WriteElements(writer, new Dictionary<string, string>
+                xmlService.WriteElements(new Dictionary<string, string>
                 {
                     { "questiontext", string.Empty }, // Empty question text signifies this is just an available answer choice in the dropdown and not a sub-question
                     { "questiontextformat", "1" },
                     { "answertext", answerOption },
                 });
-                writer.WriteEndElement(); // </match>
+                xmlService.CloseElement(); // </match>
             }
 
-            writer.WriteEndElement(); // </matches>
-            writer.WriteEndElement(); // </plugin_qtype_match_question>
+            xmlService.CloseElement(); // </matches>
+            xmlService.CloseElement(); // </plugin_qtype_match_question>
         }
 
 

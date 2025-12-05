@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
@@ -36,26 +35,28 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         /// <summary>
         /// Writes the `plugin_qtype_multichoice_question` element of questions.xml that is used for multiple choice questions
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlService">The XML Service to use to write XML elements</param>
         /// <param name="question">the question to save</param>
-        public void WritePluginData(XmlWriter writer, Question question)
+        public void WritePluginData(IXmlService xmlService, Question question)
         {
             if (question is not MultipleChoiceQuestion multiChoiceQuestion)
             {
                 throw new ArgumentException($"Incorrect question type passed to {nameof(MultiChoiceStrategy)}. Expected {nameof(MultipleChoiceQuestion)} but got {question.GetType().Name}.");
             }
 
-            writer.WriteStartElement("plugin_qtype_multichoice_question");
+            xmlService.WriteElement("plugin_qtype_multichoice_question");
 
             // Answers ------------------------------------------------------------
-            writer.WriteStartElement("answers");
+            xmlService.WriteElement("answers");
             foreach (var answer in multiChoiceQuestion.Answers)
             {
                 int answerId = _sequentialIdGenerator.GetNextAnswerId();
-                writer.WriteStartElement("answer");
-                writer.WriteAttributeString("id", answerId.ToString());
+                xmlService.WriteElementWithAttributes("answer", new Dictionary<string, string>
+                {
+                    { "id", answerId.ToString() }
+                });
 
-                WriteElements(writer, new Dictionary<string, string>
+                xmlService.WriteElements(new Dictionary<string, string>
                 {
                     { "answertext", answer.AnswerText },
                     { "answerformat", _generalHelper.EnumIntegerToString(answer.AnswerTextFormat) },
@@ -64,15 +65,17 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                     { "feedbackformat", _generalHelper.EnumIntegerToString(answer.AnswerFeedbackFormat) },
                 });
 
-                writer.WriteEndElement(); // </answer>
+                xmlService.CloseElement(); // </answer>
             }
 
-            writer.WriteEndElement(); // </answers>
+            xmlService.CloseElement(); // </answers>
 
             // Multichoice settings -------------------------------------------------
-            writer.WriteStartElement("multichoice");
             int multichoiceId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
-            writer.WriteAttributeString("id", multichoiceId.ToString());
+            xmlService.WriteElementWithAttributes("multichoice", new Dictionary<string, string>
+            {
+                { "id", multichoiceId.ToString() }
+            });
 
             var multichoiceElements = new Dictionary<string, string>
             {
@@ -89,10 +92,10 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 { "shownumcorrect", multiChoiceQuestion.Hints != null && multiChoiceQuestion.Hints.Any(h => h.ShowNumberOfCorrectAnswers) ? "1" : "0" },
                 { "showstandardinstruction", multiChoiceQuestion.ShowStandardInstructions ? "1" : "0" },
             };
-            WriteElements(writer, multichoiceElements);
+            xmlService.WriteElements(multichoiceElements);
 
-            writer.WriteEndElement(); // </multichoice>
-            writer.WriteEndElement(); // </plugin_qtype_multichoice_question>
+            xmlService.CloseElement(); // </multichoice>
+            xmlService.CloseElement(); // </plugin_qtype_multichoice_question>
         }
 
 
