@@ -200,7 +200,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
         /// <summary>
         /// writes the concrete data for a question to the XML file
         /// </summary>
-        /// <param name="xmlHelper">>Service used for writing to the XML file</param>
+        /// <param name="xmlHelper">Service used for writing to the XML file</param>
         /// <param name="question">the question to save</param>
         private void WriteQuestionElement(IXmlService xmlHelper, Question question)
         {

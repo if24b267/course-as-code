@@ -18,7 +18,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Plugins
         /// </summary>
         /// <param name="logger">Logger instance specific to <see cref="DropdownStrategy"/></param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, asecnding IDs</param>
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, ascending IDs</param>
         public DropdownStrategy(ILogger<DropdownStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
