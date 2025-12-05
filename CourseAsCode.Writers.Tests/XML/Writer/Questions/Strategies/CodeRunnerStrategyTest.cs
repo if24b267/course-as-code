@@ -6,7 +6,7 @@ using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
+namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
 {
     [TestFixture]
     public class CodeRunnerStrategyTest
@@ -27,8 +27,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
             _mockXmlService = Substitute.For<IXmlService>();
 
             // Configure default mock behaviors
-            _mockIdGenerator.GetNextCodeRunnerOptionId().Returns(100);
-            _mockIdGenerator.GetNextCodeRunnerTestCaseId().Returns(200, 201, 202);
+            var codeRunnerOptionId = 1;
+            var codeRunnerTestCaseId = 1;
+            _mockIdGenerator.GetNextCodeRunnerOptionId().Returns(_ => codeRunnerOptionId++);
+            _mockIdGenerator.GetNextCodeRunnerTestCaseId().Returns(_ => codeRunnerTestCaseId++);
 
             // Initialize System Under Test
             _strategy = new CodeRunnerStrategy(_mockLogger, _mockIdGenerator);
