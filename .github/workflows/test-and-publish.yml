@@ -3,6 +3,9 @@ name: Publish & Test CourseAsCode
 on:
   push:
 
+permissions:
+  contents: write
+
 jobs:
   test:
     name: Run NUnit Tests
