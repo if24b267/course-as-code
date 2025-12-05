@@ -333,14 +333,17 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
                 { "id", id.ToString() },
             });
 
-            xmlService.WriteElements(new Dictionary<string,string>{
+            xmlService.WriteElements(new Dictionary<string, string>
+            {
                 { "name", "top" },
                 { "contextid",        contextId.ToString() },
                 { "contextlevel",     contextLevel.ToString() },  // 50 = course, 70 = module
                 { "contextinstanceid",contextInstanceId.ToString() },
                 { "info", "" }, { "infoformat","0" },
                 { "stamp", GenerateStamp() },
-                { "parent","0" }, { "sortorder","0" }, { "idnumber","$@NULL@$" },
+                { "parent", "0" },
+                { "sortorder", "0" },
+                { "idnumber", "$@NULL@$" },
             });
             xmlService.WriteElement("question_bank_entries");
             xmlService.CloseElement(); // </question_bank_entries>

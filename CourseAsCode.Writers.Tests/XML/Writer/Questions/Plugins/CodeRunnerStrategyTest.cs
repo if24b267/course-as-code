@@ -71,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
         }
 
         [Test]
-        public void WritePluginData_WritesPluginStructure()
+        public void WritePluginData_WritesBasicStructure()
         {
             // Arrange
             var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(1, "CatA");
@@ -87,11 +87,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
         }
 
         [Test]
-        public void WritePluginData_WritesCoderunnerOptionWithGeneratedId()
+        public void WritePluginData_WritesCodeRunnerOptionWithGeneratedId()
         {
             // Arrange
             var question = FakeQuestionFactory.CreateBasicCodeRunnerQuestion(999, "CatA");
-            _mockIdGenerator.GetNextCodeRunnerOptionId().Returns(999);
+            _mockIdGenerator.GetNextCodeRunnerOptionId().Returns(50);
 
             // Act
             _strategy.WritePluginData(_mockXmlService, question);
@@ -99,7 +99,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
             // Assert
             _mockXmlService.Received().WriteElementWithAttributes(
                 "coderunner_option",
-                Arg.Is<Dictionary<string, string>>(d => d.ContainsKey("id") && d["id"] == "999"));
+                Arg.Is<Dictionary<string, string>>(d => d.ContainsKey("id") && d["id"] == "50"));
         }
 
         [Test]
@@ -160,8 +160,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
                 d["useace"] == "$@NULL@$" &&
                 d["resultcolumns"] == "$@NULL@$" &&
                 d["sandbox"] == "$@NULL@$" &&
-                d["grader"] == "$@NULL@$"
-            ));
+                d["grader"] == "$@NULL@$"));
         }
 
         [Test]
@@ -182,8 +181,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Plugins
                 d["prototypetype"] == "2" &&
                 d["precheck"] == "1" &&
                 d["answerboxlines"] == "20" &&
-                d["attachments"] == "3"
-            ));
+                d["attachments"] == "3"));
         }
 
         [Test]

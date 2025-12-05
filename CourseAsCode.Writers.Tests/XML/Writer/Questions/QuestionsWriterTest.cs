@@ -64,8 +64,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
                 _sequentialIdGenerator,
                 _quizHelper,
                 _tagsWriter,
-                _strategyResolver
-            );
+                _strategyResolver);
         }
 
         [TearDown]
