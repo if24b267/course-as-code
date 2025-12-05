@@ -4,13 +4,13 @@ using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Dropdown;
-using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
+namespace CourseAsCode.Writers.XML.FileWriters.Questions
 {
     /// <summary>
     /// Handles the creation and writing of the questions.xml file for a course.

@@ -1,13 +1,13 @@
 ﻿using System.Globalization;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types;
-using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.Questions.Plugins
 {
     public class MultiChoiceStrategy : IQuestionStrategy
     {

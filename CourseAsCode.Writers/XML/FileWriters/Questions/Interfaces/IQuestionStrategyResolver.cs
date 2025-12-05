@@ -1,6 +1,6 @@
 ﻿using CourseAsCode.Model.Questions;
 
-namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces
+namespace CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces
 {
     /// <summary>
     /// Resolves the strategy for writing a question based on its type

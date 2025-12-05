@@ -1,7 +1,7 @@
 ﻿using CourseAsCode.Model.Questions;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 
-namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces
+namespace CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces
 {
     /// <summary>
     /// Defines the strategy interface for writing different types of Moodle questions.
