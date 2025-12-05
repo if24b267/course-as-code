@@ -1,9 +1,5 @@
 using System.Globalization;
 using CourseAsCode.Model.Questions;
-using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
-using CourseAsCode.Model.Questions.Types.CodeRunner;
-using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
@@ -202,7 +198,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
 
 
         /// <summary>
-        /// writes the concrete data for a question to the XML file; supports Single/MultipleChoice and Dropdown (Matching) questions
+        /// writes the concrete data for a question to the XML file
         /// </summary>
         /// <param name="xmlHelper">>Service used for writing to the XML file</param>
         /// <param name="question">the question to save</param>
@@ -260,23 +256,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
         /// <param name="question">the question to save, containing the relevant hints (can be none)</param>
         private void WriteHints(IXmlService xmlService, Question question)
         {
-            // Get hints based on the question type
-            List<Hint>? hints = null;
-            if (question is MultipleChoiceQuestion mcq)
-            {
-                hints = mcq.Hints;
-            }
-            else if (question is DropdownQuestion ddq)
-            {
-                hints = ddq.Hints;
-            }
-            else if (question is CodeRunnerQuestion crq)
-            {
-                hints = crq.Hints;
-            }
-
             // Handle no hints
-            if (hints == null || hints.Count == 0)
+            if (question.Hints == null || question.Hints.Count == 0)
             {
                 xmlService.WriteElement("question_hints");
                 xmlService.CloseElement(); // </question_hints>
@@ -284,7 +265,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
             }
 
             xmlService.WriteElement("question_hints");
-            foreach (var hint in hints)
+            foreach (var hint in question.Hints)
             {
                 int hintId = _sequentialIdGenerator.GetNextHintId();
                 xmlService.WriteElementWithAttributes("question_hint", new Dictionary<string, string>

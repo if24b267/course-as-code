@@ -93,7 +93,4 @@ public class CodeRunnerQuestion : Question
 
     [Description("Test cases for the CodeRunner question")]
     public List<CodeRunnerTestCase> TestCases { get; set; } = new();
-
-    [Description("Hints offered when using interactive/adaptive behaviour")]
-    public List<Hint>? Hints { get; set; }
 }

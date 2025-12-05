@@ -25,8 +25,5 @@ namespace CourseAsCode.Model.Questions.Types.Dropdown
         [Description("Feedback shown after the question was answered incorrectly")]
         public string? IncorrectResponseFeedback { get; set; }
         public FormattingFormat IncorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
-
-        [Description("Hints offered when using interactive/adaptive behaviour")]
-        public List<Hint>? Hints { get; set; }
     }
 }
