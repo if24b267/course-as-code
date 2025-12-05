@@ -63,7 +63,7 @@ jobs:
     - name: Upload linux-x64 not self contained artifact
       uses: actions/upload-artifact@v4
       with:
-        name: course_as_code_linux-x64-${{ env.GIT_ARTIFACT_VERSION }}
+        name: binary-linux-x64
         path: course_as_code_linux_x64
 
     # - name: Upload linux-x64 self-contained artifact
@@ -75,7 +75,7 @@ jobs:
     - name: Upload win-x64 not self contained artifact
       uses: actions/upload-artifact@v4
       with:
-        name: course_as_code_win-x64-${{ env.GIT_ARTIFACT_VERSION }}
+        name: binary-win-x64
         path: course_as_code_win_x64
     
     # - name: Upload win-x64 self-contained artifact
