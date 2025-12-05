@@ -20,7 +20,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Plugins
         /// </summary>
         /// <param name="logger">Logger instance specific to MultiChoicePluginWriter</param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, asecnding IDs</param>
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, ascending IDs</param>
         /// <param name="quizHelper">Quiz Helper providing utility methods for quizzes</param>
         public MultiChoiceStrategy(ILogger<MultiChoiceStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
         {
