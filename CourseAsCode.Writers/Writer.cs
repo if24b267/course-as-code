@@ -67,7 +67,7 @@ namespace CourseAsCode.Writers
                 // ModifyAssignmentWithGradingInfo(course);
 
                 // --- Uncomment the following line to test the description question type | Only works with exampleCourse --- //
-                AddDescriptionQuestionToQuiz(course);
+                // AddDescriptionQuestionToQuiz(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
@@ -242,7 +242,7 @@ namespace CourseAsCode.Writers
                 QuestionText = """
                                ### This quiz tests your knowledge of the quiz feature in Course As Code.
 
-                               **Make sure you have read the documentation carefully!**  
+                               **Make sure you have read the documentation carefully!**
                                [https://davimalu.github.io/course-as-code/Activities/Quiz/](https://davimalu.github.io/course-as-code/Activities/Quiz/)
                                """,
                 Category = "Introduction",
