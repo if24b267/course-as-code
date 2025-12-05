@@ -1,14 +1,14 @@
 using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
-    public class CodeRunnerPluginWriter : XmlWriterBase, IQuestionPluginWriter
+    public class CodeRunnerStrategy : XmlWriterBase, IQuestionStrategy
     {
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
 
@@ -17,7 +17,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         /// </summary>
         /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to CodeRunnerPluginWriter</param>
-        public CodeRunnerPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CodeRunnerPluginWriter> logger, ISequentialIdGenerator sequentialIdGenerator)
+        public CodeRunnerStrategy(IXmlWriterFactory xmlWriterFactory, ILogger<CodeRunnerStrategy> logger, ISequentialIdGenerator sequentialIdGenerator)
             : base(xmlWriterFactory, logger)
         {
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
@@ -32,7 +32,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         {
             if (question is not CodeRunnerQuestion codeRunnerQuestion)
             {
-                throw new ArgumentException($"Incorrect question type passed to {nameof(CodeRunnerPluginWriter)}. Expected {nameof(CodeRunnerQuestion)} but got {question.GetType().Name}.");
+                throw new ArgumentException($"Incorrect question type passed to {nameof(CodeRunnerStrategy)}. Expected {nameof(CodeRunnerQuestion)} but got {question.GetType().Name}.");
             }
 
             writer.WriteStartElement("plugin_qtype_coderunner_question");

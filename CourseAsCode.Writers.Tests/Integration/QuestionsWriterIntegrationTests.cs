@@ -2,12 +2,12 @@ using System.Xml;
 using System.Xml.Schema;
 
 using CourseAsCode.Model;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -26,14 +26,14 @@ namespace CourseAsCode.Writers.Tests.Integration
         private IXmlWriterFactory _xmlWriterFactory;
         private ILogger<QWriter> _logger;
         private ILogger<TagsWriter> _tagsLogger;
-        private ILogger<MultiChoicePluginWriter> _multiChoicePluginWriterLogger;
-        private ILogger<DragDropTextPluginWriter> _dragDropTextPluginWriterLogger;
-        private ILogger<DropdownPluginWriter> _dropdownPluginWriterLogger;
+        private ILogger<MultiChoiceStrategy> _multiChoicePluginWriterLogger;
+        private ILogger<DragDropTextStrategy> _dragDropTextPluginWriterLogger;
+        private ILogger<DropdownStrategy> _dropdownPluginWriterLogger;
         private IGeneralHelper _generalHelper;
         private ISequentialIdGenerator _sequentialIdGenerator;
         private IQuizHelper _quizHelper;
         private ITagsWriter _tagsWriter;
-        private readonly List<IQuestionPluginWriter> _pluginWriters = new List<IQuestionPluginWriter>();
+        private readonly List<IQuestionStrategy> _pluginWriters = new List<IQuestionStrategy>();
 
         // Dependencies for GeneralHelper
         private ILogger<GeneralHelper> _generalHelperLogger;
@@ -57,9 +57,9 @@ namespace CourseAsCode.Writers.Tests.Integration
             _xmlWriterFactory = new DefaultXmlWriterFactory();
             _logger = NullLogger<QWriter>.Instance; // Use NullLogger to avoid log output during tests
             _tagsLogger = NullLogger<TagsWriter>.Instance; // Use NullLogger to avoid log output during tests
-            _multiChoicePluginWriterLogger = NullLogger<MultiChoicePluginWriter>.Instance; // Use NullLogger to avoid log output during tests
-            _dropdownPluginWriterLogger = NullLogger<DropdownPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
-            _dragDropTextPluginWriterLogger = NullLogger<DragDropTextPluginWriter>.Instance; // Use NullLogger to avoid log output during tests
+            _multiChoicePluginWriterLogger = NullLogger<MultiChoiceStrategy>.Instance; // Use NullLogger to avoid log output during tests
+            _dropdownPluginWriterLogger = NullLogger<DropdownStrategy>.Instance; // Use NullLogger to avoid log output during tests
+            _dragDropTextPluginWriterLogger = NullLogger<DragDropTextStrategy>.Instance; // Use NullLogger to avoid log output during tests
             _generalHelperLogger = NullLogger<GeneralHelper>.Instance; // Use NullLogger to avoid log output during tests
             _quizHelperLogger = NullLogger<QuizHelper>.Instance; // Use NullLogger to avoid log output during tests
             _generalHelper = new GeneralHelper(_generalHelperLogger);
@@ -68,9 +68,9 @@ namespace CourseAsCode.Writers.Tests.Integration
             _tagsWriter = new TagsWriter(_tagsLogger);
 
             // PluginWriters
-            _pluginWriters.Add(new DragDropTextPluginWriter(_xmlWriterFactory, _dragDropTextPluginWriterLogger, _generalHelper, _sequentialIdGenerator));
-            _pluginWriters.Add(new MultiChoicePluginWriter(_xmlWriterFactory, _multiChoicePluginWriterLogger, _generalHelper, _sequentialIdGenerator, _quizHelper));
-            _pluginWriters.Add(new DropdownPluginWriter(_xmlWriterFactory, _dropdownPluginWriterLogger, _generalHelper, _sequentialIdGenerator));
+            _pluginWriters.Add(new DragDropTextStrategy(_xmlWriterFactory, _dragDropTextPluginWriterLogger, _generalHelper, _sequentialIdGenerator));
+            _pluginWriters.Add(new MultiChoiceStrategy(_xmlWriterFactory, _multiChoicePluginWriterLogger, _generalHelper, _sequentialIdGenerator, _quizHelper));
+            _pluginWriters.Add(new DropdownStrategy(_xmlWriterFactory, _dropdownPluginWriterLogger, _generalHelper, _sequentialIdGenerator));
 
             _dummyCourse = new Course
             {

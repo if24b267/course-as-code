@@ -1,24 +1,24 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
-    public class DragDropTextPluginWriter : XmlWriterBase, IQuestionPluginWriter
+    public class DragDropTextStrategy : XmlWriterBase, IQuestionStrategy
     {
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="DragDropTextPluginWriter"/> class
+        /// Creates a new instance of the <see cref="DragDropTextStrategy"/> class
         /// </summary>
         /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
-        /// <param name="logger">Logger instance specific to <see cref="DragDropTextPluginWriter"/></param>
-        public DragDropTextPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<DragDropTextPluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
+        /// <param name="logger">Logger instance specific to <see cref="DragDropTextStrategy"/></param>
+        public DragDropTextStrategy(IXmlWriterFactory xmlWriterFactory, ILogger<DragDropTextStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
@@ -35,7 +35,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         {
             if (question is not DragAndDropTextQuestion dragDropQuestion)
             {
-                throw new ArgumentException($"Incorrect question type passed to {nameof(DragDropTextPluginWriter)}. Expected {nameof(DragAndDropTextQuestion)} but got {question.GetType().Name}.");
+                throw new ArgumentException($"Incorrect question type passed to {nameof(DragDropTextStrategy)}. Expected {nameof(DragAndDropTextQuestion)} but got {question.GetType().Name}.");
             }
 
             writer.WriteStartElement("plugin_qtype_ddwtos_question");

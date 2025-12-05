@@ -1,13 +1,12 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Questions;
-using CourseAsCode.Writers.XML.Helper.Interfaces;
 
-namespace CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces
+namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces
 {
     /// <summary>
     /// Defines the contract for writing the plugin-specific XML data for a question type
     /// </summary>
-    public interface IQuestionPluginWriter
+    public interface IQuestionStrategy
     {
         /// <summary>
         /// Writes the specific XML elements for the question type's plugin block

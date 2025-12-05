@@ -1,9 +1,14 @@
-﻿using CourseAsCode.Writers.Interfaces;
+﻿using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.CodeRunner;
+using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.GeneralWriter;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
@@ -19,7 +24,6 @@ using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Activities.Wiki;
 using CourseAsCode.Writers.XML.Writer.Course;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Sections;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -49,11 +53,12 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<IQuizHelper, QuizHelper>();
             services.AddSingleton<ITagsWriter, TagsWriter>();
 
-            // Plugins for the QuestionWriter
-            services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, DropdownPluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, MultiChoicePluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, CodeRunnerPluginWriter>();
+            // Strategies for the QuestionWriter
+            services.AddScoped<IQuestionStrategyResolver, QuestionStrategyResolver>();
+            services.AddTransient<CodeRunnerStrategy>();
+            services.AddTransient<DropdownStrategy>();
+            services.AddTransient<MultiChoiceStrategy>();
+            services.AddTransient<DragDropTextStrategy>();
 
             // Register QuestionsWriter (depends on the plugins registered above)
             services.AddSingleton<QuestionsWriter>();

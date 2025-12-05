@@ -3,7 +3,6 @@ using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 
 namespace CourseAsCode.Writers.XML.GeneralWriter
 {

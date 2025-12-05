@@ -4,13 +4,11 @@ using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
-using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
-using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
@@ -33,7 +31,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
         private readonly IQuizHelper _quizHelper;
         private readonly ITagsWriter _tagsWriter;
-        private readonly Dictionary<Type, IQuestionPluginWriter> _pluginWriters;
+        private readonly IQuestionStrategyResolver _strategyResolver;
+        private readonly Dictionary<Type, IQuestionStrategy> _pluginWriters;
 
 
         /// <summary>
@@ -45,45 +44,16 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
         /// <param name="sequentialIdGenerator">Helper for generating sequential IDs for various entities</param>
         /// <param name="quizHelper">Helper providing quiz-related utility methods</param>
         /// <param name="tagsWriter">Helper method providing specific helper methods focused on tag management</param>
-        /// <param name="pluginWriters">Collection of plugin writers for different question types</param>
+        /// <param name="strategyResolver">Resolver for obtaining the appropriate question strategy based on question type</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<QuestionsWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper, ITagsWriter tagsWriter, IEnumerable<IQuestionPluginWriter> pluginWriters)
+        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<QuestionsWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper, ITagsWriter tagsWriter, IQuestionStrategyResolver strategyResolver)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
             _quizHelper = quizHelper ?? throw new ArgumentNullException(nameof(quizHelper));
             _tagsWriter = tagsWriter ?? throw new ArgumentNullException(nameof(tagsWriter));
-
-            // Build the lookup dictionary for plugin writers | TODO: Refactor this to use a more sophisticated method
-            _pluginWriters = new Dictionary<Type, IQuestionPluginWriter>();
-
-            foreach (var writer in pluginWriters ?? throw new ArgumentNullException(nameof(pluginWriters)))
-            {
-                if (writer is MultiChoicePluginWriter)
-                {
-                    _pluginWriters[typeof(MultipleChoiceQuestion)] = writer;
-                    _pluginWriters[typeof(SingleChoiceQuestion)] = writer;
-                }
-                else if (writer is DropdownPluginWriter)
-                {
-                    _pluginWriters[typeof(DropdownQuestion)] = writer;
-                }
-                else if (writer is DragDropTextPluginWriter)
-                {
-                    _pluginWriters[typeof(DragAndDropTextQuestion)] = writer;
-                }
-                else if (writer is CodeRunnerPluginWriter)
-                {
-                    _pluginWriters[typeof(CodeRunnerQuestion)] = writer;
-                }
-
-                // Add other mappings here
-                else
-                {
-                    LogWarn($"Unknown plugin writer type encountered during registration: {writer.GetType().FullName}");
-                }
-            }
+            _strategyResolver = strategyResolver ?? throw new ArgumentNullException(nameof(strategyResolver));
         }
 
 
@@ -259,12 +229,9 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
             };
             WriteElements(writer, questionBaseElements);
 
-            // Use the appropriate question plugin writer based on the question type to write the specific plugin block
-            if (!_pluginWriters.TryGetValue(question.GetType(), out var pluginWriter))
-            {
-                LogWarn($"Unsupported question type {question.GetType().Name} – skipping plugin block for question '{question.QuestionName}' (ID: {question.QuestionId}).");
-            }
-            pluginWriter?.WritePluginData(writer, question);
+            // Use the appropriate question strategy based on the question type to write the specific plugin block
+            IQuestionStrategy pluginWriter = _strategyResolver.ResolveStrategy(question);
+            pluginWriter.WritePluginData(writer, question);
 
             // Comments
             WriteEmptyPlugin(writer, "qbank_comment_question", "comments");

@@ -11,13 +11,13 @@ using NSubstitute;
 namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 {
     [TestFixture]
-    public class CodeRunnerPluginWriterTest
+    public class CodeRunnerStrategyTest
     {
         private XmlWriterFactoryTest _testFactory;
-        private ILogger<CodeRunnerPluginWriter> _logger;
+        private ILogger<CodeRunnerStrategy> _logger;
         private IGeneralHelper _generalHelper;
         private ISequentialIdGenerator _idGenerator;
-        private CodeRunnerPluginWriter _codeRunnerWriter;
+        private CodeRunnerStrategy _codeRunnerWriter;
         private XmlWriter _xmlWriter;
 
         private const string DEFAULT_FORMAT_MAPPED = "1";
@@ -26,7 +26,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
         public void SetUp()
         {
             _testFactory = new XmlWriterFactoryTest();
-            _logger = Substitute.For<ILogger<CodeRunnerPluginWriter>>();
+            _logger = Substitute.For<ILogger<CodeRunnerStrategy>>();
 
             // Mock helpers
             _generalHelper = Substitute.For<IGeneralHelper>();
@@ -43,7 +43,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             _idGenerator.GetNextCodeRunnerTestCaseId().Returns(_ => testCaseIdCounter++);
 
             // Create the writer under test
-            _codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _logger, _idGenerator);
+            _codeRunnerWriter = new CodeRunnerStrategy(_testFactory, _logger, _idGenerator);
 
             // Create a fresh StringWriter for each test
             _testFactory.ClearContents();

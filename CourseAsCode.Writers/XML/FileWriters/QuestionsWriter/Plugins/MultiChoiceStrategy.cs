@@ -2,15 +2,15 @@
 using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
-    public class MultiChoicePluginWriter : XmlWriterBase, IQuestionPluginWriter
+    public class MultiChoiceStrategy : XmlWriterBase, IQuestionStrategy
     {
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
@@ -24,7 +24,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         /// <param name="generalHelper">General Helper providing various helper methods</param>
         /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique IDs</param>
         /// <param name="quizHelper">Quiz Helper providing utility methods for quizzes</param>
-        public MultiChoicePluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<MultiChoicePluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
+        public MultiChoiceStrategy(IXmlWriterFactory xmlWriterFactory, ILogger<MultiChoiceStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
@@ -42,7 +42,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         {
             if (question is not MultipleChoiceQuestion multiChoiceQuestion)
             {
-                throw new ArgumentException($"Incorrect question type passed to {nameof(MultiChoicePluginWriter)}. Expected {nameof(MultipleChoiceQuestion)} but got {question.GetType().Name}.");
+                throw new ArgumentException($"Incorrect question type passed to {nameof(MultiChoiceStrategy)}. Expected {nameof(MultipleChoiceQuestion)} but got {question.GetType().Name}.");
             }
 
             writer.WriteStartElement("plugin_qtype_multichoice_question");

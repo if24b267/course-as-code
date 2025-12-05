@@ -6,10 +6,10 @@ using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Writers.Tests.Fakes;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -22,10 +22,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     {
         private XmlWriterFactoryTest _testFactory;
         private ILogger<QWriter> _questionsLogger;
-        private ILogger<MultiChoicePluginWriter> _multiChoiceLogger;
-        private ILogger<DropdownPluginWriter> _dropdownLogger;
-        private ILogger<DragDropTextPluginWriter> _dragDropTextLogger;
-        private ILogger<CodeRunnerPluginWriter> _codeRunnerLogger;
+        private ILogger<MultiChoiceStrategy> _multiChoiceLogger;
+        private ILogger<DropdownStrategy> _dropdownLogger;
+        private ILogger<DragDropTextStrategy> _dragDropTextLogger;
+        private ILogger<CodeRunnerStrategy> _codeRunnerLogger;
         private IGeneralHelper _fakeGeneralHelper;
         private ISequentialIdGenerator _fakeIdGenerator;
         private IQuizHelper _fakeQuizHelper;
@@ -48,10 +48,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             // Arrange: Set up fake XML writer factory (to capture XML output) and logger
             _testFactory = new XmlWriterFactoryTest();
             _questionsLogger = Substitute.For<ILogger<QWriter>>();
-            _multiChoiceLogger = Substitute.For<ILogger<MultiChoicePluginWriter>>();
-            _dropdownLogger = Substitute.For<ILogger<DropdownPluginWriter>>();
-            _dragDropTextLogger = Substitute.For<ILogger<DragDropTextPluginWriter>>();
-            _codeRunnerLogger = Substitute.For<ILogger<CodeRunnerPluginWriter>>();
+            _multiChoiceLogger = Substitute.For<ILogger<MultiChoiceStrategy>>();
+            _dropdownLogger = Substitute.For<ILogger<DropdownStrategy>>();
+            _dragDropTextLogger = Substitute.For<ILogger<DragDropTextStrategy>>();
+            _codeRunnerLogger = Substitute.For<ILogger<CodeRunnerStrategy>>();
 
             // Fake general helper with predictable outputs
             _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
@@ -86,11 +86,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _fakeTagsWriter = Substitute.For<ITagsWriter>();
 
             // Create instances of the plugin writer strategies
-            var multiChoiceWriter = new MultiChoicePluginWriter(_testFactory, _multiChoiceLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper);
-            var dropdownWriter = new DropdownPluginWriter(_testFactory, _dropdownLogger, _fakeGeneralHelper, _fakeIdGenerator);
-            var dragDropTextWriter = new DragDropTextPluginWriter(_testFactory, _dragDropTextLogger, _fakeGeneralHelper, _fakeIdGenerator);
-            var codeRunnerWriter = new CodeRunnerPluginWriter(_testFactory, _codeRunnerLogger, _fakeIdGenerator);
-            var pluginWriters = new List<IQuestionPluginWriter>
+            var multiChoiceWriter = new MultiChoiceStrategy(_testFactory, _multiChoiceLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper);
+            var dropdownWriter = new DropdownStrategy(_testFactory, _dropdownLogger, _fakeGeneralHelper, _fakeIdGenerator);
+            var dragDropTextWriter = new DragDropTextStrategy(_testFactory, _dragDropTextLogger, _fakeGeneralHelper, _fakeIdGenerator);
+            var codeRunnerWriter = new CodeRunnerStrategy(_testFactory, _codeRunnerLogger, _fakeIdGenerator);
+            var pluginWriters = new List<IQuestionStrategy>
             {
                 multiChoiceWriter,
                 dropdownWriter,
@@ -805,7 +805,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _questionsWriter = new QWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper, _fakeTagsWriter, new List<IQuestionPluginWriter>());
+            _questionsWriter = new QWriter(throwingFactory, _questionsLogger, _fakeGeneralHelper, _fakeIdGenerator, _fakeQuizHelper, _fakeTagsWriter, new List<IQuestionStrategy>());
             _course.Questions.Add(FakeQuestionFactory.CreateBasicMultiChoiceQuestion(1, "CatA"));
 
             // Act & Assert: Verify that an exception is thrown

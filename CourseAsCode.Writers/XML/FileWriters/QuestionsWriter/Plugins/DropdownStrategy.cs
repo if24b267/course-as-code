@@ -1,26 +1,26 @@
 ﻿using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
 {
-    public class DropdownPluginWriter : XmlWriterBase, IQuestionPluginWriter
+    public class DropdownStrategy : XmlWriterBase, IQuestionStrategy
     {
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="DropdownPluginWriter"/> class
+        /// Creates a new instance of the <see cref="DropdownStrategy"/> class
         /// </summary>
         /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
-        /// <param name="logger">Logger instance specific to <see cref="DropdownPluginWriter"/></param>
+        /// <param name="logger">Logger instance specific to <see cref="DropdownStrategy"/></param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
         /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique IDs</param>
-        public DropdownPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<DropdownPluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
+        public DropdownStrategy(IXmlWriterFactory xmlWriterFactory, ILogger<DropdownStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
             : base(xmlWriterFactory, logger)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
@@ -37,7 +37,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         {
             if (question is not DropdownQuestion dropdownQuestion)
             {
-                throw new ArgumentException($"Incorrect question type passed to {nameof(DropdownPluginWriter)}. Expected {nameof(DropdownQuestion)} but got {question.GetType().Name}.");
+                throw new ArgumentException($"Incorrect question type passed to {nameof(DropdownStrategy)}. Expected {nameof(DropdownQuestion)} but got {question.GetType().Name}.");
             }
 
             writer.WriteStartElement("plugin_qtype_match_question");
