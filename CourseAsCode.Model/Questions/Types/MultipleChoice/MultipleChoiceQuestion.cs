@@ -31,7 +31,4 @@ public class MultipleChoiceQuestion : Question
 
     public string? IncorrectResponseFeedback { get; set; }
     public FormattingFormat IncorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
-
-    [Description("Hints offered when using interactive/adaptive behaviour")]
-    public List<Hint>? Hints { get; set; }
 }

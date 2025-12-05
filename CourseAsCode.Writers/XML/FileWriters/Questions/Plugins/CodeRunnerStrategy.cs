@@ -1,24 +1,22 @@
-using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.Questions.Plugins
 {
-    public class CodeRunnerPluginWriter : XmlWriterBase, IQuestionPluginWriter
+    public class CodeRunnerStrategy : IQuestionStrategy
     {
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
 
         /// <summary>
-        /// Creates a new instance of the CodeRunnerPluginWriter class
+        /// Creates a new instance of the strategy for writing CodeRunner questions
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to CodeRunnerPluginWriter</param>
-        public CodeRunnerPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CodeRunnerPluginWriter> logger, ISequentialIdGenerator sequentialIdGenerator)
-            : base(xmlWriterFactory, logger)
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, ascending IDs</param>
+        public CodeRunnerStrategy(ILogger<CodeRunnerStrategy> logger, ISequentialIdGenerator sequentialIdGenerator)
         {
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
         }
@@ -26,22 +24,25 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         /// <summary>
         /// Writes the `plugin_qtype_coderunner_question` element that is used for CodeRunner questions
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlService">The XML Service to use to write XML elements</param>
         /// <param name="question">the question to save</param>
-        public void WritePluginData(XmlWriter writer, Question question)
+        public void WritePluginData(IXmlService xmlService, Question question)
         {
             if (question is not CodeRunnerQuestion codeRunnerQuestion)
             {
-                throw new ArgumentException($"Incorrect question type passed to {nameof(CodeRunnerPluginWriter)}. Expected {nameof(CodeRunnerQuestion)} but got {question.GetType().Name}.");
+                throw new ArgumentException($"Incorrect question type passed to {nameof(CodeRunnerStrategy)}. Expected {nameof(CodeRunnerQuestion)} but got {question.GetType().Name}.");
             }
 
-            writer.WriteStartElement("plugin_qtype_coderunner_question");
+            xmlService.WriteElement("plugin_qtype_coderunner_question");
 
             // Write coderunner options
-            writer.WriteStartElement("coderunner_options");
+            xmlService.WriteElement("coderunner_options");
             int optionId = _sequentialIdGenerator.GetNextCodeRunnerOptionId();
-            writer.WriteStartElement("coderunner_option");
-            writer.WriteAttributeString("id", optionId.ToString());
+
+            xmlService.WriteElementWithAttributes("coderunner_option", new Dictionary<string, string>
+            {
+                { "id", optionId.ToString() },
+            });
 
             var optionElements = new Dictionary<string, string>
             {
@@ -89,18 +90,20 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 { "giveupallowed", codeRunnerQuestion.GiveUpAllowed ? "1" : "0" },
                 { "prototypeextra", "$@NULL@$" },
             };
-            WriteElements(writer, optionElements);
+            xmlService.WriteElements(optionElements);
 
-            writer.WriteEndElement(); // </coderunner_option>
-            writer.WriteEndElement(); // </coderunner_options>
+            xmlService.CloseElement(); // </coderunner_option>
+            xmlService.CloseElement(); // </coderunner_options>
 
             // Write test cases
-            writer.WriteStartElement("coderunner_testcases");
+            xmlService.WriteElement("coderunner_testcases");
             foreach (var testCase in codeRunnerQuestion.TestCases)
             {
                 int testCaseId = _sequentialIdGenerator.GetNextCodeRunnerTestCaseId();
-                writer.WriteStartElement("coderunner_testcase");
-                writer.WriteAttributeString("id", testCaseId.ToString());
+                xmlService.WriteElementWithAttributes("coderunner_testcase", new Dictionary<string, string>
+                {
+                    { "id", testCaseId.ToString() },
+                });
 
                 var testCaseElements = new Dictionary<string, string>
                 {
@@ -114,14 +117,13 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                     { "stdin", testCase.StdIn },
                     { "extra", testCase.Extra },
                 };
-                WriteElements(writer, testCaseElements);
+                xmlService.WriteElements(testCaseElements);
 
-                writer.WriteEndElement(); // </coderunner_testcase>
+                xmlService.CloseElement(); // </coderunner_testcase>
             }
 
-            writer.WriteEndElement(); // </coderunner_testcases>
-
-            writer.WriteEndElement(); // </plugin_qtype_coderunner_question>
+            xmlService.CloseElement(); // </coderunner_testcases>
+            xmlService.CloseElement(); // </plugin_qtype_coderunner_question>
         }
 
         public string GetQuestionTypeString()
