@@ -239,3 +239,15 @@ A `TextChoice` can also be assigned to a specific `Category` to specify distract
 
 !!! warning
     The documentation for CodeRunnerQuestions is currently incomplete and/or incorrect and needs to be revised.
+
+#### [DescriptionQuestion](https://docs.moodle.org/501/en/Description_question_type)
+This question type is not a question in the traditional sense, as the student has no opportunity to enter an answer and receives no points for this question. It acts merely as a note that the student can view while taking the quiz (displayed as a question without an answer field). This can be used, for example, to provide students with specific resources such as mathematical formulas or other "cheat sheets".
+
+There are no specific parameters for questions of the Description type. Just like with every other question type, the `QuestionName` field from the parent class is used to designate the name of the "question" in the question bank. The `QuestionText` field from the base class is used for the content that should be displayed in the Description question.
+
+!!! warning
+    A `DefaultMark` (= the value of this question in points, used for grading) can also be set for questions of the "Description" type, which factors into the calculation.
+
+    For example, if `DefaultMark = 3` is set, the Description question then contributes 3 points to point total of this quiz. However, since the student cannot enter an answer, they have no possibility of earning these 3 points - Description questions are **always** automatically scored with 0 points. Consequently, it becomes impossible for students to achieve the maximum score on the quiz.
+
+    Therefore, `DefaultMark = 0` should always be set for questions of the "Description" type.
