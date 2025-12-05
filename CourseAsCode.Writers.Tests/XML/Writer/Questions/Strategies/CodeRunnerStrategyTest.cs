@@ -1,6 +1,6 @@
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.FileWriters.Questions.Plugins;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;

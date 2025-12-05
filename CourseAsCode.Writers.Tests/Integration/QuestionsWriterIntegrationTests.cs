@@ -5,7 +5,7 @@ using CourseAsCode.Model;
 using CourseAsCode.Writers.Tests.XML.Writer;
 using CourseAsCode.Writers.XML.FileWriters.Questions;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
-using CourseAsCode.Writers.XML.FileWriters.Questions.Plugins;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;

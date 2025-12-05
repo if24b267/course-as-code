@@ -1,7 +1,7 @@
 ﻿using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.FileWriters.Questions.Plugins;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;

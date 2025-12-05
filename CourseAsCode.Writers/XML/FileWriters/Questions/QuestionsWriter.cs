@@ -230,8 +230,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
             xmlHelper.WriteElements(questionBaseElements);
 
             // Use the appropriate question strategy based on the question type to write the specific plugin block
-            IQuestionStrategy pluginWriter = _strategyResolver.ResolveStrategy(question);
-            pluginWriter.WritePluginData(xmlHelper, question);
+            IQuestionStrategy? pluginWriter = _strategyResolver.ResolveStrategy(question);
+            pluginWriter?.WritePluginData(xmlHelper, question);
 
             // Comments
             WriteEmptyPlugin(xmlHelper, "qbank_comment_question", "comments");
