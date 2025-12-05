@@ -123,17 +123,37 @@ jobs:
             echo "tag_name=latest-dev" >> $GITHUB_OUTPUT
             echo "prerelease=true" >> $GITHUB_OUTPUT
             echo "title=Development Build (latest-dev)" >> $GITHUB_OUTPUT
+            echo "is_rolling=true" >> $GITHUB_OUTPUT 
           elif [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
             echo "tag_name=latest-main" >> $GITHUB_OUTPUT
             echo "prerelease=false" >> $GITHUB_OUTPUT
             echo "title=Main Build (latest-main)" >> $GITHUB_OUTPUT
+            echo "is_rolling=true" >> $GITHUB_OUTPUT
           else
             # If triggered by a real tag (e.g. v1.0.0), use that
             echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
             echo "prerelease=false" >> $GITHUB_OUTPUT
             echo "title=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "is_rolling=false" >> $GITHUB_OUTPUT
           fi
 
+      # For rolling releases (latest-dev, latest-main), delete existing tag & release first
+      - name: Delete Existing Rolling Release
+        if: steps.config.outputs.is_rolling == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # --cleanup-tag: Deletes the git tag associated with the release
+          # --yes: Skip confirmation prompt
+          # || true: Ensures step doesn't fail if the release doesn't exist yet
+          gh release delete ${{ steps.config.outputs.tag_name }} --cleanup-tag --yes || true
+
+      # Give the GitHub API some time to breathe between delete and create
+      - name: Pause for API consistency
+        if: steps.config.outputs.is_rolling == 'true'
+        run: sleep 5
+
+      # Create the release
       - name: Create or Update Release
         uses: softprops/action-gh-release@v2
         with:
@@ -141,6 +161,7 @@ jobs:
           tag_name: ${{ steps.config.outputs.tag_name }}
           prerelease: ${{ steps.config.outputs.prerelease }}
           generate_release_notes: true
+          target_commitish: ${{ github.sha }} 
           files: |
             release_assets/CourseAsCode-Linux-x64.zip
             release_assets/CourseAsCode-Win-x64.zip
