@@ -104,6 +104,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
                 d.ContainsKey("fraction") && d["fraction"] == "0.0000000" &&
                 d.ContainsKey("feedback") && // PHP string checked in specific tests
                 d.ContainsKey("feedbackformat") && d["feedbackformat"] == "0"));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -125,8 +129,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             // Assert
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d["answertext"] == "NoCategoryChoice" &&
-                d["feedback"] == expectedPhp
-            ));
+                d["feedback"] == expectedPhp));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -149,6 +156,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d["answertext"] == "CatChoice" &&
                 d["feedback"] == expectedPhp));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -176,6 +187,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
 
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d["answertext"] == "Z_Choice" && d["feedback"] == expectedZebraPhp));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -199,6 +214,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
                 d["answertext"] == "NullCat" && d["feedback"] == expectedPhp));
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d["answertext"] == "EmptyCat" && d["feedback"] == expectedPhp));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -224,8 +243,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
                 d["correctfeedbackformat"] == MOCKED_FORMAT_STRING &&
                 d["partiallycorrectfeedback"] == "Not quite" &&
                 d["incorrectfeedback"] == "Bad" &&
-                d["shownumcorrect"] == "0") // Hints were null
-            );
+                d["shownumcorrect"] == "0")); // Hints were null
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -253,6 +275,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             // Assert: If any of the hints have ShowNumberOfCorrectAnswers set to true, it should be true in the XML
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("shownumcorrect") && d["shownumcorrect"] == "1"));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -280,6 +306,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             // Assert
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("shownumcorrect") && d["shownumcorrect"] == "0"));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
     }
 }

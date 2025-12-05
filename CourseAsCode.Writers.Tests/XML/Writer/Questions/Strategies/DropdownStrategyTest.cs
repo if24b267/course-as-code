@@ -104,6 +104,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
                 d["partiallycorrectfeedback"] == "Almost" &&
                 d["incorrectfeedback"] == "Wrong" &&
                 d["shownumcorrect"] == "1"));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -123,6 +127,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
                 d["correctfeedback"] == string.Empty &&
                 d["partiallycorrectfeedback"] == string.Empty &&
                 d["incorrectfeedback"] == string.Empty));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -145,6 +153,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
                 d.ContainsKey("questiontext") && d["questiontext"] == "Capital of France?" &&
                 d.ContainsKey("answertext") && d["answertext"] == "Paris" &&
                 d["questiontextformat"] == MOCKED_FORMAT_STRING));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -170,6 +182,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d["questiontext"] == string.Empty &&
                 d["answertext"] == "Distractor2"));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -199,6 +215,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             _mockXmlService.Received(1).WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d["questiontext"] == string.Empty &&
                 d["answertext"] == "WrongA"));
+
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
     }
 }
