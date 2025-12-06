@@ -117,7 +117,7 @@ The core of every quiz are the quiz questions that students must answer. A quiz 
 !!! info
     There are certain parameters that are required for all question types. These include, for example, their **name** (for internal representation in the QuestionBank), their **text** (i.e., the question itself - all questions have a question statement), or general parameters, such as whether the question is a *draft* or a finished question. These parameters are stored in the abstract parent class `Question`, the subclasses then implement only those parameters that are necessary for that particular type of question.
 
-#### [MultipleChoiceQuestion](https://docs.moodle.org/500/en/Multiple_Choice_question_type)
+#### [MultipleChoice Question](https://docs.moodle.org/500/en/Multiple_Choice_question_type)
 Multiple Choice Questions are the most common and frequently used type of question in Moodle. They consist of a question statement (`QuestionText` in the base class) and a set of possible answer options (`MultiChoiceAnswer`).
 
 For each `MultiChoiceAnswer`, the `AnswerText` can be defined, along with an `AnswerGrade` that determines the value of that answer.
@@ -148,7 +148,7 @@ For each `MultiChoiceAnswer`, the `AnswerText` can be defined, along with an `An
 1. Negative `AnswerGrade`s do not have to sum up to 1; any value can be chosen.  
 **On the contrary**: Negative `AnswerGrade`s can even be values greater than 1, so that the user receives overall point deductions if they answer the question incorrectly.
 
-##### [SingleChoiceQuestion](https://docs.moodle.org/500/en/Multiple_Choice_question_type#Single-answer_questions)
+##### [SingleChoice Question](https://docs.moodle.org/500/en/Multiple_Choice_question_type#Single-answer_questions)
 The Single Choice Question is a special form of the Multiple Choice Question, where only one of the given answers is correct (in contrast to Multiple Choice Questions where one **or more** answers can be correct). A question is marked as a Single Choice Question by setting the `SingleChoice` Boolean in the `MultipleChoiceQuestion` class to `true` and setting the `AnswerGrade` parameters accordingly.
 
 !!! info
@@ -156,7 +156,7 @@ The Single Choice Question is a special form of the Multiple Choice Question, wh
 
 <hr>
 
-#### [DropdownQuestion](https://docs.moodle.org/500/en/Matching_question_type)
+#### [Dropdown Question](https://docs.moodle.org/500/en/Matching_question_type)
 The Dropdown question is internally referred to as a `Matching Question` in Moodle and, strictly speaking, consists of multiple sub-questions. The `AnswerText` of the parent `Question` class is displayed at the top as a *heading*, while the actual question consists of several sub-questions, namely the assignment of the correct selectable text to the given text.
 
 ![Image of a dropdown question in Moodle to give you a better idea](../assets/DropDownQuestion.png)
@@ -187,7 +187,7 @@ The `DropdownQuestion` type therefore consists of several `DropdownSubQuestion`s
 
 <hr>
 
-#### [DragAndDropTextQuestion](https://docs.moodle.org/500/en/Drag_and_drop_into_text_question_type)
+#### [DragAndDropText Question](https://docs.moodle.org/500/en/Drag_and_drop_into_text_question_type)
 The `DragAndDropTextQuestion` format refers to classic fill-in-the-blank questions where the user has to insert the correct word from a set of predefined words into the corresponding gap.
 
 ![Image of a cloze text question in Moodle to give you a better idea](../assets/DragAndDropTextQuestion.png)
@@ -235,12 +235,12 @@ A `TextChoice` can also be assigned to a specific `Category` to specify distract
 
 <hr>
 
-#### [CodeRunnerQuestion](https://docs.moodle.org/500/en/CodeRunner_question_type)
+#### [CodeRunner Question](https://docs.moodle.org/500/en/CodeRunner_question_type)
 
 !!! warning
     The documentation for CodeRunnerQuestions is currently incomplete and/or incorrect and needs to be revised.
 
-#### [DescriptionQuestion](https://docs.moodle.org/501/en/Description_question_type)
+#### [Description Question](https://docs.moodle.org/501/en/Description_question_type)
 This question type is not a question in the traditional sense, as the student has no opportunity to enter an answer and receives no points for this question. It acts merely as a note that the student can view while taking the quiz (displayed as a question without an answer field). This can be used, for example, to provide students with specific resources such as mathematical formulas or other "cheat sheets".
 
 There are no specific parameters for questions of the Description type. Just like with every other question type, the `QuestionName` field from the parent class is used to designate the name of the "question" in the question bank. The `QuestionText` field from the base class is used for the content that should be displayed in the Description question.
@@ -251,3 +251,67 @@ There are no specific parameters for questions of the Description type. Just lik
     For example, if `DefaultMark = 3` is set, the Description question then contributes 3 points to point total of this quiz. However, since the student cannot enter an answer, they have no possibility of earning these 3 points - Description questions are **always** automatically scored with 0 points. Consequently, it becomes impossible for students to achieve the maximum score on the quiz.
 
     Therefore, `DefaultMark = 0` should always be set for questions of the "Description" type.
+
+#### [True/False Question](https://docs.moodle.org/501/en/True/False_question_type)
+With this question type, the student has only two options for answering: "True" or "False". Internally, this is a modified version of the [Multiple Choice](#multiplechoice-question) question that provides only 2 answer options. For this reason, the internal data model uses a similar structure:
+
+For every True/False question, a list of possible answer options is defined in `Answers` - there must be exactly two, a requirement enforced via Data Annotations. The first answer in this list automatically corresponds to the **True** option, and the second answer corresponds to the **False** option.
+
+!!! tip
+    Internally, Moodle distinguishes between the answer text ("True"/"False") and the actual mapping to the Boolean values True and False. If you assign the `AnswerText` "False" to the first option in the list and "True" to the second, this does not change the internal mapping. The item with the answer text "False" will then correspond to the internal answer option `True`. The item with the answer text "True" will then correspond to the internal answer option `False`.
+
+    If `True` were the correct answer for this question, the student would answer correctly by selecting "False" and answer incorrectly by selecting "True".
+
+    !!! example
+        ```csharp
+        var trueFalseQuestion = new TrueFalseQuestion
+        {
+            QuestionId = 1,
+            QuestionName = "Moodle inner workings",
+            QuestionText = "Are moodle's inner workings sometimes a bit weird?",
+            QuestionTextFormat = FormattingFormat.PlainText,
+            DefaultMark = 1,
+            CorrectAnswer = false,
+            Answers = new List<MultiChoiceAnswer>
+            {
+                new MultiChoiceAnswer
+                {
+                    AnswerText = "False", # Despite the text saying "False", this answer is actually the `True` option
+                    AnswerTextFormat = FormattingFormat.PlainText,
+                    AnswerGrade = 0.0f,
+                    AnswerFeedback = "You selected the answer with the correct text, but internally the other answer is the real `false` option",
+                    AnswerFeedbackFormat = FormattingFormat.PlainText,
+                },
+                new MultiChoiceAnswer
+                {
+                    AnswerText = "True", # Since Correct Answer is set to false and this answer is actually the `False` option, the student has to select this answer to answer correctly
+                    AnswerTextFormat = FormattingFormat.PlainText,
+                    AnswerGrade = 1.0f,
+                    AnswerFeedback = "You have selected the answer with the wrong text, but internally it's the real `true` option so you got the points",
+                    AnswerFeedbackFormat = FormattingFormat.PlainText,
+                },
+            },
+            Category = "Common Knowledge",
+        };
+        ```
+
+Specifying the answer options in the `Answers` list makes it possible to set parameters such as `AnswerGrade` and `AnswerFeedback`.
+
+!!! failure
+    `AnswerText` can also be set freely in this specific way, but its value must always be exactly "True" and/or "False", otherwise the question will not be displayed in Moodle.
+
+If there is no need to manually set `AnswerGrade` and `AnswerFeedback`, the list of `Answers` can also be left empty. In this case, "True" and "False" answer options are automatically generated, and `CorrectAnswer` determines which is the correct answer.
+
+!!! example
+    ```csharp
+    var trueFalseQuestionNoList = new TrueFalseQuestion
+    {
+        QuestionId = 2,
+        QuestionName = "Moodle inner workings",
+        QuestionText = "Are moodle's inner workings sometimes a bit weird?",
+        QuestionTextFormat = FormattingFormat.PlainText,
+        DefaultMark = 1,
+        CorrectAnswer = true,
+        Category = "Common Knowledge",
+    };
+    ```

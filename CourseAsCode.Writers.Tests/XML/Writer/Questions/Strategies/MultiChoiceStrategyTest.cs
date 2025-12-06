@@ -1,5 +1,6 @@
 ﻿using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
 using CourseAsCode.Writers.XML.Helper;
