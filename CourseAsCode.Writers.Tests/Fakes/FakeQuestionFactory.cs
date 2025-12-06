@@ -1,11 +1,11 @@
 ﻿using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.TrueFalse;
 
 namespace CourseAsCode.Writers.Tests.Fakes
 {
@@ -318,6 +318,49 @@ namespace CourseAsCode.Writers.Tests.Fakes
             }
 
             return ddtq;
+        }
+
+
+        /// <summary>
+        /// Creates a basic true-false question with specified parameters
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withFeedback">Indicates whether the question should include feedback for responses</param>
+        /// <returns>A <see cref="TrueFalseQuestion"/> object initialized with specified settings and default structure</returns>
+        public static TrueFalseQuestion CreateBasicTrueFalseQuestion(int id, string category, bool withFeedback = false)
+        {
+            var trueFalseQuestion = new TrueFalseQuestion
+            {
+                QuestionId = id,
+                QuestionName = "DavidsGreatness",
+                QuestionText = "Is David the greatest person to have ever lived?",
+                QuestionTextFormat = FormattingFormat.PlainText,
+                DefaultMark = 1,
+                CorrectAnswer = true,
+                Answers = new List<MultiChoiceAnswer>
+                {
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "True",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 1.0f,
+                        AnswerFeedback = withFeedback ? "Correct! David is indeed the greatest person to have ever lived." : string.Empty,
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "False",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = withFeedback ? "Incorrect! David is indeed the greatest person to have ever lived." : string.Empty,
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                },
+                Category = category,
+            };
+
+            return trueFalseQuestion;
         }
     }
 }
