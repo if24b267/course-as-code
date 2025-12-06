@@ -1,6 +1,7 @@
 # CourseAsCode
-
-[![Publish & Test CourseAsCode](https://github.com/Davimalu/course-as-code/actions/workflows/test-and-publish.yml/badge.svg?branch=develop)](https://github.com/Davimalu/course-as-code/actions/workflows/test-and-publish.yml)
+[![Deploy MkDocs Material to GitHub Pages](https://github.com/Davimalu/course-as-code/actions/workflows/mkdocs.yml/badge.svg)](https://github.com/Davimalu/course-as-code/actions/workflows/mkdocs.yml)
+[![Test CourseAsCode](https://github.com/Davimalu/course-as-code/actions/workflows/test.yml/badge.svg)](https://github.com/Davimalu/course-as-code/actions/workflows/test.yml)
+[![Publish CourseAsCode](https://github.com/Davimalu/course-as-code/actions/workflows/publish.yml/badge.svg)](https://github.com/Davimalu/course-as-code/actions/workflows/publish.yml)
 
 Course as Code is a tool that enables the creation of Moodle courses through text formats such as YAML or Markdown (hence the name Course as Code). These text files can then be converted into a Moodle backup file (.mbz), which may be imported directly into Moodle as a complete course. This approach allows fully functional Moodle courses to be created and edited using any text editor, while changes and collaboration can be managed efficiently with version control systems like Git.
 

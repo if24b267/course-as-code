@@ -7,7 +7,7 @@ public class BackupMetadataDefaults
     // General defaults
     public const string DEFAULT_NAME = "backup-moodle2-course-2-unde-19700101-0000";
     public const MoodleVersion DEFAULT_MOODLE_VERSION = MoodleVersion.Moodle450;
-    public static readonly Uri DEFAULT_MOODLE_URL = new("https://moodle.sanctus.cx");
+    public static readonly Uri DEFAULT_MOODLE_URL = new("http://localhost");
 
     // Sensible defaults
     public const bool DEFAULT_FILES_INCLUDED = true;
