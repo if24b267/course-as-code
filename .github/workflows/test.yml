@@ -1,0 +1,37 @@
+name: Test CourseAsCode
+
+on:
+  push:
+
+jobs:
+  test:
+    name: Run NUnit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup and Generate Version
+      uses: ./.github/actions/setup
+
+    - name: Run Writer NUnit tests
+      run: dotnet test CourseAsCode.Writers.Tests --logger "trx;LogFileName=writer-test_results.trx"
+      
+    - name: Run Reader NUnit tests
+      run: dotnet test CourseAsCode.Readers.Tests --logger "trx;LogFileName=reader-test_results.trx"
+
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v2
+      if: always() # Always run this step, even if tests fail
+      with:
+        name: NUnit Test Results
+        path: "**/*test_results.trx"
+        reporter: dotnet-trx
+        fail-on-error: true
+
+    - name: Upload NUnit test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: writer-test-results-${{ env.GIT_ARTIFACT_VERSION }}
+        path: "**/*test_results.trx"
