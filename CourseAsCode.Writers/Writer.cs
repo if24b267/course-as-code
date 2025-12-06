@@ -312,44 +312,11 @@ namespace CourseAsCode.Writers
                 Category = "Common Knowledge",
             };
 
-            // As long as there are exactly two answers, it's possible to give them a different text than simply "True" and "False"
-            var trueFalseQuestionCustomText = new TrueFalseQuestion
-            {
-                QuestionId = 52,
-                QuestionName = "What is the purpose of life?",
-                QuestionText = "What is the purpose of life?",
-                QuestionTextFormat = FormattingFormat.PlainText,
-                DefaultMark = 1,
-                CorrectAnswer = false,
-                Answers = new List<MultiChoiceAnswer>
-                {
-                    new MultiChoiceAnswer
-                    {
-                        AnswerText = "42",
-                        AnswerTextFormat = FormattingFormat.PlainText,
-                        AnswerGrade = 1.0f,
-                        AnswerFeedback = "Correct! 42 is the Answer to the Ultimate Question of Life, the Universe, and Everything",
-                        AnswerFeedbackFormat = FormattingFormat.PlainText,
-                    },
-                    new MultiChoiceAnswer
-                    {
-                        AnswerText = "Love",
-                        AnswerTextFormat = FormattingFormat.PlainText,
-                        AnswerGrade = 0.0f,
-                        AnswerFeedback = "Incorrect! Love is not a known concept in the world of computer science",
-                        AnswerFeedbackFormat = FormattingFormat.PlainText,
-                    },
-                },
-                Category = "Common Knowledge",
-            };
-
             quiz.Questions.Add(trueFalseQuestion);
             quiz.Questions.Add(trueFalseQuestionNoList);
-            quiz.Questions.Add(trueFalseQuestionCustomText);
 
             course.Questions.Add(trueFalseQuestion);
             course.Questions.Add(trueFalseQuestionNoList);
-            course.Questions.Add(trueFalseQuestionCustomText);
         }
     }
 }
