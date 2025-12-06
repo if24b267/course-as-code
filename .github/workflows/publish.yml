@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
 
+jobs:
   publish:
     name: Publish for Linux & Windows x64
     runs-on: ubuntu-latest
