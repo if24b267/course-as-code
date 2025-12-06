@@ -59,7 +59,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "answertext", trueFalseQuestion.Answers.ElementAtOrDefault(i)?.AnswerText ?? (i == 1 ? "True" : "False") },
+                    { "answertext", trueFalseQuestion.Answers.ElementAtOrDefault(i)?.AnswerText ?? (i == 0 ? "True" : "False") },
                     { "answerformat", _generalHelper.EnumIntegerToString(trueFalseQuestion.Answers.ElementAtOrDefault(i)?.AnswerTextFormat ?? FormattingFormat.MoodleAutoFormat) },
                     { "fraction", trueFalseQuestion.Answers.ElementAtOrDefault(i)?.AnswerGrade.ToString("0.0000000", CultureInfo.InvariantCulture) ?? (i == 0 && trueFalseQuestion.CorrectAnswer ? "1.0000000" : i == 1 && !trueFalseQuestion.CorrectAnswer ? "1.0000000" : "0.0000000") },
                     { "feedback", trueFalseQuestion.Answers.ElementAtOrDefault(i)?.AnswerFeedback ?? string.Empty },
@@ -77,10 +77,29 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 { "id", trueFalseId.ToString() },
             });
 
+            // If there's an answers list, get the correct answer from there
+            int trueAnswer = trueFalseQuestion.Answers.FirstOrDefault(a => a.AnswerGrade > 0) == trueFalseQuestion.Answers.ElementAtOrDefault(0) ? 1 : 2;
+            int falseAnswer = trueFalseQuestion.Answers.FirstOrDefault(a => a.AnswerGrade > 0) == trueFalseQuestion.Answers.ElementAtOrDefault(1) ? 1 : 2;
+
+            // Otherwise, set the correct answer based on the correct answer flag
+            if (trueFalseQuestion.Answers.Count == 0)
+            {
+                if (trueFalseQuestion.CorrectAnswer)
+                {
+                    trueAnswer = 1;
+                    falseAnswer = 2;
+                }
+                else
+                {
+                    trueAnswer = 2;
+                    falseAnswer = 1;
+                }
+            }
+
             var trueFalseElements = new Dictionary<string, string>
             {
-                { "trueanswer", trueFalseQuestion.Answers.FirstOrDefault(a => a.AnswerGrade > 0) == trueFalseQuestion.Answers.ElementAtOrDefault(0) ? "1" : "2" },
-                { "falseanswer", trueFalseQuestion.Answers.FirstOrDefault(a => a.AnswerGrade > 0) == trueFalseQuestion.Answers.ElementAtOrDefault(1) ? "1" : "2" },
+                { "trueanswer", trueAnswer.ToString() },
+                { "falseanswer", falseAnswer.ToString() },
                 { "showstandardinstruction", trueFalseQuestion.ShowStandardInstructions ? "1" : "0" },
             };
             xmlService.WriteElements(trueFalseElements);
