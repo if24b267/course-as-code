@@ -72,7 +72,7 @@ namespace CourseAsCode.Writers
                 // AddDescriptionQuestionToQuiz(course);
 
                 // --- Uncomment the following line to test the true/false question type | Only works with exampleCourse --- //
-                AddTrueFalseQuestionToQuiz(course);
+                // AddTrueFalseQuestionToQuiz(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
