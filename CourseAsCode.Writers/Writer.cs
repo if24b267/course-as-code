@@ -71,6 +71,7 @@ namespace CourseAsCode.Writers
                 // --- Uncomment the following line to test the description question type | Only works with exampleCourse --- //
                 // AddDescriptionQuestionToQuiz(course);
 
+                // --- Uncomment the following line to test the true/false question type | Only works with exampleCourse --- //
                 AddTrueFalseQuestionToQuiz(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
@@ -304,7 +305,7 @@ namespace CourseAsCode.Writers
 
             // However, it is possible to specify only "CorrectAnswer" and omit the list of Answers
             // In this case, it's not possible to specify feedback. The answers default to True and False.
-            // CorrectAnswer determines whether true or false is the correct answer
+            // CorrectAnswer determines whether true or false is the correct answer. The correct answer will give a grade of 1.0f, the incorrect 0.0f
             var trueFalseQuestionNoList = new TrueFalseQuestion
             {
                 QuestionId = 52,
