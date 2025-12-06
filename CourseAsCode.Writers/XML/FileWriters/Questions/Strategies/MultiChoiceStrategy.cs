@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;

@@ -5,6 +5,7 @@ using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;

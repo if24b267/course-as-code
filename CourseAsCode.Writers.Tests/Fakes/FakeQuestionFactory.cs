@@ -5,6 +5,7 @@ using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
 
 namespace CourseAsCode.Writers.Tests.Fakes
 {

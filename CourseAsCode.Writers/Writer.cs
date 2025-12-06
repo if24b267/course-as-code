@@ -5,6 +5,8 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Grading;
 using CourseAsCode.Model.Questions.Types.Description;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -68,6 +70,8 @@ namespace CourseAsCode.Writers
 
                 // --- Uncomment the following line to test the description question type | Only works with exampleCourse --- //
                 // AddDescriptionQuestionToQuiz(course);
+
+                AddTrueFalseQuestionToQuiz(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
@@ -251,6 +255,101 @@ namespace CourseAsCode.Writers
 
             quiz.Questions.Add(descriptionQuestion);
             course.Questions.Add(descriptionQuestion);
+        }
+
+
+        /// <summary>
+        /// Temporary method to add a question of type "True/False" to the 'Graded test about quizzes' quiz | can be removed once that question type is implemented in the Readers
+        /// </summary>
+        /// <param name="course">The course containing the assignments to be modified</param>
+        private void AddTrueFalseQuestionToQuiz(Course course)
+        {
+            // Get quiz with ID 14
+            var quiz = course.Sections[2].Activities
+                .OfType<Quiz>()
+                .FirstOrDefault(a => a.ActivityId == 14);
+
+            // Ideally, both CorrectAnswer and the list of Answer are specified
+            var trueFalseQuestion = new TrueFalseQuestion
+            {
+                QuestionId = 51,
+                QuestionName = "Is David the greatest person to have ever lived?",
+                QuestionText = "Is David the greatest person to have ever lived?",
+                QuestionTextFormat = FormattingFormat.PlainText,
+                DefaultMark = 1,
+                CorrectAnswer = true,
+                Answers = new List<MultiChoiceAnswer>
+                {
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "True",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 1.0f,
+                        AnswerFeedback = "Correct! David is indeed the greatest person to have ever lived.",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "False",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = "Incorrect! David is indeed the greatest person to have ever lived.",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                },
+                Category = "Common Knowledge",
+            };
+
+            // However, it is possible to specify only "CorrectAnswer" and omit the list of Answers
+            var trueFalseQuestionNoList = new TrueFalseQuestion
+            {
+                QuestionId = 52,
+                QuestionName = "Is there anyone even close to David in terms of greatness?",
+                QuestionText = "Is there anyone even close to David in terms of greatness?",
+                QuestionTextFormat = FormattingFormat.PlainText,
+                DefaultMark = 1,
+                CorrectAnswer = false,
+                Category = "Common Knowledge",
+            };
+
+            // As long as there are exactly two answers, it's possible to give them a different text than simply "True" and "False"
+            var trueFalseQuestionCustomText = new TrueFalseQuestion
+            {
+                QuestionId = 52,
+                QuestionName = "What is the purpose of life?",
+                QuestionText = "What is the purpose of life?",
+                QuestionTextFormat = FormattingFormat.PlainText,
+                DefaultMark = 1,
+                CorrectAnswer = false,
+                Answers = new List<MultiChoiceAnswer>
+                {
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "42",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 1.0f,
+                        AnswerFeedback = "Correct! 42 is the Answer to the Ultimate Question of Life, the Universe, and Everything",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "Love",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = "Incorrect! Love is not a known concept in the world of computer science",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                },
+                Category = "Common Knowledge",
+            };
+
+            quiz.Questions.Add(trueFalseQuestion);
+            quiz.Questions.Add(trueFalseQuestionNoList);
+            quiz.Questions.Add(trueFalseQuestionCustomText);
+
+            course.Questions.Add(trueFalseQuestion);
+            course.Questions.Add(trueFalseQuestionNoList);
+            course.Questions.Add(trueFalseQuestionCustomText);
         }
     }
 }
