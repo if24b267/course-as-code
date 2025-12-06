@@ -2,8 +2,9 @@ name: Publish CourseAsCode
 
 on:
   push:
-    - master
-    - develop
+    branches:
+      - master
+      - develop
 
 permissions:
   contents: write
