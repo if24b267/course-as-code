@@ -270,6 +270,8 @@ namespace CourseAsCode.Writers
                 .FirstOrDefault(a => a.ActivityId == 14);
 
             // Ideally, both CorrectAnswer and the list of Answer are specified
+            // This allows for exact control of the grading and feedback of the student
+            // The first answer in the list will always map to the "true" option, the second to the "false" option
             var trueFalseQuestion = new TrueFalseQuestion
             {
                 QuestionId = 51,
@@ -301,6 +303,8 @@ namespace CourseAsCode.Writers
             };
 
             // However, it is possible to specify only "CorrectAnswer" and omit the list of Answers
+            // In this case, it's not possible to specify feedback. The answers default to True and False.
+            // CorrectAnswer determines whether true or false is the correct answer
             var trueFalseQuestionNoList = new TrueFalseQuestion
             {
                 QuestionId = 52,

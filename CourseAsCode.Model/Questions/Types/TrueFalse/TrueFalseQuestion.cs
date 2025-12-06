@@ -9,7 +9,7 @@ namespace CourseAsCode.Model.Questions.Types.TrueFalse
         [Description("Set true if 'true' is the correct answer, false if 'false' is the correct answer")]
         public bool CorrectAnswer { get; set; }
 
-        [Description("List of possible answers, must be exactly 2")]
+        [Description("List of possible answers, must be exactly 2 | The first answer will be the 'true' option, the second the 'false' option")]
         [MinLength(2, ErrorMessage = "True/False questions must have exactly 2 answers.")]
         [MaxLength(2, ErrorMessage = "True/False questions must have exactly 2 answers.")]
         public List<MultiChoiceAnswer> Answers { get; set; } = new();

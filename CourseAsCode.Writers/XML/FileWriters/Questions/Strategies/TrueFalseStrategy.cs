@@ -77,29 +77,10 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 { "id", trueFalseId.ToString() },
             });
 
-            // If there's an answers list, get the correct answer from there
-            int trueAnswer = trueFalseQuestion.Answers.FirstOrDefault(a => a.AnswerGrade > 0) == trueFalseQuestion.Answers.ElementAtOrDefault(0) ? 1 : 2;
-            int falseAnswer = trueFalseQuestion.Answers.FirstOrDefault(a => a.AnswerGrade > 0) == trueFalseQuestion.Answers.ElementAtOrDefault(1) ? 1 : 2;
-
-            // Otherwise, set the correct answer based on the correct answer flag
-            if (trueFalseQuestion.Answers.Count == 0)
-            {
-                if (trueFalseQuestion.CorrectAnswer)
-                {
-                    trueAnswer = 1;
-                    falseAnswer = 2;
-                }
-                else
-                {
-                    trueAnswer = 2;
-                    falseAnswer = 1;
-                }
-            }
-
             var trueFalseElements = new Dictionary<string, string>
             {
-                { "trueanswer", trueAnswer.ToString() },
-                { "falseanswer", falseAnswer.ToString() },
+                { "trueanswer", answerIds.ElementAtOrDefault(0).ToString() },
+                { "falseanswer", answerIds.ElementAtOrDefault(1).ToString() },
                 { "showstandardinstruction", trueFalseQuestion.ShowStandardInstructions ? "1" : "0" },
             };
             xmlService.WriteElements(trueFalseElements);
