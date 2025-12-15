@@ -78,7 +78,7 @@ nav:
       - Importing a Course: Usage/Importing_A_Course.md
   - Architecture:
       - Overview: Architecture/Overview.md
-      - Reader: Architecture/Reader.md
+      - Readers: Architecture/Readers.md
       - Internal Data Model:
         - Architecture/DataModel/index.md
         - General Concepts: Architecture/DataModel/Nomenclature.md

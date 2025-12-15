@@ -50,3 +50,27 @@ Questions:
         AnswerTextFormat: MARKDOWN
         AnswerGrade: 0
         Feedback: Incorrect!
+  - QuestionName: Capital of Austria
+    Category: Geography
+    QuestionId: 14
+    QuestionText: The sky is green
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: TRUEFALSE
+    CorrectAnswer: false
+    ShowStandardInstructions: false
+  - QuestionName: Description
+    Category: description
+    QuestionId: 15
+    QuestionText: >
+      This is a description question. It does not require an answer.
+      Anyway
+      
+
+      Here is another line!
+
+
+      [https://davimalu.github.io/course-as-code/Activities/Quiz/](https://davimalu.github.io/course-as-code/Activities/Quiz/)
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 0
+    QuestionType: DESCRIPTION

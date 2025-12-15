@@ -25,6 +25,8 @@ namespace CourseAsCode.Readers.YAML.Model
         public string? IncorrectResponseFeedback { get; set; }
         public FormattingFormat IncorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
         public List<YamlDragDropAnswerText>? DragDropAnswers { get; set; }
+        public bool CorrectAnswer { get; set; } = true;
+        public bool ShowStandardInstructions { get; set; } = true;
 
         // CodeRunner Question specific properties
         public string CodeRunnerType { get; set; }

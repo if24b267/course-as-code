@@ -1,26 +1,27 @@
-﻿using System.Xml;
-using CourseAsCode.Model.Questions;
+﻿using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 {
-    public class DragDropTextPluginWriter : XmlWriterBase, IQuestionPluginWriter
+    public class DragDropTextStrategy : IQuestionStrategy
     {
+        private readonly ILogger<DragDropTextStrategy> _logger;
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="DragDropTextPluginWriter"/> class
+        /// Creates a new instance of the strategy for writing Drag and Drop onto Text questions
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
-        /// <param name="logger">Logger instance specific to <see cref="DragDropTextPluginWriter"/></param>
-        public DragDropTextPluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<DragDropTextPluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
-            : base(xmlWriterFactory, logger)
+        /// <param name="logger">Logger instance specific to <see cref="DragDropTextStrategy"/></param>
+        /// <param name="generalHelper">General Helper providing various helper methods</param>
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, ascending IDs</param>
+        public DragDropTextStrategy(ILogger<DragDropTextStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
         }
@@ -29,19 +30,19 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         /// <summary>
         /// Writes the `plugin_qtype_ddwtos_question` element for Drag and Drop onto Text questions
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlService">The XML Service to use to write XML elements</param>
         /// <param name="question">the question to save</param>
-        public void WritePluginData(XmlWriter writer, Question question)
+        public void WritePluginData(IXmlService xmlService, Question question)
         {
             if (question is not DragAndDropTextQuestion dragDropQuestion)
             {
-                throw new ArgumentException($"Incorrect question type passed to {nameof(DragDropTextPluginWriter)}. Expected {nameof(DragAndDropTextQuestion)} but got {question.GetType().Name}.");
+                throw new ArgumentException($"Incorrect question type passed to {nameof(DragDropTextStrategy)}. Expected {nameof(DragAndDropTextQuestion)} but got {question.GetType().Name}.");
             }
 
-            writer.WriteStartElement("plugin_qtype_ddwtos_question");
+            xmlService.WriteElement("plugin_qtype_ddwtos_question");
 
             // Answers (Draggable Choices) ---------------------------------------
-            writer.WriteStartElement("answers");
+            xmlService.WriteElement("answers");
 
             // The categories are represented as numbers in the XML -> map the strings to unique IDs
             Dictionary<string, int> categoryToGroupIdMap = MapCategoryToGroupId(dragDropQuestion);
@@ -49,8 +50,10 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
             foreach (var choice in dragDropQuestion.Answers)
             {
                 int answerId = _sequentialIdGenerator.GetNextAnswerId();
-                writer.WriteStartElement("answer");
-                writer.WriteAttributeString("id", answerId.ToString());
+                xmlService.WriteElementWithAttributes("answer", new Dictionary<string, string>
+                {
+                    { "id", answerId.ToString() },
+                });
 
                 // The <feedback> tag contains a PHP serialized object that is responsible for mapping the answers to a specific category (drag group)
 
@@ -62,7 +65,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 // Example: O:8:"stdClass":2:{s:9:"draggroup";s:1:"1";s:8:"infinite";b:0;}
                 string phpFeedback = $"O:8:\"stdClass\":2:{{s:9:\"draggroup\";s:{dragGroupId.Length}:\"{dragGroupId}\";s:8:\"infinite\";b:0;}}";
 
-                WriteElements(writer, new Dictionary<string, string>
+                xmlService.WriteElements(new Dictionary<string, string>
                 {
                     { "answertext", choice.Value },
                     { "answerformat", _generalHelper.EnumIntegerToString(choice.ValueFormat) },
@@ -71,15 +74,17 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                     { "feedbackformat", "0" }, // Always 0 for this question type
                 });
 
-                writer.WriteEndElement(); // </answer>
+                xmlService.CloseElement(); // </answer>
             }
 
-            writer.WriteEndElement(); // </answers>
+            xmlService.CloseElement(); // </answers>
 
             // DDWTOS Options -----------------------------------------------------
-            writer.WriteStartElement("ddwtos");
             int ddwtosId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
-            writer.WriteAttributeString("id", ddwtosId.ToString());
+            xmlService.WriteElementWithAttributes("ddwtos", new Dictionary<string, string>
+            {
+                { "id", ddwtosId.ToString() },
+            });
 
             var ddwtosElements = new Dictionary<string, string>
             {
@@ -92,10 +97,10 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 { "incorrectfeedbackformat", _generalHelper.EnumIntegerToString(dragDropQuestion.IncorrectResponseFeedbackFormat) },
                 { "shownumcorrect", dragDropQuestion.Hints?.Any(h => h.ShowNumberOfCorrectAnswers) ?? false ? "1" : "0" },
             };
-            WriteElements(writer, ddwtosElements);
+            xmlService.WriteElements(ddwtosElements);
 
-            writer.WriteEndElement(); // </ddwtos>
-            writer.WriteEndElement(); // </plugin_qtype_ddwtos_question>
+            xmlService.CloseElement(); // </ddwtos>
+            xmlService.CloseElement(); // </plugin_qtype_ddwtos_question>
         }
 
 

@@ -1,6 +1,10 @@
-﻿namespace CourseAsCode.Model.Questions.Types;
-
-public class SingleChoiceQuestion : MultipleChoiceQuestion
+﻿namespace CourseAsCode.Model.Questions.Types.MultipleChoice
 {
-    public SingleChoiceQuestion() => SingleChoice = true;
+    public class SingleChoiceQuestion : MultipleChoiceQuestion
+    {
+        public SingleChoiceQuestion()
+        {
+            SingleChoice = true;
+        }
+    }
 }

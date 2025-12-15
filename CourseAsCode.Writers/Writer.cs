@@ -1,8 +1,12 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Grading;
+using CourseAsCode.Model.Questions.Types.Description;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -63,6 +67,12 @@ namespace CourseAsCode.Writers
                 // AddGradingCategories(course);
                 // ModifyQuizzesWithGradingInfo(course);
                 // ModifyAssignmentWithGradingInfo(course);
+
+                // --- Uncomment the following line to test the description question type | Only works with exampleCourse --- //
+                // AddDescriptionQuestionToQuiz(course);
+
+                // --- Uncomment the following line to test the true/false question type | Only works with exampleCourse --- //
+                // AddTrueFalseQuestionToQuiz(course);
 
                 _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
                 _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
@@ -215,6 +225,103 @@ namespace CourseAsCode.Writers
             assignment1.GradeOffset = 1.0f;
             assignment1.BlindMarking = true;
             assignment1.HideGrader = true;
+        }
+
+
+        /// <summary>
+        /// Temporary method to add a question of type "Description" to the 'Graded test about quizzes' quiz | can be removed once that question type is implemented in the Readers
+        /// </summary>
+        /// <param name="course">The course containing the assignments to be modified</param>
+        private void AddDescriptionQuestionToQuiz(Course course)
+        {
+            // Get quiz with ID 14
+            var quiz = course.Sections[2].Activities
+                .OfType<Quiz>()
+                .FirstOrDefault(a => a.ActivityId == 14);
+
+            var descriptionQuestion = new DescriptionQuestion
+            {
+                QuestionId = 50,
+                QuestionName = "Instructions for the quiz",
+                QuestionTextFormat = FormattingFormat.Markdown,
+                QuestionText = """
+                               ### This quiz tests your knowledge of the quiz feature in Course As Code.
+
+                               **Make sure you have read the documentation carefully!**
+                               [https://davimalu.github.io/course-as-code/Activities/Quiz/](https://davimalu.github.io/course-as-code/Activities/Quiz/)
+                               """,
+                Category = "Introduction",
+                DefaultMark = 0, // If this isn't set, the Description Question will be worth 1 point that the student won't be able to get (as DefaultMark = 1 is the default value)
+            };
+
+            quiz.Questions.Add(descriptionQuestion);
+            course.Questions.Add(descriptionQuestion);
+        }
+
+
+        /// <summary>
+        /// Temporary method to add a question of type "True/False" to the 'Graded test about quizzes' quiz | can be removed once that question type is implemented in the Readers
+        /// </summary>
+        /// <param name="course">The course containing the assignments to be modified</param>
+        private void AddTrueFalseQuestionToQuiz(Course course)
+        {
+            // Get quiz with ID 14
+            var quiz = course.Sections[2].Activities
+                .OfType<Quiz>()
+                .FirstOrDefault(a => a.ActivityId == 14);
+
+            // Ideally, both CorrectAnswer and the list of Answer are specified
+            // This allows for exact control of the grading and feedback of the student
+            // The first answer in the list will always map to the "true" option, the second to the "false" option
+            var trueFalseQuestion = new TrueFalseQuestion
+            {
+                QuestionId = 51,
+                QuestionName = "Is David the greatest person to have ever lived?",
+                QuestionText = "Is David the greatest person to have ever lived?",
+                QuestionTextFormat = FormattingFormat.PlainText,
+                DefaultMark = 1,
+                CorrectAnswer = true,
+                Answers = new List<MultiChoiceAnswer>
+                {
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "True",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 1.0f,
+                        AnswerFeedback = "Correct! David is indeed the greatest person to have ever lived.",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "False",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = "Incorrect! David is indeed the greatest person to have ever lived.",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                },
+                Category = "Common Knowledge",
+            };
+
+            // However, it is possible to specify only "CorrectAnswer" and omit the list of Answers
+            // In this case, it's not possible to specify feedback. The answers default to True and False.
+            // CorrectAnswer determines whether true or false is the correct answer. The correct answer will give a grade of 1.0f, the incorrect 0.0f
+            var trueFalseQuestionNoList = new TrueFalseQuestion
+            {
+                QuestionId = 52,
+                QuestionName = "Is there anyone even close to David in terms of greatness?",
+                QuestionText = "Is there anyone even close to David in terms of greatness?",
+                QuestionTextFormat = FormattingFormat.PlainText,
+                DefaultMark = 1,
+                CorrectAnswer = false,
+                Category = "Common Knowledge",
+            };
+
+            quiz.Questions.Add(trueFalseQuestion);
+            quiz.Questions.Add(trueFalseQuestionNoList);
+
+            course.Questions.Add(trueFalseQuestion);
+            course.Questions.Add(trueFalseQuestionNoList);
         }
     }
 }

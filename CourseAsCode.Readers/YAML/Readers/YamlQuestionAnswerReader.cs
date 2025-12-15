@@ -1,4 +1,5 @@
 using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 

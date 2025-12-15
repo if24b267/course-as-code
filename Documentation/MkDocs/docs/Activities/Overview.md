@@ -76,4 +76,4 @@ On the following pages, we explain which activities are supported by **Course as
 - The [File activity](./Moodle_File.md) refers to a file (of any type) that has been uploaded by the course creator (not the student!) and is available to students as learning material.
 - The [Text and Media Area](./Text_and_Media_Area.md) (formerly: Label) can be used to embed formatted content (text, photos, multimedia, code, etc.) into a Moodle course, allowing for the design of nice-looking sections.
 - The [URL activity](./URL.md) references an external resource that is stored outside of the Moodle course.
-- The [Quiz activity](./Quiz.md) is an activity that allows you to test students with questions. A quiz can consist of various question types: from Multiple Choice and free-text questions to automatically graded [CodeRunner](./Quiz.md#coderunnerquestion) questions.
+- The [Quiz activity](./Quiz.md) is an activity that allows you to test students with questions. A quiz can consist of various question types: from Multiple Choice and free-text questions to automatically graded [CodeRunner](./Quiz.md#coderunner-question) questions.

@@ -1,24 +1,17 @@
 using System.Globalization;
-using System.Xml;
 using CourseAsCode.Model.Questions;
-using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
-using CourseAsCode.Model.Questions.Types.CodeRunner;
-using CourseAsCode.Model.Questions.Types.DragAndDropText;
-using CourseAsCode.Model.Questions.Types.Dropdown;
-using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
+namespace CourseAsCode.Writers.XML.FileWriters.Questions
 {
     /// <summary>
     /// Handles the creation and writing of the questions.xml file for a course.
     /// </summary>
-    public class QuestionsWriter : XmlWriterBase
+    public class QuestionsWriter
     {
         private const string DEFAULT_QUESTIONS_RELATIVE_PATH = "questions.xml";
         private const string DEFAULT_SERVER_ADDRESS = "172.21.0.3";
@@ -29,61 +22,35 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
         private const int DEFAULT_CONTEXT_LEVEL = 50; // 50 = course, 70 = module
         private const int DEFAULT_CONTEXT_INSTANCE_ID = 135; // Honestly, no idea what this is for
 
+        private readonly IXmlServiceFactory _xmlServiceFactory;
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
         private readonly IQuizHelper _quizHelper;
         private readonly ITagsWriter _tagsWriter;
-        private readonly Dictionary<Type, IQuestionPluginWriter> _pluginWriters;
+        private readonly ILogger<QuestionsWriter> _logger;
+        private readonly IQuestionStrategyResolver _strategyResolver;
 
 
         /// <summary>
         /// Creates a new instance of the QuestionsWriter class
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="xmlServiceFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to QuestionsWriter</param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
         /// <param name="sequentialIdGenerator">Helper for generating sequential IDs for various entities</param>
         /// <param name="quizHelper">Helper providing quiz-related utility methods</param>
         /// <param name="tagsWriter">Helper method providing specific helper methods focused on tag management</param>
-        /// <param name="pluginWriters">Collection of plugin writers for different question types</param>
+        /// <param name="strategyResolver">Resolver for obtaining the appropriate question strategy based on question type</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public QuestionsWriter(IXmlWriterFactory xmlWriterFactory, ILogger<QuestionsWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper, ITagsWriter tagsWriter, IEnumerable<IQuestionPluginWriter> pluginWriters)
-            : base(xmlWriterFactory, logger)
+        public QuestionsWriter(IXmlServiceFactory xmlServiceFactory, ILogger<QuestionsWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper, ITagsWriter tagsWriter, IQuestionStrategyResolver strategyResolver)
         {
+            _xmlServiceFactory = xmlServiceFactory ?? throw new ArgumentNullException(nameof(xmlServiceFactory));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
             _quizHelper = quizHelper ?? throw new ArgumentNullException(nameof(quizHelper));
             _tagsWriter = tagsWriter ?? throw new ArgumentNullException(nameof(tagsWriter));
-
-            // Build the lookup dictionary for plugin writers | TODO: Refactor this to use a more sophisticated method
-            _pluginWriters = new Dictionary<Type, IQuestionPluginWriter>();
-
-            foreach (var writer in pluginWriters ?? throw new ArgumentNullException(nameof(pluginWriters)))
-            {
-                if (writer is MultiChoicePluginWriter)
-                {
-                    _pluginWriters[typeof(MultipleChoiceQuestion)] = writer;
-                    _pluginWriters[typeof(SingleChoiceQuestion)] = writer;
-                }
-                else if (writer is DropdownPluginWriter)
-                {
-                    _pluginWriters[typeof(DropdownQuestion)] = writer;
-                }
-                else if (writer is DragDropTextPluginWriter)
-                {
-                    _pluginWriters[typeof(DragAndDropTextQuestion)] = writer;
-                }
-                else if (writer is CodeRunnerPluginWriter)
-                {
-                    _pluginWriters[typeof(CodeRunnerQuestion)] = writer;
-                }
-
-                // Add other mappings here
-                else
-                {
-                    LogWarn($"Unknown plugin writer type encountered during registration: {writer.GetType().FullName}");
-                }
-            }
+            _strategyResolver = strategyResolver ?? throw new ArgumentNullException(nameof(strategyResolver));
         }
 
 
@@ -98,34 +65,30 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_QUESTIONS_RELATIVE_PATH));
 
-                using (XmlWriter writer = CreateXmlWriter(filePath))
+                using (var xmlHelper = _xmlServiceFactory.Create(filePath))
                 {
-                    writer.WriteStartDocument();
-
-                    writer.WriteStartElement("question_categories");
+                    xmlHelper.WriteElement("question_categories");
 
                     // Moodle requires a top-level category, which is the parent of all other categories
-                    WriteTopCategory(writer, DEFAULT_TOP_CATEGORY_ID, DEFAULT_CONTEXT_ID, DEFAULT_CONTEXT_LEVEL, DEFAULT_CONTEXT_INSTANCE_ID);
+                    WriteTopCategory(xmlHelper, DEFAULT_TOP_CATEGORY_ID, DEFAULT_CONTEXT_ID, DEFAULT_CONTEXT_LEVEL, DEFAULT_CONTEXT_INSTANCE_ID);
 
                     // Questions are grouped by category | Each entry for a category contains the entries for all questions belonging to that category
                     foreach (var categoryGrouping in course.Questions.GroupBy(q => q.Category))
                     {
                         int categoryId = _sequentialIdGenerator.GetNextCategoryId();
-                        WriteQuestionCategory(writer, categoryId, categoryGrouping.Key, categoryGrouping.ToList());
+                        WriteQuestionCategory(xmlHelper, categoryId, categoryGrouping.Key, categoryGrouping.ToList());
 
-                        LogTrace($"Created question category {categoryId}: '{categoryGrouping.Key}' with {categoryGrouping.Count()} questions");
+                        _logger.LogTrace($"Created question category {categoryId}: '{categoryGrouping.Key}' with {categoryGrouping.Count()} questions");
                     }
 
-                    writer.WriteEndElement(); // </question_categories>
-
-                    writer.WriteEndDocument();
+                    xmlHelper.CloseElement(); // </question_categories>
                 }
 
-                LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_QUESTIONS_RELATIVE_PATH}");
+                _logger.LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_QUESTIONS_RELATIVE_PATH}");
             }
             catch (Exception e)
             {
-                LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_QUESTIONS_RELATIVE_PATH}");
+                _logger.LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_QUESTIONS_RELATIVE_PATH}");
                 throw;
             }
         }
@@ -134,14 +97,16 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
         /// <summary>
         /// Writes the `question_category` element of questions.xml
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlHelper">Service used for writing to the XML file</param>
         /// <param name="categoryId">the category ID</param>
         /// <param name="categoryName">the category name</param>
         /// <param name="questions">the list of questions belonging to that category</param>
-        private void WriteQuestionCategory(XmlWriter writer, int categoryId, string categoryName, List<Question> questions)
+        private void WriteQuestionCategory(IXmlService xmlHelper, int categoryId, string categoryName, List<Question> questions)
         {
-            writer.WriteStartElement("question_category");
-            writer.WriteAttributeString("id", categoryId.ToString());
+            xmlHelper.WriteElementWithAttributes("question_category", new Dictionary<string, string>
+            {
+                { "id", categoryId.ToString() },
+            });
 
             // Metadata for the category
             var categoryElements = new Dictionary<string, string>
@@ -157,39 +122,40 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
                 { "sortorder", "0" },
                 { "idnumber", "$@NULL@$" },
             };
-            WriteElements(writer, categoryElements);
+            xmlHelper.WriteElements(categoryElements);
 
-            writer.WriteStartElement("question_bank_entries");
+            xmlHelper.WriteElement("question_bank_entries");
             foreach (var question in questions)
             {
                 // Write all questions belonging to this category
-                WriteQuestionBankEntry(writer, categoryId, question);
+                WriteQuestionBankEntry(xmlHelper, categoryId, question);
 
                 // Store the ID of the category the question was saved to, so that other Writers (specifically InfoRefWriter) can reference it later
                 question.CategoryId = categoryId;
             }
 
-            writer.WriteEndElement(); // </question_bank_entries>
-
-            writer.WriteEndElement(); // </question_category>
+            xmlHelper.CloseElement(); // </question_bank_entries>
+            xmlHelper.CloseElement(); // </question_category>
         }
 
 
         /// <summary>
         /// Writes the `question_bank_entry` element of questions.xml
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlHelper">Service used for writing to the XML file</param>
         /// <param name="categoryId">the category ID of the category to which the question / questionbank belongs</param>
         /// <param name="question">the question to save</param>
-        private void WriteQuestionBankEntry(XmlWriter writer, int categoryId, Question question)
+        private void WriteQuestionBankEntry(IXmlService xmlHelper, int categoryId, Question question)
         {
             int bankEntryId = _sequentialIdGenerator.GetNextBankEntryId();
             question.BankEntryId = bankEntryId; // Store the ID of the question bank entry the question was saved to, so that QuizWriter can reference it later
 
-            writer.WriteStartElement("question_bank_entry");
-            writer.WriteAttributeString("id", bankEntryId.ToString());
+            xmlHelper.WriteElementWithAttributes("question_bank_entry", new Dictionary<string, string>
+            {
+                { "id", bankEntryId.ToString() },
+            });
 
-            WriteElements(writer, new Dictionary<string, string>
+            xmlHelper.WriteElements(new Dictionary<string, string>
             {
                 { "questioncategoryid", categoryId.ToString() },
                 { "idnumber", "$@NULL@$" },
@@ -197,47 +163,51 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
             });
 
             // Moodle uses an internal version control system for questions - we ignore this and only save one version of a question
-            writer.WriteStartElement("question_version");
-            WriteQuestionVersionContainer(writer, question);
-            writer.WriteEndElement(); // </question_version>
+            xmlHelper.WriteElement("question_version");
+            WriteQuestionVersionContainer(xmlHelper, question);
 
-            writer.WriteEndElement(); // </question_bank_entry>
+            xmlHelper.CloseElement(); // </question_version>
+            xmlHelper.CloseElement(); // </question_bank_entry>
         }
 
 
         /// <summary>
         /// Writes the `question_version` element of questions.xml
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlHelper">Service used for writing to the XML file</param>
         /// <param name="question">the question to save</param>
-        private void WriteQuestionVersionContainer(XmlWriter writer, Question question)
+        private void WriteQuestionVersionContainer(IXmlService xmlHelper, Question question)
         {
-            writer.WriteStartElement("question_versions");
-            writer.WriteAttributeString("id", question.QuestionId.ToString());
+            xmlHelper.WriteElementWithAttributes("question_versions", new Dictionary<string, string>
+            {
+                { "id", question.QuestionId.ToString() },
+            });
 
-            WriteElements(writer, new Dictionary<string, string>
+            xmlHelper.WriteElements(new Dictionary<string, string>
             {
                 { "version", "1" }, // Since we only save one version of a question, this can be hardcoded to 1
                 { "status", question.QuestionReady ? "ready" : "draft" }, // TODO: Determine if `draft` is really the correct value
             });
 
-            writer.WriteStartElement("questions");
-            WriteQuestionElement(writer, question);
-            writer.WriteEndElement(); // </questions>
+            xmlHelper.WriteElement("questions");
+            WriteQuestionElement(xmlHelper, question);
 
-            writer.WriteEndElement(); // </question_versions>
+            xmlHelper.CloseElement(); // </questions>
+            xmlHelper.CloseElement(); // </question_versions>
         }
 
 
         /// <summary>
-        /// writes the concrete data for a question to the XML file; supports Single/MultipleChoice and Dropdown (Matching) questions
+        /// writes the concrete data for a question to the XML file
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlHelper">Service used for writing to the XML file</param>
         /// <param name="question">the question to save</param>
-        private void WriteQuestionElement(XmlWriter writer, Question question)
+        private void WriteQuestionElement(IXmlService xmlHelper, Question question)
         {
-            writer.WriteStartElement("question");
-            writer.WriteAttributeString("id", question.QuestionId.ToString());
+            xmlHelper.WriteElementWithAttributes("question", new Dictionary<string, string>
+            {
+                { "id", question.QuestionId.ToString() },
+            });
 
             var questionBaseElements = new Dictionary<string, string>
             {
@@ -257,69 +227,53 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
                 { "createdby", "0" },
                 { "modifiedby", "0" },
             };
-            WriteElements(writer, questionBaseElements);
+            xmlHelper.WriteElements(questionBaseElements);
 
-            // Use the appropriate question plugin writer based on the question type to write the specific plugin block
-            if (!_pluginWriters.TryGetValue(question.GetType(), out var pluginWriter))
-            {
-                LogWarn($"Unsupported question type {question.GetType().Name} – skipping plugin block for question '{question.QuestionName}' (ID: {question.QuestionId}).");
-            }
-            pluginWriter?.WritePluginData(writer, question);
+            // Use the appropriate question strategy based on the question type to write the specific plugin block
+            IQuestionStrategy? pluginWriter = _strategyResolver.ResolveStrategy(question);
+            pluginWriter?.WritePluginData(xmlHelper, question);
 
             // Comments
-            WriteEmptyPlugin(writer, "qbank_comment_question", "comments");
+            WriteEmptyPlugin(xmlHelper, "qbank_comment_question", "comments");
 
             // Custom Fields
-            WriteEmptyPlugin(writer, "qbank_customfields_question", "customfields");
+            WriteEmptyPlugin(xmlHelper, "qbank_customfields_question", "customfields");
 
             // Hints
-            WriteHints(writer, question);
+            WriteHints(xmlHelper, question);
 
             // Tags
-            _tagsWriter.WriteTags(writer, question.Tags, "tags");
+            _tagsWriter.WriteTags(xmlHelper, question.Tags);
 
-            writer.WriteEndElement(); // </question>
+            xmlHelper.CloseElement(); // </question>
         }
 
 
         /// <summary>
         /// Writes the `question_hints` element of questions.xml
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlService">Service used for writing to the XML file</param>
         /// <param name="question">the question to save, containing the relevant hints (can be none)</param>
-        private void WriteHints(XmlWriter writer, Question question)
+        private void WriteHints(IXmlService xmlService, Question question)
         {
-            // Get hints based on the question type
-            List<Hint>? hints = null;
-            if (question is MultipleChoiceQuestion mcq)
-            {
-                hints = mcq.Hints;
-            }
-            else if (question is DropdownQuestion ddq)
-            {
-                hints = ddq.Hints;
-            }
-            else if (question is CodeRunnerQuestion crq)
-            {
-                hints = crq.Hints;
-            }
-
             // Handle no hints
-            if (hints == null || hints.Count == 0)
+            if (question.Hints == null || question.Hints.Count == 0)
             {
-                writer.WriteStartElement("question_hints");
-                writer.WriteEndElement(); // </question_hints>
+                xmlService.WriteElement("question_hints");
+                xmlService.CloseElement(); // </question_hints>
                 return;
             }
 
-            writer.WriteStartElement("question_hints");
-            foreach (var hint in hints)
+            xmlService.WriteElement("question_hints");
+            foreach (var hint in question.Hints)
             {
                 int hintId = _sequentialIdGenerator.GetNextHintId();
-                writer.WriteStartElement("question_hint");
-                writer.WriteAttributeString("id", hintId.ToString());
+                xmlService.WriteElementWithAttributes("question_hint", new Dictionary<string, string>
+                {
+                    { "id", hintId.ToString() },
+                });
 
-                WriteElements(writer, new Dictionary<string, string>
+                xmlService.WriteElements(new Dictionary<string, string>
                 {
                     { "hint", hint.HintText },
                     { "hintformat", _generalHelper.EnumIntegerToString(hint.HintTextFormat) },
@@ -328,10 +282,10 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
                     { "options", "$@NULL@$" },
                 });
 
-                writer.WriteEndElement(); // </question_hint>
+                xmlService.CloseElement(); // </question_hint>
             }
 
-            writer.WriteEndElement(); // </question_hints>
+            xmlService.CloseElement(); // </question_hints>
         }
 
 
@@ -352,41 +306,48 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter
         /// <summary>
         /// Writes an empty plugin element with the specified plugin name and child element container to the XML file
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlService">Service used for writing to the XML file</param>
         /// <param name="pluginName">The name of the plugin to be written</param>
         /// <param name="childContainer">The name of the child container element within the plugin</param>
-        private void WriteEmptyPlugin(XmlWriter writer, string pluginName, string childContainer)
+        private void WriteEmptyPlugin(IXmlService xmlService, string pluginName, string childContainer)
         {
-            writer.WriteStartElement($"plugin_{pluginName}");
-            writer.WriteStartElement(childContainer);
-            writer.WriteEndElement(); // childContainer
-            writer.WriteEndElement(); // plugin
+            xmlService.WriteElement($"plugin_{pluginName}");
+            xmlService.WriteElement(childContainer);
+            xmlService.CloseElement(); // childContainer
+            xmlService.CloseElement(); // plugin
         }
 
 
         /// <summary>
         /// Writes the top-level question category to the XML file. Moodle requires this to serve as the parent category for all other question categories
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlService">Service used for writing to the XML file</param>
         /// <param name="id">The unique identifier of the top-level category</param>
         /// <param name="contextId">The ID representing the context in which the category belongs</param>
         /// <param name="contextLevel">The context level of the category (e.g., course or module)</param>
         /// <param name="contextInstanceId">The unique identifier of the context instance - whatever that is</param>
-        private void WriteTopCategory(XmlWriter writer, int id, int contextId, int contextLevel, int contextInstanceId)
+        private void WriteTopCategory(IXmlService xmlService, int id, int contextId, int contextLevel, int contextInstanceId)
         {
-            writer.WriteStartElement("question_category");
-            writer.WriteAttributeString("id", id.ToString());
-            WriteElements(writer, new Dictionary<string,string>{
+            xmlService.WriteElementWithAttributes("question_category", new Dictionary<string, string>
+            {
+                { "id", id.ToString() },
+            });
+
+            xmlService.WriteElements(new Dictionary<string, string>
+            {
                 { "name", "top" },
                 { "contextid",        contextId.ToString() },
                 { "contextlevel",     contextLevel.ToString() },  // 50 = course, 70 = module
                 { "contextinstanceid",contextInstanceId.ToString() },
                 { "info", "" }, { "infoformat","0" },
                 { "stamp", GenerateStamp() },
-                { "parent","0" }, { "sortorder","0" }, { "idnumber","$@NULL@$" },
+                { "parent", "0" },
+                { "sortorder", "0" },
+                { "idnumber", "$@NULL@$" },
             });
-            writer.WriteStartElement("question_bank_entries"); writer.WriteEndElement();
-            writer.WriteEndElement(); // </question_category>
+            xmlService.WriteElement("question_bank_entries");
+            xmlService.CloseElement(); // </question_bank_entries>
+            xmlService.CloseElement(); // </question_category>
         }
     }
 }

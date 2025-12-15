@@ -1,0 +1,23 @@
+GradeCategories:
+  - GradeCategoryId: 1
+    AggregationType: Natural
+    GradeName: "Course Overall"
+    MaxGrade: 30
+    GradeToPass: 15
+  - GradeCategoryId: 2
+    AggregationType: MeanOfGrades
+    ParentGradeCategoryId: 1
+    GradeName: "Theoretical Part"
+    MaxGrade: 10
+    GradeToPass: 5
+    GradingWeight: 30
+  - GradeCategoryId: 3
+    AggregationType: Natural
+    ParentGradeCategoryId: 1
+    DropLowestGrades: 1
+    GradeName: "Practical Part"
+    MaxGrade: 70
+    GradeToPass: 15
+    GradingWeight: 70
+    GradeHidden: true
+    GradingLocked: true

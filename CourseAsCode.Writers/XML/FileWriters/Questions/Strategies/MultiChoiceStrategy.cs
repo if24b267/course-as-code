@@ -1,31 +1,29 @@
 ﻿using System.Globalization;
-using System.Xml;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
+namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 {
-    public class MultiChoicePluginWriter : XmlWriterBase, IQuestionPluginWriter
+    public class MultiChoiceStrategy : IQuestionStrategy
     {
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
         private readonly IQuizHelper _quizHelper;
 
         /// <summary>
-        /// Creates a new instance of the MultiChoicePluginWriter class
+        /// Creates a new instance of the strategy for writing multiple choice questions
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
         /// <param name="logger">Logger instance specific to MultiChoicePluginWriter</param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
-        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique IDs</param>
+        /// <param name="sequentialIdGenerator">Sequential ID generator for generating unique, ascending IDs</param>
         /// <param name="quizHelper">Quiz Helper providing utility methods for quizzes</param>
-        public MultiChoicePluginWriter(IXmlWriterFactory xmlWriterFactory, ILogger<MultiChoicePluginWriter> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
-            : base(xmlWriterFactory, logger)
+        public MultiChoiceStrategy(ILogger<MultiChoiceStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
         {
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _sequentialIdGenerator = sequentialIdGenerator ?? throw new ArgumentNullException(nameof(sequentialIdGenerator));
@@ -36,26 +34,28 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
         /// <summary>
         /// Writes the `plugin_qtype_multichoice_question` element of questions.xml that is used for multiple choice questions
         /// </summary>
-        /// <param name="writer">XmlWriter initialized on the correct document</param>
+        /// <param name="xmlService">The XML Service to use to write XML elements</param>
         /// <param name="question">the question to save</param>
-        public void WritePluginData(XmlWriter writer, Question question)
+        public void WritePluginData(IXmlService xmlService, Question question)
         {
             if (question is not MultipleChoiceQuestion multiChoiceQuestion)
             {
-                throw new ArgumentException($"Incorrect question type passed to {nameof(MultiChoicePluginWriter)}. Expected {nameof(MultipleChoiceQuestion)} but got {question.GetType().Name}.");
+                throw new ArgumentException($"Incorrect question type passed to {nameof(MultiChoiceStrategy)}. Expected {nameof(MultipleChoiceQuestion)} but got {question.GetType().Name}.");
             }
 
-            writer.WriteStartElement("plugin_qtype_multichoice_question");
+            xmlService.WriteElement("plugin_qtype_multichoice_question");
 
             // Answers ------------------------------------------------------------
-            writer.WriteStartElement("answers");
+            xmlService.WriteElement("answers");
             foreach (var answer in multiChoiceQuestion.Answers)
             {
                 int answerId = _sequentialIdGenerator.GetNextAnswerId();
-                writer.WriteStartElement("answer");
-                writer.WriteAttributeString("id", answerId.ToString());
+                xmlService.WriteElementWithAttributes("answer", new Dictionary<string, string>
+                {
+                    { "id", answerId.ToString() },
+                });
 
-                WriteElements(writer, new Dictionary<string, string>
+                xmlService.WriteElements(new Dictionary<string, string>
                 {
                     { "answertext", answer.AnswerText },
                     { "answerformat", _generalHelper.EnumIntegerToString(answer.AnswerTextFormat) },
@@ -64,15 +64,17 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                     { "feedbackformat", _generalHelper.EnumIntegerToString(answer.AnswerFeedbackFormat) },
                 });
 
-                writer.WriteEndElement(); // </answer>
+                xmlService.CloseElement(); // </answer>
             }
 
-            writer.WriteEndElement(); // </answers>
+            xmlService.CloseElement(); // </answers>
 
             // Multichoice settings -------------------------------------------------
-            writer.WriteStartElement("multichoice");
             int multichoiceId = _sequentialIdGenerator.GetNextAnswerId(); // Reuse answer ID counter for simplicity (avoids creating a new counter for just this element)
-            writer.WriteAttributeString("id", multichoiceId.ToString());
+            xmlService.WriteElementWithAttributes("multichoice", new Dictionary<string, string>
+            {
+                { "id", multichoiceId.ToString() },
+            });
 
             var multichoiceElements = new Dictionary<string, string>
             {
@@ -89,10 +91,10 @@ namespace CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins
                 { "shownumcorrect", multiChoiceQuestion.Hints != null && multiChoiceQuestion.Hints.Any(h => h.ShowNumberOfCorrectAnswers) ? "1" : "0" },
                 { "showstandardinstruction", multiChoiceQuestion.ShowStandardInstructions ? "1" : "0" },
             };
-            WriteElements(writer, multichoiceElements);
+            xmlService.WriteElements(multichoiceElements);
 
-            writer.WriteEndElement(); // </multichoice>
-            writer.WriteEndElement(); // </plugin_qtype_multichoice_question>
+            xmlService.CloseElement(); // </multichoice>
+            xmlService.CloseElement(); // </plugin_qtype_multichoice_question>
         }
 
 

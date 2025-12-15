@@ -1,4 +1,6 @@
+using CourseAsCode.Model.Grading;
 using CourseAsCode.Model.Questions;
+using CourseAsCode.Readers.YAML.Model;
 
 namespace CourseAsCode.Readers.Helper
 {
@@ -15,7 +17,11 @@ namespace CourseAsCode.Readers.Helper
 
         // currently only being counted up from 1
         public static int CurrentModuleId { get; set; }
+        public static int CurrentSubwikiId { get; set; } = 1;
+        public static int CurrentWikiPageId { get; set; } = 1;
 
         public static List<Question> Questions { get; set; }
+        public static List<GradeCategory> GradeCategories { get; set; }
+        public static List<YamlGradingInfo> GradingInfos { get; set; }
     }
 }
