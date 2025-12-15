@@ -82,7 +82,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.File
             Assert.That(root.GetAttribute("id"), Is.EqualTo(_dummyFile.ActivityId.ToString()));
             Assert.That(root.GetAttribute("moduleid"), Is.EqualTo(_dummyFile.ModuleId.ToString()));
             Assert.That(root.GetAttribute("modulename"), Is.EqualTo(_dummyFile.ModuleName));
-            Assert.That(root.GetAttribute("contextid"), Is.EqualTo("4")); // from mocked EnumIntegerToString
+            Assert.That(root.GetAttribute("contextid"), Is.EqualTo(_dummyFile.ActivityId.ToString())); // contextid equals ActivityId
         }
 
         [Test]
