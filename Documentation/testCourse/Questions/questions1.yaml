@@ -50,3 +50,12 @@ Questions:
         AnswerTextFormat: MARKDOWN
         AnswerGrade: 0
         Feedback: Incorrect!
+  - QuestionName: Capital of Austria
+    Category: Geography
+    QuestionId: 14
+    QuestionText: The sky is green
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: TRUEFALSE
+    CorrectAnswer: false
+    ShowStandardInstructions: false

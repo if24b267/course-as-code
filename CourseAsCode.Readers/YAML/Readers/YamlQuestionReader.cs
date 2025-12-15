@@ -6,6 +6,7 @@ using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
@@ -73,6 +74,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.SINGLECHOICE:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to SingleChoiceQuestion");
                     return ConvertYamlQuestionToSingleChoiceQuestion(yamlQuestion);
+                case QuestionType.TRUEFALSE:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to TrueFalseQuestion");
+                    return ConvertYamlQuestionToTrueFalseQuestion(yamlQuestion);
                 case QuestionType.MULTIPLECHOICE:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to MultipleChoiceQuestion");
                     return ConvertYamlQuestionToMultipleChoiceQuestion(yamlQuestion);
@@ -114,7 +118,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 ValidateOnSave = yamlQuestion.ValidateOnSave,
                 DisplayFeedback = yamlQuestion.DisplayFeedback,
                 GiveUpAllowed = yamlQuestion.GiveUpAllowed,
-                TestCases = ConvertYamlCodeRunnerTestCasesToCodeRunnerTestCases(yamlQuestion.CodeRunnerTestCases)
+                TestCases = ConvertYamlCodeRunnerTestCasesToCodeRunnerTestCases(yamlQuestion.CodeRunnerTestCases),
             };
 
             return question;
@@ -133,7 +137,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 HideRestIfFail = yamlTestCase.HideRestIfFail,
                 Mark = yamlTestCase.Mark,
                 StdIn = yamlTestCase.StdIn,
-                Extra = yamlTestCase.Extra
+                Extra = yamlTestCase.Extra,
             }).ToList();
         }
 
@@ -157,7 +161,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
                 IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
                 IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
-                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
             };
 
             return question;
@@ -229,7 +233,28 @@ namespace CourseAsCode.Readers.YAML.Readers
                 PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
                 IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
                 IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
-                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
+            };
+
+            return question;
+        }
+
+        private TrueFalseQuestion ConvertYamlQuestionToTrueFalseQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new TrueFalseQuestion
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                CorrectAnswer = yamlQuestion.CorrectAnswer,
+                ShowStandardInstructions = yamlQuestion.ShowStandardInstructions,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers),
+                HintPenalty = yamlQuestion.HintPenalty,
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
             };
 
             return question;
@@ -255,7 +280,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
                 IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
                 IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
-                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
             };
 
             return question;
@@ -280,6 +305,10 @@ namespace CourseAsCode.Readers.YAML.Readers
 
         private List<MultiChoiceAnswer> GetMoodleAnswersFromYamlAnswers(List<YamlQuestionAnswer> yamlAnswers)
         {
+            if (yamlAnswers == null)
+            {
+                return [];
+            }
             return yamlAnswers.Select(yamlAnswer => ConvertYamlAnswerToMoodleAnswer(yamlAnswer)).ToList();
         }
 
@@ -291,7 +320,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 AnswerTextFormat = questionAnswer.AnswerTextFormat,
                 AnswerGrade = questionAnswer.AnswerGrade,
                 AnswerFeedback = questionAnswer.Feedback,
-                AnswerFeedbackFormat = questionAnswer.FeedbackFormat
+                AnswerFeedbackFormat = questionAnswer.FeedbackFormat,
             };
         }
     }
