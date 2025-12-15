@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model;
+using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Course;
 
