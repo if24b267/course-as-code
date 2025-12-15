@@ -91,7 +91,9 @@ nav:
       - Moodle File: Activities/Moodle_File.md
       - Text and Media Area: Activities/Text_and_Media_Area.md
       - URL: Activities/URL.md
-      - Quiz: Activities/Quiz.md
+      - Quiz:
+        - Activities/Quiz/index.md
+        - Question Types: Activities/Quiz/QuestionTypes.md
   - Grading:
       - Overview: Grading/Overview.md
       - Grade Categories: Grading/Grade_Categories.md
