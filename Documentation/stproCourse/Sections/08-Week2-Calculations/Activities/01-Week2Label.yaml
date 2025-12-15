@@ -1,0 +1,6 @@
+Type: label
+Name: "Week 2: Calculations"
+Format: HTML
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/01-Week2Content.md

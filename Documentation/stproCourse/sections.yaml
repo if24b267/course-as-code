@@ -1,0 +1,13 @@
+Sections:
+  - SectionPath: Sections/00-Lehrveranstaltungstitel
+  - SectionPath: Sections/01-CourseOrganisation
+  - SectionPath: Sections/02-CourseCommunication
+  - SectionPath: Sections/03-IntroductionToSubject
+  - SectionPath: Sections/04-ServiceForStudents
+  - SectionPath: Sections/01-SelfStudyA-GettingStarted
+  - SectionPath: Sections/06-Week1-HelloWorldFormattedOutput
+  - SectionPath: Sections/07-SelfStudyB-Calculations
+  - SectionPath: Sections/08-Week2-Calculations
+  - SectionPath: Sections/09-SelfStudyC-Selection
+  - SectionPath: Sections/10-Week3-Selection
+  - SectionPath: Sections/05-SelfStudyA-Resources

@@ -1,0 +1,31 @@
+SectionName: "Week 1: Hello World, FormattedOutput and Arithmetic"
+Summary: |
+  After completing this class you will be able to:
+  - Create formatted output of textual and numeric data using format specifiers
+  - Apply arithmetic operators to perform calculations
+
+  Formatted Output:
+  Formatted output in Java lets you control how your data is displayed, like rounding numbers or aligning text. It's useful for making your program's output look clean and professional.
+
+  Understanding Arithmetic Operations:
+  Understanding arithmetic operations in Java is about learning how to perform basic math, like addition and subtraction, within your code. This is key for tasks that involve calculations.
+
+  In this class we will:
+  - Review and discuss the basic elements of a Java program
+  - Study and learn about FormattedOutput (print functions, special characters, integer/double/text formatting)
+  - Learn how to do calculations with integer, double, and mixed values
+  - Preview the variable concept
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/01-FormattedOutput-slides.yaml
+  - ActivityFilePath: Activities/02-FormattedOutput-PrintClip.yaml
+  - ActivityFilePath: Activities/03-FormattedOutput-SpecialCharacterClip.yaml
+  - ActivityFilePath: Activities/04-FormattedOutput-IntegerFormattingClip.yaml
+  - ActivityFilePath: Activities/05-FormattedOutput-StringFormattingClip.yaml
+  - ActivityFilePath: Activities/06-FormattedOutput-FloatingPointFormattingClip.yaml
+  - ActivityFilePath: Activities/07-Calculations-slides.yaml
+  - ActivityFilePath: Activities/08-Calculations-IntegerArithmeticClip.yaml
+  - ActivityFilePath: Activities/09-Calculations-DoubleArithmeticClip.yaml
+  - ActivityFilePath: Activities/10-Calculations-MixedArithmeticClip.yaml
+  - ActivityFilePath: Activities/11-Calculations-VariableDemoClip.yaml
+  - ActivityFilePath: Activities/12-URL-Kahoot.yaml

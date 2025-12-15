@@ -7,6 +7,10 @@
     "exampleCourse": {
       "commandName": "Project",
       "commandLineArgs": "-i \"../../../../Documentation/exampleCourse\" -o \"../../../../Documentation/out\""
+    },
+    "stproCourse": {
+      "commandName": "Project",
+      "commandLineArgs": "-i \"../../../../Documentation/stproCourse\" -o \"../../../../Documentation/out\""
     }
   }
 }

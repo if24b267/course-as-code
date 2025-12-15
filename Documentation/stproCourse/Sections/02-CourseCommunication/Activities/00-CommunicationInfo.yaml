@@ -1,0 +1,6 @@
+Type: label
+Name: "Communication Guidelines"
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/00-CommunicationInfo.md

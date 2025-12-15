@@ -1,0 +1,6 @@
+Type: label
+Name: "Introduction to the Subject"
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/00-IntroductionContent.md

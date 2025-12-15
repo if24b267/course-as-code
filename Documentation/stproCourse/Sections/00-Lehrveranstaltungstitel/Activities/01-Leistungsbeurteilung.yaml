@@ -1,0 +1,6 @@
+Type: label
+Name: Leistungsbeurteilung
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/01-Leistungsbeurteilung.md

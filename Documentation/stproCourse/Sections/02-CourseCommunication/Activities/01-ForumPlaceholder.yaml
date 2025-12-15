@@ -1,0 +1,6 @@
+Type: label
+Name: "Forums"
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/01-ForumPlaceholder.md

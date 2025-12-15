@@ -1,0 +1,8 @@
+Name: "Self-checks: Getting Started"
+Type: QUIZ
+Description: ""
+DescriptionFormat: HTML
+GradingMethod: HighestGrade
+QuestionBehaviour: Deferred
+ShuffleQuestions: false
+QuestionIds: [2]

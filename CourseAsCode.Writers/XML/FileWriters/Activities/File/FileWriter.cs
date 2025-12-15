@@ -68,7 +68,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.File
             writer.WriteAttributeString("id", moodleFile.ActivityId.ToString());
             writer.WriteAttributeString("moduleid", moodleFile.ModuleId.ToString());
             writer.WriteAttributeString("modulename", moodleFile.ModuleName);
-            writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(moodleFile.Context));
+            writer.WriteAttributeString("contextid", moodleFile.ActivityId.ToString());
         }
 
         /// <summary>
