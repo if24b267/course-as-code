@@ -97,6 +97,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#exporting-a-course" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -631,6 +636,26 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exporting a Course
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -648,6 +673,214 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Export Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-the-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying the Export
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying the Export">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-the-backup-file-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the backup file exists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-for-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check for errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-invalid-input-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Error: Invalid input path"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-missing-value-for-i" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Error: Missing value for -i"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-succeeds-but-mbz-file-is-empty-or-corrupted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export succeeds but .mbz file is empty or corrupted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#large-courses-take-a-long-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Large courses take a long time
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1922,6 +2155,205 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Command
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Export Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-the-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying the Export
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying the Export">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-the-backup-file-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the backup file exists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-for-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check for errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-invalid-input-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Error: Invalid input path"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-missing-value-for-i" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Error: Missing value for -i"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-succeeds-but-mbz-file-is-empty-or-corrupted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export succeeds but .mbz file is empty or corrupted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#large-courses-take-a-long-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Large courses take a long time
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1989,9 +2421,108 @@
   
 
 
-  <h1>Exporting a Course</h1>
-
-<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><span data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-11-18T17:11:15+01:00'>2025-11-18</time></span><span data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span><span class='material-icons' data-icon='doc_author'></span><div class='avatar-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' src='https://avatars.githubusercontent.com/Davimalu' onerror="this.style.display='none'" /></div></div></div></div>
+<h1 id="exporting-a-course">Exporting a Course</h1>
+<p>This guide explains how to convert your Course as Code course definition into a Moodle backup file (<code>.mbz</code>).</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before exporting, make sure you have:</p>
+<ol>
+<li><a href="../Course_As_Code_Setup/">Course as Code installed</a></li>
+<li>A valid <a href="../Creating_A_Course/">course definition</a></li>
+</ol>
+<h2 id="export-command">Export Command</h2>
+<p>To export a course, use the following command:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>CourseAsCode<span class="w"> </span>--<span class="w"> </span>-i<span class="w"> </span>&lt;input-path&gt;<span class="w"> </span>-o<span class="w"> </span>&lt;output-path&gt;
+</span></code></pre></div>
+<h3 id="parameters">Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-i &lt;input-path&gt;</code></td>
+<td>Path to your course folder (containing <code>config.yaml</code>)</td>
+</tr>
+<tr>
+<td><code>-o &lt;output-path&gt;</code></td>
+<td>Path where the output files will be created</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example">Example</h2>
+<p>Export the example course:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>CourseAsCode<span class="w"> </span>--<span class="w"> </span>-i<span class="w"> </span>Documentation/exampleCourse<span class="w"> </span>-o<span class="w"> </span>Documentation/out
+</span></code></pre></div>
+<h3 id="expected-output">Expected Output</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Starting CourseAsCode...
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>DONE!
+</span></code></pre></div>
+<h2 id="output-files">Output Files</h2>
+<p>After a successful export, the output folder will contain:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>out/
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   moodleCourse/              # Extracted backup structure
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>      activities/            # Activity XML files
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      course/                # Course configuration
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      files/                 # Uploaded files
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      sections/              # Section definitions
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>      moodle_backup.xml      # Main backup descriptor
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>      questions.xml          # Question bank
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>      ...
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   backup-moodle2-course-*.mbz  # The Moodle backup file
+</span></code></pre></div>
+<p>The <code>.mbz</code> file is what you'll import into Moodle.</p>
+<h2 id="verifying-the-export">Verifying the Export</h2>
+<h3 id="check-the-backup-file-exists">Check the backup file exists</h3>
+<p>After running the command, verify the <code>.mbz</code> file was created:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Windows</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dir<span class="w"> </span>Documentation<span class="se">\o</span>ut<span class="se">\*</span>.mbz
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Linux/Mac</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ls<span class="w"> </span>Documentation/out/*.mbz
+</span></code></pre></div>
+<h3 id="check-for-errors">Check for errors</h3>
+<p>If the export fails, check the log file for details:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>CourseAsCode/bin/Debug/net8.0/logs/app.log
+</span></code></pre></div>
+<p>Common errors include:</p>
+<ul>
+<li><strong>File not found</strong> - A referenced file (content, image, etc.) doesn't exist</li>
+<li><strong>Invalid YAML syntax</strong> - Check your YAML files for formatting errors</li>
+<li><strong>Missing required fields</strong> - Some fields in config.yaml are required</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="error-invalid-input-path">"Error: Invalid input path"</h3>
+<p>Make sure the input path:</p>
+<ul>
+<li>Points to a folder (not a file)</li>
+<li>Contains a valid <code>config.yaml</code> file</li>
+<li>Uses the correct path separator for your OS</li>
+</ul>
+<h3 id="error-missing-value-for-i">"Error: Missing value for -i"</h3>
+<p>You need to provide both input and output paths:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Correct</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>CourseAsCode<span class="w"> </span>--<span class="w"> </span>-i<span class="w"> </span>./MyCourse<span class="w"> </span>-o<span class="w"> </span>./output
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Wrong - missing output path</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>CourseAsCode<span class="w"> </span>--<span class="w"> </span>-i<span class="w"> </span>./MyCourse
+</span></code></pre></div>
+<h3 id="export-succeeds-but-mbz-file-is-empty-or-corrupted">Export succeeds but .mbz file is empty or corrupted</h3>
+<ol>
+<li>Check that all referenced files exist (content files, images, etc.)</li>
+<li>Verify your YAML syntax is correct</li>
+<li>Look at the log file for warnings</li>
+</ol>
+<h3 id="large-courses-take-a-long-time">Large courses take a long time</h3>
+<p>For courses with many files or large question banks, the export may take several minutes. This is normal.</p>
+<h2 id="next-steps">Next Steps</h2>
+<p>After successfully exporting your course:</p>
+<ol>
+<li><a href="../Importing_A_Course/">Import the Course into Moodle</a></li>
+</ol>
+<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><span data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-11-18T17:11:15+01:00'>2025-11-18</time></span><span data-tippy-content data-tippy-raw='2025-12-15'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-12-15T21:58:46+00:00'>2025-12-15</time></span><span class='material-icons' data-icon='doc_authors'></span><div class='avatar-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' src='' onerror="this.style.display='none'" /></div><div class='avatar-wrapper' data-name='Edvard Delegan' data-tippy-content data-tippy-raw='<a href="mailto:if24b270@technikum-wien.at">Edvard Delegan</a>'><span class='avatar-text'></span><img class='avatar' src='' onerror="this.style.display='none'" /></div></div></div></div>
 
 
 
