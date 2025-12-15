@@ -1,0 +1,2183 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://davimalu.github.io/course-as-code/MoodleBackupFile/Activities/Forum/">
+      
+      
+        <link rel="prev" href="../Assignment/">
+      
+      
+        <link rel="next" href="../Quiz/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Forum - Course as Code</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/mkdocs_puml/puml.css">
+    
+      <link rel="stylesheet" href="../../../assets/mkdocs_puml/interaction.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#analysis-of-forum-activity-backup-files-created-by-moodle" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Course as Code" class="md-header__button md-logo" aria-label="Course as Code" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Course as Code
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Forum
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Davimalu/course-as-code" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    davimalu/course-as-code
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Architecture/Overview/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../General/" class="md-tabs__link">
+          
+  
+  
+  Moodle Backup File (.mbz)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Course as Code" class="md-nav__button md-logo" aria-label="Course as Code" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Course as Code
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Davimalu/course-as-code" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    davimalu/course-as-code
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Architecture/Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Architecture/Reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Architecture/DataModel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Architecture/Writer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moodle Backup File (.mbz)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Moodle Backup File (.mbz)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../General/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    General
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Base_Structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Activites
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Activites
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Assignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forum
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#general-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Information
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forum-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forum Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analysis-of-xml-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analysis of XML Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analysis of XML Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forumxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forum.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="forum.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forum-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forum Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulexml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        module.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="module.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        grades.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="grades.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grade-item-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grade Item Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradingxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        grading.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="grading.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grading-area-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grading Area Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inforefxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inforef.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="inforef.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#completionxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        completion.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="completion.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#completion-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completion Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commentsxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        comments.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="comments.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competenciesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        competencies.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="competencies.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#competencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Competencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtersxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        filters.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="filters.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filter-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calendarxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        calendar.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="calendar.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grade_historyxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        grade_history.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="grade_history.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grades
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="roles.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-assignments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Assignments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xapistatexml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xapistate.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xapistate.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Quiz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QuestionTypes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    QuestionTypes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../QuestionTypes/CodeRunner/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CodeRunner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../QuestionTypes/Dropdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dropdown
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../QuestionTypes/DragAndDropText/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#general-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Information
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forum-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forum Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analysis-of-xml-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analysis of XML Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analysis of XML Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forumxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forum.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="forum.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forum-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forum Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulexml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        module.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="module.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        grades.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="grades.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grade-item-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grade Item Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradingxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        grading.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="grading.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grading-area-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grading Area Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inforefxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inforef.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="inforef.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#completionxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        completion.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="completion.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#completion-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completion Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commentsxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        comments.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="comments.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competenciesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        competencies.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="competencies.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#competencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Competencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtersxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        filters.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="filters.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filter-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calendarxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        calendar.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="calendar.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grade_historyxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        grade_history.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="grade_history.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grades
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="roles.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-assignments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Assignments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xapistatexml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        xapistate.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="xapistate.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="analysis-of-forum-activity-backup-files-created-by-moodle">Analysis of Forum Activity Backup Files Created by Moodle</h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The insights described on this page originate from reverse engineering conducted <strong>before</strong> the activity was implemented in Course as Code. Since small errors often came to light during the implementation process, and these were (unfortunately) not always corrected accordingly in the reverse engineering documentation, it's possible that the following information is in some parts <strong>incomplete</strong> or <strong>incorrect</strong>.</p>
+<p>It is therefore recommended to always cross-reference the information with the implementation in the writer classes.</p>
+</div>
+<h2 id="general-information">General Information</h2>
+<h3 id="forum-information">Forum Information</h3>
+<ul>
+<li>
+<p><strong>Name</strong>: <code>TestForum</code> - The name of the forum activity as displayed to users</p>
+</li>
+<li>
+<p><strong>Type</strong>: <code>general</code> - Specifies the type of forum</p>
+</li>
+<li>
+<p><strong>Intro</strong>: <code>&lt;p&gt;Forum&lt;/p&gt;</code> - Introductory text in HTML format</p>
+</li>
+<li>
+<p><strong>Due Date</strong>: <code>1734433020</code> (Unix timestamp) - Forum's due date</p>
+</li>
+<li>
+<p><strong>Cutoff Date</strong>: <code>1797505020</code> (Unix timestamp) - Forum's cutoff date</p>
+</li>
+<li>
+<p><strong>Max Attachments</strong>: <code>9</code> - Maximum number of file attachments allowed</p>
+</li>
+<li>
+<p><strong>Max Bytes</strong>: <code>5242880</code> - Maximum file size allowed for attachments</p>
+</li>
+<li>
+<p><strong>Force Subscribe</strong>: <code>0</code> - Users are not forced to subscribe</p>
+</li>
+<li>
+<p><strong>Tracking</strong>: Enabled - Post tracking is turned on</p>
+</li>
+</ul>
+<hr />
+<h2 id="analysis-of-xml-files">Analysis of XML Files</h2>
+<h3 id="forumxml"><strong>forum.xml</strong></h3>
+<p>The <code>forum.xml</code> file contains the main configuration and structure of the forum activity</p>
+<h4 id="forum-details">Forum Details</h4>
+<ul>
+<li>
+<p><strong>ID</strong>: <code>9</code> - Unique ID for the forum activity</p>
+</li>
+<li>
+<p><strong>Module ID</strong>: <code>14</code> - Module instance ID for the forum</p>
+</li>
+<li>
+<p><strong>Module Name</strong>: <code>forum</code> - Type of activity</p>
+</li>
+<li>
+<p><strong>Context ID</strong>: <code>69</code> - Forum context ID</p>
+</li>
+<li>
+<p><strong>Type</strong>: <code>general</code> - Type of the forum (e.g., general discussion)</p>
+</li>
+<li>
+<p><strong>Name</strong>: <code>TestForum</code> - Name of the forum</p>
+</li>
+<li>
+<p><strong>Intro</strong>: <code>&lt;p&gt;Forum&lt;/p&gt;</code> - Forum's introductory content in HTML</p>
+</li>
+<li>
+<p><strong>Intro Format</strong>: <code>1</code> - Format for the intro text (HTML)</p>
+</li>
+<li>
+<p><strong>Due Date</strong>: <code>1734433020</code> (Unix timestamp) - Forum's due date</p>
+</li>
+<li>
+<p><strong>Cutoff Date</strong>: <code>1797505020</code> (Unix timestamp) - Final cutoff date for submissions</p>
+</li>
+<li>
+<p><strong>Max Attachments</strong>: <code>9</code> - Maximum number of attachments allowed</p>
+</li>
+<li>
+<p><strong>Max Bytes</strong>: <code>5242880</code> - Maximum file size for attachments</p>
+</li>
+<li>
+<p><strong>Force Subscribe</strong>: Optional - Users are not forced to subscribe</p>
+</li>
+<li>
+<p><strong>Tracking Type</strong>: Enabled - Tracking of user posts is enabled</p>
+</li>
+<li>
+<p><strong>Tags</strong>: None - No tags assigned</p>
+</li>
+</ul>
+<hr />
+<h3 id="modulexml"><strong>module.xml</strong></h3>
+<p>The <code>module.xml</code> file defines the forum module and its placement within the course</p>
+<h4 id="module-details">Module Details</h4>
+<ul>
+<li>
+<p><strong>Module ID</strong>: <code>14</code> - ID of the forum module instance</p>
+</li>
+<li>
+<p><strong>Version</strong>: <code>2024100700</code> - Moodle version</p>
+</li>
+<li>
+<p><strong>Section ID</strong>: <code>20</code> - Course section ID</p>
+</li>
+<li>
+<p><strong>ID Number</strong>: <code>21</code> - Custom ID for the module</p>
+</li>
+<li>
+<p><strong>Added</strong>: <code>1734433118</code> (Unix timestamp) - Time the module was added</p>
+</li>
+<li>
+<p><strong>Visible</strong>: <code>Yes</code> - Module is visible to students</p>
+</li>
+<li>
+<p><strong>Download Content</strong>: Allowed - Downloading of module content is permitted</p>
+</li>
+<li>
+<p><strong>Tags</strong>: None - No tags assigned</p>
+</li>
+</ul>
+<hr />
+<h3 id="gradesxml"><strong>grades.xml</strong></h3>
+<p>The <code>grades.xml</code> file contains grade details for the forum</p>
+<h4 id="grade-item-details">Grade Item Details</h4>
+<p><strong>No grade items have been recorded</strong></p>
+<hr />
+<h3 id="gradingxml"><strong>grading.xml</strong></h3>
+<p>The <code>grading.xml</code> file defines grading areas for the forum activity</p>
+<h4 id="grading-area-details">Grading Area Details</h4>
+<ul>
+<li>
+<p><strong>Area ID</strong>: <code>3</code> - Grading area ID</p>
+</li>
+<li>
+<p><strong>Area Name</strong>: <code>forum</code> - Name of the grading area</p>
+</li>
+<li>
+<p><strong>Active Method</strong>: Not Configured - No active grading method set</p>
+</li>
+</ul>
+<hr />
+<h3 id="inforefxml"><strong>inforef.xml</strong></h3>
+<p>The <code>inforef.xml</code> file links users and grade items to the forum activity</p>
+<h4 id="references">References</h4>
+<p><strong>No references have been recorded</strong></p>
+<hr />
+<h3 id="completionxml"><strong>completion.xml</strong></h3>
+<p>The <code>completion.xml</code> file tracks completion settings for the forum</p>
+<h4 id="completion-views">Completion Views</h4>
+<p><strong>No completion settings or views have been recorded</strong></p>
+<hr />
+<h3 id="commentsxml"><strong>comments.xml</strong></h3>
+<p>The <code>comments.xml</code> file tracks comments made in the forum</p>
+<h4 id="comments">Comments</h4>
+<p><strong>No comments have been recorded</strong></p>
+<hr />
+<h3 id="competenciesxml"><strong>competencies.xml</strong></h3>
+<p>The <code>competencies.xml</code> file tracks competencies linked to the forum activity</p>
+<h4 id="competencies">Competencies</h4>
+<p><strong>No competencies have been recorded</strong></p>
+<hr />
+<h3 id="filtersxml"><strong>filters.xml</strong></h3>
+<p>The <code>filters.xml</code> file defines filter settings for the forum activity</p>
+<h4 id="filter-settings">Filter Settings</h4>
+<ul>
+<li>
+<p><strong>Filter Actives</strong>: None - No active filters applied</p>
+</li>
+<li>
+<p><strong>Filter Configurations</strong>: None - No specific filter configurations set</p>
+</li>
+</ul>
+<hr />
+<h3 id="calendarxml"><strong>calendar.xml</strong></h3>
+<p>The <code>calendar.xml</code> file contains information about calendar events related to the forum activity</p>
+<h4 id="events">Events</h4>
+<p><strong>No calendar events have been recorded</strong></p>
+<hr />
+<h3 id="grade_historyxml"><strong>grade_history.xml</strong></h3>
+<p>The <code>grade_history.xml</code> file records changes and updates to grades over time</p>
+<h4 id="grades">Grades</h4>
+<p><strong>No grade history has been recorded</strong></p>
+<hr />
+<h3 id="rolesxml"><strong>roles.xml</strong></h3>
+<p>The <code>roles.xml</code> file defines role assignments for the assignment</p>
+<h4 id="role-assignments">Role Assignments</h4>
+<p><strong>No role overrides or assignments exist</strong></p>
+<hr />
+<h3 id="xapistatexml"><strong>xapistate.xml</strong></h3>
+<p>The <code>xapistate.xml</code> file tracks xAPI states</p>
+<h4 id="states">States</h4>
+<p><strong>Empty - No xAPI states recorded</strong></p>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>The <strong>TestForum</strong> activity includes the following key points:</p>
+<ul>
+<li>
+<p>Allows up to <strong>9 attachments</strong> with a maximum size of <strong>5242880 bytes</strong></p>
+</li>
+<li>
+<p>Post tracking is enabled, and subscription is optional</p>
+</li>
+<li>
+<p>No grades, competencies, comments, or completion settings have been recorded</p>
+</li>
+<li>
+<p>Module and forum configurations have been properly defined</p>
+</li>
+<li>
+<p>Tags remain unassigned, and filter settings are inactive</p>
+</li>
+</ul>
+<p>This forum activity reflects the current state of the backup files provided</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Assignment/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Assignment">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Assignment
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Quiz/" class="md-footer__link md-footer__link--next" aria-label="Next: Quiz">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Quiz
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.expand", "search.suggest", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../../assets/mkdocs_puml/puml.js"></script>
+      
+        <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+      
+        <script src="../../../assets/mkdocs_puml/interaction.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2722 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://davimalu.github.io/course-as-code/MoodleBackupFile/Base_Structure/">
+      
+      
+        <link rel="prev" href="../General/">
+      
+      
+        <link rel="next" href="../Activities/Assignment/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Base Structure - Course as Code</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/mkdocs_puml/puml.css">
+    
+      <link rel="stylesheet" href="../../assets/mkdocs_puml/interaction.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#analysis-of-files-created-by-moodle-for-an-empty-course" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Course as Code" class="md-header__button md-logo" aria-label="Course as Code" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Course as Code
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Base Structure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Davimalu/course-as-code" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    davimalu/course-as-code
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Architecture/Overview/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../General/" class="md-tabs__link">
+          
+  
+  
+  Moodle Backup File (.mbz)
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Course as Code" class="md-nav__button md-logo" aria-label="Course as Code" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Course as Code
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Davimalu/course-as-code" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    davimalu/course-as-code
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Architecture/Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Architecture/Reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Architecture/DataModel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Architecture/Writer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moodle Backup File (.mbz)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Moodle Backup File (.mbz)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../General/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    General
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Structure
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#information-provided-to-moodle-in-the-course-creation-process-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information provided to Moodle in the course creation process (WEB-UI)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Information provided to Moodle in the course creation process (WEB-UI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Description
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#course-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appearance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appearance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files-and-uploads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files and uploads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#completion-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completion tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analysis-of-the-backup-files-created-by-moodle-for-an-empty-course" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analysis of the backup files created by Moodle for an empty course
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analysis of the backup files created by Moodle for an empty course">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-backup-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the backup file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extraction-of-the-backup-mbz-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extraction of the backup (.mbz) file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup file structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coursexml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enrolmentsxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        enrolments.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="enrolments.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-level-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-Level Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inside-each-enrol-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inside each &lt;enrol&gt; tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user_enrolments-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;user_enrolments&gt; Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inforefxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inforef.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesxml-inside-the-course-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles.xml (inside the course directory)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="roles.xml (inside the course directory)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#within-role_assignments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Within &lt;role_assignments&gt;:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#moodle_backupxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        moodle_backup.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="moodle_backup.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#information-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Details Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contents-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contents Section
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contents Section">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#course-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradebookxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gradebook.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        files.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Activites
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Activites
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Activities/Assignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Activities/Forum/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Activities/Quiz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QuestionTypes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    QuestionTypes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../QuestionTypes/CodeRunner/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CodeRunner
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../QuestionTypes/Dropdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dropdown
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../QuestionTypes/DragAndDropText/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#information-provided-to-moodle-in-the-course-creation-process-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information provided to Moodle in the course creation process (WEB-UI)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Information provided to Moodle in the course creation process (WEB-UI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Description
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#course-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appearance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appearance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files-and-uploads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files and uploads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#completion-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completion tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analysis-of-the-backup-files-created-by-moodle-for-an-empty-course" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analysis of the backup files created by Moodle for an empty course
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analysis of the backup files created by Moodle for an empty course">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-backup-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create the backup file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extraction-of-the-backup-mbz-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extraction of the backup (.mbz) file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup file structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coursexml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enrolmentsxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        enrolments.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="enrolments.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-level-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-Level Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inside-each-enrol-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inside each &lt;enrol&gt; tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user_enrolments-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;user_enrolments&gt; Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inforefxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inforef.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesxml-inside-the-course-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles.xml (inside the course directory)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="roles.xml (inside the course directory)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#within-role_assignments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Within &lt;role_assignments&gt;:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#moodle_backupxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        moodle_backup.xml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="moodle_backup.xml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#information-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Details Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contents-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contents Section
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contents Section">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#course-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings Section
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradebookxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gradebook.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        roles.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filesxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        files.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="analysis-of-files-created-by-moodle-for-an-empty-course">Analysis of files created by Moodle for an empty course</h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This document was one of the first pieces of documentation created during the reverse engineering process. At that time, we had only a very rudimentary understanding of the structure of a Moodle course and its backup file. Unfortunately, this document was <strong>not</strong> kept up to date, which is why the information it contains is very likely <strong>incomplete</strong> and/or <strong>incorrect</strong>.</p>
+<p>While the document can offer a good overview of a Moodle course's structure, it shouldn't be used for detailed information.</p>
+</div>
+<h2 id="information-provided-to-moodle-in-the-course-creation-process-web-ui">Information provided to Moodle in the course creation process (WEB-UI)</h2>
+<h3 id="general">General</h3>
+<ul>
+<li>Course full name: EmptyCourse</li>
+<li>Course short name: EmpCo</li>
+<li>Course Category: Category1</li>
+<li>Course Visibility: Show</li>
+<li>Course Start Date: 08 November 2024 00:00</li>
+<li>Course End Date: 08 November 2025 00:00</li>
+<li>Course ID number: <em>empty</em></li>
+</ul>
+<h3 id="description">Description</h3>
+<ul>
+<li>Course Summary: Test Summary</li>
+<li>Course Image: logo.png</li>
+</ul>
+<h3 id="course-format">Course Format</h3>
+<ul>
+<li>Format: Custom Sections</li>
+<li>Number of sections: 4</li>
+<li>Hidden sections: Hidden sections are completely invisible</li>
+<li>Course layout: Show all sections on one page</li>
+</ul>
+<h3 id="appearance">Appearance</h3>
+<ul>
+<li>Force language: Do not force</li>
+<li>Number of announcements: 0</li>
+<li>Show gradebook to students: Yes</li>
+<li>Show activity reports: No</li>
+<li>Show activity dates: Yes</li>
+</ul>
+<h3 id="files-and-uploads">Files and uploads</h3>
+<ul>
+<li>Maximum upload size: Site upload limit(40 MB)</li>
+</ul>
+<h3 id="completion-tracking">Completion tracking</h3>
+<ul>
+<li>Enable completion tracking: Yes</li>
+<li>Show activity completion conditions: Yes</li>
+</ul>
+<h3 id="groups">Groups</h3>
+<ul>
+<li>Group mode: No groups</li>
+<li>Force group mode: No</li>
+<li>Default grouping: None</li>
+</ul>
+<h3 id="tags">Tags</h3>
+<ul>
+<li>Tags: testTag</li>
+</ul>
+<h2 id="analysis-of-the-backup-files-created-by-moodle-for-an-empty-course">Analysis of the backup files created by Moodle for an empty course</h2>
+<h3 id="create-the-backup-file">Create the backup file</h3>
+<p>Course -&gt; More -&gt; Course reuse -&gt; Backup -&gt; Backup course with standard settings</p>
+<h3 id="extraction-of-the-backup-mbz-file">Extraction of the backup (.mbz) file</h3>
+<p>See <a href="https://docs.moodle.org/405/en/Backup_and_restore_FAQ#How_can_I_extract_original_files_from_a_Moodle_backup_file?">Moodle FAQ</a></p>
+<h3 id="backup-file-structure">Backup file structure</h3>
+<ul>
+<li><code>course</code></li>
+<li><code>calendar.xml</code><ul>
+<li>empty XML file</li>
+</ul>
+</li>
+<li><code>comments.xml</code><ul>
+<li>empty XML file</li>
+</ul>
+</li>
+<li><code>competencies.xml</code><ul>
+<li>empty XML file</li>
+</ul>
+</li>
+<li><code>completionDefaults.xml</code><ul>
+<li>empty XML file</li>
+</ul>
+</li>
+<li><code>contentbank.xml</code><ul>
+<li>empty XML file</li>
+</ul>
+</li>
+<li><code>course.xml</code><ul>
+<li>contains general information about the course, most of the information provided in the course creation process</li>
+</ul>
+</li>
+<li><code>enrolments.xml</code><ul>
+<li>contains information about the enrolments in the course</li>
+<li>See <a href="https://docs.moodle.org/405/en/Enrolments">Enrolments</a></li>
+</ul>
+</li>
+<li><code>filters.xml</code><ul>
+<li>empty XML file</li>
+</ul>
+</li>
+<li><code>inforef.xml</code><ul>
+<li>contains references to users, roles, and files associated with the course</li>
+</ul>
+</li>
+<li><code>roles.xml</code><ul>
+<li>seems to contain the assignment of roles to users in the course</li>
+</ul>
+</li>
+<li><code>files</code></li>
+<li><code>4e</code><ul>
+<li><code>4e3d7ade69bbaeaacd2e664327cc7e9952b0fbf0</code></li>
+<li>this is the file logo.png that was uploaded to the course</li>
+</ul>
+</li>
+<li><code>sections</code><ul>
+<li><code>section_1</code></li>
+<li><code>inforef.xml</code><ul>
+<li>empty XML file</li>
+</ul>
+</li>
+<li><code>section.xml</code><ul>
+<li>empty XML file</li>
+</ul>
+</li>
+<li><code>section_2</code></li>
+<li>All other sections are the same as section_1</li>
+<li><code>section_3</code></li>
+<li><code>section_4</code></li>
+<li><code>section_5</code></li>
+<li>Corresponds to the "General" section at the top + the 4 sections created in the course creation process</li>
+</ul>
+</li>
+<li><code>badges.xml</code></li>
+<li>empty XML file</li>
+<li><code>completion.xml</code></li>
+<li>empty XML file</li>
+<li><code>files.xml</code></li>
+<li>seems to contain information about the files uploaded to the course</li>
+<li>one of the entries correspons to the logo.png file</li>
+<li>one unknown entry</li>
+<li><code>grade_history.xml</code></li>
+<li>empty XML file</li>
+<li><code>gradebook.xml</code></li>
+<li>Contains information about the gradebook setup for the course</li>
+<li><code>groups.xml</code></li>
+<li>empty XML file</li>
+<li><code>moodle_backup.xml</code></li>
+<li>seems to contain metadata about the backup</li>
+<li><code>outcomes.xml</code></li>
+<li>empty XML file</li>
+<li><code>questions.xml</code></li>
+<li>empty XML file</li>
+<li><code>roles.xml</code></li>
+<li>seems to contain information about the roles available in the course</li>
+<li><code>scales.xml</code></li>
+<li>empty XML file</li>
+<li><code>users.xml</code></li>
+<li>empty XML file</li>
+</ul>
+<h3 id="coursexml">Course.xml</h3>
+<p>Contains general information about the course, mostly the information provided in the course creation process</p>
+<ul>
+<li><code>course id="2" contextid="14"</code></li>
+<li>wrapper for the course information</li>
+<li><code>id</code> is the course id as can be seen in the URL<ul>
+<li>http://localhost/course/view.php?id=2</li>
+<li>TODO: Determine how the course id is generated</li>
+</ul>
+</li>
+<li><code>contextid</code> is used by other files to identify this course<ul>
+<li>e.g. files.xml has a field <code>contextid="14"</code> stating that the file is related to this course</li>
+</ul>
+</li>
+<li><code>shortname</code></li>
+<li>The short name of the course as provided in the course creation process</li>
+<li><code>EmpCo</code></li>
+<li><code>fullname</code></li>
+<li>The full name of the course as provided in the course creation process</li>
+<li><code>EmptyCourse</code></li>
+<li><code>idnumber</code></li>
+<li>The id number of the course as provided in the course creation process</li>
+<li><code>empty</code></li>
+<li><code>summary</code></li>
+<li>The summary of the course as provided in the course creation process</li>
+<li><code>&lt;p&gt;Test Summary&lt;/p&gt;</code></li>
+<li><code>summaryformat</code></li>
+<li>The format of the summary - 1 probably means HTML</li>
+<li><code>1</code></li>
+<li><code>format</code></li>
+<li>The format of the course as provided in the course creation process</li>
+<li><code>topics</code></li>
+<li><code>topics</code> seemingly corresponds to "Format: Custom Sections" in the course creation process</li>
+<li>TODO: Determine the possible values for this field</li>
+<li><code>showgrades</code></li>
+<li>Whether to show grades to students as provided in the course creation process</li>
+<li><code>0</code> means No</li>
+<li><code>1</code> means Yes</li>
+<li><code>newsitems</code></li>
+<li>The number of announcements to show as provided in the course creation process</li>
+<li><code>0</code></li>
+<li><code>startdate</code></li>
+<li>The start date of the course as provided in the course creation process</li>
+<li>saved as a Unix timestamp</li>
+<li><code>1731024000</code> corresponds to <code>08 November 2024 00:00</code></li>
+<li><code>enddate</code></li>
+<li>The end date of the course as provided in the course creation process</li>
+<li>saved as a Unix timestamp</li>
+<li><code>1762560000</code> corresponds to <code>08 November 2025 00:00</code></li>
+<li><code>marker</code></li>
+<li><code>0</code></li>
+<li><a href="https://moodle.org/mod/forum/discuss.php?d=388688">Not helpful</a></li>
+<li><code>maxbytes</code></li>
+<li>The maximum upload size as provided in the course creation process</li>
+<li><code>0</code></li>
+<li>TODO: Determine the possible values for this field<ul>
+<li><code>0</code> means Site upload limit(40 MB)?</li>
+</ul>
+</li>
+<li><code>legacyfiles</code></li>
+<li>Moodle uses a new file system since version 2.0; this setting probably tells moodle if this backup uses the new or old file system</li>
+<li>See <a href="https://docs.moodle.org/405/en/Legacy_course_files">moodle docs</a></li>
+<li><code>0</code> means new file system (no legacy files)</li>
+<li><code>showreports</code></li>
+<li>Whether to show activity reports as provided in the course creation process</li>
+<li><code>0</code> means No</li>
+<li><code>1</code> means Yes</li>
+<li><code>visible</code></li>
+<li>The visibility of the course as provided in the course creation process</li>
+<li><code>1</code> means Show</li>
+<li><code>0</code> means Hide</li>
+<li><code>groupmode</code></li>
+<li>The group mode of the course as provided in the course creation process</li>
+<li><code>0</code> means No groups</li>
+<li><code>1</code> means Separate groups?</li>
+<li><code>2</code> means Visible groups?</li>
+<li><code>groupmodeforce</code></li>
+<li>Whether to force the group mode as provided in the course creation process</li>
+<li><code>0</code> means No</li>
+<li><code>1</code> means Yes</li>
+<li><code>defaultgroupingid</code></li>
+<li>The default grouping of the course as provided in the course creation process</li>
+<li><code>0</code> means None</li>
+<li><code>lang</code></li>
+<li>The force language setting as provided in the course creation process</li>
+<li><code>""</code> means Do not force</li>
+<li><code>theme</code></li>
+<li><code>""</code></li>
+<li>if the course uses a custom theme, it would probably be specified here</li>
+<li>the value probably must match the name of a theme in the Moodle installation, see <a href="https://moodledev.io/docs/4.4/apis/plugintypes/theme#getting-your-theme-to-appear-correctly-in-theme-selector">moodle docs</a></li>
+<li><code>timecreated</code></li>
+<li>The time the course was created</li>
+<li>saved as a Unix timestamp</li>
+<li><code>1731001588</code> corresponds to <code>Thu Nov 07 2024 18:46:28</code></li>
+<li><code>timemodified</code></li>
+<li>The time the course was last modified</li>
+<li>saved as a Unix timestamp</li>
+<li><code>1731001588</code> corresponds to <code>Thu Nov 07 2024 18:46:28</code></li>
+<li><code>requested</code></li>
+<li><code>0</code></li>
+<li>This might have something to do with automatic backups, see <a href="https://moodle.org/mod/forum/discuss.php?d=442987">here</a> and <a href="https://docs.moodle.org/405/en/Automated_course_backup">here</a></li>
+<li><code>showActivityDates</code></li>
+<li>Whether to show activity dates as provided in the course creation process</li>
+<li><code>1</code> means Yes</li>
+<li><code>0</code> means No</li>
+<li><code>showCompletionConditions</code></li>
+<li>Whether to show activity completion conditions as provided in the course creation process</li>
+<li><code>1</code> means Yes</li>
+<li><code>0</code> means No</li>
+<li><code>pdfexportfont</code><ul>
+<li><code>"$@NULL@$"</code></li>
+<li>probably refers to the name of the font used for PDF exports</li>
+<li>if empty, the default font is used?</li>
+</ul>
+</li>
+<li><code>enableCompletion</code></li>
+<li>Whether to enable completion tracking as provided in the course creation process</li>
+<li>refers either to <a href="https://docs.moodle.org/405/en/Using_Activity_completion">this</a> or <a href="https://docs.moodle.org/405/en/Course_completion">that</a></li>
+<li><code>1</code> means Yes</li>
+<li><code>0</code> means No</li>
+<li><code>completionnotify</code></li>
+<li><code>0</code></li>
+<li>whether to send a notification when a course/activity is completed?</li>
+<li>maybe see <a href="https://docs.moodle.org/405/en/Notifications#List_of_notification_types">here</a></li>
+<li><code>category id="1"</code></li>
+<li>The category of the course as provided in the course creation process</li>
+<li>TODO: Determine how the id is determined</li>
+<li><code>tags</code></li>
+<li>The tags of the course as provided in the course creation process</li>
+<li><code>testTag</code></li>
+<li><code>customfields</code></li>
+<li><code>""</code></li>
+<li>probably refers to <a href="https://moodledev.io/docs/4.4/apis/plugintypes/customfield">this</a></li>
+<li><code>courseformatoptions</code></li>
+<li><code>courseformatoption</code><ul>
+<li>TBD</li>
+</ul>
+</li>
+<li><code>courseformatoption</code><ul>
+<li>Probably corresponds to the "Hidden sections" setting in the course creation process</li>
+</ul>
+</li>
+</ul>
+<h3 id="enrolmentsxml">enrolments.xml</h3>
+<p><code>enrol</code> seems to define the different enrolment methods available for the course.
+<code>user_enrolments</code> seems to define the individual users enrolled in the course.</p>
+<h4 id="top-level-structure">Top-Level Structure</h4>
+<ul>
+<li><code>&lt;enrolments&gt;</code>: The root element containing all enrolment information.</li>
+<li><code>&lt;enrols&gt;</code>: A container for individual enrolment methods.</li>
+</ul>
+<h4 id="inside-each-enrol-tag">Inside each <code>&lt;enrol&gt;</code> tag</h4>
+<ul>
+<li><code>id</code>: Unique identifier, TBD</li>
+<li><code>1</code></li>
+<li>TODO: Determine how the id is generated</li>
+<li><code>enrol</code>: Type of enrolment method (e.g. manual, self, guest, etc.)</li>
+<li><code>manual</code></li>
+<li>See <a href="https://docs.moodle.org/405/en/Enrolment_methods">Enrolment methods</a></li>
+<li><code>status</code>: Indicates if the enrolment method is active</li>
+<li><code>0</code> for active</li>
+<li><code>name</code>: Name of the enrolment method</li>
+<li><code>$@NULL@$</code> signifies no specific name?</li>
+<li><code>enrolperiod</code>: Duration for which the enrolment is valid</li>
+<li><code>0</code> means unlimited</li>
+<li><code>enrolstartdate</code> and <code>enrolenddate</code>: Start and end dates for the enrolment period</li>
+<li>represented as Unix timestamps</li>
+<li><code>0</code> indicates no date set?</li>
+<li><code>expirynotify</code>: Whether expiration notifications are enabled?</li>
+<li><code>0</code></li>
+<li><code>expirythreshold</code>: TBD</li>
+<li><code>86400</code></li>
+<li><code>notifyall</code>: TBD</li>
+<li><code>0</code></li>
+<li><code>password</code>: Password required for enrolment?</li>
+<li><code>$@NULL@$</code> means no password?</li>
+<li><code>cost</code> and <code>currency</code>: Used for paid enrolments?</li>
+<li><code>$@NULL@$</code> means not applicable?</li>
+<li><code>roleid</code>: Default role assigned upon enrolment?</li>
+<li><code>5</code> corresponds to the role of a student?</li>
+<li>TODO: Determine what the role id corresponds to</li>
+<li><code>customintX</code>, <code>customcharX</code>, <code>customdecX</code>, <code>customtextX</code>: Custom fields for additional configurations?</li>
+<li><code>$@NULL@$</code> indicates unused?</li>
+<li><code>timecreated</code> and <code>timemodified</code>: Timestamps for when the enrolment was created and last modified?</li>
+<li>saved as Unix timestamps</li>
+</ul>
+<h4 id="user_enrolments-section"><code>&lt;user_enrolments&gt;</code> Section</h4>
+<p>Contains the individual enrolled users for this method.
+The one entry in this section corresponds to the Admin User who created the course.
+- <code>enrolment id</code>: Unique ID for the enrolment instance?
+  - <code>1</code>
+  - TODO: Determine how the id is generated
+- <code>status</code>: Active (0) or suspended (1).
+  - Corresponds to: EmptyCourse -&gt; Participants -&gt; Status -&gt; <em>Pencil Symbol</em> of a participant -&gt; Status
+- <code>userid</code>: ID of the user enrolled?
+- <code>timestart</code> and <code>timeend</code>: Start and end of the enrolment period for this user.
+  - Corresponds to: EmptyCourse -&gt; Participants -&gt; Status -&gt; <em>Pencil Symbol</em> of a participant -&gt; Enrolment starts and Enrolment ends
+- <code>modifierid</code>: ID of the user who last modified the enrolment?
+  - <code>2</code> corresponds to the Admin User who created the course?
+- <code>timemodified</code>: Timestamp of the last modification.
+  - saved as Unix timestamps </p>
+<h3 id="inforefxml">inforef.xml</h3>
+<p>Contains references to users, roles, and files associated with the course.\
+Probably ensures that the correct users, roles, and files are associated with the course during the restore process.</p>
+<ul>
+<li><code>&lt;inforef&gt;</code>: root element of the file</li>
+<li><code>&lt;userref&gt;</code>: contains references to users who are part of the Moodle course?</li>
+<li><code>&lt;user&gt;</code>: Each user has an <code>&lt;id&gt;</code> tag.<ul>
+<li><code>&lt;id&gt;2&lt;/id&gt;</code>: Refers to a user with the internal ID <code>2</code> in Moodle</li>
+<li>This ID likely corresponds to the Admin User who created the course.</li>
+</ul>
+</li>
+<li><code>&lt;roleref&gt;</code>: lists roles associated with the course?</li>
+<li><code>&lt;role&gt;</code>: Each role has an <code>&lt;id&gt;</code> tag.<ul>
+<li><code>&lt;id&gt;3&lt;/id&gt;</code> and <code>&lt;id&gt;5&lt;/id&gt;</code>: could correspond to specific roles like student, teacher, or manager within the Moodle course.</li>
+<li><code>5</code> corresponds to the role of a student?</li>
+<li>TODO: Determine the role corresponding to each ID.</li>
+</ul>
+</li>
+<li><code>&lt;fileref&gt;</code>: references files linked to the course?</li>
+<li><code>&lt;file&gt;</code>: Each file has an <code>&lt;id&gt;</code> tag.<ul>
+<li><code>&lt;id&gt;11&lt;/id&gt;</code> and <code>&lt;id&gt;12&lt;/id&gt;</code>: These IDs correspond to the id of the two files that appear in files.xml</li>
+<li><code>11</code> corresponds to the logo.png file uploaded to the course.</li>
+<li><code>12</code> corresponds to an unknown file.</li>
+</ul>
+</li>
+</ul>
+<h3 id="rolesxml-inside-the-course-directory">roles.xml (inside the course directory)</h3>
+<p>seems to contain the assignment of roles to users in the course</p>
+<ul>
+<li><code>&lt;roles&gt;</code>: root element that encapsulates all role-related data.</li>
+<li><code>&lt;role_overrides&gt;</code>: used to store any custom permissions or overrides for specific roles?</li>
+<li><code>&lt;role_assignments&gt;</code>: contains role assignments for users?</li>
+</ul>
+<h4 id="within-role_assignments">Within <code>&lt;role_assignments&gt;</code>:</h4>
+<ul>
+<li><code>&lt;assignment id="1"&gt;</code>:</li>
+<li>represents a single role assignment?</li>
+<li><code>id="1"</code> indicates this is the first assignment entry in the system?</li>
+<li><code>&lt;roleid&gt;</code>: specifies the role assigned to the user</li>
+<li><code>3</code> likely corresponds to a specific role in Moodle</li>
+<li><code>&lt;userid&gt;</code>: identifies the user to whom the role is assigned</li>
+<li><code>2</code> likely corresponds to the Admin User who created the course.</li>
+<li><code>&lt;timemodified&gt;</code>: indicates when the role assignment was last modified?</li>
+<li>stored as a Unix timestamp</li>
+<li><code>&lt;modifierid&gt;</code>: refers to the user who last modified this role assignment?</li>
+<li><code>2</code> likely corresponds to the Admin User who created the course.</li>
+<li><code>&lt;component&gt;</code> and <code>&lt;itemid&gt;</code>: TBD</li>
+<li><code>&lt;sortorder&gt;</code>: TBD</li>
+</ul>
+<h3 id="moodle_backupxml">moodle_backup.xml</h3>
+<p>contains various metadata about the backup process and the backup itself</p>
+<ul>
+<li><code>&lt;moodle_backup&gt;</code>: root element for the backup metadata</li>
+</ul>
+<h4 id="information-section">Information Section</h4>
+<ul>
+<li><code>&lt;name&gt;</code>: The name of the backup file <code>backup-moodle2-course-2-empco-20241107-1749.mbz</code></li>
+<li><code>&lt;moodle_version&gt;</code>: The version of Moodle used to create the backup</li>
+<li><code>2024100700</code></li>
+<li>Corresponds to Moodle version 4.5, see <a href="https://moodledev.io/general/releases">Moodle versions</a></li>
+<li><code>&lt;moodle_release&gt;</code>: The release of Moodle used to create the backup</li>
+<li><code>4.5 (Build: 20241007)</code></li>
+<li><code>&lt;backup_version&gt;</code> &amp; <code>&lt;backup_release&gt;</code></li>
+<li>Correspond to <code>&lt;moodle_version&gt;</code> and <code>&lt;moodle_release&gt;</code></li>
+<li>TODO: Determine the difference between these fields</li>
+<li><code>&lt;backup_date&gt;</code>: timestamp when the backup was created</li>
+<li><code>1731001753</code></li>
+<li>saved as a Unix timestamp</li>
+<li>Corresponds to <code>Thu Nov 07 2024 18:49:13 GMT+0100</code></li>
+<li><code>&lt;mnet_remoteusers&gt;</code>: TBD</li>
+<li><code>0</code> means disabled?</li>
+<li>Seems to be <a href="https://docs.moodle.org/405/en/MNet">deprecated</a></li>
+<li><code>&lt;include_files&gt;</code>: Indicates whether files are included in the backup</li>
+<li><code>1</code> means files are included</li>
+<li>Determined in the backup settings when creating the backup</li>
+<li><code>&lt;include_file_references_to_external_content&gt;</code>: TBD</li>
+<li><code>0</code> means disabled?</li>
+<li><code>&lt;original_wwwroot&gt;</code>: URL of the Moodle instance that was backed up?</li>
+<li><code>http://127.0.0.1:8080</code></li>
+<li><code>&lt;original_course_id&gt;</code>: ID of the ?original? course in Moodle</li>
+<li><code>2</code></li>
+<li>Original refers to the name the course had when the backup was created?</li>
+<li><strong>These values seem to be the same as in the course.xml file</strong></li>
+<li><code>&lt;original_course_format&gt;</code>: The format of the original course</li>
+<li><code>topics</code></li>
+<li><code>&lt;original_course_fullname&gt;</code>: Full name of the original course</li>
+<li><code>EmptyCourse</code></li>
+<li><code>&lt;original_course_shortname&gt;</code>: Short name of the original course</li>
+<li><code>EmpCo</code></li>
+<li><code>&lt;original_course_startdate&gt;</code>: Start date of the original course as unix timestamp</li>
+<li><code>1731024000</code></li>
+<li><code>&lt;original_course_enddate&gt;</code>: End date of the original course as unix timestamp</li>
+<li><code>1762560000</code></li>
+<li><code>&lt;original_course_contextid&gt;</code>: Context ID of the original course</li>
+<li><code>14</code></li>
+<li><code>&lt;original_system_contextid&gt;</code>: TBD</li>
+<li><code>1</code></li>
+<li>This value doesn't appear in the course.xml file</li>
+</ul>
+<h4 id="details-section">Details Section</h4>
+<ul>
+<li><code>&lt;detail&gt;</code>: Wrapper for the course details</li>
+<li><code>&lt;detail backup_id="c11e1f6cbc2ae39039d726d36c3e6a4a"&gt;</code>: Unique ID for the backup</li>
+<li>TODO: Determine how the backup ID is generated</li>
+<li>Only appears in the moodle_backup.xml file</li>
+<li><code>&lt;type&gt;</code>: Type of the backup?</li>
+<li><code>course</code></li>
+<li>TODO: Determine the possible values for this field</li>
+<li><code>&lt;format&gt;</code>: Format of the backup?</li>
+<li><code>moodle2</code></li>
+<li>Seems to refer to the <a href="https://docs.moodle.org/dev/Backup_2.0">"new" backup format</a></li>
+<li><code>&lt;interactive&gt;</code>: TBD</li>
+<li><code>1</code></li>
+<li><code>&lt;mode&gt;</code>: TBD</li>
+<li><code>70</code></li>
+<li><code>&lt;execution&gt;</code>: TBD</li>
+<li><code>2</code></li>
+<li><code>&lt;executiontime&gt;</code>: TBD</li>
+<li><code>0</code></li>
+</ul>
+<h4 id="contents-section">Contents Section</h4>
+<ul>
+<li><code>&lt;sections&gt;</code>: wrapper for the course sections</li>
+<li>contains multiple <code>&lt;section&gt;</code> elements <ul>
+<li>corresponding to the 5 sections in the course</li>
+</ul>
+</li>
+<li>Seemingly used to determine the order of the sections in the course</li>
+<li><code>&lt;sectionid&gt;</code>: Unique ID of the section.</li>
+<li><code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code></li>
+<li>TODO: Determine how the section ID is generated<ul>
+<li>simply ascending numbers?</li>
+</ul>
+</li>
+<li><code>&lt;title&gt;</code>: Section title?</li>
+<li><code>0</code>, <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code></li>
+<li>Why are these values numbers?</li>
+<li>TODO: Try giving the sections names in the course creation process and see if they appear here</li>
+<li><code>&lt;directory&gt;</code>: Path in the backup directory for the section.</li>
+<li><code>sections/section_1</code></li>
+<li><code>&lt;parentcmid/&gt;</code>: TBD</li>
+<li>empty</li>
+<li><code>&lt;modname/&gt;</code>: TBD</li>
+<li>empty</li>
+</ul>
+<h5 id="course-section">Course Section</h5>
+<ul>
+<li><code>&lt;course&gt;</code>: wrapper for the course information</li>
+<li><code>&lt;courseid&gt;</code>: Course ID</li>
+<li><code>2</code></li>
+<li>Corresponds to the course ID in the URL and in the course.xml file</li>
+<li><code>&lt;title&gt;</code>: Course title</li>
+<li><code>EmpCo</code></li>
+<li>Corresponds to the short name of the course in the course.xml file</li>
+<li><code>&lt;directory&gt;</code>: Path in the backup directory for the course</li>
+<li><code>course</code></li>
+</ul>
+<h4 id="settings-section">Settings Section</h4>
+<p>Contains the settings that were selected when the backup was created.
+Corresponds to the UI settings when creating the backup.</p>
+<ul>
+<li><code>&lt;settings&gt;</code>: wrapper for various backup settings</li>
+<li><code>&lt;setting&gt;</code>: contains individual settings</li>
+<li><code>&lt;level&gt;</code>: indicates whether the setting applies to the root, section, or other components<ul>
+<li><code>root</code> refers to the course level?</li>
+<li><code>section</code> refers to the individual sections?</li>
+</ul>
+</li>
+<li><code>&lt;section&gt;</code>: The section to which the setting applies?<ul>
+<li><code>section_1</code>, <code>section_2</code>, <code>section_3</code>, <code>section_4</code>, <code>section_5</code></li>
+<li>only appears for settings that apply to sections</li>
+</ul>
+</li>
+<li><code>&lt;name&gt;</code>: name of the setting<ul>
+<li>Seemingly a key-value pair in the form of <code>&lt;name&gt;</code> and <code>&lt;value&gt;</code></li>
+</ul>
+</li>
+<li><code>&lt;value&gt;</code>: value of the setting<ul>
+<li><code>1</code> or <code>0</code> for boolean settings</li>
+</ul>
+</li>
+</ul>
+<p>States which elements are included in the backup, e.g.:
+- <code>users=1</code>: User data is included
+- <code>logs=0</code>: Logs are excluded</p>
+<h3 id="gradebookxml">gradebook.xml</h3>
+<p>contains information about the gradebook setup for the course.\
+It's probably necessary to understand how grading in moodle works to fully understand this file.</p>
+<ul>
+<li><code>&lt;attributes&gt;</code>: probably a placeholder for additional metadata</li>
+<li><code>&lt;grade_categories&gt;</code>: groups grade items into categories</li>
+<li>probably refers to <a href="https://docs.moodle.org/405/en/Grade_categories">this</a></li>
+<li><code>&lt;grade_category&gt;</code>: contains information about a single grade category<ul>
+<li><code>id</code>: unique identifier for the grade category</li>
+</ul>
+</li>
+<li><code>&lt;parent&gt;</code>: <code>"$@NULL@$"</code><ul>
+<li>ID of the parent category; <code>$@NULL@$</code> indicates no parent.</li>
+<li>probably an integer value if a parent category exists</li>
+</ul>
+</li>
+<li><code>&lt;depth&gt;</code>: <code>"1"</code><ul>
+<li>probably indicates the category's depth in the hierarchy</li>
+</ul>
+</li>
+<li><code>&lt;path&gt;</code>: <code>"/1/"</code><ul>
+<li>probably path to the category's position in the hierarchy</li>
+<li>based on IDs</li>
+</ul>
+</li>
+<li><code>&lt;fullname&gt;</code>: <code>"?"</code><ul>
+<li>name of the category?</li>
+</ul>
+</li>
+<li><code>&lt;aggregation&gt;</code>: <code>"13"</code><ul>
+<li>Maybe the aggregation method used for the category?</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_aggregation">Grade aggregation</a></li>
+</ul>
+</li>
+<li><code>&lt;keephigh&gt;</code>: <code>"0"</code><ul>
+<li>only retain the X highest grades, X being the selected value for this option</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_categories#Keep_the_highest">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;droplow&gt;</code>: <code>"0"</code><ul>
+<li>drop the X lowest grades, X being the selected value for this option</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_categories#Drop_the_lowest">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;aggregateonlygraded&gt;</code>: <code>"1"</code><ul>
+<li>whether to treat non-graded items in the category as 0 zero points reached (0) or ignore them (1)</li>
+<li>boolean value (1 or 0)</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_categories#Aggregate_only_non-empty_grades">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;aggregateoutcomes&gt;</code>: <code>"0"</code><ul>
+<li>whether to include outcomes in aggregation (whatever that means)</li>
+<li>boolean value (1 or 0)</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_categories#Include_outcomes_in_aggregation">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;timecreated&gt;</code>: <code>"1731001607"</code><ul>
+<li>timestamp for when the category was created</li>
+<li>Unix timestamp</li>
+</ul>
+</li>
+<li><code>&lt;timemodified&gt;</code>: <code>"1731001607"</code><ul>
+<li>timestamp for when the category was last modified</li>
+<li>Unix timestamp</li>
+</ul>
+</li>
+<li><code>&lt;hidden&gt;</code>: <code>"0"</code><ul>
+<li>whether the category is hidden; <code>0</code> probably means visible</li>
+<li>boolean value (1 or 0)</li>
+</ul>
+</li>
+<li><code>&lt;grade_items&gt;</code></li>
+<li>defines individual gradeable items.</li>
+<li>probably refers to <a href="https://docs.moodle.org/405/en/Grade_items">this</a></li>
+<li><code>&lt;grade_item&gt;</code>: <code>id="1"</code><ul>
+<li>contains information about a single grade item</li>
+<li>unique identifier for the grade item.</li>
+</ul>
+</li>
+<li><code>&lt;categoryid&gt;</code>: <code>"$@NULL@$"</code><ul>
+<li>probably ID of the category to which the item belongs.</li>
+<li><code>$@NULL@$</code> indicates no category.</li>
+</ul>
+</li>
+<li><code>&lt;itemname&gt;</code>: <code>"$@NULL@$"</code><ul>
+<li>name of the grade item, e.g. the assignment name.</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;itemtype&gt;</code>: <code>"course"</code><ul>
+<li>type of the grade item</li>
+<li>possible values: assigment, workshop, lesson, quiz?</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;itemmodule&gt;</code>: <code>"$@NULL@$"</code></li>
+<li><code>&lt;iteminstance&gt;</code>: <code>1</code></li>
+<li><code>&lt;itemnumber&gt;</code>: <code>"$@NULL@$"</code></li>
+<li><code>&lt;iteminfo&gt;</code>: <code>"$@NULL@$"</code><ul>
+<li>general information about the grade item; optional</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;idnumber&gt;</code>: <code>"$@NULL@$"</code></li>
+<li><code>&lt;calculation&gt;</code>: <code>"$@NULL@$"</code><ul>
+<li>probably has something to do with <a href="https://docs.moodle.org/405/en/Grade_calculations">this</a></li>
+</ul>
+</li>
+<li><code>&lt;gradetype&gt;</code>: <code>"1"</code> <ul>
+<li>type of grading</li>
+<li>There are 4 grade types:</li>
+<li>None - No grading possible </li>
+<li>Value - A numerical value with a maximum and minimum </li>
+<li>Scale - An item in a list - see Scales </li>
+<li>Text - Feedback only</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;grademax&gt;</code>: <code>"0.00000"</code><ul>
+<li>The maximum grade that can be given</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Manual_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;grademin&gt;</code>: <code>"0.00000"</code><ul>
+<li>The minimum grade that can be given</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Manual_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;scaleid&gt;</code>: <code>"$@NULL@$"</code></li>
+<li><code>&lt;outcomeid&gt;</code>: <code>"$@NULL@$"</code></li>
+<li><code>&lt;gradepass&gt;</code>: <code>"0.00000"</code><ul>
+<li>minimum grade a student must achieve to be considered to have passed this item</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;multfactor&gt;</code>: <code>1.00000</code><ul>
+<li>factor by which all grade for this grade item will be multiplied</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;plusfactor&gt;</code>: <code>0.00000</code><ul>
+<li>number that will be added to every grade for this grade item, after the Multiplicator is applied</li>
+<li>can be negative</li>
+<li>maybe refers to <strong>offset</strong> in <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a>?</li>
+</ul>
+</li>
+<li><code>&lt;aggregationcoef&gt;</code>: <code>0.00000</code></li>
+<li><code>&lt;aggregationcoef2&gt;</code>: <code>"0.00000"</code></li>
+<li><code>&lt;weightoverride&gt;</code>: <code>"0"</code><ul>
+<li>probably somehow refers to the <strong>weight</strong> as seen on the screenshots in the <a href="https://docs.moodle.org/405/en/Grade_items#/media/File:editingradeitem.png">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;sortorder&gt;</code>: <code>"1"</code><ul>
+<li>position in the list of grade items?</li>
+</ul>
+</li>
+<li><code>&lt;display&gt;</code>: <code>"0"</code></li>
+<li><code>&lt;decimals&gt;</code>: <code>$@NULL@$</code><ul>
+<li>the number of decimal points to display for each grade?</li>
+<li>refers to <strong>overall decimal points</strong> on <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a>?</li>
+</ul>
+</li>
+<li><code>&lt;hidden&gt;</code>: <code>"0"</code><ul>
+<li>whether the grade item is hidden from students</li>
+</ul>
+</li>
+<li><code>&lt;locked&gt;</code>: <code>"0"</code><ul>
+<li>whether to lock this grade item</li>
+<li>A locked grade item doesn't accept changes to its settings or grades from its related module.</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;locktime&gt;</code>: <code>"0"</code><ul>
+<li>a date after which the locking will be effective, usually after the grades release date</li>
+<li>probably a Unix timestamp</li>
+<li>See <a href="https://docs.moodle.org/405/en/Grade_items#Activity-based_grade_items">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;needsupdate&gt;</code>: <code>"0"</code><ul>
+<li>whether the grade item needs updating???</li>
+</ul>
+</li>
+<li><code>&lt;timecreated&gt;</code>: <code>"1731001607"</code><ul>
+<li>timestamp for when the grade item was created.</li>
+<li>Unix timestamp</li>
+</ul>
+</li>
+<li><code>&lt;timemodified&gt;</code>: <code>"1731001607"</code><ul>
+<li>timestamp for when the grade item was last modified.</li>
+<li>Unix timestamp</li>
+</ul>
+</li>
+<li><code>&lt;grade_grades&gt;</code>:</li>
+<li><code>&lt;grade_letters&gt;</code>: </li>
+<li>probably refers to <a href="https://docs.moodle.org/405/en/Grade_letters">this</a></li>
+<li><code>&lt;grade_settings&gt;</code>: stores global gradebook settings?</li>
+<li>it seems that each setting is stored as a <code>&lt;grade_setting&gt;</code> element</li>
+<li><code>&lt;grade_setting&gt;</code>:<ul>
+<li><code>id</code>: <code>"1"</code></li>
+<li><code>&lt;name&gt;</code>: <code>"minmaxtouse"</code></li>
+<li><code>&lt;value&gt;</code>: <code>"1"</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="rolesxml">roles.xml</h3>
+<p>seems to contain information about the roles available in the course</p>
+<ul>
+<li><code>&lt;roles_definition&gt;</code></li>
+<li>Root element containing all role definitions</li>
+<li>encapsulates multiple <code>&lt;role&gt;</code> elements</li>
+<li><code>&lt;role&gt;</code>: <code>id="3"</code></li>
+<li>defines a single role</li>
+<li>each <code>&lt;role&gt;</code> element seems to represent a specific role in Moodle</li>
+<li><code>&lt;name&gt;</code>: <code></code> (empty)<ul>
+<li>full name of the role</li>
+<li>only needed for custom roles, see <a href="https://docs.moodle.org/2x/ca/Creating_custom_roles#Creating_a_new_role">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;shortname&gt;</code>: <code>editingteacher</code><ul>
+<li>short name of the role</li>
+</ul>
+</li>
+<li><code>&lt;nameincourse&gt;</code>: <code>$@NULL@$</code><ul>
+<li>custom name for the role specific to the course?</li>
+<li><code>$@NULL@$</code> if no custom name is set</li>
+</ul>
+</li>
+<li><code>&lt;description&gt;</code>: <code></code> (empty)<ul>
+<li>optional description of the role, see <a href="https://docs.moodle.org/2x/ca/Creating_custom_roles#Creating_a_new_role">moodle docs</a></li>
+</ul>
+</li>
+<li><code>&lt;sortorder&gt;</code>:  <code>3</code><ul>
+<li>position in the list of roles?</li>
+</ul>
+</li>
+<li><code>&lt;archetype&gt;</code>: <code>editingteacher</code><ul>
+<li>A role archetype is a template for a role, see <a href="https://moodledev.io/docs/4.4/apis/subsystems/roles#programming-interface">moodle docs</a></li>
+<li>"editing teacher" is the default role assigned to individuals who create course content and then use this content to teach students, see <a href="https://docs.moodle.org/2x/pl/Hosting_for_moodle_teachers">moodle docs</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="filesxml">files.xml</h3>
+<p>seems to contain information about the files uploaded to the course</p>
+<ul>
+<li><code>&lt;files&gt;</code>: root element containing all file information</li>
+<li><code>&lt;file&gt;</code>: represents a single file's metadata</li>
+<li>each file is identified by an <code>&lt;id&gt;</code> tag, other files in the backup reference this ID</li>
+<li>the two entries in this file correspond to the two files mentioned in inforef.xml</li>
+<li><code>&lt;contenthash&gt;</code>: <code>4e3d7ade69bbaeaacd2e664327cc7e9952b0fbf0</code><ul>
+<li>the file content hash is calculated by taking a <strong>SHA1 hash</strong> of the content of the file, see <a href="https://moodledev.io/docs/4.3/apis/subsystems/files/internals#file-system">moodle docs</a></li>
+<li>used to uniquely identify the file</li>
+</ul>
+</li>
+<li><code>&lt;contextid&gt;</code>: <code>14</code><ul>
+<li>probably has something to do with <a href="https://docs.moodle.org/405/en/Context">this</a> and <a href="https://docs.moodle.org/405/en/Override_permissions">this</a></li>
+</ul>
+</li>
+<li><code>&lt;component&gt;</code>: <code>course</code><ul>
+<li>moodle component associated with the file?</li>
+</ul>
+</li>
+<li><code>&lt;filearea&gt;</code>: <code>overviewfiles</code></li>
+<li><code>&lt;itemid&gt;</code>: <code>0</code></li>
+<li><code>&lt;filepath&gt;</code>: <code></code> (empty)<ul>
+<li>Why is this field empty? Shouldn't it contain the path to the file?</li>
+<li>the <code>logo.png</code> file is stored in the <code>4e</code> directory inside the <code>files</code> directory</li>
+</ul>
+</li>
+<li><code>&lt;filename&gt;</code>: <code>logo.png</code><ul>
+<li>the original name of the file</li>
+</ul>
+</li>
+<li><code>&lt;userid&gt;</code>: <code>3</code><ul>
+<li>identifies the user who uploaded the file</li>
+<li>seems to correspond to the Admin User who created the course</li>
+</ul>
+</li>
+<li><code>&lt;filesize&gt;</code>: <code>27519</code><ul>
+<li>size of the file in bytes</li>
+</ul>
+</li>
+<li><code>&lt;mimetype&gt;</code>: <code>image/png</code><ul>
+<li>describes the file's MIME type</li>
+</ul>
+</li>
+<li><code>&lt;status&gt;</code>: <code>0</code></li>
+<li><code>&lt;timecreated&gt;</code>: <code>1731136235</code><ul>
+<li>timestamp for when the file was created</li>
+<li>Unix timestamp</li>
+</ul>
+</li>
+<li><code>&lt;timemodified&gt;</code>: <code>1731136235</code><ul>
+<li>timestamp for when the file was last modified</li>
+<li>Unix timestamp</li>
+</ul>
+</li>
+<li><code>&lt;source&gt;</code>: <code>logo.png</code><ul>
+<li>How does this differ from <code>&lt;filename&gt;</code>?</li>
+</ul>
+</li>
+<li><code>&lt;author&gt;</code>: <code>Admin User</code><ul>
+<li>the name of the user who created/uploaded the file</li>
+</ul>
+</li>
+<li><code>&lt;license&gt;</code>: <code>unknown</code><ul>
+<li>seems to specify the file's license</li>
+</ul>
+</li>
+<li><code>&lt;sortorder&gt;</code>: <code>0</code><ul>
+<li>determines the order of files when displayed?</li>
+</ul>
+</li>
+<li><code>&lt;repositorytype&gt;</code>: <code>$@NULL@$</code></li>
+<li><code>&lt;repositoryid&gt;</code>: <code>$@NULL@$</code></li>
+<li><code>&lt;reference&gt;</code>: <code>$@NULL@$</code></li>
+</ul>
+<p>The second file entry in the file.xml file seems to correspond to a file marker of the UNIX file system (<code>.</code>)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../General/" class="md-footer__link md-footer__link--prev" aria-label="Previous: General">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                General
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Activities/Assignment/" class="md-footer__link md-footer__link--next" aria-label="Next: Assignment">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Assignment
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.expand", "search.suggest", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../assets/mkdocs_puml/puml.js"></script>
+      
+        <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+      
+        <script src="../../assets/mkdocs_puml/interaction.js"></script>
+      
+    
+  </body>
+</html>
