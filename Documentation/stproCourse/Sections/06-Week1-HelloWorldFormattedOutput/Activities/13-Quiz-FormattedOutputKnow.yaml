@@ -1,0 +1,9 @@
+Name: "FORMATTED_OUTPUT_KNOW+"
+Type: QUIZ
+Description: |
+  <p>identify, recall, recognize and reproduce format specifications.</p>
+AttemptsAllowed: 5
+GradingMethod: HighestGrade
+QuestionBehaviour: Deferred
+ShuffleQuestions: false
+QuestionIds: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34]

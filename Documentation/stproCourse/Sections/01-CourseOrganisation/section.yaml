@@ -1,0 +1,9 @@
+SectionName: "Course Organisation"
+Summary: ""
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/00-CourseInfo.yaml
+  - ActivityFilePath: Activities/01-Exercises.yaml
+  - ActivityFilePath: Activities/02-DemoCode.yaml
+  - ActivityFilePath: Activities/03-Handout.yaml
+  - ActivityFilePath: Activities/04-Slides.yaml

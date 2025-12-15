@@ -1,0 +1,6 @@
+SectionName: "Course Communication"
+Summary: ""
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/00-CommunicationInfo.yaml
+  - ActivityFilePath: Activities/01-ForumPlaceholder.yaml

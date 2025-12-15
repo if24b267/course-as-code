@@ -1,0 +1,6 @@
+Type: label
+Name: Anwesenheit
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/03-Anwesenheit.md

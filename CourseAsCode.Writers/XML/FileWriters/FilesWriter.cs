@@ -114,7 +114,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
             var elements = new Dictionary<string, string>
         {
             { "contenthash", contentHash },
-            { "contextid", _generalHelper.EnumIntegerToString(file.Context) },
+            { "contextid", file.ActivityId.ToString() },
             { "component", file.SystemDefaults.Component != null ? _fileHelper.GetComponentFromEnum((Component)file.SystemDefaults.Component) : "course" },
             { "filearea", file.SystemDefaults.FileArea != null ? _fileHelper.GetFileAreaFromEnum((FileArea)file.SystemDefaults.FileArea) : "content" },
             { "itemid", "0" }, // If there is only one of a file area per context, the itemid is 0, see https://moodledev.io/docs/5.0/apis/subsystems/files#file-areas
@@ -136,6 +136,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
         };
 
             WriteElements(writer, elements);
+            writer.WriteEndElement(); // Close <file>
             CopyFileToBackupFolder(outputPath, fileStream, contentHash);
             fileStream.Dispose();
         }

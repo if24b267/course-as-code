@@ -1,0 +1,17 @@
+SectionName: "Self study B: Calculations"
+Summary: |
+  After completing this self-study you will be able to:
+  - Read and store textual and numeric values
+
+  Getting Input:
+  Reading values on the console lets you take input directly from the user while your program is running, like asking for their name or a number. It's important because it makes your programs interactive, allowing them to respond to whatever data the user provides.
+
+  Variables:
+  When getting input, we store the input in variables. Variables in Java are like containers that hold data, allowing you to store and manipulate values throughout your program. Combined with arithmetic operations, they let you perform calculations, track changes, and handle numbers.
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/01-SelfStudyInstructions.yaml
+  - ActivityFilePath: Activities/02-URL-Expressions.yaml
+  - ActivityFilePath: Activities/03-URL-DataTypes.yaml
+  - ActivityFilePath: Activities/04-URL-ClassToStatement.yaml
+  - ActivityFilePath: Activities/05-URL-Conditionals.yaml

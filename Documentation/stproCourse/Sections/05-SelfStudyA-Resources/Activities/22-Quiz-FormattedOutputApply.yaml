@@ -1,0 +1,9 @@
+Name: "FORMATTED_OUTPUT_APPLY+"
+Type: QUIZ
+Description: |
+  <p>create formatted output using format specifiers.</p>
+AttemptsAllowed: 5
+GradingMethod: HighestGrade
+QuestionBehaviour: Deferred
+ShuffleQuestions: false
+QuestionIds: [45, 46, 47, 48, 49]

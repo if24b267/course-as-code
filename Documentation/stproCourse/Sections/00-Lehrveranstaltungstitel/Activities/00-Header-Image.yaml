@@ -1,0 +1,6 @@
+Type: label
+Name: "Kursübersicht Header"
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/00-Header-Image.md
