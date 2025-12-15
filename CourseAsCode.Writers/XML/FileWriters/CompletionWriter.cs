@@ -8,23 +8,11 @@ namespace CourseAsCode.Writers.XML.Writer
     {
         private const string DEFAULT_COMPLETION_RELATIVE_PATH = "completion.xml";
 
-
-        /// <summary>
-        /// Creates a new instance of the CompletionWriter class
-        /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
-        /// <param name="logger">Logger instance specific to CompletionWriter</param>
         public CompletionWriter(IXmlWriterFactory xmlWriterFactory, ILogger<CompletionWriter> logger)
             : base(xmlWriterFactory, logger)
         {
         }
 
-
-        /// <summary>
-        /// Stores the information about which users have completed the course; NOT IMPLEMENTED (yet?).
-        /// </summary>
-        /// <param name="course">The course data.</param>
-        /// <param name="outputPath">The directory where the completion.xml file will be created.</param>
         public void WriteCompletion(Model.Course course, string outputPath = "completion.xml")
         {
             try
@@ -35,10 +23,15 @@ namespace CourseAsCode.Writers.XML.Writer
                     writer.WriteStartDocument();
                     writer.WriteStartElement("course_completion");
 
-                    // Add whitespace to prevent a self-closing tag
-                    //writer.WriteWhitespace("\n");
+                    if (course.Completions != null)
+                    {
+                        foreach (var completion in course.Completions)
+                        {
+                            WriteSingleCompletion(writer, completion);
+                        }
+                    }
 
-                    writer.WriteEndElement(); // Close </course_completion>
+                    writer.WriteEndElement(); // </course_completion>
                     writer.WriteEndDocument();
                 }
 
@@ -49,6 +42,29 @@ namespace CourseAsCode.Writers.XML.Writer
                 LogError(e, $"Error writing {DEFAULT_COMPLETION_RELATIVE_PATH}");
                 throw;
             }
+        }
+
+        private void WriteSingleCompletion(XmlWriter writer, Model.CourseCompletion completion)
+        {
+            WriteStartElementWithAttributes(writer, "course_completions", new Dictionary<string, string>
+            {
+                { "id", completion.Id.ToString() }
+            });
+
+            var elements = new Dictionary<string, string>
+            {
+                { "userid", completion.UserId.ToString() },
+                { "course", completion.CourseId.ToString() },
+                { "timeenrolled", completion.TimeEnrolled.ToString() },
+                { "timestarted", completion.TimeStarted.ToString() },
+                { "timecompleted", completion.TimeCompleted?.ToString() ?? "$@NULL@$" },
+                { "reaggregate", completion.Reaggregate.ToString() }
+            };
+
+            WriteElements(writer, elements);
+
+            writer.WriteEndElement(); // </course_completions>
+            LogTrace($"Added completion {completion.Id} for user {completion.UserId} to {DEFAULT_COMPLETION_RELATIVE_PATH}");
         }
     }
 }

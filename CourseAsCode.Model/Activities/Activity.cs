@@ -41,5 +41,6 @@ namespace CourseAsCode.Model.Activities
 
         public required int ModuleId { get; set; }
         public required string ModuleName { get; set; }
+        public object GradeItems { get; set; }
     }
 }

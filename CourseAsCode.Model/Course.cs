@@ -1,9 +1,8 @@
-using System.ComponentModel;
-
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Grading;
 using CourseAsCode.Model.Questions;
+using System.ComponentModel;
 
 namespace CourseAsCode.Model
 {
@@ -31,8 +30,10 @@ namespace CourseAsCode.Model
         public List<User> EnrolledUsers { get; set; } = CourseDefaults.DEFAULT_ENROLLED_USERS;
         [Description("All the questions available in this course for quizzes, i.e. the question bank")]
         public List<Question> Questions { get; set; } = new();
-        [Description("All the grade categories available in this course for grading, e.g. a theoretical and a practical part")]
-        public List<GradeCategory> GradeCategories { get; set; } = new();
+        [Description("list of scales that are available in the course")]
+        public List<Scale> Scales { get; set; } = CourseDefaults.DEFAULT_SCALES;
+        [Description("list of course completions for this course")]
+        public List<CourseCompletion> Completions { get; set; } = CompletionDefaults.DEFAULT_COMPLETIONS;
 
         public BackupMetadata BackupMetadata { get; set; } = new BackupMetadata();
         public SensibleDefaultsCourse SensibleDefaults { get; set; } = new SensibleDefaultsCourse();
@@ -90,5 +91,8 @@ namespace CourseAsCode.Model
             [Description("MANDATORY! path to the course folder in the backup directory")]
             public string FilePath { get; set; } = CourseDefaults.DEFAULT_FILE_PATH;
         }
+
+        // Add this property to the Course class to fix CS1061
+        public List<GradeCategory> GradeCategories { get; set; } = new List<GradeCategory>();
     }
 }

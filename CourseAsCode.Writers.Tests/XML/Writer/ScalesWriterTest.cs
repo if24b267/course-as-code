@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters;
 using Microsoft.Extensions.Logging;

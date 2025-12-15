@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;

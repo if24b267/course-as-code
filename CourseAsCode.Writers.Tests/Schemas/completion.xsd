@@ -1,9 +1,23 @@
-﻿<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:element name="course_completion">
-		<xs:complexType>
-			<xs:sequence>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-</xs:schema>
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="course_completion">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="course_completions" type="CourseCompletionsType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
+    <xs:complexType name="CourseCompletionsType">
+        <xs:sequence>
+            <xs:element name="userid" type="xs:int"/>
+            <xs:element name="course" type="xs:int"/>
+            <xs:element name="timeenrolled" type="xs:long"/>
+            <xs:element name="timestarted" type="xs:long"/>
+            <xs:element name="timecompleted" type="xs:string"/>
+            <xs:element name="reaggregate" type="xs:long"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:int" use="required"/>
+    </xs:complexType>
+
+</xs:schema>

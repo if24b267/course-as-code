@@ -89,6 +89,12 @@ public static class UserDefaults
         new User.UserPreference { Id = 1, Name = "core_message_migrate_data", Value = "1" }
     };
 
+    // Default für UserCustomFields
+    public static readonly List<User.CustomField> DEFAULT_CUSTOM_FIELDS = new()
+    {
+        new User.CustomField { Id = 1, FieldName = "test", FieldType = "text", FieldData = "" },
+    };
+
     /// <summary>
     /// Returns a user object with all properties set to the default values
     /// </summary>
@@ -164,7 +170,8 @@ public static class UserDefaults
                 AcceptMessagesFromContactsOnly = DEFAULT_ACCEPT_MESSAGES_FROM_CONTACTS_ONLY,
             },
             Tags = DEFAULT_TAGS,
-            Preferences = DEFAULT_PREFERENCES
+            Preferences = DEFAULT_PREFERENCES,
+            CustomFields = DEFAULT_CUSTOM_FIELDS
         };
     }
 }

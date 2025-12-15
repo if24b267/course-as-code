@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model.Enums.Grading;
+using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
