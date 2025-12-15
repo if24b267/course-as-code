@@ -93,7 +93,7 @@ nav:
       - URL: Activities/URL.md
       - Quiz:
         - Activities/Quiz/index.md
-        - Question Types: Activities/Quiz/QuestionTypes.md
+        - Question Types: Activities/Quiz/Question_Types.md
   - Grading:
       - Overview: Grading/Overview.md
       - Grade Categories: Grading/Grade_Categories.md
