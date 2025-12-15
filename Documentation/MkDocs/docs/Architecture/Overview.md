@@ -36,6 +36,6 @@ Writer -down-> Backup: writes
 
 More detailed information on the individual components can be found on the following pages:
 
-* [Reader](./Reader.md)
+* [Readers](./Readers.md)
 * [Internal Data Model](./DataModel/index.md)
 * [Writer](./Writer.md)
