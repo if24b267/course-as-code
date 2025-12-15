@@ -17,6 +17,7 @@ using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
+using CourseAsCode.Writers.XML.Writer.Activities.Folder;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
@@ -125,6 +126,8 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<ModuleWriterChoice>();
             services.AddSingleton<FeedbackWriter>();
             services.AddSingleton<ModuleWriterFeedback>();
+            services.AddSingleton<FolderWriter>();
+            services.AddSingleton<ModuleWriterFolder>();
 
             // Register the main writer and its dependencies
             services.AddSingleton<IActivitiesWriterService, ActivitiesWriterService>();

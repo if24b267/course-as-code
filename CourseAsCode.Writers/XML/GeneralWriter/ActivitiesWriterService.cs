@@ -14,6 +14,7 @@ using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Activities.Wiki;
 using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
+using CourseAsCode.Writers.XML.Writer.Activities.Folder;
 using Microsoft.Extensions.Logging;
 using CourseAsCode.Model.Activities.Choice;
 
@@ -69,6 +70,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             private readonly FeedbackWriter _feedbackWriter;
             private readonly ModuleWriterFeedback _moduleWriterFeedback;
 
+            // Folder Activity Writers
+            private readonly FolderWriter _folderWriter;
+            private readonly ModuleWriterFolder _moduleWriterFolder;
+
             public ActivitiesWriterService(
                 ILogger<ActivitiesWriterService> logger,
                 IFileService fileService,
@@ -97,7 +102,9 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 ChoiceWriter choiceWriter,
                 ModuleWriterChoice moduleWriterChoice,
                 FeedbackWriter feedbackWriter,
-                ModuleWriterFeedback moduleWriterFeedback)
+                ModuleWriterFeedback moduleWriterFeedback,
+                FolderWriter folderWriter,
+                ModuleWriterFolder moduleWriterFolder)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
@@ -146,6 +153,11 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 // Feedback Activity Writers
                 _feedbackWriter = feedbackWriter ?? throw new ArgumentNullException(nameof(feedbackWriter));
                 _moduleWriterFeedback = moduleWriterFeedback ?? throw new ArgumentNullException(nameof(moduleWriterFeedback));
+
+                // Folder Activity Writers
+                _folderWriter = folderWriter ?? throw new ArgumentNullException(nameof(folderWriter));
+                _moduleWriterFolder = moduleWriterFolder ?? throw new ArgumentNullException(nameof(moduleWriterFolder));
+
         }
 
 
@@ -219,6 +231,12 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                             activityPath = CreateActivityDirectory(outputPath, activity, "feedback");
                             _feedbackWriter.WriteFeedback(activityPath, feedback);
                             _moduleWriterFeedback.WriteModule(activityPath, course, section, feedback);
+                        }
+                        else if (activity is Folder folder)
+                        {
+                            activityPath = CreateActivityDirectory(outputPath, activity, "folder");
+                            _folderWriter.WriteFolder(activityPath, folder);
+                            _moduleWriterFolder.WriteModule(activityPath, course, section, folder);
                         }
                         else
                         {
