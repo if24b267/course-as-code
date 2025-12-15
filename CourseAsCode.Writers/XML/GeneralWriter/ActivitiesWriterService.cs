@@ -284,17 +284,13 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                             _schedulerWriter.WriteScheduler(activityPath, scheduler);
                             _moduleWriterScheduler.WriteModule(activityPath, course, section, scheduler);
                         }
-                    else if (activity is LessonModel lesson)
-                    {
-                        activityPath = CreateActivityDirectory(outputPath, activity, "lesson");
-                        if (string.IsNullOrEmpty(activityPath)) { _logger.LogWarning("Skipping lesson {ActivityId} due to directory creation failure", activity.ActivityId); continue; }
-
-                        _logger.LogDebug("Writing lesson files to {Path} for activity {ActivityId}", activityPath, activity.ActivityId);
-                        _lessonWriter.WriteLesson(activityPath, lesson);
-                        _moduleWriterLesson.WriteModule(activityPath, course, section, lesson);
-                        _logger.LogDebug("Finished writing lesson {ActivityId}", activity.ActivityId);
-                    }
-                    else
+                        else if (activity is LessonModel lesson)
+                        {
+                            activityPath = CreateActivityDirectory(outputPath, activity, "lesson");
+                            _lessonWriter.WriteLesson(activityPath, lesson);
+                            _moduleWriterLesson.WriteModule(activityPath, course, section, lesson);
+                        }
+                        else
                         {
                             // If the activity type is not handled, we log a warning and skip it
                             _logger.LogWarning($"Activity type {activity.GetType().Name} for {activity.Name} (ID: {activity.ActivityId}) unknown. Skipping specific writers...");
