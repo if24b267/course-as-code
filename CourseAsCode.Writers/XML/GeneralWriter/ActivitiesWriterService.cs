@@ -17,8 +17,10 @@ using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using CourseAsCode.Writers.XML.Writer.Activities.Folder;
 using CourseAsCode.Writers.XML.Writer.Activities.Pages;
 using CourseAsCode.Writers.XML.Writer.Activities.Scheduler;
+using CourseAsCode.Writers.XML.FileWriters.Activities.Lesson;
 using Microsoft.Extensions.Logging;
 using CourseAsCode.Model.Activities.Choice;
+using LessonModel = CourseAsCode.Model.Activities.Resources.Lesson;
 
 namespace CourseAsCode.Writers.XML.GeneralWriter
     {
@@ -84,6 +86,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             private readonly SchedulerWriter _schedulerWriter;
             private readonly ModuleWriterScheduler _moduleWriterScheduler;
 
+            //Lesson Activity Writers
+            private readonly LessonWriter _lessonWriter;
+            private readonly ModuleWriterLesson _moduleWriterLesson;
+
             public ActivitiesWriterService(
                 ILogger<ActivitiesWriterService> logger,
                 IFileService fileService,
@@ -118,8 +124,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 PageWriter pageWriter,
                 ModuleWriterPage moduleWriterPage,
                 SchedulerWriter schedulerWriter,
-                ModuleWriterScheduler moduleWriterScheduler)
-            {
+                ModuleWriterScheduler moduleWriterScheduler,
+                LessonWriter lessonWriter,
+                ModuleWriterLesson moduleWriterLesson)
+        {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
 
@@ -179,6 +187,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 // Scheduler Activity Writers
                 _schedulerWriter = schedulerWriter ?? throw new ArgumentNullException(nameof(schedulerWriter));
                 _moduleWriterScheduler = moduleWriterScheduler ?? throw new ArgumentNullException(nameof(moduleWriterScheduler));
+
+                //Lesson Activity Writers
+                _lessonWriter = lessonWriter ?? throw new ArgumentNullException(nameof(lessonWriter));
+                _moduleWriterLesson = moduleWriterLesson ?? throw new ArgumentNullException(nameof(moduleWriterLesson));
 
         }
 
@@ -272,7 +284,17 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                             _schedulerWriter.WriteScheduler(activityPath, scheduler);
                             _moduleWriterScheduler.WriteModule(activityPath, course, section, scheduler);
                         }
-                        else
+                    else if (activity is LessonModel lesson)
+                    {
+                        activityPath = CreateActivityDirectory(outputPath, activity, "lesson");
+                        if (string.IsNullOrEmpty(activityPath)) { _logger.LogWarning("Skipping lesson {ActivityId} due to directory creation failure", activity.ActivityId); continue; }
+
+                        _logger.LogDebug("Writing lesson files to {Path} for activity {ActivityId}", activityPath, activity.ActivityId);
+                        _lessonWriter.WriteLesson(activityPath, lesson);
+                        _moduleWriterLesson.WriteModule(activityPath, course, section, lesson);
+                        _logger.LogDebug("Finished writing lesson {ActivityId}", activity.ActivityId);
+                    }
+                    else
                         {
                             // If the activity type is not handled, we log a warning and skip it
                             _logger.LogWarning($"Activity type {activity.GetType().Name} for {activity.Name} (ID: {activity.ActivityId}) unknown. Skipping specific writers...");
