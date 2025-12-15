@@ -30,8 +30,16 @@ namespace CourseAsCode.Writers.XML.FileWriters
                     writer.WriteStartDocument();
 
                     writer.WriteStartElement("scales_definition");
-                    writer.WriteEndElement(); // Close <scales_definition>
 
+                    if (course.Scales != null)
+                    {
+                        foreach (var scale in course.Scales)
+                        {
+                            WriteSingleScale(writer, scale);
+                        }
+                    }
+
+                    writer.WriteEndElement(); // </scales_definition>
                     writer.WriteEndDocument();
                 }
 
@@ -42,6 +50,35 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 LogError(e, $"Error writing {DEFAULT_SCALES_RELATIVE_PATH}");
                 throw;
             }
+        }
+
+        private void WriteSingleScale(XmlWriter writer, Model.Scale scale)
+        {
+            WriteStartElementWithAttributes(writer, "scale", new Dictionary<string, string>
+            {
+                { "id", scale.Id.ToString() }
+            });
+
+            WriteScaleElements(writer, scale);
+
+            writer.WriteEndElement(); // </scale>
+            LogTrace($"Added scale {scale.Id}: '{scale.Name}' to {DEFAULT_SCALES_RELATIVE_PATH}");
+        }
+
+        private void WriteScaleElements(XmlWriter writer, Model.Scale scale)
+        {
+            var elements = new Dictionary<string, string>
+            {
+                { "courseid", scale.CourseId.ToString() },
+                { "userid", scale.UserId.ToString() },
+                { "name", scale.Name ?? string.Empty },
+                { "scale", scale.ScaleValues ?? string.Empty },
+                { "description", scale.Description ?? string.Empty },
+                { "descriptionformat", scale.DescriptionFormat.ToString() },
+                { "timemodified", scale.TimeModified.ToString() }
+            };
+
+            WriteElements(writer, elements);
         }
     }
 }

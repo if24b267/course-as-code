@@ -36,6 +36,7 @@ public class User
     public UserPreferencesClass UserPreferences { get; set; } = new UserPreferencesClass();
     public List<UserTag> Tags { get; set; } = new();
     public List<UserPreference> Preferences { get; set; } = new();
+    public List<CustomField> CustomFields { get; set; } = new();
 
     // Defaults
     public class SensibleDefaultsUser
@@ -153,5 +154,13 @@ public class User
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Value { get; set; }
+    }
+
+    public class CustomField
+    {
+        public int Id { get; set; }
+        public string FieldName { get; set; } = string.Empty;
+        public string FieldType { get; set; } = string.Empty;
+        public string? FieldData { get; set; }
     }
 }

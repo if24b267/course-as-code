@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model.Activities;
+using CourseAsCode.Model.Activities;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;

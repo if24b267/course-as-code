@@ -23,6 +23,7 @@ public static class CourseDefaults
           ManualEnrolmentDefaults.GetDefaultManualEnrolment(),
      };
     public static readonly List<User> DEFAULT_ENROLLED_USERS = new List<User>();
+    public static readonly List<Scale> DEFAULT_SCALES = ScaleDefaults.DEFAULT_SCALES;
 
     // Sensible Defaults
     public static readonly int? DEFAULT_NUMBER_OF_ANNOUNCEMENTS_TO_DISPLAY = 3;

@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Writers.Tests.Fakes;

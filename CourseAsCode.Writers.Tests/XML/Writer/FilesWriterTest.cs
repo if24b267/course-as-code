@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
