@@ -3,6 +3,7 @@ using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
+using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
@@ -87,8 +88,11 @@ namespace CourseAsCode.Readers.YAML.Readers
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
                     return ConvertYamlQuestionToDragAndDropTextQuestion(yamlQuestion);
                 case QuestionType.CODERUNNER:
-                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CoderunnerQuestion");
                     return ConvertYamlQuestionToCodeRunnerQuestion(yamlQuestion);
+                case QuestionType.DESCRIPTION:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DescriptionQuestion");
+                    return ConvertYamlQuestionToDescriptionQuestion(yamlQuestion);
                 default:
                     _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
                     break;
@@ -119,6 +123,21 @@ namespace CourseAsCode.Readers.YAML.Readers
                 DisplayFeedback = yamlQuestion.DisplayFeedback,
                 GiveUpAllowed = yamlQuestion.GiveUpAllowed,
                 TestCases = ConvertYamlCodeRunnerTestCasesToCodeRunnerTestCases(yamlQuestion.CodeRunnerTestCases),
+            };
+
+            return question;
+        }
+
+        private DescriptionQuestion ConvertYamlQuestionToDescriptionQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new DescriptionQuestion()
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                DefaultMark = yamlQuestion.DefaultMark,
             };
 
             return question;

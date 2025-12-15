@@ -14,7 +14,7 @@ QuestionBehaviour: InteractiveMultipleTries
 ShuffleQuestions: true
 AllowRedosDuringAttempt: false
 Password: password
-QuestionIds: [1, 2, 3, 14]
+QuestionIds: [1, 2, 3, 14, 15]
 # TODO: add feedback
 # TODO: how to set to take a number of questions from the question file?
 # TODO: do we want to support the question bank or does every quiz require its own questions?
