@@ -15,6 +15,12 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         {
         }
 
+        // NEW: Backward-compatible overload for existing tests and callers
+        public void WriteGrade(string outputPath)
+        {
+            WriteGrade(outputPath, new List<Grade>());
+        }
+
         /// <summary>
         /// Writes the grades.xml file required for an activity.
         /// </summary>
