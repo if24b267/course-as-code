@@ -37,7 +37,7 @@ The entry point is `CourseReader.Read(path, format)`.
 
 The following diagram illustrates the relationships between the core interfaces and their YAML implementations.
 
-```plantuml
+```puml
 @startuml
 skinparam classAttributeIconSize 0
 
@@ -90,7 +90,7 @@ YamlActivityReader ..> YamlAssignmentReader : delegates to
 ### Sequence Diagram: Reading a Course
 This sequence demonstrates how a `Read` call propagates through the system.
 
-```
+```puml
 @startuml
 participant Client
 participant "CourseReader" as CR
