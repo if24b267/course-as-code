@@ -1,5 +1,6 @@
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Grading;
 using CourseAsCode.Model.Questions;
 using System.ComponentModel;
 
@@ -90,5 +91,8 @@ namespace CourseAsCode.Model
             [Description("MANDATORY! path to the course folder in the backup directory")]
             public string FilePath { get; set; } = CourseDefaults.DEFAULT_FILE_PATH;
         }
+
+        // Add this property to the Course class to fix CS1061
+        public List<GradeCategory> GradeCategories { get; set; } = new List<GradeCategory>();
     }
 }

@@ -16,6 +16,7 @@ using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using CourseAsCode.Writers.XML.Writer.Activities.Folder;
 using CourseAsCode.Writers.XML.Writer.Activities.Pages;
+using CourseAsCode.Writers.XML.Writer.Activities.Scheduler;
 using Microsoft.Extensions.Logging;
 using CourseAsCode.Model.Activities.Choice;
 
@@ -79,7 +80,11 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             private readonly PageWriter _pageWriter;
             private readonly ModuleWriterPage _moduleWriterPage;
 
-        public ActivitiesWriterService(
+            // Scheduler Activity Writers
+            private readonly SchedulerWriter _schedulerWriter;
+            private readonly ModuleWriterScheduler _moduleWriterScheduler;
+
+            public ActivitiesWriterService(
                 ILogger<ActivitiesWriterService> logger,
                 IFileService fileService,
                 ActivityGradesWriter activityGradesWriter,
@@ -111,7 +116,9 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 FolderWriter folderWriter,
                 ModuleWriterFolder moduleWriterFolder,
                 PageWriter pageWriter,
-                ModuleWriterPage moduleWriterPage)
+                ModuleWriterPage moduleWriterPage,
+                SchedulerWriter schedulerWriter,
+                ModuleWriterScheduler moduleWriterScheduler)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
@@ -168,6 +175,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 // Page Activity Writers
                 _pageWriter = pageWriter ?? throw new ArgumentNullException(nameof(pageWriter));
                 _moduleWriterPage = moduleWriterPage ?? throw new ArgumentNullException(nameof(moduleWriterPage));
+
+                // Scheduler Activity Writers
+                _schedulerWriter = schedulerWriter ?? throw new ArgumentNullException(nameof(schedulerWriter));
+                _moduleWriterScheduler = moduleWriterScheduler ?? throw new ArgumentNullException(nameof(moduleWriterScheduler));
 
         }
 
@@ -254,6 +265,12 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                             activityPath = CreateActivityDirectory(outputPath, activity, "page");
                             _pageWriter.WritePage(activityPath, page);
                             _moduleWriterPage.WriteModule(activityPath, course, section, page);
+                        }
+                        else if (activity is Scheduler scheduler)
+                        {
+                            activityPath = CreateActivityDirectory(outputPath, activity, "scheduler");
+                            _schedulerWriter.WriteScheduler(activityPath, scheduler);
+                            _moduleWriterScheduler.WriteModule(activityPath, course, section, scheduler);
                         }
                         else
                         {
