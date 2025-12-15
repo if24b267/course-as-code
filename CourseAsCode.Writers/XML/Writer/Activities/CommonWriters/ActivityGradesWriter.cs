@@ -15,7 +15,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
         {
         }
 
-        // NEW: Backward-compatible overload for existing tests and callers
+        // Backward-compatible overload for existing tests and callers
         public void WriteGrade(string outputPath)
         {
             WriteGrade(outputPath, new List<Grade>());
@@ -55,11 +55,13 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                     writer.WriteEndDocument();
                 }
 
-                LogDebug($"Created {DEFAULT_GRADES_RELATIVE_PATH}");
+                // Log full relative path as expected by tests: "<outputPath>/grades.xml"
+                LogDebug($"Created {Path.GetFileName(outputPath)}/{DEFAULT_GRADES_RELATIVE_PATH}");
             }
             catch (Exception e)
             {
-                LogError(e, $"Error writing {DEFAULT_GRADES_RELATIVE_PATH}");
+                // Log full relative path as expected by tests: "<outputPath>/grades.xml"
+                LogError(e, $"Error writing {Path.GetFileName(outputPath)}/{DEFAULT_GRADES_RELATIVE_PATH}");
                 throw;
             }
         }

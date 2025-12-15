@@ -22,6 +22,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
         private const string DEFAULT_FORMAT_MAPPED = "1";
 
+        // Normalize platform line endings to LF for deterministic assertions
+        private static string NormalizeLf(string? s) =>
+            (s ?? string.Empty).Replace("\r\n", "\n").Replace("\r", "\n");
+
         [SetUp]
         public void SetUp()
         {
@@ -71,10 +75,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             finally
             {
                 // Always close the writer
-                if (_xmlWriter != null)
-                {
-                    _xmlWriter.Close();
-                }
+                _xmlWriter?.Close();
             }
         }
 
@@ -148,18 +149,18 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
             Assert.That(optionNode.SelectSingleNode("showsource")?.InnerText, Is.EqualTo(question.ShowSource.ToString()));
             Assert.That(optionNode.SelectSingleNode("answerboxlines")?.InnerText, Is.EqualTo(question.AnswerBoxLines.ToString()));
             Assert.That(optionNode.SelectSingleNode("answerboxcolumns")?.InnerText, Is.EqualTo(question.AnswerBoxColumns.ToString()));
-            Assert.That(optionNode.SelectSingleNode("answerpreload")?.InnerText, Is.EqualTo(question.AnswerPreload));
-            Assert.That(optionNode.SelectSingleNode("globalextra")?.InnerText, Is.EqualTo(question.GlobalExtra));
-            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText, Is.EqualTo(question.Answer));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("answerpreload")?.InnerText), Is.EqualTo(NormalizeLf(question.AnswerPreload)));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("globalextra")?.InnerText), Is.EqualTo(NormalizeLf(question.GlobalExtra)));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("answer")?.InnerText), Is.EqualTo(NormalizeLf(question.Answer)));
             Assert.That(optionNode.SelectSingleNode("validateonsave")?.InnerText, Is.EqualTo(question.ValidateOnSave ? "1" : "0"));
-            Assert.That(optionNode.SelectSingleNode("templateparams")?.InnerText, Is.EqualTo(question.TemplateParams));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("templateparams")?.InnerText), Is.EqualTo(NormalizeLf(question.TemplateParams)));
             Assert.That(optionNode.SelectSingleNode("hoisttemplateparams")?.InnerText, Is.EqualTo(question.HoistTemplateParams ? "1" : "0"));
             Assert.That(optionNode.SelectSingleNode("extractcodefromjson")?.InnerText, Is.EqualTo(question.ExtractCodeFromJson ? "1" : "0"));
             Assert.That(optionNode.SelectSingleNode("templateparamslang")?.InnerText, Is.EqualTo(question.TemplateParamsLang));
             Assert.That(optionNode.SelectSingleNode("templateparamsevalpertry")?.InnerText, Is.EqualTo(question.TemplateParamsEvalPerTry ? "1" : "0"));
-            Assert.That(optionNode.SelectSingleNode("templateparamsevald")?.InnerText, Is.EqualTo(question.TemplateParamsEvald));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("templateparamsevald")?.InnerText), Is.EqualTo(NormalizeLf(question.TemplateParamsEvald)));
             Assert.That(optionNode.SelectSingleNode("twigall")?.InnerText, Is.EqualTo(question.TwigAll ? "1" : "0"));
-            Assert.That(optionNode.SelectSingleNode("uiparameters")?.InnerText, Is.EqualTo(question.UiParameters));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("uiparameters")?.InnerText), Is.EqualTo(NormalizeLf(question.UiParameters)));
             Assert.That(optionNode.SelectSingleNode("attachments")?.InnerText, Is.EqualTo(question.Attachments.ToString()));
             Assert.That(optionNode.SelectSingleNode("attachmentsrequired")?.InnerText, Is.EqualTo(question.AttachmentsRequired.ToString()));
             Assert.That(optionNode.SelectSingleNode("maxfilesize")?.InnerText, Is.EqualTo(question.MaxFileSize.ToString()));
@@ -201,29 +202,29 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.QuestionsWriter.Plugins
 
             // Check first test case
             var firstTestCase = question.TestCases[0];
-            var firstTestCaseNode = testCaseNodes[0];
-            Assert.That(firstTestCaseNode.SelectSingleNode("testcode")?.InnerText, Is.EqualTo(firstTestCase.TestCode));
+            var firstTestCaseNode = testCaseNodes![0];
+            Assert.That(NormalizeLf(firstTestCaseNode.SelectSingleNode("testcode")?.InnerText), Is.EqualTo(NormalizeLf(firstTestCase.TestCode)));
             Assert.That(firstTestCaseNode.SelectSingleNode("testtype")?.InnerText, Is.EqualTo(firstTestCase.TestType.ToString()));
-            Assert.That(firstTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(firstTestCase.Expected));
+            Assert.That(NormalizeLf(firstTestCaseNode.SelectSingleNode("expected")?.InnerText), Is.EqualTo(NormalizeLf(firstTestCase.Expected)));
             Assert.That(firstTestCaseNode.SelectSingleNode("useasexample")?.InnerText, Is.EqualTo(firstTestCase.UseAsExample ? "1" : "0"));
             Assert.That(firstTestCaseNode.SelectSingleNode("display")?.InnerText, Is.EqualTo(firstTestCase.Display));
             Assert.That(firstTestCaseNode.SelectSingleNode("hiderestiffail")?.InnerText, Is.EqualTo(firstTestCase.HideRestIfFail ? "1" : "0"));
             Assert.That(firstTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(firstTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
-            Assert.That(firstTestCaseNode.SelectSingleNode("stdin")?.InnerText, Is.EqualTo(firstTestCase.StdIn));
-            Assert.That(firstTestCaseNode.SelectSingleNode("extra")?.InnerText, Is.EqualTo(firstTestCase.Extra));
+            Assert.That(NormalizeLf(firstTestCaseNode.SelectSingleNode("stdin")?.InnerText), Is.EqualTo(NormalizeLf(firstTestCase.StdIn)));
+            Assert.That(NormalizeLf(firstTestCaseNode.SelectSingleNode("extra")?.InnerText), Is.EqualTo(NormalizeLf(firstTestCase.Extra)));
 
             // Check second test case
             var secondTestCase = question.TestCases[1];
-            var secondTestCaseNode = testCaseNodes[1];
-            Assert.That(secondTestCaseNode.SelectSingleNode("testcode")?.InnerText, Is.EqualTo(secondTestCase.TestCode));
+            var secondTestCaseNode = testCaseNodes![1];
+            Assert.That(NormalizeLf(secondTestCaseNode.SelectSingleNode("testcode")?.InnerText), Is.EqualTo(NormalizeLf(secondTestCase.TestCode)));
             Assert.That(secondTestCaseNode.SelectSingleNode("testtype")?.InnerText, Is.EqualTo(secondTestCase.TestType.ToString()));
-            Assert.That(secondTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(secondTestCase.Expected));
+            Assert.That(NormalizeLf(secondTestCaseNode.SelectSingleNode("expected")?.InnerText), Is.EqualTo(NormalizeLf(secondTestCase.Expected)));
             Assert.That(secondTestCaseNode.SelectSingleNode("useasexample")?.InnerText, Is.EqualTo(secondTestCase.UseAsExample ? "1" : "0"));
             Assert.That(secondTestCaseNode.SelectSingleNode("display")?.InnerText, Is.EqualTo(secondTestCase.Display));
             Assert.That(secondTestCaseNode.SelectSingleNode("hiderestiffail")?.InnerText, Is.EqualTo(secondTestCase.HideRestIfFail ? "1" : "0"));
             Assert.That(secondTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(secondTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
-            Assert.That(secondTestCaseNode.SelectSingleNode("stdin")?.InnerText, Is.EqualTo(secondTestCase.StdIn));
-            Assert.That(secondTestCaseNode.SelectSingleNode("extra")?.InnerText, Is.EqualTo(secondTestCase.Extra));
+            Assert.That(NormalizeLf(secondTestCaseNode.SelectSingleNode("stdin")?.InnerText), Is.EqualTo(NormalizeLf(secondTestCase.StdIn)));
+            Assert.That(NormalizeLf(secondTestCaseNode.SelectSingleNode("extra")?.InnerText), Is.EqualTo(NormalizeLf(secondTestCase.Extra)));
 
             // Reset the XML writer for the next test
             _xmlWriter = _testFactory.Create("test.xml", new XmlWriterSettings());

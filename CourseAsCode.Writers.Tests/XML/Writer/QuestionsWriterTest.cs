@@ -41,6 +41,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private const string DEFAULT_FORMAT_MAPPED = "1";
         private const string DEFAULT_TIMESTAMP = "1234567890";
 
+        // Normalize platform line endings to LF for deterministic assertions
+        private static string NormalizeLf(string? s) => (s ?? string.Empty).Replace("\r\n", "\n").Replace("\r", "\n");
+
         [SetUp]
         public void SetUp()
         {
@@ -198,7 +201,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var doc = new XmlDocument();
             doc.LoadXml(output);
 
-            // Assert: The total number of question_bank_entry elements should match total questions (at least that's the case in our implementation)
+            // Assert: The total number of question_bank_entry elements should match total questions
             var entryNodes = doc.SelectNodes("//question_bank_entry");
             Assert.That(entryNodes?.Count, Is.EqualTo(_course.Questions.Count), "Incorrect number of bank entries");
         }
@@ -280,9 +283,9 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(optionNode.SelectSingleNode("showsource")?.InnerText, Is.EqualTo(question.ShowSource.ToString()));
             Assert.That(optionNode.SelectSingleNode("answerboxlines")?.InnerText, Is.EqualTo(question.AnswerBoxLines.ToString()));
             Assert.That(optionNode.SelectSingleNode("answerboxcolumns")?.InnerText, Is.EqualTo(question.AnswerBoxColumns.ToString()));
-            Assert.That(optionNode.SelectSingleNode("answerpreload")?.InnerText, Is.EqualTo(question.AnswerPreload));
-            Assert.That(optionNode.SelectSingleNode("globalextra")?.InnerText, Is.EqualTo(question.GlobalExtra));
-            Assert.That(optionNode.SelectSingleNode("answer")?.InnerText, Is.EqualTo(question.Answer));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("answerpreload")?.InnerText), Is.EqualTo(NormalizeLf(question.AnswerPreload)));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("globalextra")?.InnerText), Is.EqualTo(NormalizeLf(question.GlobalExtra)));
+            Assert.That(NormalizeLf(optionNode.SelectSingleNode("answer")?.InnerText), Is.EqualTo(NormalizeLf(question.Answer)));
             Assert.That(optionNode.SelectSingleNode("validateonsave")?.InnerText, Is.EqualTo(question.ValidateOnSave ? "1" : "0"));
         }
 
@@ -305,17 +308,17 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             // Check first test case
             var firstTestCase = question.TestCases[0];
-            var firstTestCaseNode = testCaseNodes[0];
-            Assert.That(firstTestCaseNode.SelectSingleNode("testcode")?.InnerText, Is.EqualTo(firstTestCase.TestCode));
-            Assert.That(firstTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(firstTestCase.Expected));
+            var firstTestCaseNode = testCaseNodes![0];
+            Assert.That(NormalizeLf(firstTestCaseNode.SelectSingleNode("testcode")?.InnerText), Is.EqualTo(NormalizeLf(firstTestCase.TestCode)));
+            Assert.That(NormalizeLf(firstTestCaseNode.SelectSingleNode("expected")?.InnerText), Is.EqualTo(NormalizeLf(firstTestCase.Expected)));
             Assert.That(firstTestCaseNode.SelectSingleNode("display")?.InnerText, Is.EqualTo(firstTestCase.Display));
             Assert.That(firstTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(firstTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
 
             // Check second test case
             var secondTestCase = question.TestCases[1];
-            var secondTestCaseNode = testCaseNodes[1];
-            Assert.That(secondTestCaseNode.SelectSingleNode("testcode")?.InnerText, Is.EqualTo(secondTestCase.TestCode));
-            Assert.That(secondTestCaseNode.SelectSingleNode("expected")?.InnerText, Is.EqualTo(secondTestCase.Expected));
+            var secondTestCaseNode = testCaseNodes![1];
+            Assert.That(NormalizeLf(secondTestCaseNode.SelectSingleNode("testcode")?.InnerText), Is.EqualTo(NormalizeLf(secondTestCase.TestCode)));
+            Assert.That(NormalizeLf(secondTestCaseNode.SelectSingleNode("expected")?.InnerText), Is.EqualTo(NormalizeLf(secondTestCase.Expected)));
             Assert.That(secondTestCaseNode.SelectSingleNode("useasexample")?.InnerText, Is.EqualTo(secondTestCase.UseAsExample ? "1" : "0"));
             Assert.That(secondTestCaseNode.SelectSingleNode("hiderestiffail")?.InnerText, Is.EqualTo(secondTestCase.HideRestIfFail ? "1" : "0"));
             Assert.That(secondTestCaseNode.SelectSingleNode("mark")?.InnerText, Is.EqualTo(secondTestCase.Mark.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)));
@@ -378,12 +381,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var question = CreateBasicMultiChoiceQuestion(10, "TestCat");
             _course.Questions.Add(question);
 
-             // Act
+            // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
             var doc = new XmlDocument();
             doc.LoadXml(_testFactory.StringWriter.ToString());
 
-             // Assert: Check base question elements
+            // Assert: Check base question elements
             var questionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']");
             Assert.IsNotNull(questionNode, $"Question node with ID {question.QuestionId} not found");
 
@@ -391,7 +394,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(questionNode.SelectSingleNode("questiontext")?.InnerText, Is.EqualTo(question.QuestionText));
             Assert.That(questionNode.SelectSingleNode("questiontextformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("generalfeedback")?.InnerText, Is.EqualTo(question.GeneralFeedback));
-            Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
+            Assert.That(questionNode.SelectSingleNode("generalfeedbackformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(questionNode.SelectSingleNode("defaultmark")?.InnerText, Is.EqualTo(question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("penalty")?.InnerText, Is.EqualTo(question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture)));
             Assert.That(questionNode.SelectSingleNode("qtype")?.InnerText, Is.EqualTo("multichoice")); // Mapped value for multi-choice
@@ -445,12 +448,12 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             var question = CreateBasicDropdownQuestion(20, "DropdownCat");
             _course.Questions.Add(question);
 
-             // Act
+            // Act
             _questionsWriter.WriteQuestions(_course, DEFAULT_DUMMY_OUTPUT_PATH);
             var doc = new XmlDocument();
             doc.LoadXml(_testFactory.StringWriter.ToString());
 
-             // Assert: Check base question elements
+            // Assert: Check base question elements
             var questionNode = doc.SelectSingleNode($"//question[@id='{question.QuestionId}']");
             Assert.IsNotNull(questionNode, $"Question node with ID {question.QuestionId} not found");
 
@@ -526,16 +529,16 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(subQ2Match.SelectSingleNode("questiontextformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(subQ2Match.SelectSingleNode("answertext")?.InnerText, Is.EqualTo(subQ2.CorrectAnswer));
 
-             // Pooled Wrong Answer A (only from SubQ1)
+            // Pooled Wrong Answer A (only from SubQ1)
             var poolAMatch = matchesNode.SelectSingleNode("match[questiontext='' and answertext='WrongAnswerA']");
             Assert.IsNotNull(poolAMatch, "Pooled Answer A match not found");
 
-             // Pooled Wrong Answer B (from SubQ1 and SubQ2 - should appear once)
+            // Pooled Wrong Answer B (from SubQ1 and SubQ2 - should appear once)
             var poolBMatch = matchesNode.SelectNodes("match[questiontext='' and answertext='WrongAnswerB']");
             Assert.That(poolBMatch?.Count, Is.EqualTo(1), "Pooled Answer B should appear only once");
             Assert.IsNotNull(poolBMatch[0], "Pooled Answer B match not found");
 
-             // Pooled Wrong Answer C (only from SubQ2)
+            // Pooled Wrong Answer C (only from SubQ2)
             var poolCMatch = matchesNode.SelectSingleNode("match[questiontext='' and answertext='WrongAnswerC']");
             Assert.IsNotNull(poolCMatch, "Pooled Answer C match not found");
         }
@@ -589,7 +592,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(hintNodes[0]?.SelectSingleNode("shownumcorrect")?.InnerText, Is.EqualTo(question.Hints[0].ShowNumberOfCorrectAnswers ? "1" : "0"));
             Assert.That(hintNodes[0]?.SelectSingleNode("clearwrong")?.InnerText, Is.EqualTo(question.Hints[0].ClearIncorrectResponses ? "1" : "0"));
 
-             // Hint 2
+            // Hint 2
             Assert.That(hintNodes[1]?.SelectSingleNode("hint")?.InnerText, Is.EqualTo(question.Hints[1].HintText));
             Assert.That(hintNodes[1]?.SelectSingleNode("hintformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED)); // Mocked value
             Assert.That(hintNodes[1]?.SelectSingleNode("shownumcorrect")?.InnerText, Is.EqualTo(question.Hints[1].ShowNumberOfCorrectAnswers ? "1" : "0"));
@@ -707,7 +710,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             Assert.That(answer2Node.SelectSingleNode("feedback")?.InnerText, Is.EqualTo(expectedFeedback2));
             Assert.That(answer2Node.SelectSingleNode("feedbackformat")?.InnerText, Is.EqualTo("0"));
 
-             // Choice 4 (Germany, Cat A)
+            // Choice 4 (Germany, Cat A)
             var answer4Node = answersNode.SelectSingleNode($"answer[answertext='{choice4.Value}']");
             Assert.IsNotNull(answer4Node, $"Answer node for '{choice4.Value}' not found");
             Assert.That(answer4Node.SelectSingleNode("answerformat")?.InnerText, Is.EqualTo(DEFAULT_FORMAT_MAPPED));
@@ -815,13 +818,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                 Arg.Any<Func<object, Exception, string>>()!);
         }
 
-
-        /// <summary>
-        /// Creates a basic multiple-choice question with predefined parameters and structure
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <returns>A <see cref="MultipleChoiceQuestion"/> object initialized with default values and structure</returns>
         private MultipleChoiceQuestion CreateBasicMultiChoiceQuestion(int id, string category)
         {
             return new MultipleChoiceQuestion
@@ -865,20 +861,11 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                         AnswerFeedbackFormat = FormattingFormat.HTML,
                     },
                 },
-                Hints = null, // TODO: Add support for hints as feedback as in CreateBasicDropdownQuestion
+                Hints = null,
                 Tags = new List<string> { $"Tag{id}" },
             };
         }
 
-
-        /// <summary>
-        /// Creates a basic dropdown question with predefined structure and configuration
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <param name="withHints">Indicates whether the question includes hints</param>
-        /// <param name="withFeedback">Indicates whether the question provides general feedback</param>
-        /// <returns>A <see cref="DropdownQuestion"/> object with initialized values and structure</returns>
         private DropdownQuestion CreateBasicDropdownQuestion(int id, string category, bool withHints = false, bool withFeedback = false)
         {
             var dq = new DropdownQuestion
@@ -907,10 +894,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                         QuestionText = "SubQ 2 Text",
                         QuestionTextFormat = FormattingFormat.HTML,
                         CorrectAnswer = "CorrectAnswer2",
-                        WrongAnswers = ["WrongAnswerB", "WrongAnswerC"], // "WrongAnswerB" is shared
+                        WrongAnswers = ["WrongAnswerB", "WrongAnswerC"],
                     },
                 },
-                Hints = null, // Hints are added below
+                Hints = null,
                 Tags = new List<string> { $"TagDD{id}" },
             };
 
@@ -948,24 +935,6 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             return dq;
         }
 
-
-        /// <summary>
-        /// Creates a basic drag-and-drop text question with specified parameters
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <param name="withHints">Indicates whether the question should include hints</param>
-        /// <param name="withFeedback">Indicates whether the question should include feedback for responses</param>
-        /// <param name="questionReady">Indicates whether the question is considered ready for use</param>
-        /// <returns>A <see cref="DragAndDropTextQuestion"/> object initialized with specified settings and default structure</returns>
-
-        /// <summary>
-        /// Creates a basic CodeRunner question with predefined parameters and structure
-        /// </summary>
-        /// <param name="id">The unique identifier for the question</param>
-        /// <param name="category">The category to which the question belongs</param>
-        /// <param name="withHints">Indicates whether the question should include hints</param>
-        /// <returns>A <see cref="CodeRunnerQuestion"/> object initialized with default values and structure</returns>
         private CodeRunnerQuestion CreateBasicCodeRunnerQuestion(int id, string category, bool withHints = false)
         {
             var crq = new CodeRunnerQuestion
@@ -1064,6 +1033,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
 
             return crq;
         }
+
         private DragAndDropTextQuestion CreateBasicDragDropTextQuestion(int id, string category, bool withHints = false, bool withFeedback = false)
         {
             var ddtq = new DragAndDropTextQuestion
@@ -1084,10 +1054,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
                     new TextChoice { ID = 1, Value = "France", Category = "A", ValueFormat = FormattingFormat.PlainText },
                     new TextChoice { ID = 2, Value = "London", Category = "B", ValueFormat = FormattingFormat.HTML },
                     new TextChoice { ID = 3, Value = "Vienna", Category = "A", ValueFormat = FormattingFormat.PlainText },
-                    new TextChoice { ID = 4, Value = "Germany", Category = "A", ValueFormat = FormattingFormat.HTML }, // Distractor in group A
-                    new TextChoice { ID = 5, Value = "Madrid", Category = "B", ValueFormat = FormattingFormat.PlainText }, // Distractor in group B
+                    new TextChoice { ID = 4, Value = "Germany", Category = "A", ValueFormat = FormattingFormat.HTML },
+                    new TextChoice { ID = 5, Value = "Madrid", Category = "B", ValueFormat = FormattingFormat.PlainText },
                 },
-                Hints = null, // Hints are added below
+                Hints = null,
                 Tags = new List<string> { $"TagDDT{id}" },
             };
 
