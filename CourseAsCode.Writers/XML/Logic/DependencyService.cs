@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Writers.Interfaces;
+using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
@@ -13,7 +13,9 @@ using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
+using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
+using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
@@ -119,6 +121,10 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<QuizWriter>();
             services.AddSingleton<WikiWriter>();
             services.AddSingleton<ModuleWriterWiki>();
+            services.AddSingleton<ChoiceWriter>();
+            services.AddSingleton<ModuleWriterChoice>();
+            services.AddSingleton<FeedbackWriter>();
+            services.AddSingleton<ModuleWriterFeedback>();
 
             // Register the main writer and its dependencies
             services.AddSingleton<IActivitiesWriterService, ActivitiesWriterService>();

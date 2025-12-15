@@ -13,6 +13,7 @@ using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Activities.Wiki;
 using CourseAsCode.Writers.XML.Writer.Activities.Choice;
+using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using Microsoft.Extensions.Logging;
 using CourseAsCode.Model.Activities.Choice;
 
@@ -64,6 +65,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             private readonly ChoiceWriter _choiceWriter;
             private readonly ModuleWriterChoice _moduleWriterChoice;
 
+            // Feedback Activity Writers
+            private readonly FeedbackWriter _feedbackWriter;
+            private readonly ModuleWriterFeedback _moduleWriterFeedback;
+
             public ActivitiesWriterService(
                 ILogger<ActivitiesWriterService> logger,
                 IFileService fileService,
@@ -90,7 +95,9 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 WikiWriter wikiWriter,
                 ModuleWriterWiki moduleWriterWiki,
                 ChoiceWriter choiceWriter,
-                ModuleWriterChoice moduleWriterChoice)
+                ModuleWriterChoice moduleWriterChoice,
+                FeedbackWriter feedbackWriter,
+                ModuleWriterFeedback moduleWriterFeedback)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
@@ -135,6 +142,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 //Choice Activity Writers
                 _choiceWriter = choiceWriter ?? throw new ArgumentNullException(nameof(choiceWriter));
                 _moduleWriterChoice = moduleWriterChoice ?? throw new ArgumentNullException(nameof(moduleWriterChoice));
+
+                // Feedback Activity Writers
+                _feedbackWriter = feedbackWriter ?? throw new ArgumentNullException(nameof(feedbackWriter));
+                _moduleWriterFeedback = moduleWriterFeedback ?? throw new ArgumentNullException(nameof(moduleWriterFeedback));
         }
 
 
@@ -202,6 +213,12 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                             activityPath = CreateActivityDirectory(outputPath, activity, "choice");
                             _choiceWriter.WriteChoice(activityPath, choice);
                             _moduleWriterChoice.WriteModule(activityPath, course, section, choice);
+                        }
+                        else if (activity is Feedback feedback)
+                        {
+                            activityPath = CreateActivityDirectory(outputPath, activity, "feedback");
+                            _feedbackWriter.WriteFeedback(activityPath, feedback);
+                            _moduleWriterFeedback.WriteModule(activityPath, course, section, feedback);
                         }
                         else
                         {
