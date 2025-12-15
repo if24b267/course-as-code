@@ -3,6 +3,7 @@ using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
+using CourseAsCode.Writers.XML.FileWriters.Activities.Lesson;
 using CourseAsCode.Writers.XML.FileWriters.Questions;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
@@ -134,6 +135,8 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<ModuleWriterPage>();
             services.AddSingleton<SchedulerWriter>();
             services.AddSingleton<ModuleWriterScheduler>();
+            services.AddSingleton<LessonWriter>();
+            services.AddSingleton<ModuleWriterLesson>();
 
             // Register the main writer and its dependencies
             services.AddSingleton<IActivitiesWriterService, ActivitiesWriterService>();
