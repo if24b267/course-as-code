@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model;
+using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters;
@@ -12,7 +12,9 @@ using CourseAsCode.Writers.XML.Writer.Activities.Labels;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Activities.Wiki;
+using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using Microsoft.Extensions.Logging;
+using CourseAsCode.Model.Activities.Choice;
 
 namespace CourseAsCode.Writers.XML.GeneralWriter
     {
@@ -58,6 +60,9 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             private readonly WikiWriter _wikiWriter;
             private readonly ModuleWriterWiki _moduleWriterWiki;
 
+            //Choice Activity Writers
+            private readonly ChoiceWriter _choiceWriter;
+            private readonly ModuleWriterChoice _moduleWriterChoice;
 
             public ActivitiesWriterService(
                 ILogger<ActivitiesWriterService> logger,
@@ -83,7 +88,9 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 ModuleWriterQuiz moduleWriterQuiz,
                 QuizWriter quizWriter,
                 WikiWriter wikiWriter,
-                ModuleWriterWiki moduleWriterWiki)
+                ModuleWriterWiki moduleWriterWiki,
+                ChoiceWriter choiceWriter,
+                ModuleWriterChoice moduleWriterChoice)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
@@ -124,15 +131,19 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                 // Wiki Activity Writers
                 _wikiWriter = wikiWriter ?? throw new ArgumentNullException(nameof(wikiWriter));
                 _moduleWriterWiki = moduleWriterWiki ?? throw new ArgumentNullException(nameof(moduleWriterWiki));
-            }
+
+                //Choice Activity Writers
+                _choiceWriter = choiceWriter ?? throw new ArgumentNullException(nameof(choiceWriter));
+                _moduleWriterChoice = moduleWriterChoice ?? throw new ArgumentNullException(nameof(moduleWriterChoice));
+        }
 
 
-            /// <summary>
-            /// Writes all activity data for a given course into their respective directories
-            /// </summary>
-            /// <param name="course">The course object containing the sections and activities to be written.</param>
-            /// <param name="outputPath">The root directory path where activity files and directories will be created.</param>
-            public void WriteActivities(Course course, string outputPath)
+        /// <summary>
+        /// Writes all activity data for a given course into their respective directories
+        /// </summary>
+        /// <param name="course">The course object containing the sections and activities to be written.</param>
+        /// <param name="outputPath">The root directory path where activity files and directories will be created.</param>
+        public void WriteActivities(Course course, string outputPath)
             {
                 // Iterate through all sections of the course
                 foreach (var section in course.Sections)
@@ -185,6 +196,12 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
 
                             _wikiWriter.WriteWiki(activityPath, wiki);
                             _moduleWriterWiki.WriteModule(activityPath, course, section, wiki);
+                        }
+                        else if (activity is Choice choice)
+                        {
+                            activityPath = CreateActivityDirectory(outputPath, activity, "choice");
+                            _choiceWriter.WriteChoice(activityPath, choice);
+                            _moduleWriterChoice.WriteModule(activityPath, course, section, choice);
                         }
                         else
                         {
