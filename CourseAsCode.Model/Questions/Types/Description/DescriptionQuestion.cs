@@ -1,4 +1,4 @@
-﻿namespace CourseAsCode.Model.Questions.Types.Description
+namespace CourseAsCode.Model.Questions.Types.Description
 {
     public class DescriptionQuestion : Question
     {

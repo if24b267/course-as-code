@@ -960,3 +960,25 @@ Questions:
         Mark: 1.000
         StdIn: ""
         Extra: ""
+
+  - QuestionName: JavaReturnKeyword
+    Category: Keywords
+    QuestionId: 29
+    QuestionText: Which Java keyword is used to exit a method and optionally pass back a value?
+    QuestionTextFormat: MARKDOWN
+    DefaultMark: 1
+    QuestionType: SHORTANSWER
+    UseCase: false             
+    Answers:
+    - AnswerText: return
+      AnswerTextFormat: MARKDOWN
+      AnswerGrade: 1
+      Feedback: Correct!
+    - AnswerText: return;
+      AnswerTextFormat: MARKDOWN
+      AnswerGrade: 1
+      Feedback: Correct (semicolon is part of the statement, but accepted).
+    - AnswerText: break
+      AnswerTextFormat: MARKDOWN
+      AnswerGrade: 0
+      Feedback: Incorrect. Break is used for loops or switch statements.

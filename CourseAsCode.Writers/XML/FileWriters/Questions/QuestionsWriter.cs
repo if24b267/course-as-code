@@ -204,6 +204,12 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
         /// <param name="question">the question to save</param>
         private void WriteQuestionElement(IXmlService xmlHelper, Question question)
         {
+            // Use the appropriate question strategy based on the question type to write the specific plugin block
+            IQuestionStrategy? pluginWriter = _strategyResolver.ResolveStrategy(question);
+
+            // Falls eine Strategy gefunden wurde, nimm deren Typ. Sonst Fallback auf den Helper.
+            string questionTypeString = pluginWriter?.GetQuestionTypeString() ?? _quizHelper.MapQuestionType(question);
+
             xmlHelper.WriteElementWithAttributes("question", new Dictionary<string, string>
             {
                 { "id", question.QuestionId.ToString() },
@@ -219,7 +225,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
                 { "generalfeedbackformat", _generalHelper.EnumIntegerToString(question.GeneralFeedbackFormat) },
                 { "defaultmark", question.DefaultMark.ToString("0.0000000", CultureInfo.InvariantCulture) },
                 { "penalty", question.HintPenalty.ToString("0.0000000", CultureInfo.InvariantCulture) },
-                { "qtype", _quizHelper.MapQuestionType(question) },
+                { "qtype", questionTypeString},
                 { "length", "1" },
                 { "stamp", GenerateStamp() },
                 { "timecreated", _generalHelper.DateTimeToUnixTimestamp(DateTime.UtcNow) },
@@ -229,8 +235,6 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
             };
             xmlHelper.WriteElements(questionBaseElements);
 
-            // Use the appropriate question strategy based on the question type to write the specific plugin block
-            IQuestionStrategy? pluginWriter = _strategyResolver.ResolveStrategy(question);
             pluginWriter?.WritePluginData(xmlHelper, question);
 
             // Comments

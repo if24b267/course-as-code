@@ -42,5 +42,8 @@ namespace CourseAsCode.Readers.YAML.Model
         public bool DisplayFeedback { get; set; } = true;
         public bool GiveUpAllowed { get; set; } = true;
         public List<YamlCodeRunnerTestCase> CodeRunnerTestCases { get; set; }
+
+        // Short Answer specific property
+        public bool UseCase { get; set; } = false;
     }
 }
