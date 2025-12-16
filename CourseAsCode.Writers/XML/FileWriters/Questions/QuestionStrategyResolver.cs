@@ -1,5 +1,6 @@
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.CalculatedMulti;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Description;
@@ -35,6 +36,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
                 MultipleChoiceQuestion => _serviceProvider.GetRequiredService<MultiChoiceStrategy>(),
                 DescriptionQuestion => null, // Description questions do not require a strategy as they have no plugin data
                 TrueFalseQuestion => _serviceProvider.GetRequiredService<TrueFalseStrategy>(),
+                CalculatedMultiChoiceQuestion => _serviceProvider.GetRequiredService<CalculatedMultiStrategy>(),
                 SimpleCalculatedQuestion => _serviceProvider.GetRequiredService<CalculatedSimpleStrategy>(),
                 _ => throw new ArgumentException($"Question type {question.GetType().Name} is not supported."),
             };
