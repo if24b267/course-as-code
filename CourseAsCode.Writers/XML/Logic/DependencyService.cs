@@ -63,6 +63,7 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddTransient<DragDropTextStrategy>();
             services.AddTransient<TrueFalseStrategy>();
             services.AddTransient<CalculatedMultiStrategy>();
+            services.AddTransient<CalculatedSimpleStrategy>();
 
             // Register QuestionsWriter (depends on the plugins registered above)
             services.AddSingleton<QuestionsWriter>();
