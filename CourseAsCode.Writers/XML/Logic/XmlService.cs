@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Xml;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
