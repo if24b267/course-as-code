@@ -58,7 +58,7 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
         /// <param name="outputPath">The directory path where the generated files will be written.</param>
         public void WriteRootFiles(Course course, string outputPath)
         {
-            _badgesWriter.WriteBadges(outputPath);
+            _badgesWriter.WriteBadges(course, outputPath);
             _completionWriter.WriteCompletion(course, outputPath);
             _filesWriter.WriteFiles(course, outputPath);
             _gradebookWriter.WriteGradebook(course, outputPath);
