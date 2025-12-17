@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://davimalu.github.io/course-as-code/Grading/Overview/">
       
       
-        <link rel="prev" href="../../Activities/Quiz/Quiz_Architecture_and_Extensibility/">
+        <link rel="prev" href="../../Activities/Quiz/Question_Types/">
       
       
         <link rel="next" href="../Grade_Categories/">
@@ -50,6 +50,28 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../../assets/mkdocs_puml/puml.css">
+    
+      <link rel="stylesheet" href="../../assets/mkdocs_puml/interaction.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/light.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/material.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/shift-away.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/scale.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/backdrop.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/tippy.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/core/core.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/user.config.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -341,6 +363,28 @@
     
   
   Moodle Backup File (.mbz)
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Development/Roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
 
         </a>
       </li>
@@ -1200,8 +1244,6 @@
       
         
       
-        
-      
     
     
     
@@ -1271,34 +1313,6 @@
     
   
     Question Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../Activities/Quiz/Quiz_Architecture_and_Extensibility/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quiz Architecture & Developer Guide
   
 
     
@@ -1979,6 +1993,127 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Development/Roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Development/Known_Issues/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known Issues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -2112,12 +2247,16 @@
 <p>Each activity and each Grade Category can be specifically weighted. For each Grade Category, a minimum score can be set that the user must achieve to pass. For example, it can be specified that both the Theoretical Part and the Practical Part must be passed individually to receive a passing overall grade.</p>
 <h2 id="grade-items">Grade Items</h2>
 <p>Individual activities are referred to as <a href="../Grade_Items/">Grade Items</a> in the gradebook (e.g., Quizzes, Assignments, etc.). Each Grade Item can be assigned to a Grade Category. Grade Items inherit their grading settings from the Grade Category they are assigned to, but can manually overridden them if needed. Furthermore, the weighting can also be changed for each Grade Item within a Grade Category.</p>
+<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><span data-tippy-content data-tippy-raw='2025-10-25'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-10-25T16:46:15+02:00'>2025-10-25</time></span><span data-tippy-content data-tippy-raw='2025-10-25'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-10-25T14:46:15+00:00'>2025-10-25</time></span><span class='material-icons' data-icon='doc_author'></span><div class='avatar-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' src='https://avatars.githubusercontent.com/Davimalu' onerror="this.style.display='none'" /></div></div></div></div>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -2147,7 +2286,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../Activities/Quiz/Quiz_Architecture_and_Extensibility/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Quiz Architecture &amp; Developer Guide">
+          <a href="../../Activities/Quiz/Question_Types/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Question Types">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2157,7 +2296,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Quiz Architecture & Developer Guide
+                Question Types
               </div>
             </div>
           </a>
@@ -2233,6 +2372,24 @@
     
     
       <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../assets/mkdocs_puml/puml.js"></script>
+      
+        <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+      
+        <script src="../../assets/mkdocs_puml/interaction.js"></script>
+      
+        <script src="../../assets/document_dates/tippy/popper.min.js"></script>
+      
+        <script src="../../assets/document_dates/tippy/tippy.umd.min.js"></script>
+      
+        <script src="../../assets/document_dates/core/default.config.js"></script>
+      
+        <script src="../../assets/document_dates/user.config.js"></script>
+      
+        <script src="../../assets/document_dates/core/utils.js"></script>
+      
+        <script src="../../assets/document_dates/core/core.js"></script>
       
     
   </body>

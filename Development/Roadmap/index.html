@@ -8,31 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://davimalu.github.io/course-as-code/Activities/Quiz/Quiz_Architecture_and_Extensibility/">
+        <link rel="canonical" href="https://davimalu.github.io/course-as-code/Development/Roadmap/">
       
       
-        <link rel="prev" href="../Question_Types/">
+        <link rel="prev" href="../../MoodleBackupFile/QuestionTypes/DragAndDropText/">
       
       
-        <link rel="next" href="../../../Grading/Overview/">
+        <link rel="next" href="../Known_Issues/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>Quiz Architecture & Developer Guide - Course as Code</title>
+        <title>Roadmap - Course as Code</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,7 +51,29 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+      <link rel="stylesheet" href="../../assets/mkdocs_puml/puml.css">
+    
+      <link rel="stylesheet" href="../../assets/mkdocs_puml/interaction.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/light.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/material.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/shift-away.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/scale.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/backdrop.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/tippy.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/core/core.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/user.config.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -75,11 +97,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#quiz-architecture-developer-guide" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -90,7 +107,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Course as Code" class="md-header__button md-logo" aria-label="Course as Code" data-md-component="logo">
+    <a href="../.." title="Course as Code" class="md-header__button md-logo" aria-label="Course as Code" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +127,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Quiz Architecture & Developer Guide
+              Roadmap
             
           </span>
         </div>
@@ -223,7 +240,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -244,7 +261,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../Usage/Overview/" class="md-tabs__link">
+        <a href="../../Usage/Overview/" class="md-tabs__link">
           
   
   
@@ -266,7 +283,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../Architecture/Overview/" class="md-tabs__link">
+        <a href="../../Architecture/Overview/" class="md-tabs__link">
           
   
   
@@ -284,13 +301,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../Overview/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../Activities/Overview/" class="md-tabs__link">
           
   
   
@@ -312,7 +327,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../Grading/Overview/" class="md-tabs__link">
+        <a href="../../Grading/Overview/" class="md-tabs__link">
           
   
   
@@ -334,13 +349,37 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../MoodleBackupFile/General/" class="md-tabs__link">
+        <a href="../../MoodleBackupFile/General/" class="md-tabs__link">
           
   
   
     
   
   Moodle Backup File (.mbz)
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
 
         </a>
       </li>
@@ -370,7 +409,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Course as Code" class="md-nav__button md-logo" aria-label="Course as Code" data-md-component="logo">
+    <a href="../.." title="Course as Code" class="md-nav__button md-logo" aria-label="Course as Code" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -400,7 +439,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -493,7 +532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Usage/Overview/" class="md-nav__link">
+      <a href="../../Usage/Overview/" class="md-nav__link">
         
   
   
@@ -521,7 +560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Usage/Moodle_Environment_Setup/" class="md-nav__link">
+      <a href="../../Usage/Moodle_Environment_Setup/" class="md-nav__link">
         
   
   
@@ -549,7 +588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Usage/Course_As_Code_Setup/" class="md-nav__link">
+      <a href="../../Usage/Course_As_Code_Setup/" class="md-nav__link">
         
   
   
@@ -577,7 +616,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Usage/Creating_A_Course/" class="md-nav__link">
+      <a href="../../Usage/Creating_A_Course/" class="md-nav__link">
         
   
   
@@ -605,7 +644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Usage/Exporting_A_Course/" class="md-nav__link">
+      <a href="../../Usage/Exporting_A_Course/" class="md-nav__link">
         
   
   
@@ -633,7 +672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Usage/Importing_A_Course/" class="md-nav__link">
+      <a href="../../Usage/Importing_A_Course/" class="md-nav__link">
         
   
   
@@ -730,7 +769,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Architecture/Overview/" class="md-nav__link">
+      <a href="../../Architecture/Overview/" class="md-nav__link">
         
   
   
@@ -758,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Architecture/Readers/" class="md-nav__link">
+      <a href="../../Architecture/Readers/" class="md-nav__link">
         
   
   
@@ -815,7 +854,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../Architecture/DataModel/" class="md-nav__link ">
+            <a href="../../Architecture/DataModel/" class="md-nav__link ">
               
   
   
@@ -859,7 +898,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Architecture/DataModel/Nomenclature/" class="md-nav__link">
+      <a href="../../Architecture/DataModel/Nomenclature/" class="md-nav__link">
         
   
   
@@ -887,7 +926,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Architecture/DataModel/Course_Nomenclature/" class="md-nav__link">
+      <a href="../../Architecture/DataModel/Course_Nomenclature/" class="md-nav__link">
         
   
   
@@ -915,7 +954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Architecture/DataModel/User_Nomenclature/" class="md-nav__link">
+      <a href="../../Architecture/DataModel/User_Nomenclature/" class="md-nav__link">
         
   
   
@@ -951,7 +990,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Architecture/Writer/" class="md-nav__link">
+      <a href="../../Architecture/Writer/" class="md-nav__link">
         
   
   
@@ -983,10 +1022,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -1006,20 +1043,19 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -1037,7 +1073,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1055,7 +1091,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Overview/" class="md-nav__link">
+      <a href="../../Activities/Overview/" class="md-nav__link">
         
   
   
@@ -1083,7 +1119,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Assignment/" class="md-nav__link">
+      <a href="../../Activities/Assignment/" class="md-nav__link">
         
   
   
@@ -1111,7 +1147,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Moodle_File/" class="md-nav__link">
+      <a href="../../Activities/Moodle_File/" class="md-nav__link">
         
   
   
@@ -1139,7 +1175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Text_and_Media_Area/" class="md-nav__link">
+      <a href="../../Activities/Text_and_Media_Area/" class="md-nav__link">
         
   
   
@@ -1167,7 +1203,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../URL/" class="md-nav__link">
+      <a href="../../Activities/URL/" class="md-nav__link">
         
   
   
@@ -1192,8 +1228,6 @@
                 
   
   
-    
-  
   
   
     
@@ -1205,8 +1239,6 @@
       
         
       
-        
-      
     
     
     
@@ -1214,15 +1246,17 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../Activities/Quiz/" class="md-nav__link ">
               
   
   
@@ -1246,7 +1280,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1266,7 +1300,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Question_Types/" class="md-nav__link">
+      <a href="../../Activities/Quiz/Question_Types/" class="md-nav__link">
         
   
   
@@ -1282,199 +1316,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quiz Architecture & Developer Guide
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quiz Architecture & Developer Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#quiz-architecture-developer-guide" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quiz Architecture &amp; Developer Guide
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quiz Architecture &amp; Developer Guide">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-data-flows-the-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How data flows (The Lifecycle)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#guide-how-to-add-a-new-question-type" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Guide: How to add a new Question Type
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Guide: How to add a new Question Type">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-0-find-out-what-the-xml-looks-like" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 0: Find out what the XML looks like
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-1-add-the-name-enum" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: Add the Name (Enum)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-define-the-data-fields-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: Define the Data Fields (Model)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-update-the-reader" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Update the Reader
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-create-the-xml-writer-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Create the XML Writer (Strategy)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-connect-everything-registration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Connect everything (Registration)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1562,7 +1403,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Grading/Overview/" class="md-nav__link">
+      <a href="../../Grading/Overview/" class="md-nav__link">
         
   
   
@@ -1590,7 +1431,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Grading/Grade_Categories/" class="md-nav__link">
+      <a href="../../Grading/Grade_Categories/" class="md-nav__link">
         
   
   
@@ -1618,7 +1459,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../Grading/Grade_Items/" class="md-nav__link">
+      <a href="../../Grading/Grade_Items/" class="md-nav__link">
         
   
   
@@ -1715,7 +1556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../MoodleBackupFile/General/" class="md-nav__link">
+      <a href="../../MoodleBackupFile/General/" class="md-nav__link">
         
   
   
@@ -1743,7 +1584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../MoodleBackupFile/Base_Structure/" class="md-nav__link">
+      <a href="../../MoodleBackupFile/Base_Structure/" class="md-nav__link">
         
   
   
@@ -1831,7 +1672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../MoodleBackupFile/Activities/Assignment/" class="md-nav__link">
+      <a href="../../MoodleBackupFile/Activities/Assignment/" class="md-nav__link">
         
   
   
@@ -1859,7 +1700,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../MoodleBackupFile/Activities/Forum/" class="md-nav__link">
+      <a href="../../MoodleBackupFile/Activities/Forum/" class="md-nav__link">
         
   
   
@@ -1887,7 +1728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../MoodleBackupFile/Activities/Quiz/" class="md-nav__link">
+      <a href="../../MoodleBackupFile/Activities/Quiz/" class="md-nav__link">
         
   
   
@@ -1983,7 +1824,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../MoodleBackupFile/QuestionTypes/CodeRunner/" class="md-nav__link">
+      <a href="../../MoodleBackupFile/QuestionTypes/CodeRunner/" class="md-nav__link">
         
   
   
@@ -2011,7 +1852,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../MoodleBackupFile/QuestionTypes/Dropdown/" class="md-nav__link">
+      <a href="../../MoodleBackupFile/QuestionTypes/Dropdown/" class="md-nav__link">
         
   
   
@@ -2039,7 +1880,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../MoodleBackupFile/QuestionTypes/DragAndDropText/" class="md-nav__link">
+      <a href="../../MoodleBackupFile/QuestionTypes/DragAndDropText/" class="md-nav__link">
         
   
   
@@ -2075,6 +1916,138 @@
   
 
     
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Known_Issues/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Known Issues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -2092,136 +2065,6 @@
   
   
   
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#quiz-architecture-developer-guide" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quiz Architecture &amp; Developer Guide
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quiz Architecture &amp; Developer Guide">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-data-flows-the-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How data flows (The Lifecycle)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#guide-how-to-add-a-new-question-type" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Guide: How to add a new Question Type
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Guide: How to add a new Question Type">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-0-find-out-what-the-xml-looks-like" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 0: Find out what the XML looks like
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-1-add-the-name-enum" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: Add the Name (Enum)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-define-the-data-fields-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: Define the Data Fields (Model)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-update-the-reader" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Update the Reader
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-create-the-xml-writer-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Create the XML Writer (Strategy)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-connect-everything-registration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Connect everything (Registration)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -2246,7 +2089,7 @@
   
   
     <li class="md-path__item">
-      <a href="../../.." class="md-path__link">
+      <a href="../.." class="md-path__link">
         
   <span class="md-ellipsis">
     Home
@@ -2264,28 +2107,10 @@
     
     
       <li class="md-path__item">
-        <a href="../../Overview/" class="md-path__link">
+        <a href="./" class="md-path__link">
           
   <span class="md-ellipsis">
-    Activities
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="../" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Quiz
+    Development
   </span>
 
         </a>
@@ -2307,150 +2132,18 @@
   
 
 
-  <h1>Quiz Architecture & Developer Guide</h1>
+  <h1>Roadmap</h1>
 
-<h3 id="quiz-architecture-developer-guide">Quiz Architecture &amp; Developer Guide</h3>
-<p>The Quiz Activity is unique. Unlike a simple URL or a File, a Quiz acts like a "container" that can hold many different types of questions (like Essay, Multiple Choice, etc.).</p>
-<p>Because every question type looks different in the code, we built the system to be very flexible. This guide explains how it works and how you can add new question types.</p>
-<hr>
-<h4 id="how-data-flows-the-lifecycle">How data flows (The Lifecycle)</h4>
-<p>To handle the different question types, the system follows a strict pipeline:</p>
-<p>Reader: Reads the generic YAML file and figures out exactly which type of question it is (e.g., "This is a ShortAnswer").</p>
-<p>Model: Creates the specific C# object for that question in memory.</p>
-<p>Writer: When saving the file, the system looks for the specific "Writer Strategy" that knows how to turn this exact question into Moodle XML.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>@startuml
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>!theme plain
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>skinparam componentStyle rectangle
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>package &quot;1. Input (Reading)&quot; {
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    file &quot;questions.yaml&quot; as YAML
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    component &quot;YamlQuestionReader&quot; as Reader
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    note bottom of Reader:
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        1. Reads YAML
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        2. Decides Question Type
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        3. Creates Object
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>}
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>package &quot;2. Memory (Model)&quot; {
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    object &quot;ShortAnswerQuestion&quot; as Concrete
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>}
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>package &quot;3. Output (Writing)&quot; {
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    component &quot;QuestionsWriter&quot; as Writer
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    component &quot;QuestionStrategyResolver&quot; as Resolver
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    component &quot;ShortAnswerStrategy&quot; as Strategy
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    file &quot;backup.mbz&quot; as Output
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>}
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>YAML -&gt; Reader : Read
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>Reader -&gt; Concrete : Create
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>Concrete -&gt; Writer : Add to list
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>Writer -&gt; Resolver : &quot;I need a writer for ShortAnswer!&quot;
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>Resolver -&gt; Strategy : &quot;Here is the ShortAnswerStrategy.&quot;
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>Strategy -&gt; Output : Writes XML
-</span></code></pre></div>
-<hr>
-<h4 id="guide-how-to-add-a-new-question-type">Guide: How to add a new Question Type</h4>
-<h5 id="step-0-find-out-what-the-xml-looks-like">Step 0: Find out what the XML looks like</h5>
-<p>Before you write code, you need to know what Moodle expects. The easiest way is to copy an existing question from Moodle:</p>
-<p>Create: Go to Moodle, create a test course, and create a question of the type you want (e.g., "Numerical").</p>
-<p>Export: Make a backup of this course (.mbz file).</p>
-<p>Look: Unzip the backup file and open questions.xml.</p>
-<p>Find: Search for your question. You will see a tag like <code>&lt;plugin_qtype_numerical_question&gt;</code>. This is the part that your code needs to generate later.</p>
-<hr>
-<h5 id="step-1-add-the-name-enum">Step 1: Add the Name (Enum)</h5>
-<p>First, we need to give the new type a name in our system.</p>
-<p>File: CourseAsCode.Readers.Enums.QuestionType.cs</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>public enum QuestionType
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>{
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    // ... other types ...
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    NUMERICAL // &lt;--- Add this
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>}
-</span></code></pre></div>
-<hr>
-<h5 id="step-2-define-the-data-fields-model">Step 2: Define the Data Fields (Model)</h5>
-<p>Create a class that defines what data this question has. It must inherit from Question.</p>
-<p>File: CourseAsCode.Model.Questions.Types.Numerical.NumericalQuestion.cs</p>
-<p>Tip: Use [Description] to explain what the fields do.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>public class NumericalQuestion : Question
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>{
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    [Description(&quot;How much error is allowed (e.g. 0.1)&quot;)]
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    public double Tolerance { get; set; }
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    public List&lt;NumericalAnswer&gt; Answers { get; set; } = new();
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>}
-</span></code></pre></div>
-<hr>
-<h5 id="step-3-update-the-reader">Step 3: Update the Reader</h5>
-<p>Now, teach the Reader how to load your new class from the YAML file.</p>
-<p>File: CourseAsCode.Readers.YAML.Readers.YamlQuestionReader.cs</p>
-<p>Action: Add a line to the switch statement to handle your new type.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>case QuestionType.NUMERICAL:
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    return ConvertYamlQuestionToNumericalQuestion(yamlQuestion);
-</span></code></pre></div>
-<hr>
-<h5 id="step-4-create-the-xml-writer-strategy">Step 4: Create the XML Writer (Strategy)</h5>
-<p>This is the most important part. Create a class that knows how to write the XML for this specific question. We call this a "Strategy".</p>
-<p>File: CourseAsCode.Writers.XML.FileWriters.Questions.Strategies.NumericalStrategy.cs</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>public class NumericalStrategy : IQuestionStrategy
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>{
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    private readonly ISequentialIdGenerator _idGenerator;
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    // We need the generator to create unique IDs for Moodle
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    public NumericalStrategy(ISequentialIdGenerator idGenerator) 
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    {
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        _idGenerator = idGenerator;
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    }
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    public string GetQuestionTypeString() =&gt; &quot;numerical&quot;; // The internal Moodle name
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    public void WritePluginData(IXmlService xmlService, Question question)
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    {
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        var model = (NumericalQuestion)question;
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        xmlService.WriteElement(&quot;plugin_qtype_numerical_question&quot;);
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>        // Example: Writing the tolerance value to XML
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        xmlService.WriteElement(&quot;tolerance&quot;, model.Tolerance.ToString());
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        xmlService.CloseElement();
-</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    }
-</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>}
-</span></code></pre></div>
-<hr>
-<h5 id="step-5-connect-everything-registration">Step 5: Connect everything (Registration)</h5>
-<p>Finally, tell the application that your new Strategy exists.</p>
-<p>Register the Service: In CourseAsCode.Writers.XML.Logic.DependencyService.cs, add:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>services.AddTransient&lt;NumericalStrategy&gt;();
-</span></code></pre></div>
-<p>Update the Resolver: In QuestionStrategyResolver.cs, tell it when to use your new strategy:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>    case NumericalQuestion:
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>        return _serviceProvider.GetRequiredService&lt;NumericalStrategy&gt;();
-</span></code></pre></div>
-<hr>
-<h4 id="testing">Testing</h4>
-<p>It is highly recommended to write a test for your new Strategy. If the XML is even slightly wrong, Moodle will not be able to restore the backup.</p>
-<p>Where: CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies</p>
-<p>How: We mock the XML Writer to check if your Strategy writes the correct tags and attributes.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>[Test]
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>public void WritePluginData_WritesToleranceCorrectly()
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>{
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    // 1. Create a dummy question
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    var question = new NumericalQuestion { Tolerance = 5.0 };
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    // 2. Run the writer
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    _strategy.WritePluginData(_mockXmlService, question);
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    // 3. Check if &quot;tolerance&quot; was written with value &quot;5&quot;
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    _mockXmlService.Received().WriteElement(&quot;tolerance&quot;, &quot;5&quot;);
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>}
-</span></code></pre></div>
+<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><span data-tippy-content data-tippy-raw='2025-12-17'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-12-17T13:07:48+01:00'>2025-12-17</time></span><span data-tippy-content data-tippy-raw='2025-12-17'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-12-17T12:07:48+00:00'>2025-12-17</time></span><span class='material-icons' data-icon='doc_author'></span><div class='avatar-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' src='https://avatars.githubusercontent.com/Davimalu' onerror="this.style.display='none'" /></div></div></div></div>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -2480,7 +2173,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../Question_Types/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Question Types">
+          <a href="../../MoodleBackupFile/QuestionTypes/DragAndDropText/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Matching">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2490,20 +2183,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Question Types
+                Matching
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../../Grading/Overview/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+          <a href="../Known_Issues/" class="md-footer__link md-footer__link--next" aria-label="Next: Known Issues">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Overview
+                Known Issues
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2562,10 +2255,28 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.top", "navigation.tabs", "navigation.expand", "navigation.indexes", "navigation.path", "search.suggest", "search.highlight", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.top", "navigation.tabs", "navigation.expand", "navigation.indexes", "navigation.path", "search.suggest", "search.highlight", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../assets/mkdocs_puml/puml.js"></script>
+      
+        <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+      
+        <script src="../../assets/mkdocs_puml/interaction.js"></script>
+      
+        <script src="../../assets/document_dates/tippy/popper.min.js"></script>
+      
+        <script src="../../assets/document_dates/tippy/tippy.umd.min.js"></script>
+      
+        <script src="../../assets/document_dates/core/default.config.js"></script>
+      
+        <script src="../../assets/document_dates/user.config.js"></script>
+      
+        <script src="../../assets/document_dates/core/utils.js"></script>
+      
+        <script src="../../assets/document_dates/core/core.js"></script>
       
     
   </body>
