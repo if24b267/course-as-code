@@ -1,4 +1,3 @@
-# Grading
 Some activities support grading (e.g., Quizzes and Assignments). Course As Code allows you to configure grading settings for these activities.
 
 ## Grade Categories

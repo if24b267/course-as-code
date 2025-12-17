@@ -1,4 +1,3 @@
-# Overview
 In this section, we explain the basic architecture of **Course As Code**: 
 
 Course as Code is a modular application that, broadly speaking, consists of three main components:
