@@ -1,4 +1,3 @@
-# Activities
 A course consists of any number of sections, which in turn can contain any number of activities.
 
 ```puml

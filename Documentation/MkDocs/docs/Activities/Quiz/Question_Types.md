@@ -47,7 +47,7 @@ The Single Choice Question is a special form of the Multiple Choice Question, wh
 #### [DropdownQuestion](https://docs.moodle.org/500/en/Matching_question_type)
 The Dropdown question is internally referred to as a `Matching Question` in Moodle and, strictly speaking, consists of multiple sub-questions. The `AnswerText` of the parent `Question` class is displayed at the top as a *heading*, while the actual question consists of several sub-questions, namely the assignment of the correct selectable text to the given text.
 
-![Image of a dropdown question in Moodle to give you a better idea](../assets/DropDownQuestion.png)
+![Image of a dropdown question in Moodle to give you a better idea](../../assets/DropDownQuestion.png)
 
 The `DropdownQuestion` type therefore consists of several `DropdownSubQuestion`s, which represent the individual interaction possibilities for the user (in this case `Java`, `C`, `Prolog`, and `Haskell`). For each sub-question, the `QuestionText` and the `CorrectAnswer` are defined. To make answering the question more challenging, a series of `WrongAnswers` can also be specified.
 
@@ -78,7 +78,7 @@ The `DropdownQuestion` type therefore consists of several `DropdownSubQuestion`s
 #### [DragAndDropTextQuestion](https://docs.moodle.org/500/en/Drag_and_drop_into_text_question_type)
 The `DragAndDropTextQuestion` format refers to classic fill-in-the-blank questions where the user has to insert the correct word from a set of predefined words into the corresponding gap.
 
-![Image of a cloze text question in Moodle to give you a better idea](../assets/DragAndDropTextQuestion.png)
+![Image of a cloze text question in Moodle to give you a better idea](../../assets/DragAndDropTextQuestion.png)
 
 This question type consists of a `QuestionText` (in the parent class `Question`) that can contain gaps, and multiple `TextChoice` elements, each assigned an `ID` and a `Value` (its content), which can be inserted into the cloze text.
 
@@ -104,7 +104,7 @@ The `QuestionText` should be formulated as continuous text. Gaps can be defined 
 
 A `TextChoice` can also be assigned to a specific `Category` to specify distractors individually per gap.
 
-![A different cloze text question in Moodle, making use of categories, to give you a better idea](../assets/DragAndDropTextQuestionWithCategory.png)
+![A different cloze text question in Moodle, making use of categories, to give you a better idea](../../assets/DragAndDropTextQuestionWithCategory.png)
 
 !!! example
     The question from the example screenshot would be represented in the data model as follows:
@@ -127,7 +127,7 @@ A `TextChoice` can also be assigned to a specific `Category` to specify distract
 CodeRunner questions require students to write and run code in order to solve a programming task. They rely on the Moodle CodeRunner plugin, which must be installed on the Moodle instance for this question type to function.
 
 A CodeRunner question evaluates the student’s code by running it against one or more test cases. The question can be defined entirely inline inside the YAML file, or—especially for larger tasks—split into multiple external files.
-![Image of a CodeRunner question](../assets/CodeRunnerQuestion.png)
+![Image of a CodeRunner question](../../assets/CodeRunnerQuestion.png)
 
 <hr>
 ##### Overview

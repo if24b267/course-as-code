@@ -1,4 +1,3 @@
-# Moodle Backup File
 Moodle allows courses to be exported in the form of backup files. These files have the extension `.mbz` and are essentially ZIP archives that contain a collection of XML files. These XML files represent all aspects of the course, including the course structure, user roles, files, and other settings.
 
 Although these files are basically ZIP archives, for unknown reasons they cannot be opened with standard tools such as `winrar`, `7zip`, or the default Windows extraction program. A simple method to extract the .xml files from the backup is to use the Linux tool `tar`.
