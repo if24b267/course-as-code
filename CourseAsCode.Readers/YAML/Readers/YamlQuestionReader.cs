@@ -361,10 +361,6 @@ namespace CourseAsCode.Readers.YAML.Readers
                 Answers = ConvertYamlAnswersToShortAnswerOptions(yamlQuestion.Answers),
                 HintPenalty = yamlQuestion.HintPenalty,
                 UseCase = yamlQuestion.UseCase,
-                //CorrectResponseFeedback = yamlQuestion.CorrectResponseFeedback,
-                //CorrectResponseFeedbackFormat = yamlQuestion.CorrectResponseFeedbackFormat,
-                //IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
-                //IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
                 Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
             };
 
@@ -378,14 +374,13 @@ namespace CourseAsCode.Readers.YAML.Readers
                 return new List<ShortAnswerOptions>();
             }
 
-            // Hier mappen wir die allgemeine "YamlAnswer" auf deine spezifische "ShortAnswerOption"
             return yamlAnswers.Select(yamlAnswer => new ShortAnswerOptions
             {
                 AnswerText = yamlAnswer.AnswerText,
                 AnswerTextFormat = yamlAnswer.AnswerTextFormat,
-                AnswerGrade = yamlAnswer.AnswerGrade,     // Wichtig: Fraction (1.0 für 100%)
-                AnswerFeedback = yamlAnswer.Feedback,     // Feedback Text
-                AnswerFeedbackFormat = yamlAnswer.FeedbackFormat // Feedback Format
+                AnswerGrade = yamlAnswer.AnswerGrade,     
+                AnswerFeedback = yamlAnswer.Feedback,     
+                AnswerFeedbackFormat = yamlAnswer.FeedbackFormat 
             }).ToList();
         }
     }
