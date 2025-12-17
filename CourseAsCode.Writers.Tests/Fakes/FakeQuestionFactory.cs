@@ -1,10 +1,11 @@
-﻿using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.ShortAnswer;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 
 namespace CourseAsCode.Writers.Tests.Fakes
@@ -361,6 +362,84 @@ namespace CourseAsCode.Writers.Tests.Fakes
             };
 
             return trueFalseQuestion;
+        }
+
+        /// <summary>
+        /// Creates a basic dropdown question with predefined structure and configuration
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withHints">Indicates whether the question includes hints</param>
+        /// <param name="withFeedback">Indicates whether the question provides general feedback</param>
+        /// <returns>A <see cref="ShortAnswerQuestion"/> object with initialized values and structure</returns>
+        public static ShortAnswerQuestion CreateBasicShortAnswerQuestion(int id, string category, bool withHints = false)
+        {
+            var saq = new ShortAnswerQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"ShortAnswer_{id}",
+                QuestionText = $"<p>Short Answer Text {id}</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = $"General Feedback SA {id}",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.33f,
+                UseCase = false,
+                QuestionReady = true,
+                Answers = new List<ShortAnswerOptions>
+                {
+                    new ShortAnswerOptions
+                    {
+                        AnswerText = "Correct Answer",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 1.0f,
+                        AnswerFeedback = "Excellent!",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new ShortAnswerOptions
+                    {
+                        AnswerText = "Almost Correct",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = "Close, but not perfect.",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new ShortAnswerOptions
+                    {
+                        AnswerText = "*", 
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = "Wrong answer.",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                },
+                Hints = null, // Hints are added below
+                Tags = new List<string> { $"TagSA{id}" },
+            };
+
+            if (withHints)
+            {
+                saq.Hints = new List<Hint>
+                {
+                    new Hint
+                    {
+                        HintText = "SA Hint 1",
+                        HintTextFormat = FormattingFormat.HTML,
+                        ShowNumberOfCorrectAnswers = true,
+                        ClearIncorrectResponses = false,
+                    },
+                    new Hint
+                    {
+                        HintText = "SA Hint 2",
+                        HintTextFormat = FormattingFormat.PlainText,
+                        ShowNumberOfCorrectAnswers = false,
+                        ClearIncorrectResponses = true,
+                    },
+                };
+            }
+
+            return saq;
         }
     }
 }

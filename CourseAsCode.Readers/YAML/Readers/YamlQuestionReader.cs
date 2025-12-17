@@ -7,6 +7,7 @@ using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.ShortAnswer;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
@@ -93,6 +94,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.DESCRIPTION:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DescriptionQuestion");
                     return ConvertYamlQuestionToDescriptionQuestion(yamlQuestion);
+                case QuestionType.SHORTANSWER:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to ShortAnswerQuestion");
+                    return ConvertYamlQuestionToShortAnswerQuestion(yamlQuestion);
                 default:
                     _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
                     break;
@@ -341,6 +345,43 @@ namespace CourseAsCode.Readers.YAML.Readers
                 AnswerFeedback = questionAnswer.Feedback,
                 AnswerFeedbackFormat = questionAnswer.FeedbackFormat,
             };
+        }
+
+        private ShortAnswerQuestion ConvertYamlQuestionToShortAnswerQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new ShortAnswerQuestion
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                Answers = ConvertYamlAnswersToShortAnswerOptions(yamlQuestion.Answers),
+                HintPenalty = yamlQuestion.HintPenalty,
+                UseCase = yamlQuestion.UseCase,
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
+            };
+
+            return question;
+        }
+
+        private List<ShortAnswerOptions> ConvertYamlAnswersToShortAnswerOptions(List<YamlQuestionAnswer> yamlAnswers)
+        {
+            if (yamlAnswers == null)
+            {
+                return new List<ShortAnswerOptions>();
+            }
+
+            return yamlAnswers.Select(yamlAnswer => new ShortAnswerOptions
+            {
+                AnswerText = yamlAnswer.AnswerText,
+                AnswerTextFormat = yamlAnswer.AnswerTextFormat,
+                AnswerGrade = yamlAnswer.AnswerGrade,     
+                AnswerFeedback = yamlAnswer.Feedback,     
+                AnswerFeedbackFormat = yamlAnswer.FeedbackFormat 
+            }).ToList();
         }
     }
 }

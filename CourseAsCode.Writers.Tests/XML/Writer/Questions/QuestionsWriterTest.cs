@@ -53,7 +53,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             _sequentialIdGenerator.GetNextHintId().Returns(500, 501);
 
             // Setup Strategy Resolver to always return a valid mock strategy
-            _strategyResolver.ResolveStrategy(Arg.Any<Model.Questions.Question>()).Returns(_mockStrategy);
+            _strategyResolver.ResolveStrategy(Arg.Any<Model.Questions.Question>()).Returns((IQuestionStrategy)null);
             _quizHelper.MapQuestionType(Arg.Any<Model.Questions.Question>()).Returns("multichoice");
 
             // Initialize System Under Test

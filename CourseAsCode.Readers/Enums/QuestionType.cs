@@ -8,6 +8,7 @@ namespace CourseAsCode.Readers.Enums
         DROPDOWN,
         DRAGANDDROPTEXT,
         CODERUNNER,
-        DESCRIPTION
+        DESCRIPTION,
+        SHORTANSWER
     }
 }

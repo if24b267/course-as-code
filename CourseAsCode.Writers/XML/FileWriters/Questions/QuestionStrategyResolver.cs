@@ -8,6 +8,7 @@ using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.ShortAnswer;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
@@ -36,6 +37,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
                 DropdownQuestion => _serviceProvider.GetRequiredService<DropdownStrategy>(),
                 MultipleChoiceQuestion => _serviceProvider.GetRequiredService<MultiChoiceStrategy>(),
                 DescriptionQuestion => null, // Description questions do not require a strategy as they have no plugin data
+                ShortAnswerQuestion => _serviceProvider.GetRequiredService<ShortAnswerStrategy>(),
                 TrueFalseQuestion => _serviceProvider.GetRequiredService<TrueFalseStrategy>(),
                 CalculatedQuestion => _serviceProvider.GetRequiredService<CalculatedStrategy>(),
                 CalculatedMultiChoiceQuestion => _serviceProvider.GetRequiredService<CalculatedMultiStrategy>(),
