@@ -207,7 +207,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
             // Use the appropriate question strategy based on the question type to write the specific plugin block
             IQuestionStrategy? pluginWriter = _strategyResolver.ResolveStrategy(question);
 
-            // Falls eine Strategy gefunden wurde, nimm deren Typ. Sonst Fallback auf den Helper.
+            // If a strategy was found, use its type. Else Fallback to the Helper.
             string questionTypeString = pluginWriter?.GetQuestionTypeString() ?? _quizHelper.MapQuestionType(question);
 
             xmlHelper.WriteElementWithAttributes("question", new Dictionary<string, string>
