@@ -85,6 +85,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
 
             // Assert
             _xmlService.Received(1).WriteElement("question_categories");
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -105,6 +109,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             _xmlService.Received(1).WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("name") && d["name"] == "top" &&
                 d.ContainsKey("parent") && d["parent"] == "0"));
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -123,6 +131,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             // Assert: Should write 2 specific categories (CatA and CatB) plus the Top category (checked in different tests)
             _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d => d.ContainsKey("name") && d["name"] == "CatA"));
             _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d => d.ContainsKey("name") && d["name"] == "CatB"));
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -142,6 +154,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("questioncategoryid") &&
                 d.ContainsKey("ownerid")));
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -159,6 +175,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             // Assert: The total number of question_bank_entry elements should match total questions (at least that's the case in our implementation)
             _xmlService.Received().WriteElement("question_bank_entries");
             _xmlService.Received(3).WriteElementWithAttributes("question_bank_entry", Arg.Any<Dictionary<string, string>>());
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -177,6 +197,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             _xmlService.Received().WriteElementWithAttributes("question_versions", Arg.Is<Dictionary<string,string>>(d => d["id"] == question.QuestionId.ToString()));
             _xmlService.Received().WriteElements(elements: Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("version") && d["version"] == "1"));
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -196,6 +220,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             _xmlService.Received().WriteElementWithAttributes("question_versions", Arg.Is<Dictionary<string,string>>(d => d["id"] == q.QuestionId.ToString()));
             _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("status") && d["status"] == "ready"));
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -224,6 +252,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
                 d["qtype"] == "multichoice" &&
                 d.ContainsKey("stamp") &&
                 d.ContainsKey("timecreated")));
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -247,6 +279,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
 
             // 2. Strategy called to write data to the xml service
             specificStrategy.Received(1).WritePluginData(_xmlService, q);
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -268,6 +304,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             // Custom Fields
             _xmlService.Received().WriteElement("plugin_qbank_customfields_question");
             _xmlService.Received().WriteElement("customfields");
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -284,6 +324,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
 
             // Assert
             _tagsWriter.Received(1).WriteTags(_xmlService, q.Tags);
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -309,6 +353,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
                 d["hint"] == "Try harder" &&
                 d["shownumcorrect"] == "1"
             ));
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -332,6 +380,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
                 d["hint"] == "Code Hint" &&
                 d["clearwrong"] == "1"
             ));
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
 
         [Test]
@@ -350,6 +402,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             _xmlService.Received().WriteElement("question_hints");
             _xmlService.Received().CloseElement(); // Close question_hints immediately
             _xmlService.DidNotReceive().WriteElementWithAttributes("question_hint", Arg.Any<Dictionary<string, string>>());
+
+            // Check if all opened tags were closed
+            int openTags = _xmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _xmlService.Received(openTags).CloseElement();
         }
     }
 }

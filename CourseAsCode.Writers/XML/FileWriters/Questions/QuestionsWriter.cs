@@ -34,7 +34,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
         /// <summary>
         /// Creates a new instance of the QuestionsWriter class
         /// </summary>
-        /// <param name="xmlServiceFactory">Factory for creating XmlWriters</param>
+        /// <param name="xmlServiceFactory">Factory for creating XML services</param>
         /// <param name="logger">Logger instance specific to QuestionsWriter</param>
         /// <param name="generalHelper">General Helper providing various helper methods</param>
         /// <param name="sequentialIdGenerator">Helper for generating sequential IDs for various entities</param>
