@@ -1923,8 +1923,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1942,6 +1958,78 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vs-code-plugin-for-course-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VS Code Plugin for Course Creation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#course-preview-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course Preview Function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cascading-config-and-sensible-defaults-wip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cascading Config and Sensible Defaults (WIP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ux-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UX Improvements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-for-multiple-moodle-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support for Multiple Moodle Versions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2000,8 +2088,69 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vs-code-plugin-for-course-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VS Code Plugin for Course Creation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#course-preview-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course Preview Function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cascading-config-and-sensible-defaults-wip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cascading Config and Sensible Defaults (WIP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ux-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UX Improvements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-for-multiple-moodle-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support for Multiple Moodle Versions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2069,7 +2218,9 @@
   
 
 
-<h1 id="vs-code-plugin-for-course-creation">VS Code Plugin for Course Creation</h1>
+  <h1>Roadmap</h1>
+
+<h2 id="vs-code-plugin-for-course-creation">VS Code Plugin for Course Creation</h2>
 <p>Course As Code allows Moodle courses to be created in the form of text files. This enables courses to be managed using source control tools like Git and also facilitates easier collaboration on course creation. However, a crucial disadvantage of this approach is that there is no UI available to present configuration options to the user in a simple manner.</p>
 <p>Instead, the entire configuration takes place via <code>.yaml</code> files. While this text-based approach provides the aforementioned advantages regarding version control, it is no longer immediately apparent to the user which options are available and which values individual configuration parameters can or may accept.</p>
 <p>For this reason, a plugin for <a href="https://code.visualstudio.com/">Visual Studio Code</a> is to be developed that provides IntelliSense-like functions when writing the text files for a Moodle course, such as code completion for individual parameters, displaying documentation for specific parameters, showing possible values for parameters, highlighting syntax errors, etc.</p>
@@ -2077,16 +2228,40 @@
 <p class="admonition-title">Tip</p>
 <p>A preliminary Proof of Concept implementation of this feature could potentially be realized using JSON/YAML schemas. In VS Code, such a schema can be integrated using the <code>$schema</code> keyword and would likewise offer validation, auto-completion, and documentation, while being significantly less effort to create than a complete VS Code plugin.</p>
 </div>
-<h1 id="course-preview-function">Course Preview Function</h1>
+<h2 id="course-preview-function">Course Preview Function</h2>
 <p>In the final version of Course As Code, users should be able to generate a course preview before importing it into Moodle. This allows potential issues to be identified prior to the Moodle import and supports the course creation process.</p>
 <p>Suitable formats for the preview include both PDF (more complex) and HTML/CSS (simpler). Due to the architecture of Course As Code, this feature can be implemented relatively easily as well as independently of the rest of the development by 1-2 team members working in parallel to the other development efforts. The Reader, internal data model, and Writer operate completely independently of one another.</p>
 <p>To implement this functionality, the existing Writer component - which currently converts data read by the Reader and stored in the internal data model into XML files and subsequently into a Moodle backup file - simply needs to be replaced by a newly developed component (green) that converts the data into a <code>.pdf</code> or <code>.html</code> file.</p>
 <div class='puml-container'><div class="puml light" style=""><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="DESCRIPTION" height="324px" preserveAspectRatio="xMidYMid meet" style="width:765px;height:324px;background:#FFFFFF;" version="1.1" viewBox="0 0 765 324" width="765px" zoomAndPan="magnify" class="diagram"><defs/><g><g class="entity" data-entity="Description" data-source-line="10" data-uid="ent0002" id="entity_Description"><rect fill="#E6E9EF" height="68.8906" rx="7.5" ry="7.5" style="stroke:#5C5F77;stroke-width:0.5;" width="156.4658" x="7" y="136.59"/><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.4658" x="17" y="159.5851">Textual Description</text><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="134.9004" x="17.7827" y="175.882">of a Moodle Course</text><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="85.6406" x="42.4126" y="192.1789">(.yaml, .md)</text></g><g class="entity" data-entity="Reader" data-source-line="11" data-uid="ent0003" id="entity_Reader"><rect fill="#E6E9EF" height="36.2969" rx="7.5" ry="7.5" style="stroke:#5C5F77;stroke-width:0.5;" width="70.1758" x="55.14" y="15.15"/><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50.1758" x="65.14" y="38.1451">Reader</text></g><g class="entity" data-entity="Model" data-source-line="12" data-uid="ent0004" id="entity_Model"><rect fill="#E6E9EF" height="52.5938" rx="7.5" ry="7.5" style="stroke:#5C5F77;stroke-width:0.5;" width="99.9121" x="222.28" y="7"/><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="54.2021" x="245.135" y="29.9951">Internal</text><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="79.9121" x="232.28" y="46.292">Data Model</text></g><g class="entity" data-entity="Writer" data-source-line="13" data-uid="ent0005" id="entity_Writer"><rect fill="#E6E9EF" height="36.2969" rx="7.5" ry="7.5" style="stroke:#5C5F77;stroke-width:0.5;" width="63.3467" x="484.56" y="15.15"/><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="43.3467" x="494.56" y="38.1451">Writer</text></g><g class="entity" data-entity="PreviewWriter" data-source-line="14" data-uid="ent0006" id="entity_PreviewWriter"><rect fill="#90EE90" height="36.2969" rx="7.5" ry="7.5" style="stroke:#5C5F77;stroke-width:0.5;" width="147.6543" x="198.41" y="152.89"/><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="127.6543" x="208.41" y="175.8851">PDF/HTML5 Writer</text></g><g class="entity" data-entity="Backup" data-source-line="15" data-uid="ent0007" id="entity_Backup"><rect fill="#E6E9EF" height="52.5938" rx="7.5" ry="7.5" style="stroke:#5C5F77;stroke-width:0.5;" width="378.5244" x="380.97" y="144.74"/><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="135.6934" x="502.3855" y="167.7351">Moodle Backup File</text><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="358.5244" x="390.97" y="184.032">backup-moodle2-course-ID-YYYYMMDD-HHMM.mbz</text></g><g class="entity" data-entity="Preview" data-source-line="16" data-uid="ent0008" id="entity_Preview"><rect fill="#90EE90" height="36.2969" rx="7.5" ry="7.5" style="stroke:#5C5F77;stroke-width:0.5;" width="305.5371" x="119.46" y="282.48"/><text fill="#4C4F69" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="285.5371" x="129.46" y="305.4751">PDF and/or HTML5 Preview of the course</text></g><g class="link" data-entity-1="Reader" data-entity-2="Description" data-link-type="dependency" data-source-line="19" data-uid="lnk10" id="link_Reader_Description"><path d="M89.3701,57.756 C88.5901,79.026 87.47,109.42 86.48,136.24" fill="none" id="Reader-backto-Description" style="stroke:#5C5F77;stroke-width:1;"/><polygon fill="#5C5F77" points="89.59,51.76,85.2629,60.6074,89.4068,56.7566,93.2575,60.9005,89.59,51.76" style="stroke:#5C5F77;stroke-width:1;"/><text fill="#4C4F69" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="63.7559" x="89.23" y="102.6569">interprets</text></g><g class="link" data-entity-1="Reader" data-entity-2="Model" data-link-type="dependency" data-source-line="20" data-uid="lnk11" id="link_Reader_Model"><path d="M125.76,33.3 C153.17,33.3 185.45,33.3 216,33.3" fill="none" id="Reader-to-Model" style="stroke:#5C5F77;stroke-width:1;"/><polygon fill="#5C5F77" points="222,33.3,213,29.3,217,33.3,213,37.3,222,33.3" style="stroke:#5C5F77;stroke-width:1;"/><text fill="#4C4F69" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55.9229" x="146.3" y="26.3669">stores in</text></g><g class="link" data-entity-1="Model" data-entity-2="Writer" data-link-type="dependency" data-source-line="21" data-uid="lnk12" id="link_Model_Writer"><path d="M322.49,33.3 C371.04,33.3 437.1,33.3 478.28,33.3" fill="none" id="Model-to-Writer" style="stroke:#5C5F77;stroke-width:1;"/><polygon fill="#5C5F77" points="484.28,33.3,475.28,29.3,479.28,33.3,475.28,37.3,484.28,33.3" style="stroke:#5C5F77;stroke-width:1;"/><text fill="#4C4F69" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="71.0049" x="367.87" y="26.3669">reads from</text></g><g class="link" data-entity-1="Model" data-entity-2="PreviewWriter" data-link-type="dependency" data-source-line="22" data-uid="lnk13" id="link_Model_PreviewWriter"><path d="M272.23,59.83 C272.23,86.86 272.23,122.82 272.23,146.4" fill="none" id="Model-to-PreviewWriter" style="stroke:#5C5F77;stroke-width:1;"/><polygon fill="#5C5F77" points="272.23,152.4,276.23,143.4,272.23,147.4,268.23,143.4,272.23,152.4" style="stroke:#5C5F77;stroke-width:1;"/><text fill="#4C4F69" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="71.0049" x="273.23" y="102.6569">reads from</text></g><g class="link" data-entity-1="Writer" data-entity-2="Backup" data-link-type="dependency" data-source-line="23" data-uid="lnk14" id="link_Writer_Backup"><path d="M523.18,51.76 C532.53,75.25 546.993,111.6046 557.773,138.7146" fill="none" id="Writer-to-Backup" style="stroke:#5C5F77;stroke-width:1;"/><polygon fill="#5C5F77" points="559.99,144.29,560.3814,134.4489,558.1425,139.6438,552.9476,137.4049,559.99,144.29" style="stroke:#5C5F77;stroke-width:1;"/><text fill="#4C4F69" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="39.457" x="546.23" y="102.6569">writes</text></g><g class="link" data-entity-1="PreviewWriter" data-entity-2="Preview" data-link-type="dependency" data-source-line="24" data-uid="lnk15" id="link_PreviewWriter_Preview"><path d="M272.23,189.51 C272.23,213.95 272.23,252.05 272.23,276.37" fill="none" id="PreviewWriter-to-Preview" style="stroke:#5C5F77;stroke-width:1;"/><polygon fill="#5C5F77" points="272.23,282.37,276.23,273.37,272.23,277.37,268.23,273.37,272.23,282.37" style="stroke:#5C5F77;stroke-width:1;"/><text fill="#4C4F69" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="65.6665" x="273.23" y="248.5469">generates</text></g></g></svg></div><div class="puml dark" style=""><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="DESCRIPTION" height="324px" preserveAspectRatio="xMidYMid meet" style="width:765px;height:324px;background:#303446;" version="1.1" viewBox="0 0 765 324" width="765px" zoomAndPan="magnify" class="diagram"><defs/><g><rect fill="#303446" height="324" style="stroke:none;stroke-width:1;" width="765" x="0" y="0"/><g class="entity" data-entity="Description" data-source-line="10" data-uid="ent0002" id="entity_Description"><rect fill="#292C3C" height="68.8906" rx="7.5" ry="7.5" style="stroke:#B5BFE2;stroke-width:0.5;" width="156.4658" x="7" y="136.59"/><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.4658" x="17" y="159.5851">Textual Description</text><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="134.9004" x="17.7827" y="175.882">of a Moodle Course</text><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="85.6406" x="42.4126" y="192.1789">(.yaml, .md)</text></g><g class="entity" data-entity="Reader" data-source-line="11" data-uid="ent0003" id="entity_Reader"><rect fill="#292C3C" height="36.2969" rx="7.5" ry="7.5" style="stroke:#B5BFE2;stroke-width:0.5;" width="70.1758" x="55.14" y="15.15"/><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50.1758" x="65.14" y="38.1451">Reader</text></g><g class="entity" data-entity="Model" data-source-line="12" data-uid="ent0004" id="entity_Model"><rect fill="#292C3C" height="52.5938" rx="7.5" ry="7.5" style="stroke:#B5BFE2;stroke-width:0.5;" width="99.9121" x="222.28" y="7"/><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="54.2021" x="245.135" y="29.9951">Internal</text><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="79.9121" x="232.28" y="46.292">Data Model</text></g><g class="entity" data-entity="Writer" data-source-line="13" data-uid="ent0005" id="entity_Writer"><rect fill="#292C3C" height="36.2969" rx="7.5" ry="7.5" style="stroke:#B5BFE2;stroke-width:0.5;" width="63.3467" x="484.56" y="15.15"/><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="43.3467" x="494.56" y="38.1451">Writer</text></g><g class="entity" data-entity="PreviewWriter" data-source-line="14" data-uid="ent0006" id="entity_PreviewWriter"><rect fill="#90EE90" height="36.2969" rx="7.5" ry="7.5" style="stroke:#B5BFE2;stroke-width:0.5;" width="147.6543" x="198.41" y="152.89"/><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="127.6543" x="208.41" y="175.8851">PDF/HTML5 Writer</text></g><g class="entity" data-entity="Backup" data-source-line="15" data-uid="ent0007" id="entity_Backup"><rect fill="#292C3C" height="52.5938" rx="7.5" ry="7.5" style="stroke:#B5BFE2;stroke-width:0.5;" width="378.5244" x="380.97" y="144.74"/><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="135.6934" x="502.3855" y="167.7351">Moodle Backup File</text><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="358.5244" x="390.97" y="184.032">backup-moodle2-course-ID-YYYYMMDD-HHMM.mbz</text></g><g class="entity" data-entity="Preview" data-source-line="16" data-uid="ent0008" id="entity_Preview"><rect fill="#90EE90" height="36.2969" rx="7.5" ry="7.5" style="stroke:#B5BFE2;stroke-width:0.5;" width="305.5371" x="119.46" y="282.48"/><text fill="#C6D0F5" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="285.5371" x="129.46" y="305.4751">PDF and/or HTML5 Preview of the course</text></g><g class="link" data-entity-1="Reader" data-entity-2="Description" data-link-type="dependency" data-source-line="19" data-uid="lnk10" id="link_Reader_Description"><path d="M89.3701,57.756 C88.5901,79.026 87.47,109.42 86.48,136.24" fill="none" id="Reader-backto-Description" style="stroke:#B5BFE2;stroke-width:1;"/><polygon fill="#B5BFE2" points="89.59,51.76,85.2629,60.6074,89.4068,56.7566,93.2575,60.9005,89.59,51.76" style="stroke:#B5BFE2;stroke-width:1;"/><text fill="#C6D0F5" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="63.7559" x="89.23" y="102.6569">interprets</text></g><g class="link" data-entity-1="Reader" data-entity-2="Model" data-link-type="dependency" data-source-line="20" data-uid="lnk11" id="link_Reader_Model"><path d="M125.76,33.3 C153.17,33.3 185.45,33.3 216,33.3" fill="none" id="Reader-to-Model" style="stroke:#B5BFE2;stroke-width:1;"/><polygon fill="#B5BFE2" points="222,33.3,213,29.3,217,33.3,213,37.3,222,33.3" style="stroke:#B5BFE2;stroke-width:1;"/><text fill="#C6D0F5" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55.9229" x="146.3" y="26.3669">stores in</text></g><g class="link" data-entity-1="Model" data-entity-2="Writer" data-link-type="dependency" data-source-line="21" data-uid="lnk12" id="link_Model_Writer"><path d="M322.49,33.3 C371.04,33.3 437.1,33.3 478.28,33.3" fill="none" id="Model-to-Writer" style="stroke:#B5BFE2;stroke-width:1;"/><polygon fill="#B5BFE2" points="484.28,33.3,475.28,29.3,479.28,33.3,475.28,37.3,484.28,33.3" style="stroke:#B5BFE2;stroke-width:1;"/><text fill="#C6D0F5" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="71.0049" x="367.87" y="26.3669">reads from</text></g><g class="link" data-entity-1="Model" data-entity-2="PreviewWriter" data-link-type="dependency" data-source-line="22" data-uid="lnk13" id="link_Model_PreviewWriter"><path d="M272.23,59.83 C272.23,86.86 272.23,122.82 272.23,146.4" fill="none" id="Model-to-PreviewWriter" style="stroke:#B5BFE2;stroke-width:1;"/><polygon fill="#B5BFE2" points="272.23,152.4,276.23,143.4,272.23,147.4,268.23,143.4,272.23,152.4" style="stroke:#B5BFE2;stroke-width:1;"/><text fill="#C6D0F5" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="71.0049" x="273.23" y="102.6569">reads from</text></g><g class="link" data-entity-1="Writer" data-entity-2="Backup" data-link-type="dependency" data-source-line="23" data-uid="lnk14" id="link_Writer_Backup"><path d="M523.18,51.76 C532.53,75.25 546.993,111.6046 557.773,138.7146" fill="none" id="Writer-to-Backup" style="stroke:#B5BFE2;stroke-width:1;"/><polygon fill="#B5BFE2" points="559.99,144.29,560.3814,134.4489,558.1425,139.6438,552.9476,137.4049,559.99,144.29" style="stroke:#B5BFE2;stroke-width:1;"/><text fill="#C6D0F5" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="39.457" x="546.23" y="102.6569">writes</text></g><g class="link" data-entity-1="PreviewWriter" data-entity-2="Preview" data-link-type="dependency" data-source-line="24" data-uid="lnk15" id="link_PreviewWriter_Preview"><path d="M272.23,189.51 C272.23,213.95 272.23,252.05 272.23,276.37" fill="none" id="PreviewWriter-to-Preview" style="stroke:#B5BFE2;stroke-width:1;"/><polygon fill="#B5BFE2" points="272.23,282.37,276.23,273.37,272.23,277.37,268.23,273.37,272.23,282.37" style="stroke:#B5BFE2;stroke-width:1;"/><text fill="#C6D0F5" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="65.6665" x="273.23" y="248.5469">generates</text></g></g></svg></div></div>
 
-<h1 id="cascading-config-bzw-sinnvolle-defaults-wip">Cascading Config bzw. sinnvolle Defaults (WIP)</h1>
-<h1 id="verbesserte-ux">Verbesserte UX</h1>
-<h1 id="support-fur-mehrere-moodle-versionen">Support für mehrere Moodle Versionen</h1>
-<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><span data-tippy-content data-tippy-raw='2025-12-17'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-12-17T14:40:50+01:00'>2025-12-17</time></span><span data-tippy-content data-tippy-raw='2025-12-17'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-12-17T14:20:08+00:00'>2025-12-17</time></span><span class='material-icons' data-icon='doc_author'></span><div class='avatar-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' src='https://avatars.githubusercontent.com/Davimalu' onerror="this.style.display='none'" /></div></div></div></div>
+<h2 id="cascading-config-and-sensible-defaults-wip">Cascading Config and Sensible Defaults (WIP)</h2>
+<p>One of the core design goals of Course As Code is to make course creation easier and faster than is traditionally the case in Moodle. One of the most important concepts for achieving this goal is the so-called <strong>Cascading Config</strong> and the use of sensible default values.</p>
+<p>One of the most time-consuming tasks in Moodle course creation is having to manually set all necessary parameters for every activity, even though identical settings are often chosen for a wide variety of activities anyway. Course As Code aims to address this by introducing support for <strong>Cascading Configs</strong>:</p>
+<p>For example, certain default settings for activities (e.g., whether they should be visible to students or whether standard instructions should be displayed for quizzes) can be set at the course level, which are then automatically inherited by all other activities (or any other entity configurable via Course As Code) in this course. This means that these settings no longer need to be set for every single activity; instead, they are simply inherited from the parent configuration (which could also have the scope of a single section instead, for example).</p>
+<p>However, the user still has the option to set configuration parameters for a single activity, thereby overriding the global defaults if they wish to apply varying settings for a specific activity.</p>
+<div class="admonition info">
+<p class="admonition-title">Handling Missing Default Configuration</p>
+<p>If the user does not provide such global (or section-level) standard settings, Course As Code should instead set reasonable default parameters so that the course can still be created without triggering error messages. Although, in this situation, Course As Code obviously has to guess which settings the user desires.</p>
+<div class="admonition tip">
+<p class="admonition-title">Omitting Config Files</p>
+</div>
+<p>Ideally, it should even be possible to omit certain configuration files (e.g., the configuration file for a specific activity) entirely if the user is satisfied with the default settings or simply wants to inherit them from a higher level (<strong>Cascading Config</strong>). This significantly increases the clarity of the course definitions.</p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">Current Status</p>
+<p>The concept of <strong>Cascading Config</strong> and the use of sensible default values is already partially implemented in the current version of Course As Code. However, the implementation is inconsistent and incomplete in some places, which is why further work is required here.</p>
+</div>
+<h2 id="ux-improvements">UX Improvements</h2>
+<p>Although priority was already given to user-friendliness during the implementation of the Readers, some parameters and configuration files are not yet optimally designed, and some settings lack consistency across the entire application. A major factor in this regard is the usage of IDs. The current Reader implementation assigns internal IDs to many entities (e.g., activities, quiz questions, etc.). To link these elsewhere (e.g., a hyperlink to an activity, inclusion of a quiz question in a quiz), the user currently has to specify the entity's ID to establish the link.</p>
+<p>This approach is relatively cumbersome and user-unfriendly, as the user is required to memorize arbitrary IDs to create the course. Therefore, a simpler system should be introduced to enable the user to create links within their course. So far, the most promising ideas appear to be specifying the path to the activity instead of the ID, and/or giving the user the option to define a text-based "label" for an entity, which they could then reference instead of the ID.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In our view, it is not necessary to completely refactor the Readers to implement this feature. The fact that the Readers operate internally with IDs is a sound design decision for reasons of performance and avoiding collisions/ambiguities. However, they should provide an abstraction layer for the user so that they do not have to work directly with these IDs. This could be implemented, for example, by creating a mapping table that maps paths/labels to IDs.</p>
+</div>
+<h2 id="support-for-multiple-moodle-versions">Support for Multiple Moodle Versions</h2>
+<p>Major Moodle versions (e.g. Moodle 4.X -&gt; 5.X) often introduce breaking changes that alter how backups are stored within a Moodle backup file (<code>.mbz</code>). For example, the internal storage method for Question Banks changed between Moodle 4.X and Moodle 5.X. Consequently, Course As Code must be adapted to function with Moodle 5.X; see <a href="../Known_Issues/#error-messages-during-imports-in-moodle-5x">"Error Messages During Imports in Moodle 5.X"</a> for further information.</p>
+<p>However, to ensure that adapting to the new format expected by Moodle 5.X (and following major versions) does not result in a loss of backward compatibility with Moodle 4.X or other earlier versions, Course As Code should allow the user to select the target Moodle version when generating the backup file.</p>
+<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><span data-tippy-content data-tippy-raw='2025-12-17'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-12-17T14:40:50+01:00'>2025-12-17</time></span><span data-tippy-content data-tippy-raw='2025-12-17'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-12-17T15:00:41+00:00'>2025-12-17</time></span><span class='material-icons' data-icon='doc_author'></span><div class='avatar-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' src='https://avatars.githubusercontent.com/Davimalu' onerror="this.style.display='none'" /></div></div></div></div>
 
 
 
