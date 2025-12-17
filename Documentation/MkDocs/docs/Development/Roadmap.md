@@ -57,7 +57,7 @@ However, the user still has the option to set configuration parameters for a sin
     If the user does not provide such global (or section-level) standard settings, Course As Code should instead set reasonable default parameters so that the course can still be created without triggering error messages. Although, in this situation, Course As Code obviously has to guess which settings the user desires.
     
     !!! tip "Omitting Config Files"
-    Ideally, it should even be possible to omit certain configuration files (e.g., the configuration file for a specific activity) entirely if the user is satisfied with the default settings or simply wants to inherit them from a higher level (**Cascading Config**). This significantly increases the clarity of the course definitions.
+        Ideally, it should even be possible to omit certain configuration files (e.g., the configuration file for a specific activity) entirely if the user is satisfied with the default settings or simply wants to inherit them from a higher level (**Cascading Config**). This significantly increases the clarity of the course definitions.
 
 !!! abstract "Current Status"
     The concept of **Cascading Config** and the use of sensible default values is already partially implemented in the current version of Course As Code. However, the implementation is inconsistent and incomplete in some places, which is why further work is required here.
