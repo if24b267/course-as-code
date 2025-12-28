@@ -94,6 +94,7 @@ nav:
       - Quiz:
         - Activities/Quiz/index.md
         - Question Types: Activities/Quiz/Question_Types.md
+        - Quiz Architecture & Developer Guide: Activities/Quiz/Quiz_Architecture_and_Extensibility.md
   - Grading:
       - Overview: Grading/index.md
       - Grade Categories: Grading/Grade_Categories.md
