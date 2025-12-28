@@ -57,15 +57,15 @@ markdown_extensions:
   - pymdownx.details
   - tables
 
-# plugins:
-#   - plantuml:
-#       puml_url: https://www.plantuml.com/plantuml/
-#       theme: 
-#         light: catppuccin/latte-white
-#         dark: catppuccin/frappe
-#   - search:
-#   - document-dates:
-#       position: bottom
+plugins:
+  - plantuml:
+      puml_url: https://www.plantuml.com/plantuml/
+      theme: 
+        light: catppuccin/latte-white
+        dark: catppuccin/frappe
+  - search:
+  - document-dates:
+      position: bottom
 
 nav:
   - Home: index.md
