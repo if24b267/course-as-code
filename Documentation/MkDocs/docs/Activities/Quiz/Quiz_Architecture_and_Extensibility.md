@@ -1,21 +1,19 @@
 ### Quiz Architecture & Developer Guide
 
-The Quiz Activity is unique. Unlike a simple URL or a File, a Quiz acts like a "container" that can hold many different types of questions (like Essay, Multiple Choice, etc.).
+The **Quiz Activity** is the most complex module in Course as Code. Unlike a simple URL, a Quiz is a container for many different **Question Types** (Short Answer, Multiple Choice, Drag and Drop, etc.). 
 
-Because every question type looks different in the code, we built the system to be very flexible. This guide explains how it works and how you can add new question types.
+Because every question looks different in the final Moodle XML, we use a modular system called the **Strategy Pattern**. This guide explains how it works and how you can add new question types.
 
 <hr>
 #### How data flows (The Lifecycle)
 
-To handle the different question types, the system follows a strict pipeline:
+To handle different question types, the system follows a strict pipeline:
 
-Reader: Reads the generic YAML file and figures out exactly which type of question it is (e.g., "This is a ShortAnswer").
+1.  **Reader:** Reads the generic YAML file and decides which type of question it is (e.g., "This is a SHORTANSWER").
+2.  **Model:** Creates the specific C# object (e.g., `ShortAnswerQuestion`) and fills it with data.
+3.  **Writer:** The `QuestionsWriter` asks the `StrategyResolver` for the right "Strategy" to turn this specific object into Moodle XML.
 
-Model: Creates the specific C# object for that question in memory.
-
-Writer: When saving the file, the system looks for the specific "Writer Strategy" that knows how to turn this exact question into Moodle XML.
-
-```
+```plantuml
 @startuml
 !theme plain
 skinparam componentStyle rectangle
@@ -46,27 +44,29 @@ Concrete -> Writer : Add to list
 Writer -> Resolver : "I need a writer for ShortAnswer!"
 Resolver -> Strategy : "Here is the ShortAnswerStrategy."
 Strategy -> Output : Writes XML
+@enduml
 ```
 
 <hr>
 #### Guide: How to add a new Question Type
-##### Step 0: Find out what the XML looks like
 
-Before you write code, you need to know what Moodle expects. The easiest way is to copy an existing question from Moodle:
+Follow these steps to implement a new Moodle question type (e.g., Numerical).
 
-Create: Go to Moodle, create a test course, and create a question of the type you want (e.g., "Numerical").
+##### Step 0: The Prerequisite (Reverse Engineering)
 
-Export: Make a backup of this course (.mbz file).
+Before writing any code, you must find out what Moodle expects in the XML file.:
 
-Look: Unzip the backup file and open questions.xml.
-
-Find: Search for your question. You will see a tag like `<plugin_qtype_numerical_question>`. This is the part that your code needs to generate later.
+1. Create: Go to Moodle, create a test course, and add a question of the type you want to implement.
+2. Export: Create a course backup (`.mbz` file).
+3. Inspect: Convert the `.mbz` to `.zip`, unzip it, and open the `questions.xml` file.
+4. Target: Find your question and look at the `<plugin_qtype_...>` tag. This XML structure is exactly what your Strategy (Step 4) needs to generate.
+    
 <hr>
 ##### Step 1: Add the Name (Enum)
 
-First, we need to give the new type a name in our system.
+Add the new type to the list of supported questions.
 
-File: CourseAsCode.Readers.Enums.QuestionType.cs
+File: `CourseAsCode.Readers.Enums.QuestionType.cs`
 
 ```
 public enum QuestionType
@@ -76,76 +76,97 @@ public enum QuestionType
 }
 ```
 <hr>
-##### Step 2: Define the Data Fields (Model)
+##### Step 2: Create the Data Model
 
-Create a class that defines what data this question has. It must inherit from Question.
+Create a class that defines what data this question needs. It must inherit from `Question`.
 
-File: CourseAsCode.Model.Questions.Types.Numerical.NumericalQuestion.cs
+File: `CourseAsCode.Model.Questions.Types.Numerical.NumericalQuestion.cs`
 
-Tip: Use [Description] to explain what the fields do.
+Tip: Use `[Description]` attributes to help other developers
 
 ```
 public class NumericalQuestion : Question
 {
-    [Description("How much error is allowed (e.g. 0.1)")]
+    [Description("How many errors are allowed (e.g. 0.1)")]
     public double Tolerance { get; set; }
     
     public List<NumericalAnswer> Answers { get; set; } = new();
 }
 ```
 <hr>
-##### Step 3: Update the Reader
+##### Step 3: Update the Reader & Mapping
 
-Now, teach the Reader how to load your new class from the YAML file.
+To get your data from the file into the system, you need to update two places in the Reader layer:
 
-File: CourseAsCode.Readers.YAML.Readers.YamlQuestionReader.cs
-
-Action: Add a line to the switch statement to handle your new type.
+1. The YAML Model: Open `CourseAsCode.Readers.YAML.Model.YamlQuestion.cs`. You must add your unique variables here. If you don't add them, the system will ignore them when reading the YAML file.
 
 ```
-case QuestionType.NUMERICAL:
-    return ConvertYamlQuestionToNumericalQuestion(yamlQuestion);
+public class YamlQuestion {
+    // ... existing properties ...
+
+    // ADD YOUR UNIQUE VARIABLES HERE:
+    public double Tolerance { get; set; } 
+}
 ```
+
+2. The Mapping Logic: Open `CourseAsCode.Readers.YAML.Readers.YamlQuestionReader.cs`. Add a case to the `switch` statement and create a mapping method.
+
+!!! warning "Mapping is mandatory" You must manually copy the data from the `YamlQuestion` (the raw input) to your `NumericalQuestion` (the internal model).
+
+```
+private NumericalQuestion ConvertYamlQuestionToNumericalQuestion(YamlQuestion yaml)
+{
+    var question = new NumericalQuestion();
+    
+    // 1. Map Base Properties (inherited from Question)
+    question.QuestionName = yaml.QuestionName;
+    question.QuestionText = yaml.QuestionText;
+    question.DefaultMark = yaml.DefaultMark;
+
+    // 2. Map your Unique Properties
+    question.Tolerance = yaml.Tolerance; 
+
+    return question;
+}
+```
+
 <hr>
 ##### Step 4: Create the XML Writer (Strategy)
 
-This is the most important part. Create a class that knows how to write the XML for this specific question. We call this a "Strategy".
+Create a class that knows how to write the specific XML tags you found in Step 0.
 
-File: CourseAsCode.Writers.XML.FileWriters.Questions.Strategies.NumericalStrategy.cs
+File: `CourseAsCode.Writers.XML.FileWriters.Questions.Strategies.NumericalStrategy.cs`
 
 ```
-public class NumericalStrategy : IQuestionStrategy
-{
+public class NumericalStrategy : IQuestionStrategy {
     private readonly ISequentialIdGenerator _idGenerator;
 
-    // We need the generator to create unique IDs for Moodle
-    public NumericalStrategy(ISequentialIdGenerator idGenerator) 
-    {
+    public NumericalStrategy(ISequentialIdGenerator idGenerator) {
         _idGenerator = idGenerator;
     }
 
-    public string GetQuestionTypeString() => "numerical"; // The internal Moodle name
+    public string GetQuestionTypeString() => "numerical";
 
-    public void WritePluginData(IXmlService xmlService, Question question)
-    {
+    public void WritePluginData(IXmlService xmlService, Question question) {
         var model = (NumericalQuestion)question;
-        
         xmlService.WriteElement("plugin_qtype_numerical_question");
         
-        // Example: Writing the tolerance value to XML
+        // Use _idGenerator.GetNextAnswerId() for any IDs needed in the XML
         xmlService.WriteElement("tolerance", model.Tolerance.ToString());
         
         xmlService.CloseElement();
     }
 }
 ```
+
 <hr>
-##### Step 5: Connect everything (Registration)
+##### Step 5: Connection & Registration
 
 Finally, tell the application that your new Strategy exists.
 
-Register the Service: In CourseAsCode.Writers.XML.Logic.DependencyService.cs, add:
-    
+1. Register Service: In `DependencyService.cs`, add: `services.AddTransient<NumericalStrategy>();`
+2. Update Resolver: In `QuestionStrategyResolver.cs`, add the case: `case NumericalQuestion => _serviceProvider.GetRequiredService<NumericalStrategy>(),`
+
 ```
 services.AddTransient<NumericalStrategy>();
 ```
@@ -158,25 +179,31 @@ Update the Resolver: In QuestionStrategyResolver.cs, tell it when to use your ne
 ```
 
 <hr>
-#### Testing
 
-It is highly recommended to write a test for your new Strategy. If the XML is even slightly wrong, Moodle will not be able to restore the backup.
+#### Best Practices & Testing
+##### Unit Testing
 
-Where: CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
+It is Good Practice to write a test for your Strategy. If the XML is wrong, Moodle will fail to import the whole course.
 
-How: We mock the XML Writer to check if your Strategy writes the correct tags and attributes.
+Location: `CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies`
+Method: Use `NSubstitute` to mock the `IXmlService`. Check if the correct tags and values are written.
+
+##### Handling IDs
+
+Never hardcode IDs (like `id="1"`). Moodle requires unique, sequential IDs. Always use the `ISequentialIdGenerator` injected via the constructor.
+
+<hr>
+#### Example Usage (YAML)
+
+After implementing everything, you can use the new type in your `questions.yaml`:
+YAML
 
 ```
-[Test]
-public void WritePluginData_WritesToleranceCorrectly()
-{
-    // 1. Create a dummy question
-    var question = new NumericalQuestion { Tolerance = 5.0 };
-    
-    // 2. Run the writer
-    _strategy.WritePluginData(_mockXmlService, question);
-
-    // 3. Check if "tolerance" was written with value "5"
-    _mockXmlService.Received().WriteElement("tolerance", "5");
-}
+  - QuestionName: Math Task
+    QuestionType: NUMERICAL
+    QuestionText: "What is 10 / 3?"
+    Tolerance: 0.01
+    Answers:
+      - AnswerText: "3.33"
+        AnswerGrade: 1.0
 ```
