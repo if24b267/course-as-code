@@ -9,6 +9,7 @@ namespace CourseAsCode.Readers.Enums
         DRAGANDDROPTEXT,
         CODERUNNER,
         DESCRIPTION,
-        SHORTANSWER
+        SHORTANSWER,
+        ESSAY
     }
 }

@@ -6,6 +6,7 @@ using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Model.Questions.Types.ShortAnswer;
+using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 
 namespace CourseAsCode.Writers.Tests.Fakes
@@ -365,7 +366,7 @@ namespace CourseAsCode.Writers.Tests.Fakes
         }
 
         /// <summary>
-        /// Creates a basic dropdown question with predefined structure and configuration
+        /// Creates a basic short answer question with predefined structure and configuration
         /// </summary>
         /// <param name="id">The unique identifier for the question</param>
         /// <param name="category">The category to which the question belongs</param>
@@ -440,6 +441,47 @@ namespace CourseAsCode.Writers.Tests.Fakes
             }
 
             return saq;
+        }
+
+        /// <summary>
+        /// Creates a basic essay question with predefined structure and configuration
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withHints">Indicates whether the question includes hints</param>
+        /// <param name="withFeedback">Indicates whether the question provides general feedback</param>
+        /// <returns>A <see cref="EssayaQuestion"/> object with initialized values and structure</returns>
+        public static EssayQuestion CreateBasicEssayQuestion(int id, string category, bool withHints = false)
+        {
+            var eq = new EssayQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"Essay_{id}",
+                QuestionText = $"<p>Essay Text {id}</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = $"General Feedback SA {id}",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.33f,
+                QuestionReady = true,
+                ResponseFormat = "editor",
+                ResponseRequired = true,
+                ResponseFieldLines = 20,
+                MinWordLimit = 3,
+                MaxWordLimit = 300,
+                AttachmentsAllowed = 1,
+                AttachmentsRequired = 0,
+                FileTypesList = ".pdf",
+                MaxBytes = 0,
+                GraderInfo = "Make sure that the person is passionate",
+                GraderInfoFormat = FormattingFormat.Markdown,
+                ResponseTemplate = "Start your essay here...",
+                ResponseTemplateFormat = FormattingFormat.Markdown,
+                Tags = new List<string> { $"TagSA{id}" },
+            };
+
+            return eq;
         }
     }
 }

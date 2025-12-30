@@ -8,6 +8,7 @@ using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Model.Questions.Types.ShortAnswer;
+using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
@@ -94,6 +95,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.DESCRIPTION:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DescriptionQuestion");
                     return ConvertYamlQuestionToDescriptionQuestion(yamlQuestion);
+                case QuestionType.ESSAY:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to EssayQuestion");
+                    return ConvertYamlQuestionToEssayQuestion(yamlQuestion);
                 case QuestionType.SHORTANSWER:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to ShortAnswerQuestion");
                     return ConvertYamlQuestionToShortAnswerQuestion(yamlQuestion);
@@ -345,6 +349,35 @@ namespace CourseAsCode.Readers.YAML.Readers
                 AnswerFeedback = questionAnswer.Feedback,
                 AnswerFeedbackFormat = questionAnswer.FeedbackFormat,
             };
+        }
+
+        private EssayQuestion ConvertYamlQuestionToEssayQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new EssayQuestion
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                ResponseFormat = yamlQuestion.ResponseFormat,
+                ResponseRequired = yamlQuestion.ResponseRequired,
+                ResponseFieldLines = yamlQuestion.ResponseFieldLines,
+                MinWordLimit = yamlQuestion.MinWordLimit,
+                MaxWordLimit = yamlQuestion.MaxWordLimit,
+                AttachmentsAllowed = yamlQuestion.AttachmentsAllowed,
+                AttachmentsRequired = yamlQuestion.AttachmentsRequired,
+                FileTypesList = yamlQuestion.FileTypesList,
+                MaxBytes = yamlQuestion.MaxBytes,
+                GraderInfo = yamlQuestion.GraderInfo,
+                GraderInfoFormat = yamlQuestion.GraderInfoFormat,
+                ResponseTemplate = yamlQuestion.ResponseTemplate,
+                ResponseTemplateFormat = yamlQuestion.ResponseTemplateFormat,
+            };
+
+            return question;
         }
 
         private ShortAnswerQuestion ConvertYamlQuestionToShortAnswerQuestion(YamlQuestion yamlQuestion)
