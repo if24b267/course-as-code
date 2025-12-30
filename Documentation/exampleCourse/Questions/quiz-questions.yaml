@@ -982,3 +982,25 @@ Questions:
       AnswerTextFormat: MARKDOWN
       AnswerGrade: 0
       Feedback: Incorrect. Break is used for loops or switch statements.
+
+  - QuestionName: Essay Austrian food
+    Category: essay
+    QuestionId: 30
+    QuestionText: Write an essay regarding the best food in Austria.
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: ESSAY
+    ResponseFormat: editor
+    ResponseRequired: true
+    ResponseFieldLines: 20
+    MinWordLimit: 3
+    MaxWordLimit: 300
+    AttachmentsAllowed: 1           
+    AttachmentsRequired: 0          
+    FileTypesList: ".pdf,.docx"     
+    MaxBytes: 0 
+    GraderInfo: "Make sure that the person is passionate"
+    GraderInfoFormat: MARKDOWN
+    ResponseTemplate: "Start your essay here..."
+    ResponseTemplateFormat: MARKDOWN
+

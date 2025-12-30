@@ -45,5 +45,20 @@ namespace CourseAsCode.Readers.YAML.Model
 
         // Short Answer specific property
         public bool UseCase { get; set; } = false;
+
+        // Essay specific properties
+        public string ResponseFormat { get; set; } = "editor";
+        public bool ResponseRequired { get; set; } = true;
+        public int ResponseFieldLines { get; set; } = 15;
+        public int? MinWordLimit { get; set; }
+        public int? MaxWordLimit { get; set; }
+        public int AttachmentsAllowed { get; set; } = 0;
+        public int AttachmentsRequired { get; set; } = 0;
+        public string FileTypesList { get; set; } = string.Empty;
+        public long MaxBytes { get; set; } = 0;
+        public string GraderInfo { get; set; }
+        public FormattingFormat GraderInfoFormat { get; set; } = FormattingFormat.HTML;
+        public string ResponseTemplate { get; set; }
+        public FormattingFormat ResponseTemplateFormat { get; set; } = FormattingFormat.HTML;
     }
 }
