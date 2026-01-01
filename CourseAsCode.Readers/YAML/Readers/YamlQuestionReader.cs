@@ -1,14 +1,16 @@
+using System.ComponentModel;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Model.Questions.Types.ShortAnswer;
-using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
@@ -101,6 +103,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.SHORTANSWER:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to ShortAnswerQuestion");
                     return ConvertYamlQuestionToShortAnswerQuestion(yamlQuestion);
+                case QuestionType.SIMPLECALCULATED:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedSimpleQuestion");
+                    return ConvertYamlQuestionToSimpleCalculatedQuestion(yamlQuestion);
                 default:
                     _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
                     break;
@@ -415,6 +420,91 @@ namespace CourseAsCode.Readers.YAML.Readers
                 AnswerFeedback = yamlAnswer.Feedback,     
                 AnswerFeedbackFormat = yamlAnswer.FeedbackFormat 
             }).ToList();
+        }
+
+        private SimpleCalculatedQuestion ConvertYamlQuestionToSimpleCalculatedQuestion(YamlQuestion yaml)
+        {
+            return new SimpleCalculatedQuestion
+            {
+                QuestionName = yaml.QuestionName,
+                QuestionText = yaml.QuestionText,
+                QuestionId = yaml.QuestionId,
+                Category = yaml.Category,
+                DefaultMark = yaml.DefaultMark,
+                QuestionReady = yaml.QuestionReady,
+                QuestionTextFormat = yaml.QuestionTextFormat,
+
+                NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
+                NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
+                DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
+                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords),
+
+                Answers = ConvertYamlAnswersToSimpleCalculatedOptions(yaml.Answers),
+            };
+        }
+
+        private List<SimpleCalculatedAnswer> ConvertYamlAnswersToSimpleCalculatedOptions(List<YamlQuestionAnswer> yamlAnswers)
+        {
+            if (yamlAnswers == null)
+            {
+                return new List<SimpleCalculatedAnswer>();
+            }
+
+            return yamlAnswers.Select(yamlAnswer => new SimpleCalculatedAnswer
+            {
+                AnswerText = yamlAnswer.AnswerText,
+                AnswerTextFormat = yamlAnswer.AnswerTextFormat,
+                Fraction = yamlAnswer.AnswerGrade,
+                Feedback = yamlAnswer.Feedback,
+                FeedbackFormat = yamlAnswer.FeedbackFormat,
+            }).ToList();
+        }
+
+        private SimpleCalculatedQuestion.NumericalOption MapNumericalOptions(YamlNumericalOption? yamlOpt)
+        {
+            return new SimpleCalculatedQuestion.NumericalOption
+            {
+                ShowUnits = yamlOpt?.ShowUnits ?? 3,
+                UnitsLeft = yamlOpt?.UnitsLeft ?? false,
+                UnitGradingType = yamlOpt?.UnitGradingType ?? 0,
+                UnitPenalty = yamlOpt?.UnitPenalty ?? 0.1f,
+            };
+        }
+
+        private List<SimpleCalculatedQuestion.NumericalUnit> MapNumericalUnits(List<YamlNumericalUnit>? yamlList)
+        {
+            return yamlList?.Select(u => new SimpleCalculatedQuestion.NumericalUnit
+            {
+                UnitName = u.UnitName,
+                Multiplier = u.Multiplier,
+            }).ToList() ?? new();
+        }
+
+        private List<SimpleCalculatedQuestion.DatasetDefinition> MapDatasetDefinitions(List<YamlDatasetDefinition>? yamlList)
+        {
+            return yamlList?.Select(d => new SimpleCalculatedQuestion.DatasetDefinition
+            {
+                Name = d.Name,
+                Category = d.Category,
+                Type = d.Type,
+                Options = d.Options,
+                Items = d.Items.Select(i => new SimpleCalculatedQuestion.DatasetItem
+                {
+                    Number = i.Number,
+                    Value = i.Value
+                }).ToList()
+            }).ToList() ?? new();
+        }
+
+        private List<SimpleCalculatedQuestion.CalculatedRecord> MapCalculatedRecords(List<YamlCalculatedRecord>? yamlList)
+        {
+            return yamlList?.Select(r => new SimpleCalculatedQuestion.CalculatedRecord
+            {
+                Tolerance = r.Tolerance,
+                ToleranceType = r.ToleranceType,
+                CorrectAnswerLength = r.CorrectAnswerLength,
+                CorrectAnswerFormat = r.CorrectAnswerFormat,
+            }).ToList() ?? new();
         }
     }
 }

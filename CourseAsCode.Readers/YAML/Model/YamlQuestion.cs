@@ -60,5 +60,11 @@ namespace CourseAsCode.Readers.YAML.Model
         public FormattingFormat GraderInfoFormat { get; set; } = FormattingFormat.HTML;
         public string ResponseTemplate { get; set; }
         public FormattingFormat ResponseTemplateFormat { get; set; } = FormattingFormat.HTML;
+
+        // Calculated Questions specific properties
+        public YamlNumericalOption? NumericalOptions { get; set; }
+        public List<YamlNumericalUnit>? NumericalUnits { get; set; }
+        public List<YamlDatasetDefinition>? DatasetDefinitions { get; set; }
+        public List<YamlCalculatedRecord>? CalculatedRecords { get; set; }
     }
 }

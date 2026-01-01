@@ -31,6 +31,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
             // Answers ------------------------------------------------------------
             var generatedAnswerIds = new List<int>();
+
             xmlService.WriteElement("answers");
             foreach (var ans in simple.Answers)
             {
@@ -67,8 +68,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 });
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "unit", unit.UnitName },
                     { "multiplier", unit.Multiplier.ToString("0.0000000", CultureInfo.InvariantCulture) },
+                    { "unit", unit.UnitName },
                 });
                 xmlService.CloseElement(); // </numerical_unit>
             }
@@ -133,9 +134,14 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
             // Calculated records -------------------------------------------------
             xmlService.WriteElement("calculated_records");
-            foreach (var rec in simple.CalculatedRecords)
+
+            for (int i = 0; i < simple.CalculatedRecords.Count; i++)
             {
+                var rec = simple.CalculatedRecords[i];
                 int recId = _sequentialIdGenerator.GetNextAnswerId();
+
+                string linkedAnswerId = (i < generatedAnswerIds.Count) ? generatedAnswerIds[i].ToString() : "0";
+
                 xmlService.WriteElementWithAttributes("calculated_record", new Dictionary<string, string>
                 {
                     { "id", recId.ToString() },
@@ -143,7 +149,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "answer", rec.AnswerRefId.ToString() },
+                    { "answer", linkedAnswerId },
                     { "tolerance", rec.Tolerance.ToString("0.00", CultureInfo.InvariantCulture) },
                     { "tolerancetype", rec.ToleranceType.ToString() },
                     { "correctanswerlength", rec.CorrectAnswerLength.ToString() },
@@ -152,6 +158,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
                 xmlService.CloseElement(); // </calculated_record>
             }
+
             xmlService.CloseElement(); // </calculated_records>
 
             // Calculated options -------------------------------------------------

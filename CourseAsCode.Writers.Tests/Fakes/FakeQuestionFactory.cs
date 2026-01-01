@@ -1,12 +1,13 @@
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Model.Questions.Types.ShortAnswer;
-using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 
 namespace CourseAsCode.Writers.Tests.Fakes
@@ -482,6 +483,97 @@ namespace CourseAsCode.Writers.Tests.Fakes
             };
 
             return eq;
+        }
+
+        /// <summary>
+        /// Creates a basic simple calculated question with predefined datasets, units and tolerance settings.
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <returns>A <see cref="SimpleCalculatedQuestion"/> object initialized with default values</returns>
+        public static SimpleCalculatedQuestion CreateBasicSimpleCalculatedQuestion(int id, string category)
+        {
+            var scq = new SimpleCalculatedQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"SimpleCalc_{id}",
+                QuestionText = "<p>Calculate the sum of {a} and {b}.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "General Feedback",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                QuestionReady = true,
+
+                NumericalOptions = new SimpleCalculatedQuestion.NumericalOption
+                {
+                    ShowUnits = 3,
+                    UnitsLeft = false,
+                    UnitGradingType = 1,
+                    UnitPenalty = 0.1f,
+                },
+
+                NumericalUnits = new List<SimpleCalculatedQuestion.NumericalUnit>
+                {
+                    new SimpleCalculatedQuestion.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
+                    new SimpleCalculatedQuestion.NumericalUnit { UnitName = "m", Multiplier = 0.01f },
+                },
+
+                DatasetDefinitions = new List<SimpleCalculatedQuestion.DatasetDefinition>
+                {
+                    new SimpleCalculatedQuestion.DatasetDefinition
+                    {
+                        Name = "a",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<SimpleCalculatedQuestion.DatasetItem>
+                        {
+                            new SimpleCalculatedQuestion.DatasetItem { Number = 1, Value = 5.0f },
+                            new SimpleCalculatedQuestion.DatasetItem { Number = 2, Value = 3.5f },
+                        },
+                    },
+                    new SimpleCalculatedQuestion.DatasetDefinition
+                    {
+                        Name = "b",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<SimpleCalculatedQuestion.DatasetItem>
+                        {
+                            new SimpleCalculatedQuestion.DatasetItem { Number = 1, Value = 2.0f },
+                            new SimpleCalculatedQuestion.DatasetItem { Number = 2, Value = 6.1f },
+                        },
+                    },
+                },
+
+                Answers = new List<SimpleCalculatedAnswer>
+                {
+                    new SimpleCalculatedAnswer
+                    {
+                        AnswerText = "{a} + {b}",
+                        Fraction = 1.0f,
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        Feedback = "Well done!",
+                        FeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+
+                CalculatedRecords = new List<SimpleCalculatedQuestion.CalculatedRecord>
+                {
+                    new SimpleCalculatedQuestion.CalculatedRecord
+                    {
+                        Tolerance = 0.01f,
+                        ToleranceType = 1,
+                        CorrectAnswerLength = 2,
+                        CorrectAnswerFormat = 1,
+                    },
+                },
+
+                Tags = new List<string> { $"TagSimpleCalc{id}" },
+            };
+
+            return scq;
         }
     }
 }
