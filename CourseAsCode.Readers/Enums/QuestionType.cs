@@ -10,6 +10,7 @@ namespace CourseAsCode.Readers.Enums
         CODERUNNER,
         DESCRIPTION,
         SHORTANSWER,
-        ESSAY
+        ESSAY,
+        SIMPLECALCULATED,
     }
 }
