@@ -505,7 +505,7 @@ namespace CourseAsCode.Writers.Tests.Fakes
                 DefaultMark = 1.0f,
                 QuestionReady = true,
 
-                NumericalOptions = new SimpleCalculatedQuestion.NumericalOption
+                NumericalOptions = new CalculatedHelper.NumericalOption
                 {
                     ShowUnits = 3,
                     UnitsLeft = false,
@@ -513,36 +513,36 @@ namespace CourseAsCode.Writers.Tests.Fakes
                     UnitPenalty = 0.1f,
                 },
 
-                NumericalUnits = new List<SimpleCalculatedQuestion.NumericalUnit>
+                NumericalUnits = new List<CalculatedHelper.NumericalUnit>
                 {
-                    new SimpleCalculatedQuestion.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
-                    new SimpleCalculatedQuestion.NumericalUnit { UnitName = "m", Multiplier = 0.01f },
+                    new CalculatedHelper.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
+                    new CalculatedHelper.NumericalUnit { UnitName = "m", Multiplier = 0.01f },
                 },
 
-                DatasetDefinitions = new List<SimpleCalculatedQuestion.DatasetDefinition>
+                DatasetDefinitions = new List<CalculatedHelper.DatasetDefinition>
                 {
-                    new SimpleCalculatedQuestion.DatasetDefinition
+                    new CalculatedHelper.DatasetDefinition
                     {
                         Name = "a",
                         Category = 0,
                         Type = 1,
                         Options = "uniform:1.0:10.0:1",
-                        Items = new List<SimpleCalculatedQuestion.DatasetItem>
+                        Items = new List<CalculatedHelper.DatasetItem>
                         {
-                            new SimpleCalculatedQuestion.DatasetItem { Number = 1, Value = 5.0f },
-                            new SimpleCalculatedQuestion.DatasetItem { Number = 2, Value = 3.5f },
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 5.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 3.5f },
                         },
                     },
-                    new SimpleCalculatedQuestion.DatasetDefinition
+                    new CalculatedHelper.DatasetDefinition
                     {
                         Name = "b",
                         Category = 0,
                         Type = 1,
                         Options = "uniform:1.0:10.0:1",
-                        Items = new List<SimpleCalculatedQuestion.DatasetItem>
+                        Items = new List<CalculatedHelper.DatasetItem>
                         {
-                            new SimpleCalculatedQuestion.DatasetItem { Number = 1, Value = 2.0f },
-                            new SimpleCalculatedQuestion.DatasetItem { Number = 2, Value = 6.1f },
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 2.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 6.1f },
                         },
                     },
                 },
@@ -559,9 +559,9 @@ namespace CourseAsCode.Writers.Tests.Fakes
                     },
                 },
 
-                CalculatedRecords = new List<SimpleCalculatedQuestion.CalculatedRecord>
+                CalculatedRecords = new List<CalculatedHelper.CalculatedRecord>
                 {
-                    new SimpleCalculatedQuestion.CalculatedRecord
+                    new CalculatedHelper.CalculatedRecord
                     {
                         Tolerance = 0.01f,
                         ToleranceType = 1,

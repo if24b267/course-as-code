@@ -98,16 +98,7 @@ public class NumericalQuestion : Question
 
 To get your data from the file into the system, you need to update two places in the Reader layer:
 
-1. The YAML Model: Open `CourseAsCode.Readers.YAML.Model.YamlQuestion.cs`. You must add your unique variables here. If you don't add them, the system will ignore them when reading the YAML file.
-
-```
-public class YamlQuestion {
-    // ... existing properties ...
-
-    // ADD YOUR UNIQUE VARIABLES HERE:
-    public double Tolerance { get; set; } 
-}
-```
+1. The YAML Model: Open `CourseAsCode.Readers.YAML.Model.YamlQuestion.cs`. You must add your unique variables here.
 
 2. The Mapping Logic: Open `CourseAsCode.Readers.YAML.Readers.YamlQuestionReader.cs`. Add a case to the `switch` statement and create a mapping method.
 

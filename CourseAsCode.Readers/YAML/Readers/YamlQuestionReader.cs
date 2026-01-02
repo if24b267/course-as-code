@@ -3,6 +3,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.Calculated;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Description;
@@ -106,6 +107,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.SIMPLECALCULATED:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedSimpleQuestion");
                     return ConvertYamlQuestionToSimpleCalculatedQuestion(yamlQuestion);
+                //case QuestionType.CALCULATED:
+                //    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedQuestion");
+                //    return ConvertYamlQuestionToCalculatedQuestion(yamlQuestion);
                 default:
                     _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
                     break;
@@ -460,9 +464,9 @@ namespace CourseAsCode.Readers.YAML.Readers
             }).ToList();
         }
 
-        private SimpleCalculatedQuestion.NumericalOption MapNumericalOptions(YamlNumericalOption? yamlOpt)
+        private CalculatedHelper.NumericalOption MapNumericalOptions(YamlNumericalOption? yamlOpt)
         {
-            return new SimpleCalculatedQuestion.NumericalOption
+            return new CalculatedHelper.NumericalOption
             {
                 ShowUnits = yamlOpt?.ShowUnits ?? 3,
                 UnitsLeft = yamlOpt?.UnitsLeft ?? false,
@@ -471,24 +475,24 @@ namespace CourseAsCode.Readers.YAML.Readers
             };
         }
 
-        private List<SimpleCalculatedQuestion.NumericalUnit> MapNumericalUnits(List<YamlNumericalUnit>? yamlList)
+        private List<CalculatedHelper.NumericalUnit> MapNumericalUnits(List<YamlNumericalUnit>? yamlList)
         {
-            return yamlList?.Select(u => new SimpleCalculatedQuestion.NumericalUnit
+            return yamlList?.Select(u => new CalculatedHelper.NumericalUnit
             {
                 UnitName = u.UnitName,
                 Multiplier = u.Multiplier,
             }).ToList() ?? new();
         }
 
-        private List<SimpleCalculatedQuestion.DatasetDefinition> MapDatasetDefinitions(List<YamlDatasetDefinition>? yamlList)
+        private List<CalculatedHelper.DatasetDefinition> MapDatasetDefinitions(List<YamlDatasetDefinition>? yamlList)
         {
-            return yamlList?.Select(d => new SimpleCalculatedQuestion.DatasetDefinition
+            return yamlList?.Select(d => new CalculatedHelper.DatasetDefinition
             {
                 Name = d.Name,
                 Category = d.Category,
                 Type = d.Type,
                 Options = d.Options,
-                Items = d.Items.Select(i => new SimpleCalculatedQuestion.DatasetItem
+                Items = d.Items.Select(i => new CalculatedHelper.DatasetItem
                 {
                     Number = i.Number,
                     Value = i.Value
@@ -496,9 +500,9 @@ namespace CourseAsCode.Readers.YAML.Readers
             }).ToList() ?? new();
         }
 
-        private List<SimpleCalculatedQuestion.CalculatedRecord> MapCalculatedRecords(List<YamlCalculatedRecord>? yamlList)
+        private List<CalculatedHelper.CalculatedRecord> MapCalculatedRecords(List<YamlCalculatedRecord>? yamlList)
         {
-            return yamlList?.Select(r => new SimpleCalculatedQuestion.CalculatedRecord
+            return yamlList?.Select(r => new CalculatedHelper.CalculatedRecord
             {
                 Tolerance = r.Tolerance,
                 ToleranceType = r.ToleranceType,
@@ -506,5 +510,26 @@ namespace CourseAsCode.Readers.YAML.Readers
                 CorrectAnswerFormat = r.CorrectAnswerFormat,
             }).ToList() ?? new();
         }
+
+        //private CalculatedQuestion ConvertYamlQuestionToCalculatedQuestion(YamlQuestion yaml)
+        //{
+        //    return new CalculatedQuestion
+        //    {
+        //        QuestionName = yaml.QuestionName,
+        //        QuestionText = yaml.QuestionText,
+        //        QuestionId = yaml.QuestionId,
+        //        Category = yaml.Category,
+        //        DefaultMark = yaml.DefaultMark,
+        //        QuestionReady = yaml.QuestionReady,
+        //        QuestionTextFormat = yaml.QuestionTextFormat,
+
+        //        NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
+        //        NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
+        //        DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
+        //        CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords),
+
+        //        Answers = ConvertYamlAnswersToSimpleCalculatedOptions(yaml.Answers),
+        //    };
+        //}
     }
 }

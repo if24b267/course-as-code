@@ -12,5 +12,6 @@ namespace CourseAsCode.Readers.Enums
         SHORTANSWER,
         ESSAY,
         SIMPLECALCULATED,
+        CALCULATED,
     }
 }
