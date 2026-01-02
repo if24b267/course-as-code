@@ -547,9 +547,9 @@ namespace CourseAsCode.Writers.Tests.Fakes
                     },
                 },
 
-                Answers = new List<SimpleCalculatedAnswer>
+                Answers = new List<CalculatedHelper.CalculatedAnswer>
                 {
-                    new SimpleCalculatedAnswer
+                    new CalculatedHelper.CalculatedAnswer
                     {
                         AnswerText = "{a} + {b}",
                         Fraction = 1.0f,

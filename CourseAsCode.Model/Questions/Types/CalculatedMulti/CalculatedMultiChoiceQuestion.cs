@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Questions.Helper;
 
 namespace CourseAsCode.Model.Questions.Types.CalculatedMulti
 {
@@ -7,7 +8,6 @@ namespace CourseAsCode.Model.Questions.Types.CalculatedMulti
     {
         public CalculatedMultiChoiceQuestion()
         {
-            Answers = new List<CalculatedMultiAnswer>();
             NumericalOptions = new NumericalOption();
             CalculatedOptions = new CalculatedOption();
             DatasetDefinitions = new List<DatasetDefinition>();
@@ -15,7 +15,7 @@ namespace CourseAsCode.Model.Questions.Types.CalculatedMulti
         }
 
         [Description("List of answer choices (with calculated expressions and fractions)")]
-        public List<CalculatedMultiAnswer> Answers { get; set; }
+        public List<CalculatedHelper.CalculatedAnswer> Answers { get; set; } = new();
 
         // Numerical units (kept empty by default, can be extended)
         [Description("Numerical units for answers")]

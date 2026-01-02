@@ -107,9 +107,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.SIMPLECALCULATED:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedSimpleQuestion");
                     return ConvertYamlQuestionToSimpleCalculatedQuestion(yamlQuestion);
-                //case QuestionType.CALCULATED:
-                //    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedQuestion");
-                //    return ConvertYamlQuestionToCalculatedQuestion(yamlQuestion);
+                case QuestionType.CALCULATED:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedQuestion");
+                    return ConvertYamlQuestionToCalculatedQuestion(yamlQuestion);
                 default:
                     _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
                     break;
@@ -447,14 +447,14 @@ namespace CourseAsCode.Readers.YAML.Readers
             };
         }
 
-        private List<SimpleCalculatedAnswer> ConvertYamlAnswersToSimpleCalculatedOptions(List<YamlQuestionAnswer> yamlAnswers)
+        private List<CalculatedHelper.CalculatedAnswer> ConvertYamlAnswersToSimpleCalculatedOptions(List<YamlQuestionAnswer> yamlAnswers)
         {
             if (yamlAnswers == null)
             {
-                return new List<SimpleCalculatedAnswer>();
+                return new List<CalculatedHelper.CalculatedAnswer>();
             }
 
-            return yamlAnswers.Select(yamlAnswer => new SimpleCalculatedAnswer
+            return yamlAnswers.Select(yamlAnswer => new CalculatedHelper.CalculatedAnswer
             {
                 AnswerText = yamlAnswer.AnswerText,
                 AnswerTextFormat = yamlAnswer.AnswerTextFormat,
@@ -511,25 +511,25 @@ namespace CourseAsCode.Readers.YAML.Readers
             }).ToList() ?? new();
         }
 
-        //private CalculatedQuestion ConvertYamlQuestionToCalculatedQuestion(YamlQuestion yaml)
-        //{
-        //    return new CalculatedQuestion
-        //    {
-        //        QuestionName = yaml.QuestionName,
-        //        QuestionText = yaml.QuestionText,
-        //        QuestionId = yaml.QuestionId,
-        //        Category = yaml.Category,
-        //        DefaultMark = yaml.DefaultMark,
-        //        QuestionReady = yaml.QuestionReady,
-        //        QuestionTextFormat = yaml.QuestionTextFormat,
+        private CalculatedQuestion ConvertYamlQuestionToCalculatedQuestion(YamlQuestion yaml)
+        {
+            return new CalculatedQuestion
+            {
+                QuestionName = yaml.QuestionName,
+                QuestionText = yaml.QuestionText,
+                QuestionId = yaml.QuestionId,
+                Category = yaml.Category,
+                DefaultMark = yaml.DefaultMark,
+                QuestionReady = yaml.QuestionReady,
+                QuestionTextFormat = yaml.QuestionTextFormat,
 
-        //        NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
-        //        NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
-        //        DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
-        //        CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords),
+                NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
+                NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
+                DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
+                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords),
 
-        //        Answers = ConvertYamlAnswersToSimpleCalculatedOptions(yaml.Answers),
-        //    };
-        //}
+                Answers = ConvertYamlAnswersToSimpleCalculatedOptions(yaml.Answers),
+            };
+        }
     }
 }

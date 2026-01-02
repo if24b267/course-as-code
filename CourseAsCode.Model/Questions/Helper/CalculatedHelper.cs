@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Questions.Helper
 {
@@ -71,10 +72,21 @@ namespace CourseAsCode.Model.Questions.Helper
             public int Single { get; set; } = 0;
             public bool ShuffleAnswers { get; set; } = true;
             public string? CorrectFeedback { get; set; }
+            public FormattingFormat CorrectFeedbackFormat { get; set; } = FormattingFormat.PlainText;
             public string? PartiallyCorrectFeedback { get; set; }
+            public FormattingFormat PartiallyCorrectFeedbackFormat { get; set; } = FormattingFormat.PlainText;
             public string? IncorrectFeedback { get; set; }
+            public FormattingFormat IncorrectFeedbackFormat { get; set; } = FormattingFormat.PlainText;
             public string AnswerNumbering { get; set; } = "abc";
             public bool ShowNumCorrect { get; set; } = false;
+        }
+        public class CalculatedAnswer
+        {
+            public string AnswerText { get; set; } = string.Empty;
+            public FormattingFormat AnswerTextFormat { get; set; } = FormattingFormat.PlainText;
+            public float Fraction { get; set; } = 1.0f;
+            public string? Feedback { get; set; }
+            public FormattingFormat FeedbackFormat { get; set; } = FormattingFormat.PlainText;
         }
     }
 }

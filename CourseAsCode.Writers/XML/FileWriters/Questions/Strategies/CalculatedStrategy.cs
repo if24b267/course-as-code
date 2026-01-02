@@ -48,10 +48,10 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
                     { "answertext", answer.AnswerText },
-                    { "answerformat", _generalHelper.EnumIntegerToString(answer.AnswerTextFormat) },
-                    { "fraction", answer.AnswerGrade.ToString("0.0000000", CultureInfo.InvariantCulture) },
-                    { "feedback", answer.AnswerFeedback ?? string.Empty },
-                    { "feedbackformat", _generalHelper.EnumIntegerToString(answer.AnswerFeedbackFormat) },
+                    { "answerformat", answer.AnswerTextFormat.ToString() },
+                    { "fraction", answer.Fraction.ToString("0.0000000", CultureInfo.InvariantCulture) },
+                    { "feedback", answer.Feedback ?? string.Empty },
+                    { "feedbackformat", answer.FeedbackFormat.ToString() },
                 });
 
                 xmlService.CloseElement(); // </answer>

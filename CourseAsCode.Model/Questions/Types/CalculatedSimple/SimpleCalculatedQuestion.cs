@@ -6,13 +6,8 @@ namespace CourseAsCode.Model.Questions.Types.CalculatedSimple
 {
     public class SimpleCalculatedQuestion : Question
     {
-        public SimpleCalculatedQuestion()
-        {
-            Answers = new List<SimpleCalculatedAnswer>();
-        }
-
         [Description("List of answers with expressions referencing dataset variables")]
-        public List<SimpleCalculatedAnswer> Answers { get; set; }
+        public List<CalculatedHelper.CalculatedAnswer> Answers { get; set; } = new();
 
         [Description("Numerical units (unused by default)")]
         public List<CalculatedHelper.NumericalUnit> NumericalUnits { get; set; } = new();
