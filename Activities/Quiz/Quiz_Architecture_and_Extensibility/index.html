@@ -2561,52 +2561,57 @@
 <h5 id="step-3-update-the-reader-mapping">Step 3: Update the Reader &amp; Mapping</h5>
 <p>To get your data from the file into the system, you need to update two places in the Reader layer:</p>
 <ol>
-<li>
-<p>The YAML Model: Open <code>CourseAsCode.Readers.YAML.Model.YamlQuestion.cs</code>. You must add your unique variables here.</p>
-</li>
-<li>
-<p>The Mapping Logic: Open <code>CourseAsCode.Readers.YAML.Readers.YamlQuestionReader.cs</code>. Add a case to the <code>switch</code> statement and create a mapping method.</p>
-</li>
+<li>The YAML Model: Open <code>CourseAsCode.Readers.YAML.Model.YamlQuestion.cs</code>. You must add your unique variables here. If you don't add them, the system will ignore them when reading the YAML file.</li>
+</ol>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>public class YamlQuestion {
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    // ... existing properties ...
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    // ADD YOUR UNIQUE VARIABLES HERE:
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    public double Tolerance { get; set; } 
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>}
+</span></code></pre></div>
+<ol>
+<li>The Mapping Logic: Open <code>CourseAsCode.Readers.YAML.Readers.YamlQuestionReader.cs</code>. Add a case to the <code>switch</code> statement and create a mapping method.</li>
 </ol>
 <p>!!! warning "Mapping is mandatory" You must manually copy the data from the <code>YamlQuestion</code> (the raw input) to your <code>NumericalQuestion</code> (the internal model).</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>private NumericalQuestion ConvertYamlQuestionToNumericalQuestion(YamlQuestion yaml)
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>{
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    var question = new NumericalQuestion();
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    // 1. Map Base Properties (inherited from Question)
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    question.QuestionName = yaml.QuestionName;
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    question.QuestionText = yaml.QuestionText;
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    question.DefaultMark = yaml.DefaultMark;
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    // 2. Map your Unique Properties
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    question.Tolerance = yaml.Tolerance; 
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    return question;
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>private NumericalQuestion ConvertYamlQuestionToNumericalQuestion(YamlQuestion yaml)
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>{
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    var question = new NumericalQuestion();
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    // 1. Map Base Properties (inherited from Question)
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    question.QuestionName = yaml.QuestionName;
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    question.QuestionText = yaml.QuestionText;
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    question.DefaultMark = yaml.DefaultMark;
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    // 2. Map your Unique Properties
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    question.Tolerance = yaml.Tolerance; 
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    return question;
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>}
 </span></code></pre></div>
 <hr>
 <h5 id="step-4-create-the-xml-writer-strategy">Step 4: Create the XML Writer (Strategy)</h5>
 <p>Create a class that knows how to write the specific XML tags you found in Step 0.</p>
 <p>File: <code>CourseAsCode.Writers.XML.FileWriters.Questions.Strategies.NumericalStrategy.cs</code></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>public class NumericalStrategy : IQuestionStrategy {
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    private readonly ISequentialIdGenerator _idGenerator;
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    public NumericalStrategy(ISequentialIdGenerator idGenerator) {
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        _idGenerator = idGenerator;
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    }
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    public string GetQuestionTypeString() =&gt; &quot;numerical&quot;;
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    public void WritePluginData(IXmlService xmlService, Question question) {
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        var model = (NumericalQuestion)question;
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        xmlService.WriteElement(&quot;plugin_qtype_numerical_question&quot;);
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        // Use _idGenerator.GetNextAnswerId() for any IDs needed in the XML
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        xmlService.WriteElement(&quot;tolerance&quot;, model.Tolerance.ToString());
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        xmlService.CloseElement();
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    }
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>public class NumericalStrategy : IQuestionStrategy {
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    private readonly ISequentialIdGenerator _idGenerator;
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    public NumericalStrategy(ISequentialIdGenerator idGenerator) {
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        _idGenerator = idGenerator;
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    }
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    public string GetQuestionTypeString() =&gt; &quot;numerical&quot;;
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    public void WritePluginData(IXmlService xmlService, Question question) {
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        var model = (NumericalQuestion)question;
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        xmlService.WriteElement(&quot;plugin_qtype_numerical_question&quot;);
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>        // Use _idGenerator.GetNextAnswerId() for any IDs needed in the XML
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        xmlService.WriteElement(&quot;tolerance&quot;, model.Tolerance.ToString());
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        xmlService.CloseElement();
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    }
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>}
 </span></code></pre></div>
 <hr>
 <h5 id="step-5-connection-registration">Step 5: Connection &amp; Registration</h5>
@@ -2615,11 +2620,11 @@
 <li>Register Service: In <code>DependencyService.cs</code>, add: <code>services.AddTransient&lt;NumericalStrategy&gt;();</code></li>
 <li>Update Resolver: In <code>QuestionStrategyResolver.cs</code>, add the case: <code>case NumericalQuestion =&gt; _serviceProvider.GetRequiredService&lt;NumericalStrategy&gt;(),</code></li>
 </ol>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>services.AddTransient&lt;NumericalStrategy&gt;();
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>services.AddTransient&lt;NumericalStrategy&gt;();
 </span></code></pre></div>
 <p>Update the Resolver: In QuestionStrategyResolver.cs, tell it when to use your new strategy:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>    case NumericalQuestion:
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>        return _serviceProvider.GetRequiredService&lt;NumericalStrategy&gt;();
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>    case NumericalQuestion:
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>        return _serviceProvider.GetRequiredService&lt;NumericalStrategy&gt;();
 </span></code></pre></div>
 <hr>
 
@@ -2634,15 +2639,15 @@ Method: Use <code>NSubstitute</code> to mock the <code>IXmlService</code>. Check
 <h4 id="example-usage-yaml">Example Usage (YAML)</h4>
 <p>After implementing everything, you can use the new type in your <code>questions.yaml</code>:
 YAML</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>  - QuestionName: Math Task
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    QuestionType: NUMERICAL
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    QuestionText: &quot;What is 10 / 3?&quot;
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    Tolerance: 0.01
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    Answers:
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>      - AnswerText: &quot;3.33&quot;
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        AnswerGrade: 1.0
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>  - QuestionName: Math Task
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    QuestionType: NUMERICAL
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    QuestionText: &quot;What is 10 / 3?&quot;
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    Tolerance: 0.01
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    Answers:
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>      - AnswerText: &quot;3.33&quot;
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        AnswerGrade: 1.0
 </span></code></pre></div>
-<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><div class='dd-left'><span class='dd-item' data-tippy-content data-tippy-raw='2025-12-27'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-12-27T23:41:39.916503+01:00'>2025-12-27</time></span><span class='dd-item' data-tippy-content data-tippy-raw='2026-01-02'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2026-01-02T14:47:17+00:00'>2026-01-02</time></span></div><div class='dd-right'><span class='material-icons' data-icon='doc_authors'></span><div class='author-group'><div class='avatar-wrapper' data-name='xSulo' data-tippy-content data-tippy-raw='<a href="mailto:145797901+xSulo@users.noreply.github.com">xSulo</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='145797901+xSulo@users.noreply.github.com' /></div><div class='avatar-wrapper' data-name='Süleyman Tegmen' data-tippy-content data-tippy-raw='<a href="mailto:if23b028@technikum-wien.at">Süleyman Tegmen</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='if23b028@technikum-wien.at' /></div></div></div></div></div>
+<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><div class='dd-left'><span class='dd-item' data-tippy-content data-tippy-raw='2025-12-28'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-12-28T11:21:44+01:00'>2025-12-28</time></span><span class='dd-item' data-tippy-content data-tippy-raw='2025-12-28'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-12-28T10:21:44+00:00'>2025-12-28</time></span></div><div class='dd-right'><span class='material-icons' data-icon='doc_author'></span><div class='author-group'><div class='avatar-wrapper' data-name='xSulo' data-tippy-content data-tippy-raw='<a href="mailto:145797901+xSulo@users.noreply.github.com">xSulo</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='145797901+xSulo@users.noreply.github.com' /></div></div></div></div></div>
 
 
 
