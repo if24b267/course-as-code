@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.Calculated;
@@ -14,6 +15,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
         private readonly IQuizHelper _quizHelper;
+        private static readonly Dictionary<string, (int DefId, List<int> ItemIds)> _sharedDatasetCache = new();
 
         public CalculatedStrategy(ILogger<CalculatedStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
         {
@@ -49,9 +51,9 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 {
                     { "answertext", answer.AnswerText },
                     { "answerformat", _generalHelper.EnumIntegerToString(answer.AnswerTextFormat) },
-                    { "fraction", answer.AnswerGrade.ToString("0.0000000", CultureInfo.InvariantCulture) },
-                    { "feedback", answer.AnswerFeedback ?? string.Empty },
-                    { "feedbackformat", _generalHelper.EnumIntegerToString(answer.AnswerFeedbackFormat) },
+                    { "fraction", answer.Fraction.ToString("0.0000000", CultureInfo.InvariantCulture) },
+                    { "feedback", answer.Feedback ?? string.Empty },
+                    { "feedbackformat", _generalHelper.EnumIntegerToString(answer.FeedbackFormat) },
                 });
 
                 xmlService.CloseElement(); // </answer>
@@ -60,7 +62,20 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
             // Numerical units ----------------------------------------------------
             xmlService.WriteElement("numerical_units");
-            // If you need units, emit them here similar to answers.
+            foreach (var unit in calcQuestion.NumericalUnits)
+            {
+                int unitId = _sequentialIdGenerator.GetNextAnswerId();
+                xmlService.WriteElementWithAttributes("numerical_unit", new Dictionary<string, string>
+                {
+                    { "id", unitId.ToString() },
+                });
+                xmlService.WriteElements(new Dictionary<string, string>
+                {
+                    { "multiplier", unit.Multiplier.ToString("0.0000000", CultureInfo.InvariantCulture) },
+                    { "unit", unit.UnitName },
+                });
+                xmlService.CloseElement(); // </numerical_unit>
+            }
             xmlService.CloseElement(); // </numerical_units>
 
             // Numerical options --------------------------------------------------
@@ -92,7 +107,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "category", def.Category.ToString() },
+                    { "category", def.Category == 0 ? "0" : question.CategoryId.ToString() },
                     { "name", def.Name },
                     { "type", def.Type.ToString() },
                     { "options", def.Options },
@@ -122,9 +137,15 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
             // Calculated records -------------------------------------------------
             xmlService.WriteElement("calculated_records");
-            foreach (var rec in calcQuestion.CalculatedRecords)
+            for (int i = 0; i < calcQuestion.CalculatedRecords.Count; i++)
             {
+                var rec = calcQuestion.CalculatedRecords[i];
                 int recId = _sequentialIdGenerator.GetNextAnswerId();
+
+                string linkedAnswerId = (i < answerIdByIndex.Count)
+                                      ? answerIdByIndex[i].ToString()
+                                      : "0";
+
                 xmlService.WriteElementWithAttributes("calculated_record", new Dictionary<string, string>
                 {
                     { "id", recId.ToString() },
@@ -132,8 +153,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "answer", rec.AnswerRefId.ToString() },
-                    { "tolerance", rec.Tolerance.ToString("0.00", CultureInfo.InvariantCulture) }, // sample uses 0.01 without 7 decimals
+                    { "answer", linkedAnswerId },
+                    { "tolerance", rec.Tolerance.ToString("0.00", CultureInfo.InvariantCulture) },
                     { "tolerancetype", rec.ToleranceType.ToString() },
                     { "correctanswerlength", rec.CorrectAnswerLength.ToString() },
                     { "correctanswerformat", rec.CorrectAnswerFormat.ToString() },

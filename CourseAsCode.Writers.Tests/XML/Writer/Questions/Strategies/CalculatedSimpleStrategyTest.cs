@@ -1,3 +1,4 @@
+using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
@@ -56,7 +57,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
         {
             // Arrange
             var question = FakeQuestionFactory.CreateBasicSimpleCalculatedQuestion(1, "Math");
-            question.NumericalUnits = new List<SimpleCalculatedQuestion.NumericalUnit>
+            question.NumericalUnits = new List<CalculatedHelper.NumericalUnit>
             {
                 new() { UnitName = "km", Multiplier = 1000.0f }
             };
@@ -70,7 +71,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             _mockXmlService.Received().WriteElementWithAttributes("numerical_unit", Arg.Any<Dictionary<string, string>>());
 
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
-                d.ContainsKey("unit") && d["unit"] == "km" && // Achtung: Dein Code schreibt "unit", nicht "unit_name" (siehe Zeile 73 in deinem Code)
+                d.ContainsKey("unit") && d["unit"] == "km" && 
                 d.ContainsKey("multiplier") && d["multiplier"] == "1000.0000000"
             ));
         }

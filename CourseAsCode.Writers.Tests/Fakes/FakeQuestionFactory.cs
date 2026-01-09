@@ -1,6 +1,7 @@
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types.Calculated;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
@@ -505,7 +506,7 @@ namespace CourseAsCode.Writers.Tests.Fakes
                 DefaultMark = 1.0f,
                 QuestionReady = true,
 
-                NumericalOptions = new SimpleCalculatedQuestion.NumericalOption
+                NumericalOptions = new CalculatedHelper.NumericalOption
                 {
                     ShowUnits = 3,
                     UnitsLeft = false,
@@ -513,43 +514,43 @@ namespace CourseAsCode.Writers.Tests.Fakes
                     UnitPenalty = 0.1f,
                 },
 
-                NumericalUnits = new List<SimpleCalculatedQuestion.NumericalUnit>
+                NumericalUnits = new List<CalculatedHelper.NumericalUnit>
                 {
-                    new SimpleCalculatedQuestion.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
-                    new SimpleCalculatedQuestion.NumericalUnit { UnitName = "m", Multiplier = 0.01f },
+                    new CalculatedHelper.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
+                    new CalculatedHelper.NumericalUnit { UnitName = "m", Multiplier = 0.01f },
                 },
 
-                DatasetDefinitions = new List<SimpleCalculatedQuestion.DatasetDefinition>
+                DatasetDefinitions = new List<CalculatedHelper.DatasetDefinition>
                 {
-                    new SimpleCalculatedQuestion.DatasetDefinition
+                    new CalculatedHelper.DatasetDefinition
                     {
                         Name = "a",
                         Category = 0,
                         Type = 1,
                         Options = "uniform:1.0:10.0:1",
-                        Items = new List<SimpleCalculatedQuestion.DatasetItem>
+                        Items = new List<CalculatedHelper.DatasetItem>
                         {
-                            new SimpleCalculatedQuestion.DatasetItem { Number = 1, Value = 5.0f },
-                            new SimpleCalculatedQuestion.DatasetItem { Number = 2, Value = 3.5f },
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 5.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 3.5f },
                         },
                     },
-                    new SimpleCalculatedQuestion.DatasetDefinition
+                    new CalculatedHelper.DatasetDefinition
                     {
                         Name = "b",
                         Category = 0,
                         Type = 1,
                         Options = "uniform:1.0:10.0:1",
-                        Items = new List<SimpleCalculatedQuestion.DatasetItem>
+                        Items = new List<CalculatedHelper.DatasetItem>
                         {
-                            new SimpleCalculatedQuestion.DatasetItem { Number = 1, Value = 2.0f },
-                            new SimpleCalculatedQuestion.DatasetItem { Number = 2, Value = 6.1f },
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 2.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 6.1f },
                         },
                     },
                 },
 
-                Answers = new List<SimpleCalculatedAnswer>
+                Answers = new List<CalculatedHelper.CalculatedAnswer>
                 {
-                    new SimpleCalculatedAnswer
+                    new CalculatedHelper.CalculatedAnswer
                     {
                         AnswerText = "{a} + {b}",
                         Fraction = 1.0f,
@@ -559,9 +560,9 @@ namespace CourseAsCode.Writers.Tests.Fakes
                     },
                 },
 
-                CalculatedRecords = new List<SimpleCalculatedQuestion.CalculatedRecord>
+                CalculatedRecords = new List<CalculatedHelper.CalculatedRecord>
                 {
-                    new SimpleCalculatedQuestion.CalculatedRecord
+                    new CalculatedHelper.CalculatedRecord
                     {
                         Tolerance = 0.01f,
                         ToleranceType = 1,
@@ -574,6 +575,112 @@ namespace CourseAsCode.Writers.Tests.Fakes
             };
 
             return scq;
+        }
+
+        /// <summary>
+        /// Creates a basic  calculated question with predefined datasets, units and tolerance settings.
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <returns>A <see cref="CalculatedQuestion"/> object initialized with default values</returns>
+        public static CalculatedQuestion CreateBasicCalculatedQuestion(int id, string category)
+        {
+            var cq = new CalculatedQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"Calc_{id}",
+                QuestionText = "<p>Calculate the sum of {a} and {b}.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "General Feedback",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                QuestionReady = true,
+
+                NumericalOptions = new CalculatedHelper.NumericalOption
+                {
+                    ShowUnits = 3,
+                    UnitsLeft = false,
+                    UnitGradingType = 1,
+                    UnitPenalty = 0.1f,
+                },
+
+                NumericalUnits = new List<CalculatedHelper.NumericalUnit>
+                {
+                    new CalculatedHelper.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
+                    new CalculatedHelper.NumericalUnit { UnitName = "m", Multiplier = 0.01f },
+                },
+
+                DatasetDefinitions = new List<CalculatedHelper.DatasetDefinition>
+                {
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "a",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 5.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 3.5f },
+                        },
+                    },
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "b",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 2.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 6.1f },
+                        },
+                    },
+                },
+
+                Answers = new List<CalculatedHelper.CalculatedAnswer>
+                {
+                    new CalculatedHelper.CalculatedAnswer
+                    {
+                        AnswerText = "{a} + {b}",
+                        Fraction = 1.0f,
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        Feedback = "Well done!",
+                        FeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+
+                CalculatedRecords = new List<CalculatedHelper.CalculatedRecord>
+                {
+                    new CalculatedHelper.CalculatedRecord
+                    {
+                        Tolerance = 0.01f,
+                        ToleranceType = 1,
+                        CorrectAnswerLength = 2,
+                        CorrectAnswerFormat = 1,
+                    },
+                },
+
+                CalculatedOptions = new CalculatedHelper.CalculatedOption
+                {
+                    Synchronize = 0,
+                    Single = 0,
+                    ShuffleAnswers = true,
+                    CorrectFeedback = "good job", 
+                    CorrectFeedbackFormat = FormattingFormat.PlainText,
+                    PartiallyCorrectFeedback = "Almost",
+                    PartiallyCorrectFeedbackFormat = FormattingFormat.PlainText,
+                    IncorrectFeedback = "incorrect",
+                    IncorrectFeedbackFormat = FormattingFormat.PlainText,
+                    AnswerNumbering = "abc",
+                    ShowNumCorrect = false,
+                 },
+
+                Tags = new List<string> { $"TagSimpleCalc{id}" },
+            };
+
+            return cq;
         }
     }
 }

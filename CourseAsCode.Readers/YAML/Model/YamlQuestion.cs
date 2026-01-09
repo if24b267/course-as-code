@@ -66,5 +66,6 @@ namespace CourseAsCode.Readers.YAML.Model
         public List<YamlNumericalUnit>? NumericalUnits { get; set; }
         public List<YamlDatasetDefinition>? DatasetDefinitions { get; set; }
         public List<YamlCalculatedRecord>? CalculatedRecords { get; set; }
+        public YamlCalculatedOption? CalculatedOptions { get; set; }
     }
 }

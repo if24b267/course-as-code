@@ -1006,12 +1006,53 @@ Questions:
 
   - QuestionName: "Simple Calculation {A} + {B}"
     Category: simple_calcualted
-    QuestionId: 18
+    QuestionId: 31
     QuestionText: "<p>Calculate the sum of {A} and {B}.</p>"
     QuestionTextFormat: HTML
     DefaultMark: 1
     QuestionType: SIMPLECALCULATED
     QuestionReady: true
+    DatasetDefinitions:
+      - Name: "A" 
+        Category: 0 
+        Type: 1 
+        Options: "uniform:1.0:10.0:1" 
+        Items:
+          - Number: 1
+            Value: 5.0
+          - Number: 2
+            Value: 3.5
+      - Name: "B"
+        Category: 0
+        Type: 1
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 2.0
+          - Number: 2
+            Value: 6.1
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1      
+        CorrectAnswerLength: 1 
+        CorrectAnswerFormat: 1 
+    Answers:
+      - AnswerText: "{A} + {B}"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1.0
+        Feedback: "Well done!"
+        FeedbackFormat: HTML
+
+  - QuestionName: "Calculation {A} + {B}"
+    Category: calcualted
+    QuestionId: 32
+    QuestionText: "<p>Calculate the sum of {A} and {B}.</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATED
+    QuestionReady: true
+    CalculatedOptions:
+      Synchronize: 0
     DatasetDefinitions:
       - Name: "A" 
         Category: 0 
