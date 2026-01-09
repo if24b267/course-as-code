@@ -46,10 +46,10 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
                     { "answertext", ans.AnswerText },
-                    { "answerformat", ans.AnswerTextFormat.ToString() },
+                    { "answerformat",  _generalHelper.EnumIntegerToString(ans.AnswerTextFormat) },
                     { "fraction", ans.Fraction.ToString("0.0000000", CultureInfo.InvariantCulture) },
                     { "feedback", ans.Feedback ?? string.Empty },
-                    { "feedbackformat", ans.FeedbackFormat.ToString() },
+                    { "feedbackformat", _generalHelper.EnumIntegerToString(ans.FeedbackFormat) },
                 });
 
                 xmlService.CloseElement(); // </answer>

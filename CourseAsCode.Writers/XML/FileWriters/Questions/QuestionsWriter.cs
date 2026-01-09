@@ -127,11 +127,12 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
             xmlHelper.WriteElement("question_bank_entries");
             foreach (var question in questions)
             {
+                // Store the ID of the category the question was saved to, so that other Writers (specifically InfoRefWriter) can reference it later
+                // Moved up, because calculated questions need the categorieId before being built, otherwise synchronization doesnt work
+                question.CategoryId = categoryId;
+
                 // Write all questions belonging to this category
                 WriteQuestionBankEntry(xmlHelper, categoryId, question);
-
-                // Store the ID of the category the question was saved to, so that other Writers (specifically InfoRefWriter) can reference it later
-                question.CategoryId = categoryId;
             }
 
             xmlHelper.CloseElement(); // </question_bank_entries>

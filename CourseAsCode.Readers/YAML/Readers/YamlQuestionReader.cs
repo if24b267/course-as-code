@@ -443,11 +443,11 @@ namespace CourseAsCode.Readers.YAML.Readers
                 DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
                 CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords),
 
-                Answers = ConvertYamlAnswersToSimpleCalculatedOptions(yaml.Answers),
+                Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
             };
         }
 
-        private List<CalculatedHelper.CalculatedAnswer> ConvertYamlAnswersToSimpleCalculatedOptions(List<YamlQuestionAnswer> yamlAnswers)
+        private List<CalculatedHelper.CalculatedAnswer> ConvertYamlAnswersToCalculatedOptions(List<YamlQuestionAnswer> yamlAnswers)
         {
             if (yamlAnswers == null)
             {
@@ -466,12 +466,14 @@ namespace CourseAsCode.Readers.YAML.Readers
 
         private CalculatedHelper.NumericalOption MapNumericalOptions(YamlNumericalOption? yamlOpt)
         {
+            if (yamlOpt == null) return new CalculatedHelper.NumericalOption();
+
             return new CalculatedHelper.NumericalOption
             {
-                ShowUnits = yamlOpt?.ShowUnits ?? 3,
-                UnitsLeft = yamlOpt?.UnitsLeft ?? false,
-                UnitGradingType = yamlOpt?.UnitGradingType ?? 0,
-                UnitPenalty = yamlOpt?.UnitPenalty ?? 0.1f,
+                ShowUnits = yamlOpt.ShowUnits,
+                UnitsLeft = yamlOpt.UnitsLeft,
+                UnitGradingType = yamlOpt.UnitGradingType,
+                UnitPenalty = yamlOpt.UnitPenalty,
             };
         }
 
@@ -495,8 +497,8 @@ namespace CourseAsCode.Readers.YAML.Readers
                 Items = d.Items.Select(i => new CalculatedHelper.DatasetItem
                 {
                     Number = i.Number,
-                    Value = i.Value
-                }).ToList()
+                    Value = i.Value,
+                }).ToList(),
             }).ToList() ?? new();
         }
 
@@ -509,6 +511,26 @@ namespace CourseAsCode.Readers.YAML.Readers
                 CorrectAnswerLength = r.CorrectAnswerLength,
                 CorrectAnswerFormat = r.CorrectAnswerFormat,
             }).ToList() ?? new();
+        }
+
+        private CalculatedHelper.CalculatedOption MapCalculatedOptions(YamlCalculatedOption? yamlOpt)
+        {
+            if (yamlOpt == null) return new CalculatedHelper.CalculatedOption();
+
+            return new CalculatedHelper.CalculatedOption
+            {
+                Synchronize = yamlOpt.Synchronize,
+                Single = yamlOpt.Single,
+                ShuffleAnswers = yamlOpt.ShuffleAnswers,
+                CorrectFeedback = yamlOpt.CorrectFeedback,
+                CorrectFeedbackFormat = yamlOpt.CorrectFeedbackFormat,
+                PartiallyCorrectFeedback = yamlOpt.PartiallyCorrectFeedback,
+                PartiallyCorrectFeedbackFormat = yamlOpt.PartiallyCorrectFeedbackFormat,
+                IncorrectFeedback = yamlOpt.IncorrectFeedback,
+                IncorrectFeedbackFormat = yamlOpt.IncorrectFeedbackFormat,
+                AnswerNumbering = yamlOpt.AnswerNumbering,
+                ShowNumCorrect = yamlOpt.ShowNumCorrect,
+            };
         }
 
         private CalculatedQuestion ConvertYamlQuestionToCalculatedQuestion(YamlQuestion yaml)
@@ -527,8 +549,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
                 DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
                 CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords),
+                CalculatedOptions = MapCalculatedOptions(yaml.CalculatedOptions),
 
-                Answers = ConvertYamlAnswersToSimpleCalculatedOptions(yaml.Answers),
+                Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
             };
         }
     }
