@@ -169,6 +169,9 @@ namespace CourseAsCode.Readers
             };
 
             _logger.Debug($"Final course object: {JsonSerializer.Serialize(_course)}");
+
+            ValueKeeper.CourseId = (int)_course.SensibleDefaults.CourseIdNumber;
+
             return _course;
         }
 
@@ -203,6 +206,7 @@ namespace CourseAsCode.Readers
             services.AddSingleton<IWikiPageReader, YamlWikiPageReader>();
             services.AddSingleton<IGradeCategoriesReader, YamlGradeCategoriesReader>();
             services.AddSingleton<IYamlGradingInfosReader, YamlGradingInfosReader>();
+            services.AddSingleton<ILessonReader, YamlLessonReader>();
         }
     }
 }

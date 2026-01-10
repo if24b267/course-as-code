@@ -8,6 +8,7 @@ namespace CourseAsCode.Readers.Helper
     public static class ValueKeeper
     {
         public static string? CoursePath { get; set; }
+        public static int CourseId { get; set; }
 
         // currently only being counted up from 1
         public static int CurrentActivityId { get; set; }
