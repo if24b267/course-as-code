@@ -241,6 +241,20 @@ namespace CourseAsCode.Writers.XML.Writer
                         writer.WriteEndElement(); // Closes <activity>
                     }
 
+                    if (activity is Lesson lesson)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", lesson.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", lesson.ModuleName);
+                        writer.WriteElementString("title", lesson.Name);
+                        writer.WriteElementString("directory", $"activities/lesson_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // </activity>
+                    }
+
                     LogTrace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
                 }
             }

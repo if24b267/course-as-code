@@ -1,4 +1,5 @@
 using CourseAsCode.Model;
+using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
@@ -46,7 +47,6 @@ namespace CourseAsCode.Writers
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
 
-
         /// <summary>
         /// Writes the specified course to disk, creating the necessary folder structure and files.
         /// </summary>
@@ -79,7 +79,6 @@ namespace CourseAsCode.Writers
             }
         }
 
-
         /// <summary>
         /// Ensures the required folder structure for the Moodle Backup exists by creating necessary directories under the specified output path.
         /// </summary>
@@ -93,9 +92,9 @@ namespace CourseAsCode.Writers
             _fileService.CreateDirectory(Path.Combine(outputPath, "files"));
         }
 
-
         /// <summary>
         /// Equip the course with default values for enrolled users and sections if they are not defined
+        /// + injects 2 example Lessons (hardcoded) if none exist yet.
         /// </summary>
         /// <param name="course">The course object to populate with default values</param>
         private void PrepareCourseDefaults(Course course)
@@ -111,6 +110,81 @@ namespace CourseAsCode.Writers
                 _logger.LogInformation("No sections specified by user, adding default section");
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
             }
+
+            // --- ONLY EXAMPLE LESSONS ---
+            var section = course.Sections[0];
+            section.Activities ??= new List<Activity>();
+
+            if (section.Activities.Any(a => a is Lesson))
+            {
+                return;
+            }
+
+            section.Activities.Add(new Lesson
+            {
+                // Required for folder naming & references
+                Name = "Example Lesson 1",
+                ActivityId = 9001,
+                ModuleId = 50,
+                ModuleName = "lesson",
+                CourseId = course.SystemDefaults.Id,
+                Context = Context.Course,
+
+                // User relevant settings
+                Intro = "<p>Example Lesson 1 Intro</p>",
+                IntroFormat = FormattingFormat.HTML,
+                Grade = 100,
+                Practice = false,
+                MaxAttempts = 3,
+                Review = true,
+                Retake = true,
+                ProgressBar = true,
+                DisplayLeft = true,
+
+               
+                Pages = new List<object>
+                {
+                    new { PageId = 1, Title = "Page 1", Content = "<p>Welcome</p>" },
+                    new { PageId = 2, Title = "Page 2", Content = "<p>Concepts</p>" },
+                    new { PageId = 3, Title = "Page 3", Content = "<p>Example</p>" },
+                    new { PageId = 4, Title = "Page 4", Content = "<p>Mini quiz placeholder</p>" },
+                    new { PageId = 5, Title = "Page 5", Content = "<p>Summary</p>" },
+                    new { PageId = 6, Title = "Page 6", Content = "<p>End</p>" },
+                },
+            });
+
+            section.Activities.Add(new Lesson
+            {
+                Name = "Example Lesson 2",
+                ActivityId = 9002,
+                ModuleId = 51,
+                ModuleName = "lesson",
+                CourseId = course.SystemDefaults.Id,
+                Context = Context.Course,
+
+                Intro = "<p>Example Lesson 2 Intro</p>",
+                IntroFormat = FormattingFormat.HTML,
+                Grade = 50,
+                Practice = false,
+                MaxAttempts = 1,
+                Review = false,
+                Retake = false,
+                ProgressBar = false,
+                DisplayLeft = false,
+                UsePassword = true,
+                Password = "letmein",
+                TimeLimit = 15 * 60,
+                Available = DateTime.UtcNow.AddDays(-1),
+                Deadline = DateTime.UtcNow.AddDays(7),
+
+                Pages = new List<object>
+                {
+                    new { PageId = 10, Title = "Page 1", Content = "<p>Instructions</p>" },
+                    new { PageId = 11, Title = "Page 2", Content = "<p>Task 1</p>" },
+                    new { PageId = 12, Title = "Page 3", Content = "<p>Task 2</p>" },
+                    new { PageId = 13, Title = "Page 4", Content = "<p>Finish</p>" },
+                },
+            });
         }
     }
 }
