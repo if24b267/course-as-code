@@ -1,0 +1,342 @@
+Questions:
+  # ==================================================================================
+  # QUESTION 1: Addition (Perimeter)
+  # ==================================================================================
+  - QuestionName: "Sync Test 1: Perimeter {a} + {b}"
+    Category: sync_test_category  # Important: Both questions should be in the same category
+    QuestionId: 22
+    QuestionText: "<p>Imagine a rectangle.</p><p>Side A is <b>{synca}</b> cm.</p><p>Side B is <b>{syncb}</b> cm.</p><p>Calculate the sum of the sides (A + B):</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATEDMULTICHOICE
+    QuestionReady: true
+
+    # KEY SETTING FOR SYNC
+    CalculatedOptions:
+      Synchronize: 1      # 1 = Synchronize datasets with other questions sharing the same name
+      Single: 0
+      ShuffleAnswers: true
+      CorrectFeedback: "Correct!"
+      CorrectFeedbackFormat: HTML
+      IncorrectFeedback: "Incorrect."
+      IncorrectFeedbackFormat: HTML
+
+    # 1. Numerical Options
+    NumericalOptions:
+      ShowUnits: 3        # 3 = Text input (no unit selection required)
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    # 2. Numerical Units
+    NumericalUnits:
+      - UnitName: "cm"
+        Multiplier: 1.0
+
+    # 3. Dataset Definitions
+    DatasetDefinitions:
+      - Name: "synca"
+        Category: 1       # 0 = Private to this quiz context
+        Type: 1           # 1 = Moodle generates value
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 3.0    # Fixed value for testing consistency
+          - Number: 2
+            Value: 4.0
+          - Number: 3
+            Value: 5.0
+          - Number: 4
+            Value: 6.0
+          - Number: 5
+            Value: 7.0
+          - Number: 6
+            Value: 8.0   
+          - Number: 7
+            Value: 9.0
+          - Number: 8
+            Value: 10.0
+          - Number: 9
+            Value: 11.0
+          - Number: 10
+            Value: 12.0
+      - Name: "syncb"
+        Category: 1
+        Type: 1
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 1.0
+          - Number: 2
+            Value: 2.0
+          - Number: 3
+            Value: 3.0
+          - Number: 4
+            Value: 4.0
+          - Number: 5
+            Value: 5.0
+          - Number: 6
+            Value: 6.0   
+          - Number: 7
+            Value: 7.0
+          - Number: 8
+            Value: 8.0
+          - Number: 9
+            Value: 9.0
+          - Number: 10
+            Value: 10.0
+    # 4. Calculated Records
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 1
+        CorrectAnswerFormat: 1
+
+    # 5. Answers 
+    Answers:
+      - AnswerText: "{= {synca} + {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: "Well done! You calculated the sum correctly."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} - {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML
+
+  # ==================================================================================
+  # QUESTION 2: Multiplication (Area) - MUST MATCH Q1 DATASETS
+  # ==================================================================================
+  - QuestionName: "Sync Test 2: Area {a} * {b}"
+    Category: sync_test_category
+    QuestionId: 23
+    QuestionText: "<p>Using the <b>same rectangle</b> from the previous question:</p><p>Side A = {synca} cm</p><p>Side B = {syncb} cm</p><p>Calculate the Area (A * B):</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATEDMULTICHOICE
+    QuestionReady: true
+
+    # KEY SETTING FOR SYNC
+    CalculatedOptions:
+      Synchronize: 1      # MUST be 1
+      Single: 0
+      ShuffleAnswers: true
+
+    # Same Options
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    # Same Units
+    NumericalUnits:
+      - UnitName: "cm"
+        Multiplier: 1.0
+
+    # Same Dataset Definitions (Names must match exactly!)
+    DatasetDefinitions:
+      - Name: "synca"
+        Category: 1
+        Type: 1
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 3.0    
+          - Number: 2
+            Value: 4.0
+          - Number: 3
+            Value: 5.0
+          - Number: 4
+            Value: 6.0
+          - Number: 5
+            Value: 7.0
+          - Number: 6
+            Value: 8.0   
+          - Number: 7
+            Value: 9.0
+          - Number: 8
+            Value: 10.0
+          - Number: 9
+            Value: 11.0
+          - Number: 10
+            Value: 12.0
+      - Name: "syncb"
+        Category: 1
+        Type: 1
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 1.0
+          - Number: 2
+            Value: 2.0
+          - Number: 3
+            Value: 3.0
+          - Number: 4
+            Value: 4.0
+          - Number: 5
+            Value: 5.0
+          - Number: 6
+            Value: 6.0   
+          - Number: 7
+            Value: 7.0
+          - Number: 8
+            Value: 8.0
+          - Number: 9
+            Value: 9.0
+          - Number: 10
+            Value: 10.0
+
+    # Records
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 1
+        CorrectAnswerFormat: 1
+
+    # 5. Answers (Formula: a * b)
+    Answers:
+      - AnswerText: "{= {synca} * {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: "Excellent! You calculated the area correctly."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} / {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML
+
+  # ==================================================================================
+  # QUESTION 2: Multiplication (Area) - MUST MATCH Q1 DATASETS
+  # ==================================================================================
+  - QuestionName: "Sync Test 3: Sum {a} + {b}"
+    Category: sync_test_category
+    QuestionId: 24
+    QuestionText: "<p>Using a <b>random rectangle</b>:</p><p>Side A = {synca} cm</p><p>Side B = {syncb} cm</p><p>Calculate the Sum (A + B):</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATEDMULTICHOICE
+    QuestionReady: true
+
+    # KEY SETTING FOR SYNC
+    CalculatedOptions:
+      Synchronize: 0     # 0, since we dont want to sychronize this one
+      Single: 0
+      ShuffleAnswers: true
+
+    # Same Options
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    # Same Units
+    NumericalUnits:
+      - UnitName: "cm"
+        Multiplier: 1.0
+
+    # Same Dataset Definitions (Names must match exactly!)
+    DatasetDefinitions:
+      - Name: "synca"
+        Category: 0
+        Type: 1
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 3.0    
+          - Number: 2
+            Value: 4.0
+          - Number: 3
+            Value: 5.0
+          - Number: 4
+            Value: 6.0
+          - Number: 5
+            Value: 7.0
+          - Number: 6
+            Value: 8.0   
+          - Number: 7
+            Value: 9.0
+          - Number: 8
+            Value: 10.0
+          - Number: 9
+            Value: 11.0
+          - Number: 10
+            Value: 12.0
+      - Name: "syncb"
+        Category: 0
+        Type: 1
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 1.0
+          - Number: 2
+            Value: 2.0
+          - Number: 3
+            Value: 3.0
+          - Number: 4
+            Value: 4.0
+          - Number: 5
+            Value: 5.0
+          - Number: 6
+            Value: 6.0   
+          - Number: 7
+            Value: 7.0
+          - Number: 8
+            Value: 8.0
+          - Number: 9
+            Value: 9.0
+          - Number: 10
+            Value: 10.0
+
+    # Records
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 1
+        CorrectAnswerFormat: 1
+
+    # 5. Answers (Formula: a * b)
+    Answers:
+      - AnswerText: "{= {synca} + {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: "Well done! You calculated the sum correctly."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} - {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {syncb}}"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Wrong."
+        FeedbackFormat: HTML

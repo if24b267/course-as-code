@@ -4,6 +4,7 @@ using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.Calculated;
+using CourseAsCode.Model.Questions.Types.CalculatedMulti;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Description;
@@ -110,6 +111,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.CALCULATED:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedQuestion");
                     return ConvertYamlQuestionToCalculatedQuestion(yamlQuestion);
+                case QuestionType.CALCULATEDMULTICHOICE:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedMultiChoiceQuestion");
+                    return ConvertYamlQuestionToCalculatedMultiChoiceQuestion(yamlQuestion);
                 default:
                     _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
                     break;
@@ -441,7 +445,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
                 NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
                 DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
-                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords),
+                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords, yaml.Answers),
 
                 Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
             };
@@ -502,14 +506,23 @@ namespace CourseAsCode.Readers.YAML.Readers
             }).ToList() ?? new();
         }
 
-        private List<CalculatedHelper.CalculatedRecord> MapCalculatedRecords(List<YamlCalculatedRecord>? yamlList)
+        private List<CalculatedHelper.CalculatedRecord> MapCalculatedRecords(List<YamlCalculatedRecord>? yamlRecords, List<YamlQuestionAnswer>? answers)
         {
-            return yamlList?.Select(r => new CalculatedHelper.CalculatedRecord
+            var template = yamlRecords?.FirstOrDefault();
+
+            return answers?.Select(a =>
             {
-                Tolerance = r.Tolerance,
-                ToleranceType = r.ToleranceType,
-                CorrectAnswerLength = r.CorrectAnswerLength,
-                CorrectAnswerFormat = r.CorrectAnswerFormat,
+                var rec = new CalculatedHelper.CalculatedRecord();
+
+                if (template != null)
+                {
+                    rec.Tolerance = template.Tolerance;
+                    rec.ToleranceType = template.ToleranceType;
+                    rec.CorrectAnswerLength = template.CorrectAnswerLength;
+                    rec.CorrectAnswerFormat = template.CorrectAnswerFormat;
+                }
+
+                return rec;
             }).ToList() ?? new();
         }
 
@@ -548,7 +561,29 @@ namespace CourseAsCode.Readers.YAML.Readers
                 NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
                 NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
                 DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
-                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords),
+                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords, yaml.Answers),
+                CalculatedOptions = MapCalculatedOptions(yaml.CalculatedOptions),
+
+                Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
+            };
+        }
+
+        private CalculatedMultiChoiceQuestion ConvertYamlQuestionToCalculatedMultiChoiceQuestion(YamlQuestion yaml)
+        {
+            return new CalculatedMultiChoiceQuestion
+            {
+                QuestionName = yaml.QuestionName,
+                QuestionText = yaml.QuestionText,
+                QuestionId = yaml.QuestionId,
+                Category = yaml.Category,
+                DefaultMark = yaml.DefaultMark,
+                QuestionReady = yaml.QuestionReady,
+                QuestionTextFormat = yaml.QuestionTextFormat,
+
+                NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
+                NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
+                DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
+                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords, yaml.Answers),
                 CalculatedOptions = MapCalculatedOptions(yaml.CalculatedOptions),
 
                 Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
