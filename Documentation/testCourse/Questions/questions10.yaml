@@ -198,9 +198,6 @@ Questions:
         Feedback: "Excellent! You calculated the area correctly."
         FeedbackFormat: HTML
 
-  # ==================================================================================
-  # QUESTION 2: Multiplication (Area) - MUST MATCH Q1 DATASETS
-  # ==================================================================================
   - QuestionName: "Sync Test 3: Sum {a} + {b}"
     Category: sync_test_category
     QuestionId: 21
