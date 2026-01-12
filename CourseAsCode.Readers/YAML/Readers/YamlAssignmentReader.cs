@@ -110,6 +110,8 @@ namespace CourseAsCode.Readers.YAML.Readers
                 MarkingAnonymous = yamlAssignment.MarkingAnonymous ?? AssignmentDefaults.DEFAULT_MARKING_ANONYMOUS,
                 PreventSubmissionNotInGroup = yamlAssignment.PreventSubmissionNotInGroup ??
                                               AssignmentDefaults.DEFAULT_PREVENT_SUBMISSION_NOT_IN_GROUP,
+                GradingLocked = yamlAssignment.GradingLocked ?? AssignmentDefaults.DEFAULT_LOCKED_GRADE,
+                GradingLockedAfter = yamlAssignment.GradingLockedAfter ?? AssignmentDefaults.DEFAULT_GRADE_LOCKED_UNTIL,
 
                 ModuleId = ValueKeeper.CurrentModuleId,
                 ModuleName = "assign",

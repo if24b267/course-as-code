@@ -15,7 +15,8 @@ GradingInfos:
     GradeHiddenUntil: 31-08-2026 23:59
   - GradeCategoryId: 3
     PathToActivity: "../../Sections/Assignment Section/Activities/assignment1.yaml"
-    GradingLocked: true
+    # By setting "GradingLocked" to true, users are unable to submit, this is what caused our "Unable to submit" issue
+    # GradingLocked: true
     BlindMarking: true
     GradeName: "Documentation Report"
     GradingWeight: 50
