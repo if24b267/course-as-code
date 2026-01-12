@@ -87,7 +87,9 @@ nav:
       - Writer: Architecture/Writer.md
   - Activities:
       - Overview: Activities/index.md
-      - Assignment: Activities/Assignment.md
+      - Assignment:
+        - Assignment Developer: Activities/Assignment_Dev.md
+        - Assignment User: Activities/Assignment_User.md
       - Moodle File: Activities/Moodle_File.md
       - Text and Media Area: Activities/Text_and_Media_Area.md
       - URL: Activities/URL.md
