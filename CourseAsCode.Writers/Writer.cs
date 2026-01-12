@@ -1,4 +1,5 @@
 using CourseAsCode.Model;
+using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
@@ -46,7 +47,6 @@ namespace CourseAsCode.Writers
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
 
-
         /// <summary>
         /// Writes the specified course to disk, creating the necessary folder structure and files.
         /// </summary>
@@ -64,10 +64,10 @@ namespace CourseAsCode.Writers
             {
                 EnsureFolderStructureExists(outputPath);
 
-                _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
-                _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
-                _sectionFilesWriterService.WriteSectionFiles(course, outputPath); // Files in /sections
-                _activitiesWriterService.WriteActivities(course, outputPath); // Files in /activities
+                _rootFilesWriterService.WriteRootFiles(course, outputPath);
+                _courseFilesWriterService.WriteCourseFiles(course, outputPath);
+                _sectionFilesWriterService.WriteSectionFiles(course, outputPath);
+                _activitiesWriterService.WriteActivities(course, outputPath);
 
                 _logger.LogInformation($"Course '{course.FullName}' successfully written to {outputPath}");
                 return true;
@@ -78,7 +78,6 @@ namespace CourseAsCode.Writers
                 return false;
             }
         }
-
 
         /// <summary>
         /// Ensures the required folder structure for the Moodle Backup exists by creating necessary directories under the specified output path.
@@ -92,7 +91,6 @@ namespace CourseAsCode.Writers
             _fileService.CreateDirectory(Path.Combine(outputPath, "activities"));
             _fileService.CreateDirectory(Path.Combine(outputPath, "files"));
         }
-
 
         /// <summary>
         /// Equip the course with default values for enrolled users and sections if they are not defined
@@ -110,6 +108,49 @@ namespace CourseAsCode.Writers
             {
                 _logger.LogInformation("No sections specified by user, adding default section");
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
+            }
+
+            // --- DUMMY PAGE DATA ---
+            var section = course.Sections[0];
+            section.Activities ??= new List<Activity>();
+
+            if (!section.Activities.Any(a => a is Page))
+            {
+                section.Activities.Add(new Page
+                {
+                    Name = "Example Page: Welcome",
+                    ActivityId = 8001,
+                    Context = Context.Course,
+
+                    Intro = "<p>This is a short intro shown on the course page.</p>",
+                    IntroFormat = FormattingFormat.HTML,
+
+                    Content = "<h2>Welcome</h2><p>This is an example HTML page.</p>",
+                    ContentFormat = FormattingFormat.HTML,
+
+                    TimeModified = DateTime.UtcNow,
+
+                    ModuleId = 200,
+                    ModuleName = "page"
+                });
+
+                section.Activities.Add(new Page
+                {
+                    Name = "Example Page: Markdown Content",
+                    ActivityId = 8002,
+                    Context = Context.Course,
+
+                    Intro = "This page uses Markdown.",
+                    IntroFormat = FormattingFormat.PlainText,
+
+                    Content = "## Heading\n- Item A\n- Item B\n",
+                    ContentFormat = FormattingFormat.Markdown,
+
+                    TimeModified = DateTime.UtcNow,
+
+                    ModuleId = 201,
+                    ModuleName = "page"
+                });
             }
         }
     }
