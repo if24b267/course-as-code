@@ -1,5 +1,6 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
+using CourseAsCode.Model.Activities.Choice;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
@@ -64,10 +65,10 @@ namespace CourseAsCode.Writers
             {
                 EnsureFolderStructureExists(outputPath);
 
-                _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
-                _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
-                _sectionFilesWriterService.WriteSectionFiles(course, outputPath); // Files in /sections
-                _activitiesWriterService.WriteActivities(course, outputPath); // Files in /activities
+                _rootFilesWriterService.WriteRootFiles(course, outputPath);
+                _courseFilesWriterService.WriteCourseFiles(course, outputPath);
+                _sectionFilesWriterService.WriteSectionFiles(course, outputPath);
+                _activitiesWriterService.WriteActivities(course, outputPath);
 
                 _logger.LogInformation($"Course '{course.FullName}' successfully written to {outputPath}");
                 return true;
@@ -189,6 +190,147 @@ namespace CourseAsCode.Writers
                     new Lesson.LessonPage { PageId = 13, Title = "Page 4", Content = "<p>Finish</p>" },
                 },
             });
+            // --- DUMMY PAGE DATA ---
+            var section = course.Sections[0];
+            section.Activities ??= new List<Activity>();
+
+            if (!section.Activities.Any(a => a is Page))
+            {
+                section.Activities.Add(new Page
+                {
+                    Name = "Example Page: Welcome",
+                    ActivityId = 8001,
+                    Context = Context.Course,
+
+                    Intro = "<p>This is a short intro shown on the course page.</p>",
+                    IntroFormat = FormattingFormat.HTML,
+
+                    Content = "<h2>Welcome</h2><p>This is an example HTML page.</p>",
+                    ContentFormat = FormattingFormat.HTML,
+
+                    TimeModified = DateTime.UtcNow,
+
+                    ModuleId = 200,
+                    ModuleName = "page",
+                });
+
+                section.Activities.Add(new Page
+                {
+                    Name = "Example Page: Markdown Content",
+                    ActivityId = 8002,
+                    Context = Context.Course,
+
+                    Intro = "This page uses Markdown.",
+                    IntroFormat = FormattingFormat.PlainText,
+
+                    Content = "## Heading\n- Item A\n- Item B\n",
+                    ContentFormat = FormattingFormat.Markdown,
+
+                    TimeModified = DateTime.UtcNow,
+
+                    ModuleId = 201,
+                    ModuleName = "page",
+                });
+            }
+
+            // --- DUMMY CHOICE DATA ---
+            if (!section.Activities.Any(a => a is Choice))
+            {
+                var now = DateTime.UtcNow;
+
+                section.Activities.Add(new Choice
+                {
+                    Name = "Example Choice",
+                    ActivityId = 8201,
+                    Context = Context.Course,
+                    TimeCreated = now.AddMinutes(-5),
+                    TimeModified = now,
+
+                    Description = "<p>Please pick one topic.</p>",
+                    DescriptionFormat = FormattingFormat.HTML,
+
+                    Publish = false,
+                    ShowResults = false,
+                    Display = 0,
+                    AllowUpdate = false,
+                    AllowMultiple = false,
+                    ShowUnanswered = false,
+                    LimitAnswers = false,
+                    TimeOpen = null,
+                    TimeClose = null,
+                    CompletionSubmit = false,
+                    ShowPreview = false,
+                    IncludeInactive = false,
+                    ShowAvailable = false,
+                    Options = new List<Choice.ChoiceOption>
+                    {
+                        new Choice.ChoiceOption { Id = 1, Text = "Topic A", MaxAnswers = 0, TimeModified = now },
+                        new Choice.ChoiceOption { Id = 2, Text = "Topic B", MaxAnswers = 0, TimeModified = now },
+                        new Choice.ChoiceOption { Id = 3, Text = "Topic C", MaxAnswers = 0, TimeModified = now },
+
+                    },
+                });
+            }
+            // --- DUMMY FEEDBACK DATA ---
+            if (!section.Activities.Any(a => a is Feedback))
+            {
+                var now = DateTime.UtcNow;
+
+                section.Activities.Add(new Feedback
+                {
+                    Name = "Example Feedback",
+                    ActivityId = 8301,
+                    Context = Context.Course,
+                    TimeCreated = now.AddMinutes(-10),
+                    TimeModified = now,
+
+                    Description = "<p>Please fill out this self-assessment.</p>",
+                    DescriptionFormat = FormattingFormat.HTML,
+
+                    Anonymous = 2,
+                    EmailNotification = 0,
+                    MultipleSubmit = 0,
+                    Autonumbering = 0,
+                    PublishStats = 1,
+                    CompletionSubmit = false,
+
+                    // items
+                    Items = new List<Feedback.FeedbackItem>
+                    {
+                        new Feedback.FeedbackItem
+                        {
+                            Id = 1,
+                            Template = 0,
+                            Name = "label",
+                            Label = "",
+                            Typ = "label",
+                            Presentation = "<p>Legend: (1) low … (4) high</p>",
+                            HasValue = 0,
+                            Position = 1,
+                            Required = 0,
+                            DependItem = 0,
+                            DependValue = "",
+                            Options = ""
+                        },
+
+                        new Feedback.FeedbackItem
+                        {
+                            Id = 2,
+                            Template = 0,
+                            Name = "I can describe the basics",
+                            Label = "",
+                            Typ = "multichoice",
+                            Presentation = "r>>>>>1|2|3|4<<<<<1",
+                            HasValue = 1,
+                            Position = 2,
+                            Required = 0,
+                            DependItem = 0,
+                            DependValue = "",
+                            Options = "h"
+                        },
+                    },
+                });
+            }
         }
     }
 }
