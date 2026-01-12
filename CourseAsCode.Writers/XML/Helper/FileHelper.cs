@@ -45,6 +45,7 @@ public class FileHelper : IFileHelper
             Component.Forum => "mod_forum",
             Component.Glossary => "mod_glossary",
             Component.HtmlBlock => "block_html",
+            Component.Folder => "mod_folder",
             _ => "course",
         };
     }

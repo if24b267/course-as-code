@@ -37,6 +37,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
         }
 
 
+
         public void WriteFiles(Model.Course course, string outputPath)
         {
             string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_FILE_RELATIVE_PATH));
@@ -54,12 +55,20 @@ namespace CourseAsCode.Writers.XML.FileWriters
                         {
                             if (activity is MoodleFile file)
                             {
-                                WriteSingleFile(writer, outputPath, file);
+                                WriteSingleFile(writer, outputPath, file, contextIdOverride: null);
+                            }
+
+                            if (activity is Folder folder && folder.Files != null)
+                            {
+                                foreach (var folderFile in folder.Files)
+                                {
+                                    WriteSingleFile(writer, outputPath, folderFile, contextIdOverride: folder.ActivityId);
+                                }
                             }
                         }
                     }
 
-                    writer.WriteEndElement(); // Close <files>
+                    writer.WriteEndElement(); // </files>
                     writer.WriteEndDocument();
                 }
 
@@ -137,6 +146,78 @@ namespace CourseAsCode.Writers.XML.FileWriters
 
             WriteElements(writer, elements);
             writer.WriteEndElement(); // Close <file>
+            CopyFileToBackupFolder(outputPath, fileStream, contentHash);
+            fileStream.Dispose();
+        }
+
+        /// <summary>
+        /// Writes a single file entry to the XML document, with an option to override the context ID.
+        /// </summary>
+        private void WriteSingleFile(XmlWriter writer, string outputPath, MoodleFile file, int? contextIdOverride)
+        {
+            FileStream? fileStream = null;
+            try
+            {
+                if (!_fileService.Exists(file.FilePath))
+                {
+                    LogWarn($"{file.FilePath} does not exist. Skipping file");
+                    return;
+                }
+
+                fileStream = _fileService.OpenRead(file.FilePath);
+                LogDebug($"Found {file.FilePath}");
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Error opening {file.FilePath}. Skipping file");
+                return;
+            }
+
+            string? contentHash = null;
+            try
+            {
+                contentHash = GetMoodleContentHash(fileStream);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Skipping file {Path.GetFileName(fileStream.Name)}");
+                return;
+            }
+
+            var contextId = (contextIdOverride ?? file.ActivityId).ToString();
+
+            WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string>
+            {
+                { "id", file.ActivityId.ToString() },
+            });
+
+            var elements = new Dictionary<string, string>
+        {
+            { "contenthash", contentHash },
+            { "contextid", contextId },
+            { "component", file.SystemDefaults.Component != null ? _fileHelper.GetComponentFromEnum((Component)file.SystemDefaults.Component) : "course" },
+            { "filearea", file.SystemDefaults.FileArea != null ? _fileHelper.GetFileAreaFromEnum((FileArea)file.SystemDefaults.FileArea) : "content" },
+            { "itemid", "0" },
+            { "filepath", "/" },
+            { "filename", file.FileName },
+            { "userid", file.SensibleDefaults.Author?.SystemDefaults.Id.ToString() ?? GeneralDefaults.DEFAULTADMINUSERID.ToString() },
+            { "filesize", fileStream.Length.ToString() },
+            { "mimetype", MimeTypes.GetMimeType(file.FilePath) },
+            { "status", "0" },
+            { "timecreated", _generalHelper.DateTimeToUnixTimestamp(file.TimeCreated) },
+            { "timemodified", _generalHelper.DateTimeToUnixTimestamp(file.TimeModified) },
+            { "source", file.FileName },
+            { "author", file.SensibleDefaults.Author?.Username ?? "$@NULL@$" },
+            { "license", file.SensibleDefaults.License != null ? _fileHelper.GetLicenseFromEnum((License)file.SensibleDefaults.License) : "unknown" },
+            { "sortorder", "0" },
+            { "repositorytype", "$@NULL@$" },
+            { "repositoryid", "$@NULL@$" },
+            { "reference", "$@NULL@$" },
+        };
+
+            WriteElements(writer, elements);
+            writer.WriteEndElement(); // </file>
+
             CopyFileToBackupFolder(outputPath, fileStream, contentHash);
             fileStream.Dispose();
         }
