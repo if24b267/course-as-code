@@ -188,6 +188,7 @@ namespace CourseAsCode.Writers
                         new Choice.ChoiceOption { Id = 1, Text = "Topic A", MaxAnswers = 0, TimeModified = now },
                         new Choice.ChoiceOption { Id = 2, Text = "Topic B", MaxAnswers = 0, TimeModified = now },
                         new Choice.ChoiceOption { Id = 3, Text = "Topic C", MaxAnswers = 0, TimeModified = now },
+
                     },
                 });
             }
