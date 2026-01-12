@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Model.Enums;
@@ -36,8 +38,8 @@ namespace CourseAsCode.Model.Activities.Resources
         [Description("Dependency lesson id (0 for none)")]
         public int Dependency { get; set; } = LessonDefaults.DEFAULT_DEPENDENCY;
 
-        [Description("Serialized condition rules")]
-        public string Conditions { get; set; } = LessonDefaults.DEFAULT_CONDITIONS;
+        [Description("Lesson access/condition rules")]
+        public LessonConditions Conditions { get; set; } = new();
 
         // ────────────────────────────────────────────────────────────────────────────
         // Attempts and behavior
@@ -120,10 +122,49 @@ namespace CourseAsCode.Model.Activities.Resources
         // ────────────────────────────────────────────────────────────────────────────
         public bool AllowOfflineAttempts { get; set; } = LessonDefaults.DEFAULT_ALLOW_OFFLINE_ATTEMPTS;
 
-        // Containers
-        public List<object> Pages { get; set; } = new();
+        public List<LessonPage> Pages { get; set; } = new();
         public List<object> Grades { get; set; } = new();
         public List<object> Timers { get; set; } = new();
         public List<object> Overrides { get; set; } = new();
+
+        public class LessonPage
+        {
+            [Description("unique page id within the lesson")]
+            public int PageId { get; set; }
+
+            [Description("page title")]
+            public string Title { get; set; } = string.Empty;
+
+            [Description("page contents (HTML)")]
+            public string Content { get; set; } = string.Empty;
+
+            [Description("format of page content")]
+            public FormattingFormat ContentFormat { get; set; } = FormattingFormat.HTML;
+
+            [Description("page time modified")]
+            public DateTime TimeModified { get; set; } = DateTime.UtcNow;
+
+            // ────────────────────────────────────────────────────────────────────────
+            // Moodle lesson backup fields 
+            // ────────────────────────────────────────────────────────────────────────
+            public int QType { get; set; } = LessonDefaults.DEFAULT_PAGE_QTYPE;
+            public int QOption { get; set; } = LessonDefaults.DEFAULT_PAGE_QOPTION;
+            public int Layout { get; set; } = LessonDefaults.DEFAULT_PAGE_LAYOUT;
+            public int Display { get; set; } = LessonDefaults.DEFAULT_PAGE_DISPLAY;
+
+            // Default single "Continue" answer
+            public string AnswerText { get; set; } = LessonDefaults.DEFAULT_ANSWER_TEXT;
+        }
+        public sealed class LessonConditions
+        {
+            [Description("Minimum time spent (seconds) before access is granted")]
+            public int TimeSpentSeconds { get; set; } = LessonDefaults.DEFAULT_CONDITIONS_TIMESPENT_SECONDS;
+
+            [Description("Whether completion is required (0/1)")]
+            public int Completed { get; set; } = LessonDefaults.DEFAULT_CONDITIONS_COMPLETED;
+
+            [Description("Minimum grade required (0+). 0 disables this check.")]
+            public int GradeBetterThan { get; set; } = LessonDefaults.DEFAULT_CONDITIONS_GRADEBETTERTHAN;
+        }
     }
 }

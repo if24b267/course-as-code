@@ -1,5 +1,6 @@
 using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -50,7 +51,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Lesson
             writer.WriteAttributeString("id", lesson.ActivityId.ToString());
             writer.WriteAttributeString("moduleid", lesson.ModuleId.ToString());
             writer.WriteAttributeString("modulename", "lesson");
-            writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(lesson.Context));
+            writer.WriteAttributeString("contextid", lesson.ActivityId.ToString());
         }
 
         private void WriteLessonTag(XmlWriter writer, LessonModel lesson)
@@ -69,7 +70,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Lesson
                 { "usepassword", lesson.UsePassword ? "1" : "0" },
                 { "password", lesson.Password ?? "" },
                 { "dependency", lesson.Dependency.ToString() },
-                { "conditions", lesson.Conditions ?? "" },
+                { "conditions", SerializeConditions(lesson.Conditions) },
                 { "grade", lesson.Grade.ToString() },
                 { "custom", lesson.Custom ? "1" : "0" },
                 { "ongoing", "0" },
@@ -105,8 +106,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Lesson
 
             WriteElements(writer, elements);
 
-            writer.WriteStartElement("pages");
-            writer.WriteEndElement();
+            WritePages(writer, lesson);
 
             writer.WriteStartElement("grades");
             writer.WriteEndElement();
@@ -118,6 +118,96 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Lesson
             writer.WriteEndElement();
 
             writer.WriteEndElement(); // </lesson>
+        }
+
+        private void WritePages(XmlWriter writer, LessonModel lesson)
+        {
+            writer.WriteStartElement("pages");
+
+            var pages = (lesson.Pages ?? new List<LessonModel.LessonPage>())
+                .OrderBy(p => p.PageId)
+                .ToList();
+
+            if (pages.Count == 0)
+            {
+                writer.WriteEndElement(); // </pages>
+                return;
+            }
+
+            var answerId = 1;
+
+            foreach (var (page, index) in pages.Select((p, i) => (p, i)))
+            {
+                var prevPageId = index == 0 ? 0 : pages[index - 1].PageId;
+                var nextPageId = index == pages.Count - 1 ? 0 : pages[index + 1].PageId;
+
+                writer.WriteStartElement("page");
+                writer.WriteAttributeString("id", page.PageId.ToString());
+
+                var pageElements = new Dictionary<string, string>
+                {
+                    { "prevpageid", prevPageId.ToString() },
+                    { "nextpageid", nextPageId.ToString() },
+                    { "qtype", page.QType.ToString() },
+                    { "qoption", page.QOption.ToString() },
+                    { "layout", page.Layout.ToString() },
+                    { "display", page.Display.ToString() },
+                    { "timecreated", _generalHelper.DateTimeToUnixTimestamp(page.TimeModified) },
+                    { "timemodified", _generalHelper.DateTimeToUnixTimestamp(page.TimeModified) },
+                    { "title", page.Title ?? string.Empty },
+                    { "contents", page.Content ?? string.Empty },
+                    { "contentsformat", _generalHelper.EnumIntegerToString(page.ContentFormat) },
+                };
+
+                WriteElements(writer, pageElements);
+
+                writer.WriteStartElement("answers");
+
+                writer.WriteStartElement("answer");
+                writer.WriteAttributeString("id", answerId.ToString());
+
+                var jumpTo = nextPageId == 0 ? "0" : nextPageId.ToString();
+
+                var answerElements = new Dictionary<string, string>
+                {
+                    { "jumpto", jumpTo },
+                    { "grade", LessonDefaults.DEFAULT_ANSWER_GRADE.ToString() },
+                    { "score", LessonDefaults.DEFAULT_ANSWER_SCORE.ToString() },
+                    { "flags", LessonDefaults.DEFAULT_ANSWER_FLAGS.ToString() },
+                    { "timecreated", _generalHelper.DateTimeToUnixTimestamp(page.TimeModified) },
+                    { "timemodified", "0" },
+                    { "answer_text", page.AnswerText ?? LessonDefaults.DEFAULT_ANSWER_TEXT },
+                    { "response", LessonDefaults.DEFAULT_ANSWER_RESPONSE },
+                    { "answerformat", LessonDefaults.DEFAULT_ANSWER_FORMAT.ToString() },
+                    { "responseformat", LessonDefaults.DEFAULT_RESPONSE_FORMAT.ToString() },
+                };
+
+                WriteElements(writer, answerElements);
+
+                writer.WriteStartElement("attempts");
+                writer.WriteEndElement(); // </attempts>
+
+                writer.WriteEndElement(); // </answer>
+                answerId++;
+
+                writer.WriteEndElement(); // </answers>
+
+                writer.WriteStartElement("branches");
+                writer.WriteEndElement(); // </branches>
+
+                writer.WriteEndElement(); // </page>
+            }
+
+            writer.WriteEndElement(); // </pages>
+        }
+
+        private static string SerializeConditions(LessonModel.LessonConditions? conditions)
+        {
+            var timespent = conditions?.TimeSpentSeconds ?? LessonDefaults.DEFAULT_CONDITIONS_TIMESPENT_SECONDS;
+            var completed = conditions?.Completed ?? LessonDefaults.DEFAULT_CONDITIONS_COMPLETED;
+            var gradebetterthan = conditions?.GradeBetterThan ?? LessonDefaults.DEFAULT_CONDITIONS_GRADEBETTERTHAN;
+
+            return $"O:8:\"stdClass\":3:{{s:9:\"timespent\";i:{timespent};s:9:\"completed\";i:{completed};s:15:\"gradebetterthan\";i:{gradebetterthan};}}";
         }
     }
 }

@@ -111,7 +111,7 @@ namespace CourseAsCode.Writers
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
             }
 
-            // --- ONLY EXAMPLE LESSONS ---
+            // --- Dummy Data LESSONS ---
             var section = course.Sections[0];
             section.Activities ??= new List<Activity>();
 
@@ -122,7 +122,6 @@ namespace CourseAsCode.Writers
 
             section.Activities.Add(new Lesson
             {
-                // Required for folder naming & references
                 Name = "Example Lesson 1",
                 ActivityId = 9001,
                 ModuleId = 50,
@@ -130,7 +129,6 @@ namespace CourseAsCode.Writers
                 CourseId = course.SystemDefaults.Id,
                 Context = Context.Course,
 
-                // User relevant settings
                 Intro = "<p>Example Lesson 1 Intro</p>",
                 IntroFormat = FormattingFormat.HTML,
                 Grade = 100,
@@ -141,15 +139,21 @@ namespace CourseAsCode.Writers
                 ProgressBar = true,
                 DisplayLeft = true,
 
-               
-                Pages = new List<object>
+                Conditions = new Lesson.LessonConditions
                 {
-                    new { PageId = 1, Title = "Page 1", Content = "<p>Welcome</p>" },
-                    new { PageId = 2, Title = "Page 2", Content = "<p>Concepts</p>" },
-                    new { PageId = 3, Title = "Page 3", Content = "<p>Example</p>" },
-                    new { PageId = 4, Title = "Page 4", Content = "<p>Mini quiz placeholder</p>" },
-                    new { PageId = 5, Title = "Page 5", Content = "<p>Summary</p>" },
-                    new { PageId = 6, Title = "Page 6", Content = "<p>End</p>" },
+                    TimeSpentSeconds = 0,
+                    Completed = 0,
+                    GradeBetterThan = 0
+                },
+
+                Pages = new List<Lesson.LessonPage>
+                {
+                    new Lesson.LessonPage { PageId = 1, Title = "Page 1", Content = "<p>Welcome</p>" },
+                    new Lesson.LessonPage { PageId = 2, Title = "Page 2", Content = "<p>Concepts</p>" },
+                    new Lesson.LessonPage { PageId = 3, Title = "Page 3", Content = "<p>Example</p>" },
+                    new Lesson.LessonPage { PageId = 4, Title = "Page 4", Content = "<p>Mini quiz placeholder</p>" },
+                    new Lesson.LessonPage { PageId = 5, Title = "Page 5", Content = "<p>Summary</p>" },
+                    new Lesson.LessonPage { PageId = 6, Title = "Page 6", Content = "<p>End</p>" },
                 },
             });
 
@@ -177,12 +181,12 @@ namespace CourseAsCode.Writers
                 Available = DateTime.UtcNow.AddDays(-1),
                 Deadline = DateTime.UtcNow.AddDays(7),
 
-                Pages = new List<object>
+                Pages = new List<Lesson.LessonPage>
                 {
-                    new { PageId = 10, Title = "Page 1", Content = "<p>Instructions</p>" },
-                    new { PageId = 11, Title = "Page 2", Content = "<p>Task 1</p>" },
-                    new { PageId = 12, Title = "Page 3", Content = "<p>Task 2</p>" },
-                    new { PageId = 13, Title = "Page 4", Content = "<p>Finish</p>" },
+                    new Lesson.LessonPage { PageId = 10, Title = "Page 1", Content = "<p>Instructions</p>" },
+                    new Lesson.LessonPage { PageId = 11, Title = "Page 2", Content = "<p>Task 1</p>" },
+                    new Lesson.LessonPage { PageId = 12, Title = "Page 3", Content = "<p>Task 2</p>" },
+                    new Lesson.LessonPage { PageId = 13, Title = "Page 4", Content = "<p>Finish</p>" },
                 },
             });
         }
