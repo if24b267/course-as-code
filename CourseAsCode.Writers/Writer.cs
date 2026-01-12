@@ -190,8 +190,8 @@ namespace CourseAsCode.Writers
                     new Lesson.LessonPage { PageId = 13, Title = "Page 4", Content = "<p>Finish</p>" },
                 },
             });
+
             // --- DUMMY PAGE DATA ---
-            var section = course.Sections[0];
             section.Activities ??= new List<Activity>();
 
             if (!section.Activities.Any(a => a is Page))
