@@ -1043,44 +1043,148 @@ Questions:
         Feedback: "Well done!"
         FeedbackFormat: HTML
 
-  - QuestionName: "Calculation {A} + {B}"
-    Category: calcualted
+  - QuestionName: "Sync Test 1: Perimeter {a} + {b}"
+    Category: sync_test_category 
     QuestionId: 32
-    QuestionText: "<p>Calculate the sum of {A} and {B}.</p>"
+    QuestionText: "<p>Imagine a rectangle.</p><p>Side A is <b>{synca}</b> cm.</p><p>Side B is <b>{syncb}</b> cm.</p><p>Calculate the sum of the sides (A + B):</p>"
     QuestionTextFormat: HTML
     DefaultMark: 1
     QuestionType: CALCULATED
     QuestionReady: true
     CalculatedOptions:
-      Synchronize: 0
+      Synchronize: 1     
+      Single: 0
+      ShuffleAnswers: true
+      CorrectFeedback: "Correct!"
+      CorrectFeedbackFormat: HTML
+      IncorrectFeedback: "Incorrect."
+      IncorrectFeedbackFormat: HTML
+    NumericalOptions:
+      ShowUnits: 3      
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+    NumericalUnits:
+      - UnitName: "cm"
+        Multiplier: 1.0
     DatasetDefinitions:
-      - Name: "A" 
-        Category: 0 
-        Type: 1 
-        Options: "uniform:1.0:10.0:1" 
+      - Name: "synca"
+        Category: 1       
+        Type: 1           
+        Options: "uniform:1.0:10.0:1"
         Items:
           - Number: 1
-            Value: 5.0
+            Value: 3.0    
           - Number: 2
-            Value: 3.5
-      - Name: "B"
-        Category: 0
+            Value: 4.0
+          - Number: 3
+            Value: 5.0
+          - Number: 4
+            Value: 6.0
+          - Number: 5
+            Value: 7.0
+      - Name: "syncb"
+        Category: 1
         Type: 1
         Options: "uniform:1.0:10.0:1"
         Items:
           - Number: 1
-            Value: 2.0
+            Value: 1.0
           - Number: 2
-            Value: 6.1
+            Value: 2.0
+          - Number: 3
+            Value: 3.0
+          - Number: 4
+            Value: 4.0
+          - Number: 5
+            Value: 5.0
     CalculatedRecords:
       - Tolerance: 0.01
-        ToleranceType: 1      
-        CorrectAnswerLength: 1 
-        CorrectAnswerFormat: 1 
+        ToleranceType: 1
+        CorrectAnswerLength: 1
+        CorrectAnswerFormat: 1
     Answers:
-      - AnswerText: "{A} + {B}"
+      - AnswerText: "{synca} + {syncb}"
         AnswerTextFormat: MARKDOWN
         AnswerGrade: 1.0
-        Feedback: "Well done!"
+        Feedback: "Well done! You calculated the sum correctly."
+        FeedbackFormat: HTML
+
+  - QuestionName: "Sync Test 2: Area {a} * {b}"
+    Category: sync_test_category
+    QuestionId: 33
+    QuestionText: "<p>Using the <b>same rectangle</b> from the previous question:</p><p>Side A = {synca} cm</p><p>Side B = {syncb} cm</p><p>Calculate the Area (A * B):</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATEDMULTICHOICE
+    QuestionReady: true
+    CalculatedOptions:
+      Synchronize: 1      
+      Single: 0
+      ShuffleAnswers: true
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+    NumericalUnits:
+      - UnitName: "cm"
+        Multiplier: 1.0
+    DatasetDefinitions:
+      - Name: "synca"
+        Category: 1
+        Type: 1
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 3.0    
+          - Number: 2
+            Value: 4.0
+          - Number: 3
+            Value: 5.0
+          - Number: 4
+            Value: 6.0
+          - Number: 5
+            Value: 7.0
+      - Name: "syncb"
+        Category: 1
+        Type: 1
+        Options: "uniform:1.0:10.0:1"
+        Items:
+          - Number: 1
+            Value: 1.0
+          - Number: 2
+            Value: 2.0
+          - Number: 3
+            Value: 3.0
+          - Number: 4
+            Value: 4.0
+          - Number: 5
+            Value: 5.0
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 1
+        CorrectAnswerFormat: 1
+    Answers:
+      - AnswerText: "{= {synca} * {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: "Excellent! You calculated the area correctly."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} / {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "You calculated the area incorrectly."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} + {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "You calculated the area incorrectly."
+        FeedbackFormat: HTML
+      - AnswerText: "{= {synca} - {syncb} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "You calculated the area incorrectly."
         FeedbackFormat: HTML
 

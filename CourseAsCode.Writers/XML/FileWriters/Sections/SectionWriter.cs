@@ -58,7 +58,7 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
                             { "name", section.Name ?? "$@NULL@$" },
                             { "summary", section.Summary ?? "" },
                             { "summaryformat", ((int)section.SystemDefaults.SummaryFormat).ToString() },
-                            { "sequence", sequence },
+                            { "sequence", string.Join(",", section.Activities.Select(a => a.ModuleId)) },
                             { "visible", section.VisibleToStudents ? "1" : "0" },
                             { "availabilityjson", "$@NULL@$" },
                             { "component", section.SystemDefaults.Component?.ToString() ?? "$@NULL@$" },

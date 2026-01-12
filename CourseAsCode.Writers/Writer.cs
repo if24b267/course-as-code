@@ -1,5 +1,6 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
+using CourseAsCode.Model.Activities.Choice;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
@@ -94,6 +95,7 @@ namespace CourseAsCode.Writers
 
         /// <summary>
         /// Equip the course with default values for enrolled users and sections if they are not defined
+        /// + injects 2 example Lessons (hardcoded) if none exist yet.
         /// </summary>
         /// <param name="course">The course object to populate with default values</param>
         private void PrepareCourseDefaults(Course course)
@@ -110,8 +112,86 @@ namespace CourseAsCode.Writers
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
             }
 
-            // --- DUMMY PAGE DATA ---
+            // --- Dummy Data LESSONS ---
             var section = course.Sections[0];
+            section.Activities ??= new List<Activity>();
+
+            if (section.Activities.Any(a => a is Lesson))
+            {
+                return;
+            }
+
+            section.Activities.Add(new Lesson
+            {
+                Name = "Example Lesson 1",
+                ActivityId = 9001,
+                ModuleId = 50,
+                ModuleName = "lesson",
+                CourseId = course.SystemDefaults.Id,
+                Context = Context.Course,
+
+                Intro = "<p>Example Lesson 1 Intro</p>",
+                IntroFormat = FormattingFormat.HTML,
+                Grade = 100,
+                Practice = false,
+                MaxAttempts = 3,
+                Review = true,
+                Retake = true,
+                ProgressBar = true,
+                DisplayLeft = true,
+
+                Conditions = new Lesson.LessonConditions
+                {
+                    TimeSpentSeconds = 0,
+                    Completed = 0,
+                    GradeBetterThan = 0
+                },
+
+                Pages = new List<Lesson.LessonPage>
+                {
+                    new Lesson.LessonPage { PageId = 1, Title = "Page 1", Content = "<p>Welcome</p>" },
+                    new Lesson.LessonPage { PageId = 2, Title = "Page 2", Content = "<p>Concepts</p>" },
+                    new Lesson.LessonPage { PageId = 3, Title = "Page 3", Content = "<p>Example</p>" },
+                    new Lesson.LessonPage { PageId = 4, Title = "Page 4", Content = "<p>Mini quiz placeholder</p>" },
+                    new Lesson.LessonPage { PageId = 5, Title = "Page 5", Content = "<p>Summary</p>" },
+                    new Lesson.LessonPage { PageId = 6, Title = "Page 6", Content = "<p>End</p>" },
+                },
+            });
+
+            section.Activities.Add(new Lesson
+            {
+                Name = "Example Lesson 2",
+                ActivityId = 9002,
+                ModuleId = 51,
+                ModuleName = "lesson",
+                CourseId = course.SystemDefaults.Id,
+                Context = Context.Course,
+
+                Intro = "<p>Example Lesson 2 Intro</p>",
+                IntroFormat = FormattingFormat.HTML,
+                Grade = 50,
+                Practice = false,
+                MaxAttempts = 1,
+                Review = false,
+                Retake = false,
+                ProgressBar = false,
+                DisplayLeft = false,
+                UsePassword = true,
+                Password = "letmein",
+                TimeLimit = 15 * 60,
+                Available = DateTime.UtcNow.AddDays(-1),
+                Deadline = DateTime.UtcNow.AddDays(7),
+
+                Pages = new List<Lesson.LessonPage>
+                {
+                    new Lesson.LessonPage { PageId = 10, Title = "Page 1", Content = "<p>Instructions</p>" },
+                    new Lesson.LessonPage { PageId = 11, Title = "Page 2", Content = "<p>Task 1</p>" },
+                    new Lesson.LessonPage { PageId = 12, Title = "Page 3", Content = "<p>Task 2</p>" },
+                    new Lesson.LessonPage { PageId = 13, Title = "Page 4", Content = "<p>Finish</p>" },
+                },
+            });
+
+            // --- DUMMY PAGE DATA ---
             section.Activities ??= new List<Activity>();
 
             if (!section.Activities.Any(a => a is Page))
@@ -131,7 +211,7 @@ namespace CourseAsCode.Writers
                     TimeModified = DateTime.UtcNow,
 
                     ModuleId = 200,
-                    ModuleName = "page"
+                    ModuleName = "page",
                 });
 
                 section.Activities.Add(new Page
@@ -149,8 +229,147 @@ namespace CourseAsCode.Writers
                     TimeModified = DateTime.UtcNow,
 
                     ModuleId = 201,
-                    ModuleName = "page"
+                    ModuleName = "page",
                 });
+            }
+
+            // --- DUMMY CHOICE DATA ---
+            if (!section.Activities.Any(a => a is Choice))
+            {
+                var now = DateTime.UtcNow;
+
+                section.Activities.Add(new Choice
+                {
+                    Name = "Example Choice",
+                    ActivityId = 8201,
+                    Context = Context.Course,
+                    TimeCreated = now.AddMinutes(-5),
+                    TimeModified = now,
+
+                    Description = "<p>Please pick one topic.</p>",
+                    DescriptionFormat = FormattingFormat.HTML,
+
+                    Publish = false,
+                    ShowResults = false,
+                    Display = 0,
+                    AllowUpdate = false,
+                    AllowMultiple = false,
+                    ShowUnanswered = false,
+                    LimitAnswers = false,
+                    TimeOpen = null,
+                    TimeClose = null,
+                    CompletionSubmit = false,
+                    ShowPreview = false,
+                    IncludeInactive = false,
+                    ShowAvailable = false,
+                    Options = new List<Choice.ChoiceOption>
+                    {
+                        new Choice.ChoiceOption { Id = 1, Text = "Topic A", MaxAnswers = 0, TimeModified = now },
+                        new Choice.ChoiceOption { Id = 2, Text = "Topic B", MaxAnswers = 0, TimeModified = now },
+                        new Choice.ChoiceOption { Id = 3, Text = "Topic C", MaxAnswers = 0, TimeModified = now },
+
+                    },
+                });
+            }
+            // --- DUMMY FEEDBACK DATA ---
+            if (!section.Activities.Any(a => a is Feedback))
+            {
+                var now = DateTime.UtcNow;
+
+                section.Activities.Add(new Feedback
+                {
+                    Name = "Example Feedback",
+                    ActivityId = 8301,
+                    Context = Context.Course,
+                    TimeCreated = now.AddMinutes(-10),
+                    TimeModified = now,
+
+                    Description = "<p>Please fill out this self-assessment.</p>",
+                    DescriptionFormat = FormattingFormat.HTML,
+
+                    Anonymous = 2,
+                    EmailNotification = 0,
+                    MultipleSubmit = 0,
+                    Autonumbering = 0,
+                    PublishStats = 1,
+                    CompletionSubmit = false,
+
+                    // items
+                    Items = new List<Feedback.FeedbackItem>
+                    {
+                        new Feedback.FeedbackItem
+                        {
+                            Id = 1,
+                            Template = 0,
+                            Name = "label",
+                            Label = "",
+                            Typ = "label",
+                            Presentation = "<p>Legend: (1) low … (4) high</p>",
+                            HasValue = 0,
+                            Position = 1,
+                            Required = 0,
+                            DependItem = 0,
+                            DependValue = "",
+                            Options = ""
+                        },
+
+                        new Feedback.FeedbackItem
+                        {
+                            Id = 2,
+                            Template = 0,
+                            Name = "I can describe the basics",
+                            Label = "",
+                            Typ = "multichoice",
+                            Presentation = "r>>>>>1|2|3|4<<<<<1",
+                            HasValue = 1,
+                            Position = 2,
+                            Required = 0,
+                            DependItem = 0,
+                            DependValue = "",
+                            Options = "h"
+                        },
+                    },
+                });
+            }
+
+            // --- DUMMY FOLDER DATA ---
+            if (!section.Activities.Any(a => a is Folder))
+            {
+                var now = DateTime.UtcNow;
+
+                var folder = new Folder
+                {
+                    Name = "Example Folder",
+                    ActivityId = 8401,
+                    Context = Context.Course,
+
+                    TimeCreated = now,
+                    TimeModified = now,
+                    VisibleToStudents = true,
+                    DisplayDescription = false,
+                };
+
+                folder.Files.Add(new MoodleFile
+                {
+                    ActivityId = 8501,
+                    Name = "test.txt",
+                    FileName = "test.txt",
+
+                    //Pfusch lösung ich weiß
+                    FilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Documentation", "SampleFiles", "test.txt")),
+
+                    TimeCreated = now,
+                    TimeModified = now,
+
+                    SystemDefaults =
+                    {
+                        Component = Component.Folder,
+                        FileArea = FileArea.CourseContent,
+                        ItemId = 0
+                    },
+                });
+
+                section.Activities.Add(folder);
             }
 
             // --- DUMMY SCHEDULER DATA ---

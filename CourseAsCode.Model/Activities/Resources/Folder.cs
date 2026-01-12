@@ -34,6 +34,8 @@ namespace CourseAsCode.Model.Activities.Resources
         [Description("force download of contained files")]
         public bool ForceDownload { get; set; } = FolderDefault.DEFAULT_FORCE_DOWNLOAD;
 
+        [Description("files contained in this folder activity")]
+        public List<MoodleFile> Files { get; set; } = new();
         public SensibleDefaultsFolder SensibleDefaults { get; set; } = new SensibleDefaultsFolder();
         public SystemDefaultsFolder SystemDefaults { get; set; } = new SystemDefaultsFolder();
 

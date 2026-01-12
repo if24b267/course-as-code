@@ -14,7 +14,10 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources
         public const bool DEFAULT_USE_PASSWORD = false;
         public const string DEFAULT_PASSWORD = "";
         public const int DEFAULT_DEPENDENCY = 0;
-        public const string DEFAULT_CONDITIONS = "O:8:\"stdClass\":3:{s:9:\"timespent\";i:0;s:9:\"completed\";i:0;s:15:\"gradebetterthan\";i:0;}";
+        public const int DEFAULT_CONDITIONS_TIMESPENT_SECONDS = 0;
+        public const int DEFAULT_CONDITIONS_COMPLETED = 0;
+        public const int DEFAULT_CONDITIONS_GRADEBETTERTHAN = 0;
+        //public const string DEFAULT_CONDITIONS = "O:8:\"stdClass\":3:{s:9:\"timespent\";i:0;s:9:\"completed\";i:0;s:15:\"gradebetterthan\";i:0;}";
 
         // Attempts and behavior
         public const bool DEFAULT_PRACTICE = false;
@@ -57,5 +60,23 @@ namespace CourseAsCode.Model.Defaults.Activities.Resources
 
         // Mobile
         public const bool DEFAULT_ALLOW_OFFLINE_ATTEMPTS = false;
+
+        // ────────────────────────────────────────────────────────────────────────────
+        // Lesson Page defaults 
+        // ────────────────────────────────────────────────────────────────────────────
+
+        public const int DEFAULT_PAGE_QTYPE = 20;
+        public const int DEFAULT_PAGE_QOPTION = 0;
+        public const int DEFAULT_PAGE_LAYOUT = 1;
+        public const int DEFAULT_PAGE_DISPLAY = 1;
+
+        public const int DEFAULT_ANSWER_GRADE = 0;
+        public const int DEFAULT_ANSWER_SCORE = 0;
+        public const int DEFAULT_ANSWER_FLAGS = 0;
+
+        public const string DEFAULT_ANSWER_TEXT = "Continue";
+        public const string DEFAULT_ANSWER_RESPONSE = "$@NULL@$";
+        public const int DEFAULT_ANSWER_FORMAT = 0;
+        public const int DEFAULT_RESPONSE_FORMAT = 0;
     }
 }

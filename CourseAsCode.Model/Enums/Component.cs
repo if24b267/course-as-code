@@ -10,4 +10,5 @@ public enum Component
     Forum, // files managed by a forum within the course
     Glossary, // files managed by a glossary within the course
     HtmlBlock, // files managed by an HTML Block within the course
+    Folder, // files managed by a folder resource within the course
 }

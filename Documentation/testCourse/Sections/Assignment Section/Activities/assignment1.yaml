@@ -5,9 +5,13 @@ Description: This is an assignment activity.
 Intro: This is the assignment intro.
 AllowSubmissionDrafts: true
 SendNotifications: false
-DueDate: 31-08-2025 23:59
+DueDate: 31-08-2026 23:59
 AllowSubmissionsFromDate: 31-01-2023 23:59
 Grade: 50
 CompletionSubmit: true
 RequireSubmissionStatement: true
 MaxAttempts: 2
+
+# Grading gets locked after a specific date. SUBMISSIONS ARENT POSSIBLE AFTER DATE IS HIT (is off by default)
+# GradingLockedAfter: 31-08-2026 23:59 
+

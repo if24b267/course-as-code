@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;

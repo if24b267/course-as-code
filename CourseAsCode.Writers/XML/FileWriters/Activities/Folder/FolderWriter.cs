@@ -69,7 +69,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Folder
             writer.WriteAttributeString("id", folder.ActivityId.ToString());
             writer.WriteAttributeString("moduleid", folder.SystemDefaults.ModuleId.ToString());
             writer.WriteAttributeString("modulename", folder.SystemDefaults.ModuleName);
-            writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(folder.Context));
+            writer.WriteAttributeString("contextid", folder.ActivityId.ToString());
         }
     }
 }
