@@ -255,6 +255,20 @@ namespace CourseAsCode.Writers.XML.Writer
                         writer.WriteEndElement(); // Closes <activity>
                     }
 
+                    if (activity is Scheduler scheduler)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", scheduler.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", scheduler.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", scheduler.Name);
+                        writer.WriteElementString("directory", $"activities/scheduler_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // </activity>
+                    }
+
                     LogTrace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
                 }
             }
@@ -425,6 +439,18 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"wiki_{activity.ActivityId}", $"wiki_{activity.ActivityId}_included", "1");
                         WriteSingleBackupSettingTag(writer, "activity", $"wiki_{activity.ActivityId}", $"wiki_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is Page page)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"page_{activity.ActivityId}", $"page_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"page_{activity.ActivityId}", $"page_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is Scheduler)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"scheduler_{activity.ActivityId}", $"scheduler_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"scheduler_{activity.ActivityId}", $"scheduler_{activity.ActivityId}_userinfo", "1");
                     }
 
                     LogTrace($"Added setting for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");

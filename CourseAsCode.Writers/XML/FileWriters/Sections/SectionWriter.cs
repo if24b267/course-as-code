@@ -1,6 +1,7 @@
 using System.Xml;
 
 using CourseAsCode.Model;
+using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -10,20 +11,11 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
     {
         private readonly IFileService _fileService;
 
-
-        /// <summary>
-        /// Creates a new instance of the SectionWriter class
-        /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
-        /// <param name="logger">Logger instance specific to SectionWriter</param>
-        /// <param name="fileService">Service that handles operations on the file system</param>
-        /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
         public SectionWriter(IXmlWriterFactory xmlWriterFactory, ILogger<SectionWriter> logger, IFileService fileService)
             : base(xmlWriterFactory, logger)
         {
             _fileService = fileService;
         }
-
 
         public void WriteSections(string outputPath, List<Section> sections)
         {
@@ -46,6 +38,14 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
                         continue;
                     }
 
+                    // Build sequence from the module ids that Moodle expects for each activity type
+                    var sequence = section.Activities == null
+                        ? ""
+                        : string.Join(",",
+                            section.Activities
+                                .Select(GetModuleIdForSequence)
+                                .Where(id => id > 0));
+
                     using (XmlWriter writer = CreateXmlWriter(filePath))
                     {
                         writer.WriteStartDocument();
@@ -58,7 +58,7 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
                             { "name", section.Name ?? "$@NULL@$" },
                             { "summary", section.Summary ?? "" },
                             { "summaryformat", ((int)section.SystemDefaults.SummaryFormat).ToString() },
-                            { "sequence", "" },
+                            { "sequence", sequence },
                             { "visible", section.VisibleToStudents ? "1" : "0" },
                             { "availabilityjson", "$@NULL@$" },
                             { "component", section.SystemDefaults.Component?.ToString() ?? "$@NULL@$" },
@@ -72,7 +72,7 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
 
                         WriteElements(writer, elements);
 
-                        writer.WriteEndElement(); // Close <section>
+                        writer.WriteEndElement(); // </section>
                         writer.WriteEndDocument();
 
                         LogDebug($"Created {relativePath} for Section {section.SystemDefaults.SectionId}: {section.Name}");
@@ -84,6 +84,23 @@ namespace CourseAsCode.Writers.XML.Writer.Sections
                     throw;
                 }
             }
+        }
+
+        private static int GetModuleIdForSequence(CourseAsCode.Model.Activities.Activity activity)
+        {
+            // Activities that store moduleid in SystemDefaults (writer uses SystemDefaults.*)
+            if (activity is Page page)
+            {
+                return page.SystemDefaults?.ModuleId ?? 0;
+            }
+
+            if (activity is Scheduler scheduler)
+            {
+                return scheduler.SystemDefaults?.ModuleId ?? 0;
+            }
+
+            // Default: Activity.ModuleId (lesson, quiz, assign, url, etc.)
+            return activity.ModuleId;
         }
     }
 }

@@ -152,6 +152,46 @@ namespace CourseAsCode.Writers
                     ModuleName = "page"
                 });
             }
+
+            // --- DUMMY SCHEDULER DATA ---
+            section.Activities ??= new List<Activity>();
+
+            if (!section.Activities.Any(a => a is Scheduler))
+            {
+                var now = DateTime.UtcNow;
+
+                section.Activities.Add(new Scheduler
+                {
+                    Name = "Example Scheduler: Consultation",
+                    ActivityId = 8101,
+                    Context = Context.Course,
+
+                    Description = "<p>Book a slot.</p>",
+                    DescriptionFormat = FormattingFormat.HTML,
+
+                    ModuleId = 300,
+                    ModuleName = "scheduler",
+
+                    SchedulerMode = "oneonly",
+                    MaxBookings = 1,
+                    DefaultSlotDuration = 20,
+                    TimeModified = now,
+
+                    Slots = new List<Scheduler.SchedulerSlot>
+                    {
+                        new Scheduler.SchedulerSlot
+                        {
+                            Id = 1,
+                            StaffId = 2,
+                            StartTime = now.Date.AddDays(1).AddHours(9),
+                            Duration = 20,
+                            MaxStudents = 1,
+                            Booked = 0,
+                            TimeModified = now
+                        },
+                    },
+                });
+            }
         }
     }
 }
