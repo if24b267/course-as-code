@@ -244,15 +244,13 @@ namespace CourseAsCode.Writers.XML.Writer
                     if (activity is Lesson lesson)
                     {
                         writer.WriteStartElement("activity");
-
                         writer.WriteElementString("moduleid", lesson.ModuleId.ToString());
                         writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
                         writer.WriteElementString("modulename", lesson.ModuleName);
                         writer.WriteElementString("title", lesson.Name);
                         writer.WriteElementString("directory", $"activities/lesson_{activity.ActivityId}");
-                        writer.WriteElementString("insubsection", string.Empty);
-
-                        writer.WriteEndElement(); // </activity>
+                        writer.WriteElementString("insubsection", string.Empty); 
+                        writer.WriteEndElement(); // close <activity>
                     }
 
                     LogTrace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
@@ -301,7 +299,7 @@ namespace CourseAsCode.Writers.XML.Writer
             {
                 { "courseid", course.SystemDefaults.Id.ToString() },
                 { "title", course.ShortName },
-                { "directory", "course" },
+                { "directory", "course" }
             };
 
             WriteElements(writer, elements);
@@ -425,6 +423,18 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"wiki_{activity.ActivityId}", $"wiki_{activity.ActivityId}_included", "1");
                         WriteSingleBackupSettingTag(writer, "activity", $"wiki_{activity.ActivityId}", $"wiki_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is Lesson lesson)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"lesson_{activity.ActivityId}", $"lesson_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"lesson_{activity.ActivityId}", $"lesson_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if(activity is Page page)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"page_{activity.ActivityId}", $"page_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"page_{activity.ActivityId}", $"page_{activity.ActivityId}_userinfo", "1");
                     }
 
                     LogTrace($"Added setting for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
