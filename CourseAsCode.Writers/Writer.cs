@@ -3,6 +3,7 @@ using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Choice;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
+using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Grading;
@@ -271,6 +272,7 @@ namespace CourseAsCode.Writers
                     },
                 });
             }
+
             // --- DUMMY FEEDBACK DATA ---
             if (!section.Activities.Any(a => a is Feedback))
             {
@@ -372,43 +374,23 @@ namespace CourseAsCode.Writers
                 section.Activities.Add(folder);
             }
 
-            // --- DUMMY SCHEDULER DATA ---
-            section.Activities ??= new List<Activity>();
-
+            // --- DUMMY SCHEDULER DATA  ---
             if (!section.Activities.Any(a => a is Scheduler))
             {
-                var now = DateTime.Now;
+                var now = DateTime.Now; 
 
                 section.Activities.Add(new Scheduler
                 {
-                    Name = "Book a slot for oral exam (Lecturer XXX)",
+                    Name = "Example Scheduler",
                     ActivityId = 8101,
                     Context = Context.Course,
 
-                    Description = "<p>Bitte melden Sie sich zu einem der Slots an. Die mündliche Prüfung wird über MS Teams abgehalten.</p>",
+                    Description = "<p>Book one slot.</p>",
                     DescriptionFormat = FormattingFormat.HTML,
 
-                    ModuleId = 300,
-                    ModuleName = "scheduler",
 
-                    SchedulerMode = "oneonly",
-                    MaxBookings = 1,
-                    GuardTime = 0,
-                    DefaultSlotDuration = 20,
-                    AllowNotifications = 0,
-                    StaffRoleName = "",
-                    Scale = 0,
-                    GradingStrategy = 0,
-                    BookingGrouping = -1,
-                    UseNotes = 1,
-                    UseBookingForm = 0,
-                    BookingInstructions = "",
-                    BookingInstructionsFormat = FormattingFormat.HTML,
-                    UseStudentNotes = 0,
-                    RequireUpload = 0,
-                    UploadMaxFiles = 0,
-                    UploadMaxSize = 0,
-                    UseCaptcha = 0,
+                    SchedulerMode = SchedulerDefaults.DEFAULT_SCHEDULER_MODE,
+                    TimeModified = now,
 
                     Slots = new List<Scheduler.SchedulerSlot>
                     {
@@ -416,8 +398,8 @@ namespace CourseAsCode.Writers
                         {
                             Id = 1,
                             StaffId = 2,
-                            StartTime = now.Date.AddDays(7).AddHours(9),
-                            Duration = 20,
+                            StartTime = now.Date.AddDays(1).AddHours(12),
+                            Duration = SchedulerDefaults.DEFAULT_DEFAULTSLOTDURATION,
                             MaxStudents = 1,
                             Booked = 0,
                             TimeModified = now
@@ -426,15 +408,13 @@ namespace CourseAsCode.Writers
                         {
                             Id = 2,
                             StaffId = 2,
-                            StartTime = now.Date.AddDays(7).AddHours(9).AddMinutes(20),
-                            Duration = 20,
+                            StartTime = now.Date.AddDays(1).AddHours(12).AddMinutes(SchedulerDefaults.DEFAULT_DEFAULTSLOTDURATION),
+                            Duration = SchedulerDefaults.DEFAULT_DEFAULTSLOTDURATION,
                             MaxStudents = 1,
                             Booked = 0,
                             TimeModified = now
                         },
                     },
-
-                    TimeModified = now,
                 });
             }
         }

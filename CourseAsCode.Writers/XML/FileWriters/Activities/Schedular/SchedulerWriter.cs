@@ -105,7 +105,7 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Scheduler
             writer.WriteAttributeString("id", scheduler.ActivityId.ToString());
             writer.WriteAttributeString("moduleid", scheduler.SystemDefaults.ModuleId.ToString());
             writer.WriteAttributeString("modulename", scheduler.SystemDefaults.ModuleName);
-            writer.WriteAttributeString("contextid", _generalHelper.EnumIntegerToString(scheduler.Context));
+            writer.WriteAttributeString("contextid", scheduler.ActivityId.ToString());
         }
     }
 }
