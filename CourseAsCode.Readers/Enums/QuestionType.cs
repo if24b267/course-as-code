@@ -13,5 +13,6 @@ namespace CourseAsCode.Readers.Enums
         ESSAY,
         SIMPLECALCULATED,
         CALCULATED,
+        CALCULATEDMULTICHOICE,
     }
 }
