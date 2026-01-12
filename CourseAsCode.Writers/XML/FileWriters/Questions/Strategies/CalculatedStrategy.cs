@@ -15,7 +15,6 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
         private readonly IGeneralHelper _generalHelper;
         private readonly ISequentialIdGenerator _sequentialIdGenerator;
         private readonly IQuizHelper _quizHelper;
-        private static readonly Dictionary<string, (int DefId, List<int> ItemIds)> _sharedDatasetCache = new();
 
         public CalculatedStrategy(ILogger<CalculatedStrategy> logger, IGeneralHelper generalHelper, ISequentialIdGenerator sequentialIdGenerator, IQuizHelper quizHelper)
         {
@@ -142,9 +141,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 var rec = calcQuestion.CalculatedRecords[i];
                 int recId = _sequentialIdGenerator.GetNextAnswerId();
 
-                string linkedAnswerId = (i < answerIdByIndex.Count)
-                                      ? answerIdByIndex[i].ToString()
-                                      : "0";
+                string linkedAnswerId = (i < answerIdByIndex.Count) ? answerIdByIndex[i].ToString() : "0";
 
                 xmlService.WriteElementWithAttributes("calculated_record", new Dictionary<string, string>
                 {

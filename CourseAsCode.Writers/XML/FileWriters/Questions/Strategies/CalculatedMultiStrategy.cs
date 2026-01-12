@@ -32,12 +32,13 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
             xmlService.WriteElement("plugin_qtype_calculatedmulti_question");
 
             // Answers ------------------------------------------------------------
-            var generatedAnswerIds = new List<int>();
+            var answerIdByIndex = new List<int>();
             xmlService.WriteElement("answers");
-            foreach (var ans in calcMulti.Answers)
+            for (int i = 0; i < calcMulti.Answers.Count; i++)
             {
+                var answer = calcMulti.Answers[i];
                 int answerId = _sequentialIdGenerator.GetNextAnswerId();
-                generatedAnswerIds.Add(answerId);
+                answerIdByIndex.Add(answerId);
 
                 xmlService.WriteElementWithAttributes("answer", new Dictionary<string, string>
                 {
@@ -46,11 +47,11 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "answertext", ans.AnswerText },
-                    { "answerformat", _generalHelper.EnumIntegerToString(ans.AnswerTextFormat) },
-                    { "fraction", ans.Fraction.ToString("0.0000000", CultureInfo.InvariantCulture) },
-                    { "feedback", ans.Feedback ?? string.Empty },
-                    { "feedbackformat", _generalHelper.EnumIntegerToString(ans.FeedbackFormat) },
+                    { "answertext", answer.AnswerText },
+                    { "answerformat", _generalHelper.EnumIntegerToString(answer.AnswerTextFormat) },
+                    { "fraction", answer.Fraction.ToString("0.0000000", CultureInfo.InvariantCulture) },
+                    { "feedback", answer.Feedback ?? string.Empty },
+                    { "feedbackformat", _generalHelper.EnumIntegerToString(answer.FeedbackFormat) },
                 });
 
                 xmlService.CloseElement(); // </answer>
@@ -69,38 +70,28 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 });
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "unit", unit.UnitName },
                     { "multiplier", unit.Multiplier.ToString("0.0000000", CultureInfo.InvariantCulture) },
+                    { "unit", unit.UnitName },
                 });
                 xmlService.CloseElement(); // </numerical_unit>
             }
             xmlService.CloseElement(); // </numerical_units>
 
             // Numerical options --------------------------------------------------
+            int numericalOptionId = _sequentialIdGenerator.GetNextAnswerId();
             xmlService.WriteElement("numerical_options");
-            if (calcMulti.NumericalOptions.ShowUnits.HasValue ||
-                calcMulti.NumericalOptions.UnitsLeft.HasValue ||
-                calcMulti.NumericalOptions.UnitGradingType.HasValue ||
-                calcMulti.NumericalOptions.UnitPenalty.HasValue)
+            xmlService.WriteElementWithAttributes("numerical_option", new Dictionary<string, string>
             {
-                int numericalOptionId = _sequentialIdGenerator.GetNextAnswerId();
-                xmlService.WriteElementWithAttributes("numerical_option", new Dictionary<string, string>
-                {
-                    { "id", numericalOptionId.ToString() },
-                });
-                var opt = new Dictionary<string, string>();
-                if (calcMulti.NumericalOptions.ShowUnits.HasValue)
-                    opt["showunits"] = calcMulti.NumericalOptions.ShowUnits.Value.ToString();
-                if (calcMulti.NumericalOptions.UnitsLeft.HasValue)
-                    opt["unitsleft"] = calcMulti.NumericalOptions.UnitsLeft.Value ? "1" : "0";
-                if (calcMulti.NumericalOptions.UnitGradingType.HasValue)
-                    opt["unitgradingtype"] = calcMulti.NumericalOptions.UnitGradingType.Value.ToString();
-                if (calcMulti.NumericalOptions.UnitPenalty.HasValue)
-                    opt["unitpenalty"] = calcMulti.NumericalOptions.UnitPenalty.Value.ToString("0.0000000", CultureInfo.InvariantCulture);
-
-                xmlService.WriteElements(opt);
-                xmlService.CloseElement(); // </numerical_option>
-            }
+                { "id", numericalOptionId.ToString() },
+            });
+            xmlService.WriteElements(new Dictionary<string, string>
+            {
+                { "showunits", calcMulti.NumericalOptions.ShowUnits.ToString() },
+                { "unitsleft", calcMulti.NumericalOptions.UnitsLeft ? "1" : "0" },
+                { "unitgradingtype", calcMulti.NumericalOptions.UnitGradingType.ToString() },
+                { "unitpenalty", calcMulti.NumericalOptions.UnitPenalty.ToString("0.0000000", CultureInfo.InvariantCulture) },
+            });
+            xmlService.CloseElement(); // </numerical_option>
             xmlService.CloseElement(); // </numerical_options>
 
             // Dataset definitions ------------------------------------------------
@@ -115,7 +106,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "category", def.Category.ToString() },
+                    { "category", def.Category == 0 ? "0" : question.CategoryId.ToString() },
                     { "name", def.Name },
                     { "type", def.Type.ToString() },
                     { "options", def.Options },
@@ -145,9 +136,13 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
             // Calculated records -------------------------------------------------
             xmlService.WriteElement("calculated_records");
-            foreach (var rec in calcMulti.CalculatedRecords)
+            for (int i = 0; i < calcMulti.CalculatedRecords.Count; i++)
             {
+                var rec = calcMulti.CalculatedRecords[i];
                 int recId = _sequentialIdGenerator.GetNextAnswerId();
+
+                string linkedAnswerId = (i < answerIdByIndex.Count) ? answerIdByIndex[i].ToString() : "0";
+
                 xmlService.WriteElementWithAttributes("calculated_record", new Dictionary<string, string>
                 {
                     { "id", recId.ToString() },
@@ -155,7 +150,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
 
                 xmlService.WriteElements(new Dictionary<string, string>
                 {
-                    { "answer", rec.AnswerRefId.ToString() },
+                    { "answer", linkedAnswerId },
                     { "tolerance", rec.Tolerance.ToString("0.00", CultureInfo.InvariantCulture) },
                     { "tolerancetype", rec.ToleranceType.ToString() },
                     { "correctanswerlength", rec.CorrectAnswerLength.ToString() },

@@ -2,6 +2,7 @@ using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types.Calculated;
+using CourseAsCode.Model.Questions.Types.CalculatedMulti;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
@@ -681,6 +682,124 @@ namespace CourseAsCode.Writers.Tests.Fakes
             };
 
             return cq;
+        }
+
+        /// <summary>
+        /// Creates a basic calculated multi-choice question with datasets, multiple formulas as answers, and tolerance settings.
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <returns>A <see cref="CalculatedMultiChoiceQuestion"/> object initialized with default values</returns>
+        public static CalculatedMultiChoiceQuestion CreateBasicCalculatedMultiChoiceQuestion(int id, string category)
+        {
+            var cmq = new CalculatedMultiChoiceQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"CalcMulti_{id}",
+                QuestionText = "<p>Select the correct formula for the sum of {a} and {b}.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "General Feedback",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                QuestionReady = true,
+
+                NumericalOptions = new CalculatedHelper.NumericalOption
+                {
+                    ShowUnits = 3,
+                    UnitsLeft = false,
+                    UnitGradingType = 1,
+                    UnitPenalty = 0.1f,
+                },
+
+                NumericalUnits = new List<CalculatedHelper.NumericalUnit>
+                {
+                    new CalculatedHelper.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
+                },
+
+                DatasetDefinitions = new List<CalculatedHelper.DatasetDefinition>
+                {
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "a",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 5.0f },
+                        },
+                    },
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "b",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 3.0f },
+                        },
+                    },
+                },
+
+                Answers = new List<CalculatedHelper.CalculatedAnswer>
+                {
+                    new CalculatedHelper.CalculatedAnswer
+                    {
+                        AnswerText = "{={a} + {b}}",
+                        Fraction = 1.0f,
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        Feedback = "Correct!",
+                        FeedbackFormat = FormattingFormat.HTML,
+                    },
+                    new CalculatedHelper.CalculatedAnswer
+                    {
+                        AnswerText = "{={a} - {b}}",
+                        Fraction = 0.0f,
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        Feedback = "Wrong formula.",
+                        FeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+
+                CalculatedRecords = new List<CalculatedHelper.CalculatedRecord>
+                {
+                    new CalculatedHelper.CalculatedRecord
+                    {
+                        Tolerance = 0.01f,
+                        ToleranceType = 1,
+                        CorrectAnswerLength = 2,
+                        CorrectAnswerFormat = 1,
+                    },
+                    new CalculatedHelper.CalculatedRecord
+                    {
+                        Tolerance = 0.01f,
+                        ToleranceType = 1,
+                        CorrectAnswerLength = 2,
+                        CorrectAnswerFormat = 1,
+                    },
+                },
+
+                CalculatedOptions = new CalculatedHelper.CalculatedOption
+                {
+                    Synchronize = 0,
+                    Single = 1,
+                    ShuffleAnswers = true,
+                    CorrectFeedback = "Correct",
+                    CorrectFeedbackFormat = FormattingFormat.PlainText,
+                    PartiallyCorrectFeedback = "Partial",
+                    PartiallyCorrectFeedbackFormat = FormattingFormat.PlainText,
+                    IncorrectFeedback = "Incorrect",
+                    IncorrectFeedbackFormat = FormattingFormat.PlainText,
+                    AnswerNumbering = "abc",
+                    ShowNumCorrect = true,
+                },
+
+                Tags = new List<string> { $"TagCalcMulti{id}" },
+            };
+
+            return cmq;
         }
     }
 }
