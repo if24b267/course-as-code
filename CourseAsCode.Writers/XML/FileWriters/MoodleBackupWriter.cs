@@ -1,5 +1,4 @@
 using System.Xml;
-using CourseAsCode.Model.Activities.Choice;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -256,20 +255,6 @@ namespace CourseAsCode.Writers.XML.Writer
                         writer.WriteEndElement(); // Closes <activity>
                     }
 
-                    if (activity is Choice choice)
-                    {
-                        writer.WriteStartElement("activity");
-
-                        writer.WriteElementString("moduleid", choice.SystemDefaults.ModuleId.ToString());
-                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
-                        writer.WriteElementString("modulename", choice.SystemDefaults.ModuleName);
-                        writer.WriteElementString("title", choice.Name);
-                        writer.WriteElementString("directory", $"activities/choice_{activity.ActivityId}");
-                        writer.WriteElementString("insubsection", string.Empty);
-
-                        writer.WriteEndElement(); // </activity>
-                    }
-
                     LogTrace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
                 }
             }
@@ -440,12 +425,6 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"wiki_{activity.ActivityId}", $"wiki_{activity.ActivityId}_included", "1");
                         WriteSingleBackupSettingTag(writer, "activity", $"wiki_{activity.ActivityId}", $"wiki_{activity.ActivityId}_userinfo", "1");
-                    }
-
-                    if (activity is Choice)
-                    {
-                        WriteSingleBackupSettingTag(writer, "activity", $"choice_{activity.ActivityId}", $"choice_{activity.ActivityId}_included", "1");
-                        WriteSingleBackupSettingTag(writer, "activity", $"choice_{activity.ActivityId}", $"choice_{activity.ActivityId}_userinfo", "1");
                     }
 
                     LogTrace($"Added setting for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
