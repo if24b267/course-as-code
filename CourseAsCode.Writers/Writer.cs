@@ -112,7 +112,8 @@ namespace CourseAsCode.Writers
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
             }
 
-            // --- Dummy Data LESSONS ---
+            // --- Dummy Data LESSONS ---/
+            
             var section = course.Sections[0];
             section.Activities ??= new List<Activity>();
 
@@ -190,6 +191,7 @@ namespace CourseAsCode.Writers
                     new Lesson.LessonPage { PageId = 13, Title = "Page 4", Content = "<p>Finish</p>" },
                 },
             });
+            
 
             // --- DUMMY PAGE DATA ---
             section.Activities ??= new List<Activity>();
@@ -371,6 +373,7 @@ namespace CourseAsCode.Writers
 
                 section.Activities.Add(folder);
             }
+            
         }
     }
 }

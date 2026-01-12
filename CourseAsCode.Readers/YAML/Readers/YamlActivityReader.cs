@@ -17,8 +17,9 @@ namespace CourseAsCode.Readers.YAML.Readers
         private readonly IQuizReader _quizReader;
         private readonly IAssignmentReader _assignmentReader;
         private readonly IWikiReader _wikiReader;
+        private readonly ILessonReader _lessonReader;
 
-        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader, IWikiReader wikiReader)
+        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader, IWikiReader wikiReader, ILessonReader lessonReader)
         {
             _fileReader = fileReader;
             _textMediaAreaReader = textMediaAreaReader;
@@ -27,6 +28,7 @@ namespace CourseAsCode.Readers.YAML.Readers
             _quizReader = quizReader;
             _assignmentReader = assignmentReader;
             _wikiReader = wikiReader;
+            _lessonReader = lessonReader;
         }
 
         public Activity? Read(string modelObjectPath)
@@ -69,6 +71,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case ActivityType.WIKI:
                     _logger.Debug($"Reading wiki activity from {modelObjectPath}");
                     return _wikiReader.Read(modelObjectPath);
+                case ActivityType.LESSON:
+                    _logger.Debug($"Reading lesson activity from {modelObjectPath}");
+                    return _lessonReader.Read(modelObjectPath);
             }
 
             return null;

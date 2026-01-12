@@ -5,22 +5,23 @@ namespace CourseAsCode.Readers.YAML.Model
 {
     public class YamlLesson : YamlActivity
     {
+        public string ModuleName { get; set; } = "lesson";
+        public Context Context { get; set; } = Context.Course;
         public string Intro { get; set; } = LessonDefaults.DEFAULT_INTRO;
         public FormattingFormat IntroFormat { get; set; } = LessonDefaults.DEFAULT_INTRO_FORMAT;
         public int Grade { get; set; } = LessonDefaults.DEFAULT_GRADE;
-        public bool Custom { get; set; } = LessonDefaults.DEFAULT_CUSTOM;
+        public bool Practice { get; set; } = LessonDefaults.DEFAULT_PRACTICE;
+        public int MaxAttempts { get; set; } = LessonDefaults.DEFAULT_MAX_ATTEMPTS;
+        public bool Review { get; set; } = LessonDefaults.DEFAULT_REVIEW;
+        public bool Retake { get; set; } = LessonDefaults.DEFAULT_RETAKE;
+        public bool ProgressBar { get; set; } = LessonDefaults.DEFAULT_PROGRESS_BAR;
+        public bool DisplayLeft { get; set; } = LessonDefaults.DEFAULT_DISPLAY_LEFT;
         public bool UsePassword { get; set; } = LessonDefaults.DEFAULT_USE_PASSWORD;
         public string Password { get; set; } = LessonDefaults.DEFAULT_PASSWORD;
-        // TODO: instead of id here, maybe build in reader so you can link another lesson activity file and get the id based on that?
-        public int Dependency { get; set; } = LessonDefaults.DEFAULT_DEPENDENCY;
-        // TODO: this should be a subclass (in the model too first!) so it is human readable in YAML
-        public string Conditions { get; set; } = LessonDefaults.DEFAULT_CONDITIONS;
-        public bool Practice { get; set; } = LessonDefaults.DEFAULT_PRACTICE;
-        public bool ModAttempts { get; set; } = LessonDefaults.DEFAULT_MOD_ATTEMPTS;
-        public int MaxAnswers { get; set; } = LessonDefaults.DEFAULT_MAX_ANSWERS;
-        public int MaxAttempts  { get; set; } = LessonDefaults.DEFAULT_MAX_ATTEMPTS;
-        public bool Review { get; set; } = LessonDefaults.DEFAULT_REVIEW;
-
-
+        public int TimeLimit { get; set; } = LessonDefaults.DEFAULT_TIME_LIMIT;
+        public DateTime? Available { get; set; } = LessonDefaults.DEFAULT_AVAILABLE;
+        public DateTime? Deadline { get; set; } = LessonDefaults.DEFAULT_DEADLINE;
+        public YamlLessonCondition Conditions { get; set; } = new();
+        public List<YamlLessonPage> Pages { get; set; } = new();
     }
 }

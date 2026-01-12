@@ -1,0 +1,32 @@
+Name: Example Lesson 1
+Type: LESSON
+ModuleName: "lesson"
+Intro: "<p>Example Lesson 1 Intro</p>"
+IntroFormat: HTML
+Grade: 100
+Practice: false
+MaxAttempts: 3
+Review: true
+Retake: true
+ProgressBar: true
+DisplayLeft: true
+Conditions:
+  TimeSpentSeconds: 0
+  Completed: 0
+  GradeBetterThan: 0
+Pages:
+  - Title: "Lesson 1 - Page 1"
+    Content: "<p>This is the content of Lesson 1, Page 1.</p>"
+    ContentFormat: HTML
+  - Title: "Lesson 1 - Page 2"
+    Content: "<p>This is the content of Lesson 1, Page 2.</p>"
+    ContentFormat: HTML
+  - Title: "Lesson 1 - Page 3"
+    Content: "<p>This is the content of Lesson 1, Page 3.</p>"
+    ContentFormat: HTML
+  - Title: "Lesson 1 - Page 4"
+    Content: "<p>This is the content of Lesson 1, Page 4.</p>"
+    ContentFormat: HTML
+  - Title: "Lesson 1 - Page 5"
+    Content: "<p>This is the content of Lesson 1, Page 5.</p>"
+    ContentFormat: HTML

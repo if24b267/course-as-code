@@ -17,8 +17,9 @@ namespace CourseAsCode.Readers.Helper
         public static int CurrentSectionId { get; set; }
 
         // currently only being counted up from 1
-        public static int CurrentModuleId { get; set; }
+        public static int CurrentModuleId { get; set; } = 1;
         public static int CurrentSubwikiId { get; set; } = 1;
+        public static int CurrentLessonPageId { get; set; } = 1;
         public static int CurrentWikiPageId { get; set; } = 1;
 
         public static List<Question> Questions { get; set; }

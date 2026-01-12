@@ -1,0 +1,4 @@
+SectionName: Lesson Section
+Activities:
+  - ActivityFilePath: Activities/lesson1.yaml
+  - ActivityFilePath: Activities/lesson2.yaml

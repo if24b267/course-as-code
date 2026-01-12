@@ -1,0 +1,35 @@
+Name: Example Lesson 2
+Type: LESSON
+ModuleName: "lesson"
+Intro: "<p>Example Lesson 2 Intro</p>"
+IntroFormat: HTML
+Grade: 50
+Practice: false
+MaxAttempts: 1
+Review: false
+Retake: false
+ProgressBar: false
+DisplayLeft: false
+UsePassword: true
+Password: letmein
+TimeLimit: 600
+Conditions:
+  TimeSpentSeconds: 0
+  Completed: 0
+  GradeBetterThan: 0
+Pages:
+  - Title: "Lesson 2 - Page 1"
+    Content: "<p>This is the content of Lesson 2, Page 1.</p>"
+    ContentFormat: HTML
+  - Title: "Lesson 2 - Page 2"
+    Content: "<p>This is the content of Lesson 2, Page 2.</p>"
+    ContentFormat: HTML
+  - Title: "Lesson 2 - Page 3"
+    Content: "<p>This is the content of Lesson 2, Page 3.</p>"
+    ContentFormat: HTML
+  - Title: "Lesson 2 - Page 4"
+    Content: "<p>This is the content of Lesson 2, Page 4.</p>"
+    ContentFormat: HTML
+  - Title: "Lesson 2 - Page 5"
+    Content: "<p>This is the content of Lesson 2, Page 5.</p>"
+    ContentFormat: HTML
