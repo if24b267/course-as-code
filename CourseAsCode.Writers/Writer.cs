@@ -331,6 +331,46 @@ namespace CourseAsCode.Writers
                     },
                 });
             }
+
+            // --- DUMMY FOLDER DATA ---
+            if (!section.Activities.Any(a => a is Folder))
+            {
+                var now = DateTime.UtcNow;
+
+                var folder = new Folder
+                {
+                    Name = "Example Folder",
+                    ActivityId = 8401,
+                    Context = Context.Course,
+
+                    TimeCreated = now,
+                    TimeModified = now,
+                    VisibleToStudents = true,
+                    DisplayDescription = false,
+                };
+
+                folder.Files.Add(new MoodleFile
+                {
+                    ActivityId = 8501,
+                    Name = "test.txt",
+                    FileName = "test.txt",
+
+                    //Pfusch lösung ich weiß
+                    FilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Documentation", "SampleFiles", "test.txt")),
+
+                    TimeCreated = now,
+                    TimeModified = now,
+
+                    SystemDefaults =
+                    {
+                        Component = Component.Folder,
+                        FileArea = FileArea.CourseContent,
+                        ItemId = 0
+                    },
+                });
+
+                section.Activities.Add(folder);
+            }
         }
     }
 }
