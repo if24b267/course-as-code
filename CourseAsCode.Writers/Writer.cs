@@ -1,6 +1,5 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
-using CourseAsCode.Model.Activities.Choice;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
@@ -132,7 +131,7 @@ namespace CourseAsCode.Writers
                     TimeModified = DateTime.UtcNow,
 
                     ModuleId = 200,
-                    ModuleName = "page",
+                    ModuleName = "page"
                 });
 
                 section.Activities.Add(new Page
@@ -150,45 +149,7 @@ namespace CourseAsCode.Writers
                     TimeModified = DateTime.UtcNow,
 
                     ModuleId = 201,
-                    ModuleName = "page",
-                });
-            }
-
-            // --- DUMMY CHOICE DATA ---
-            if (!section.Activities.Any(a => a is Choice))
-            {
-                var now = DateTime.UtcNow;
-
-                section.Activities.Add(new Choice
-                {
-                    Name = "Example Choice",
-                    ActivityId = 8201,
-                    Context = Context.Course,
-                    TimeCreated = now.AddMinutes(-5),
-                    TimeModified = now,
-
-                    Description = "<p>Please pick one topic.</p>",
-                    DescriptionFormat = FormattingFormat.HTML,
-
-                    Publish = false,
-                    ShowResults = false,
-                    Display = 0,
-                    AllowUpdate = false,
-                    AllowMultiple = false,
-                    ShowUnanswered = false,
-                    LimitAnswers = false,
-                    TimeOpen = null,
-                    TimeClose = null,
-                    CompletionSubmit = false,
-                    ShowPreview = false,
-                    IncludeInactive = false,
-                    ShowAvailable = false,
-                    Options = new List<Choice.ChoiceOption>
-                    {
-                        new Choice.ChoiceOption { Id = 1, Text = "Topic A", MaxAnswers = 0, TimeModified = now },
-                        new Choice.ChoiceOption { Id = 2, Text = "Topic B", MaxAnswers = 0, TimeModified = now },
-                        new Choice.ChoiceOption { Id = 3, Text = "Topic C", MaxAnswers = 0, TimeModified = now },
-                    },
+                    ModuleName = "page"
                 });
             }
         }
