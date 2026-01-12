@@ -192,6 +192,66 @@ namespace CourseAsCode.Writers
                     },
                 });
             }
+            // --- DUMMY FEEDBACK DATA ---
+            if (!section.Activities.Any(a => a is Feedback))
+            {
+                var now = DateTime.UtcNow;
+
+                section.Activities.Add(new Feedback
+                {
+                    Name = "Example Feedback",
+                    ActivityId = 8301,
+                    Context = Context.Course,
+                    TimeCreated = now.AddMinutes(-10),
+                    TimeModified = now,
+
+                    Description = "<p>Please fill out this self-assessment.</p>",
+                    DescriptionFormat = FormattingFormat.HTML,
+
+                    Anonymous = 2,
+                    EmailNotification = 0,
+                    MultipleSubmit = 0,
+                    Autonumbering = 0,
+                    PublishStats = 1,
+                    CompletionSubmit = false,
+
+                    // items
+                    Items = new List<Feedback.FeedbackItem>
+                    {
+                        new Feedback.FeedbackItem
+                        {
+                            Id = 1,
+                            Template = 0,
+                            Name = "label",
+                            Label = "",
+                            Typ = "label",
+                            Presentation = "<p>Legend: (1) low … (4) high</p>",
+                            HasValue = 0,
+                            Position = 1,
+                            Required = 0,
+                            DependItem = 0,
+                            DependValue = "",
+                            Options = ""
+                        },
+
+                        new Feedback.FeedbackItem
+                        {
+                            Id = 2,
+                            Template = 0,
+                            Name = "I can describe the basics",
+                            Label = "",
+                            Typ = "multichoice",
+                            Presentation = "r>>>>>1|2|3|4<<<<<1",
+                            HasValue = 1,
+                            Position = 2,
+                            Required = 0,
+                            DependItem = 0,
+                            DependValue = "",
+                            Options = "h"
+                        },
+                    },
+                });
+            }
         }
     }
 }
