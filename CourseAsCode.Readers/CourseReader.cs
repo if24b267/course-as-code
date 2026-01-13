@@ -204,6 +204,7 @@ namespace CourseAsCode.Readers
             services.AddSingleton<IYamlPageReader, YamlPageReader>();
             services.AddSingleton<IChoiceReader, YamlChoiceReader>();
             services.AddSingleton<IFeedbackReader, YamlFeedbackReader>();
+            services.AddSingleton<IFolderReader, YamlFolderReader>();
         }
     }
 }

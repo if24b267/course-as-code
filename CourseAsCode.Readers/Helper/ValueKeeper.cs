@@ -21,6 +21,7 @@ namespace CourseAsCode.Readers.Helper
         public static int CurrentWikiPageId { get; set; } = 1;
         public static int CurrentChoiceOptionId { get; set; } = 1;
         public static int CurrentFeedbackItemId { get; set; } = 1;
+        public static int CurrentFileItemId { get; set; } = 1;
 
         public static List<Question> Questions { get; set; }
         public static List<GradeCategory> GradeCategories { get; set; }

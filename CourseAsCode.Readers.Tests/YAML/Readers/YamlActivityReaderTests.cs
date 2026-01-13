@@ -27,7 +27,8 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
                 _mockTextMediaAreaReader, _mockUrlReader, new YamlFileReaderHelper(),
                 new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()),
                 _mockWikiReader, new YamlPageReader(new YamlFileReaderHelper()),
-                new YamlChoiceReader(new YamlFileReaderHelper()), new YamlFeedbackReader(new YamlFileReaderHelper()));
+                new YamlChoiceReader(new YamlFileReaderHelper()), new YamlFeedbackReader(new YamlFileReaderHelper()),
+                new YamlFolderReader(new YamlFileReaderHelper(), _mockFileReader));
 
             // Configure mock URL reader to return a valid URL object
             _mockUrlReader.Read(Arg.Any<string>()).Returns(new URL

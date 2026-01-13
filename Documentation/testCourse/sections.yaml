@@ -7,3 +7,4 @@ Sections:
   - SectionPath: Sections/PageSection
   - SectionPath: Sections/ChoiceSection
   - SectionPath: Sections/FeedbackSection
+  - SectionPath: Sections/FolderSection

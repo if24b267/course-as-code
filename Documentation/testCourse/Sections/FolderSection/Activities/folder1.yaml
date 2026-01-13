@@ -1,0 +1,7 @@
+Name: Example Folder
+Type: FOLDER
+DisplayDescription: true
+YamlFilePaths:
+  - ./file1.yaml
+  - ./file2.yaml
+  - ./file3.yaml
