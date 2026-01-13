@@ -11,6 +11,7 @@ namespace CourseAsCode.Readers.Enums
         WIKI,
         PAGE,
         CHOICE,
-        FEEDBACK
+        FEEDBACK,
+        FOLDER
     }
 }
