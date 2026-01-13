@@ -6,6 +6,7 @@ using CourseAsCode.Model.Questions.Types.CalculatedMulti;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
@@ -800,6 +801,87 @@ namespace CourseAsCode.Writers.Tests.Fakes
             };
 
             return cmq;
+        }
+
+        /// <summary>
+        /// Creates a basic drag-and-drop text and image question with predefined background and draggable items.
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <returns>A <see cref="DragAndDropTextAndImageQuestion"/> object initialized with default values</returns>
+        public static DragAndDropTextAndImageQuestion CreateBasicDragDropTextAndImageQuestion(int id, string category)
+        {
+            return new DragAndDropTextAndImageQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"DragDropImage_{id}",
+                QuestionText = "<p>Place the correct labels on the diagram.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "General Feedback for DragDropImage",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                QuestionReady = true,
+                ShuffleAnswers = true,
+                DropZoneVisibility = true,
+
+                BackgroundImagePath = "Resources/background.png",
+                BackgroundImageName = "background.png",
+
+                // Draggable items (Drags)
+                Drags = new List<TextAndImageDrag>
+                {
+                    new TextAndImageDrag
+                    {
+                        ID = 0, 
+                        Number = 1,
+                        Label = "Label 1",
+                        DragGroup = 1,
+                        Infinite = false
+                    },
+                    new TextAndImageDrag
+                    {
+                        ID = 0,
+                        Number = 2,
+                        ImagePath = "Resources/drag_icon.png",
+                        ImageName = "drag_icon.png",
+                        DragGroup = 1,
+                        Infinite = true
+                    }
+                },
+
+                // Drop zones (Drops)
+                Drops = new List<TextAndImageDrop>
+                {
+                    new TextAndImageDrop
+                    {
+                        ID = 0,
+                        Number = 1,
+                        XLeft = 50,
+                        YTop = 50,
+                        Choice = 1,
+                        Label = "Target 1"
+                    },
+                    new TextAndImageDrop
+                    {
+                        ID = 0,
+                        Number = 2,
+                        XLeft = 150,
+                        YTop = 150,
+                        Choice = 2,
+                        Label = "Target 2"
+                    }
+                },
+
+                CorrectResponseFeedback = "Great job!",
+                CorrectResponseFeedbackFormat = FormattingFormat.PlainText,
+                PartiallyCorrectResponseFeedback = "Almost there.",
+                PartiallyCorrectResponseFeedbackFormat = FormattingFormat.PlainText,
+                IncorrectResponseFeedback = "Try again.",
+                IncorrectResponseFeedbackFormat = FormattingFormat.PlainText,
+
+                Tags = new List<string> { $"TagDDImage{id}" }
+            };
         }
     }
 }

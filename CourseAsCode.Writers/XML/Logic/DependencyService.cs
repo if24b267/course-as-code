@@ -61,6 +61,7 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddTransient<DropdownStrategy>();
             services.AddTransient<MultiChoiceStrategy>();
             services.AddTransient<DragDropTextStrategy>();
+            services.AddTransient<DragAndDropTextAndImageStrategy>();
             services.AddTransient<ShortAnswerStrategy>();
             services.AddTransient<EssayStrategy>();
             services.AddTransient<TrueFalseStrategy>();

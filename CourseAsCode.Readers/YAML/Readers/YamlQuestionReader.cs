@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.IO;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
@@ -9,6 +10,7 @@ using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
@@ -60,7 +62,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                             PathUtils.InlineIfFile(yamlQuestionCodeRunnerTestCase.StdIn, baseDir);
                     }
                 }
-                var question = ConvertYamlQuestionToMoodleQuestion(yamlQuestion);
+                var question = ConvertYamlQuestionToMoodleQuestion(yamlQuestion, baseDir);
                 if (finalQuestionList.Any(questionFromList => questionFromList.QuestionId == question.QuestionId))
                 {
                     _logger.Error($"Question with ID {question.QuestionId} already exists in the list.");
@@ -73,7 +75,7 @@ namespace CourseAsCode.Readers.YAML.Readers
             return finalQuestionList;
         }
 
-        private Question? ConvertYamlQuestionToMoodleQuestion(YamlQuestion yamlQuestion)
+        private Question? ConvertYamlQuestionToMoodleQuestion(YamlQuestion yamlQuestion, string baseDir)
         {
             // TODO: add some kind of verification that all required properties are set for that question type (e.g. coderunner -> coderunnertype)
             switch (yamlQuestion.QuestionType)
@@ -93,6 +95,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.DRAGANDDROPTEXT:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
                     return ConvertYamlQuestionToDragAndDropTextQuestion(yamlQuestion);
+                case QuestionType.DRAGANDDROPTEXTANDIMAGE:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextAndImageQuestion");
+                    return ConvertYamlQuestionToDragAndDropTextAndImageQuestion(yamlQuestion, baseDir);
                 case QuestionType.CODERUNNER:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CoderunnerQuestion");
                     return ConvertYamlQuestionToCodeRunnerQuestion(yamlQuestion);
@@ -247,9 +252,12 @@ namespace CourseAsCode.Readers.YAML.Readers
         private List<DropdownSubQuestion> ConvertYamlSubQuestionListToMoodleSubQuestionList(List<YamlSubQuestion> yamlSubQuestions)
         {
             return yamlSubQuestions.Select(yamlSubQuestion => new DropdownSubQuestion()
-                {
-                    QuestionText = yamlSubQuestion.SubQuestionText, QuestionTextFormat = yamlSubQuestion.SubQuestionTextFormat, CorrectAnswer = yamlSubQuestion.CorrectAnswer, WrongAnswers = yamlSubQuestion.WrongAnswers ?? [],
-                })
+            {
+                QuestionText = yamlSubQuestion.SubQuestionText,
+                QuestionTextFormat = yamlSubQuestion.SubQuestionTextFormat,
+                CorrectAnswer = yamlSubQuestion.CorrectAnswer,
+                WrongAnswers = yamlSubQuestion.WrongAnswers ?? [],
+            })
                 .ToList();
         }
 
@@ -424,9 +432,9 @@ namespace CourseAsCode.Readers.YAML.Readers
             {
                 AnswerText = yamlAnswer.AnswerText,
                 AnswerTextFormat = yamlAnswer.AnswerTextFormat,
-                AnswerGrade = yamlAnswer.AnswerGrade,     
-                AnswerFeedback = yamlAnswer.Feedback,     
-                AnswerFeedbackFormat = yamlAnswer.FeedbackFormat 
+                AnswerGrade = yamlAnswer.AnswerGrade,
+                AnswerFeedback = yamlAnswer.Feedback,
+                AnswerFeedbackFormat = yamlAnswer.FeedbackFormat
             }).ToList();
         }
 
@@ -588,6 +596,84 @@ namespace CourseAsCode.Readers.YAML.Readers
 
                 Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
             };
+        }
+
+        private DragAndDropTextAndImageQuestion ConvertYamlQuestionToDragAndDropTextAndImageQuestion(YamlQuestion yaml, string baseDir)
+        {
+            return new DragAndDropTextAndImageQuestion
+            {
+                QuestionName = yaml.QuestionName,
+                QuestionText = yaml.QuestionText,
+                QuestionId = yaml.QuestionId,
+                Category = yaml.Category,
+                DefaultMark = yaml.DefaultMark,
+                QuestionReady = yaml.QuestionReady,
+                QuestionTextFormat = yaml.QuestionTextFormat,
+                HintPenalty = yaml.HintPenalty,
+                CorrectResponseFeedback = yaml.CorrectResponseFeedback,
+                CorrectResponseFeedbackFormat = yaml.CorrectResponseFeedbackFormat,
+                PartiallyCorrectResponseFeedback = yaml.PartiallyCorrectResponseFeedback,
+                PartiallyCorrectResponseFeedbackFormat = yaml.PartiallyCorrectResponseFeedbackFormat,
+                IncorrectResponseFeedback = yaml.IncorrectResponseFeedback,
+                IncorrectResponseFeedbackFormat = yaml.IncorrectResponseFeedbackFormat,
+                ShowNumCorrect = yaml.ShowNumCorrect,
+                Hints = yaml.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yaml.Hints),
+                ShuffleAnswers = yaml.ShuffleAnswers,
+
+                DropZoneVisibility = yaml.DropZoneVisibility,
+                BackgroundImagePath = ResolveFilePath(yaml.BackgroundImagePath, baseDir),
+                BackgroundImageName = yaml.BackgroundImageName,
+
+                Drags = MapDragOptions(yaml.Drags, baseDir),
+                Drops = MapDropOptions(yaml.Drops),
+            };
+        }
+
+        private List<TextAndImageDrag> MapDragOptions(List<TextAndImageDragModel> yamlDrags, string baseDir)
+        {
+            if (yamlDrags == null)
+            {
+                return new List<TextAndImageDrag>();
+            }
+
+            return yamlDrags.Select(yamlDrag => new TextAndImageDrag
+            {
+                Number = yamlDrag.Number,
+                DragGroup = yamlDrag.DragGroup,
+                Infinite = yamlDrag.Infinite,
+                Label = yamlDrag.Label,
+                ImagePath = ResolveFilePath(yamlDrag.ImagePath, baseDir),
+                ImageName = yamlDrag.ImageName,
+            }).ToList();
+        }
+
+        private List<TextAndImageDrop> MapDropOptions(List<TextAndImageDropModel> yamlDrops)
+        {
+            if (yamlDrops == null)
+            {
+                return new List<TextAndImageDrop>();
+            }
+
+            return yamlDrops.Select(yamlDrop => new TextAndImageDrop
+            {
+                Number = yamlDrop.Number,
+                XLeft = yamlDrop.XLeft,
+                YTop = yamlDrop.YTop,
+                Choice = yamlDrop.Choice,
+                Label = yamlDrop.Label,
+            }).ToList();
+        }
+
+        private string? ResolveFilePath(string relativePath, string? yamlDirectory)
+        {
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                return null;
+            }
+
+            string combinedPath = Path.Combine(yamlDirectory, relativePath);
+
+            return Path.GetFullPath(combinedPath);
         }
     }
 }

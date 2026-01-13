@@ -1,12 +1,15 @@
 using System.IO;
+using System.Reflection.Emit;
 using System.Security.Cryptography;
 using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
@@ -20,6 +23,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
         private readonly IFileHelper _fileHelper;
         private readonly IGeneralHelper _generalHelper;
         private readonly IFileService _fileService;
+        private readonly ISequentialIdGenerator _idGenerator;
 
 
         /// <summary>
@@ -31,12 +35,13 @@ namespace CourseAsCode.Writers.XML.FileWriters
         /// <param name="fileHelper">Helper method providing specific helper methods focused on file management</param>
         /// <param name="fileService">Service that handles operations on the file system</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<FilesWriter> logger, IFileHelper fileHelper, IGeneralHelper generalHelper, IFileService fileService)
+        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<FilesWriter> logger, IFileHelper fileHelper, IGeneralHelper generalHelper, IFileService fileService, ISequentialIdGenerator idGenerator)
             : base(xmlWriterFactory, logger)
         {
             _fileHelper = fileHelper ?? throw new ArgumentNullException(nameof(fileHelper));
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
+            _idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
         }
 
 
@@ -286,13 +291,15 @@ namespace CourseAsCode.Writers.XML.FileWriters
             {
                 if (question is not DragAndDropTextAndImageQuestion ddQuestion) continue;
 
+                question.ContextId = CourseDefaults.QUESTION_BANK_CONTEXT_ID;
+
                 // Backgroundimage
                 if (!string.IsNullOrEmpty(ddQuestion.BackgroundImagePath))
                 {
                     string fileName = ddQuestion.BackgroundImageName ?? Path.GetFileName(ddQuestion.BackgroundImagePath);
 
                     WriteQuizImage(writer, outputPath, ddQuestion.BackgroundImagePath, fileName,
-                        quiz.ActivityId, "qtype_ddimageortext", "bgimage", ddQuestion.QuestionId);
+                        question.ContextId, "qtype_ddimageortext", "bgimage", ddQuestion.QuestionId);
                 }
 
                 // Drag Images
@@ -302,10 +309,12 @@ namespace CourseAsCode.Writers.XML.FileWriters
                     {
                         if (string.IsNullOrEmpty(drag.ImagePath)) continue;
 
+                        if (drag.ID == 0) drag.ID = _idGenerator.GetNextAnswerId();
+
                         string dragName = drag.ImageName ?? Path.GetFileName(drag.ImagePath);
 
                         WriteQuizImage(writer, outputPath, drag.ImagePath, dragName,
-                            quiz.ActivityId, "qtype_ddimageortext", "dragimage", drag.ID);
+                            question.ContextId, "qtype_ddimageortext", "dragimage", drag.ID);
                     }
                 }
             }
@@ -321,7 +330,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
             using (var stream = _fileService.OpenRead(filePath))
             {
                 string contentHash = GetMoodleContentHash(stream);
-                long fileSize = stream.Length; ;
+                long fileSize = stream.Length;
 
                 string uniqueId = Math.Abs((fileName + itemId + contentHash).GetHashCode()).ToString();
                 WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string> { { "id", uniqueId } });

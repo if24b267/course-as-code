@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions.Helper;
 
@@ -11,6 +11,9 @@ namespace CourseAsCode.Model.Questions
         // ────────────────────────────────────────────────────────────────────────────
         [Description("Unique identifier for the question")]
         public int QuestionId { get; set; }
+
+        [Description("Identifier for the context")]
+        public int ContextId { get; set; }
 
         [Description("Unique identifier of the question bank to which the question belongs")]
         public int BankEntryId { get; set; }

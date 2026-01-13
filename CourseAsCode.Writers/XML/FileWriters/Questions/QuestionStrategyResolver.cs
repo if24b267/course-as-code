@@ -6,6 +6,7 @@ using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Model.Questions.Types.Dropdown;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Model.Questions.Types.ShortAnswer;
@@ -35,6 +36,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
             {
                 CodeRunnerQuestion => _serviceProvider.GetRequiredService<CodeRunnerStrategy>(),
                 DragAndDropTextQuestion => _serviceProvider.GetRequiredService<DragDropTextStrategy>(),
+                DragAndDropTextAndImageQuestion => _serviceProvider.GetRequiredService<DragAndDropTextAndImageStrategy>(),
                 DropdownQuestion => _serviceProvider.GetRequiredService<DropdownStrategy>(),
                 MultipleChoiceQuestion => _serviceProvider.GetRequiredService<MultiChoiceStrategy>(),
                 DescriptionQuestion => null, // Description questions do not require a strategy as they have no plugin data

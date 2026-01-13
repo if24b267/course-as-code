@@ -27,8 +27,8 @@ namespace CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage
         public string? IncorrectResponseFeedback { get; set; }
         public FormattingFormat IncorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
 
-        //[Description("Shows the amount of correct answers")]
-        //public bool ShowNumCorrect { get; set; }
+        [Description("Shows the amount of correct answers")]
+        public bool ShowNumCorrect { get; set; }
 
         [Description("Should the background of the dropzone be visible? If visible, it hides the original image behind it. Transparent = true/1")]
         public bool DropZoneVisibility { get; set; }
