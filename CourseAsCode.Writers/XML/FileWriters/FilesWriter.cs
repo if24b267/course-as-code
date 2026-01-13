@@ -1,9 +1,12 @@
+using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Questions;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
@@ -64,6 +67,11 @@ namespace CourseAsCode.Writers.XML.FileWriters
                                 {
                                     WriteSingleFile(writer, outputPath, folderFile, contextIdOverride: folder.ActivityId);
                                 }
+                            }
+
+                            if (activity is Quiz quiz && quiz.Questions != null)
+                            {
+                                ProcessQuizImages(writer, outputPath, quiz);
                             }
                         }
                     }
@@ -267,6 +275,86 @@ namespace CourseAsCode.Writers.XML.FileWriters
 
             LogDebug($"Calculated hash {hash} for file {Path.GetFileName(fileStream.Name)}");
             return hash;
+        }
+
+        /// <summary>
+        /// Is responsible for processing the images used in quizzes
+        /// </summary>
+        private void ProcessQuizImages(XmlWriter writer, string outputPath, Quiz quiz)
+        {
+            foreach (var question in quiz.Questions)
+            {
+                if (question is not DragAndDropTextAndImageQuestion ddQuestion) continue;
+
+                // Backgroundimage
+                if (!string.IsNullOrEmpty(ddQuestion.BackgroundImagePath))
+                {
+                    string fileName = ddQuestion.BackgroundImageName ?? Path.GetFileName(ddQuestion.BackgroundImagePath);
+
+                    WriteQuizImage(writer, outputPath, ddQuestion.BackgroundImagePath, fileName,
+                        quiz.ActivityId, "qtype_ddimageortext", "bgimage", ddQuestion.QuestionId);
+                }
+
+                // Drag Images
+                if (ddQuestion.Drags != null)
+                {
+                    foreach (var drag in ddQuestion.Drags)
+                    {
+                        if (string.IsNullOrEmpty(drag.ImagePath)) continue;
+
+                        string dragName = drag.ImageName ?? Path.GetFileName(drag.ImagePath);
+
+                        WriteQuizImage(writer, outputPath, drag.ImagePath, dragName,
+                            quiz.ActivityId, "qtype_ddimageortext", "dragimage", drag.ID);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method logic mirrors WriteSingleFile but uses simple parameters instead of MoodleFile objects.
+        /// </summary>
+        private void WriteQuizImage(XmlWriter writer, string outputPath, string filePath, string fileName, int contextId, string component, string fileArea, int itemId)
+        {
+            if (!_fileService.Exists(filePath)) return;
+
+            using (var stream = _fileService.OpenRead(filePath))
+            {
+                string contentHash = GetMoodleContentHash(stream);
+                long fileSize = stream.Length; ;
+
+                string uniqueId = Math.Abs((fileName + itemId + contentHash).GetHashCode()).ToString();
+                WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string> { { "id", uniqueId } });
+
+                var elements = new Dictionary<string, string>
+                {
+                    { "contenthash", contentHash },
+                    { "contextid", contextId.ToString() },
+                    { "component", component },
+                    { "filearea", fileArea },
+                    { "itemid", itemId.ToString() },
+                    { "filepath", "/" },
+                    { "filename", fileName },
+                    { "userid", "2" }, // Admin
+                    { "filesize", fileSize.ToString() },
+                    { "mimetype", MimeTypes.GetMimeType(filePath) },
+                    { "status", "0" },
+                    { "timecreated", _generalHelper.DateTimeToUnixTimestamp(DateTime.Now) },
+                    { "timemodified", _generalHelper.DateTimeToUnixTimestamp(DateTime.Now) },
+                    { "source", fileName },
+                    { "author", "$@NULL@$" },
+                    { "license", "unknown" },
+                    { "sortorder", "0" },
+                    { "repositorytype", "$@NULL@$" },
+                    { "repositoryid", "$@NULL@$" },
+                    { "reference", "$@NULL@$" },
+                };
+
+                WriteElements(writer, elements);
+                writer.WriteEndElement();
+
+                CopyFileToBackupFolder(outputPath, stream, contentHash);
+            }
         }
     }
 }
