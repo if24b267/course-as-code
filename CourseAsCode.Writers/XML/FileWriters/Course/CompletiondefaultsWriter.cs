@@ -19,7 +19,7 @@ namespace CourseAsCode.Writers.XML.Writer.Course
         {
         }
 
-        
+
         public void WriteCompletionDefaults(Model.Course course, string outputPath)
         {
             try

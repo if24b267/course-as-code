@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions.Helper;
 
 namespace CourseAsCode.Model.Questions.Types.CalculatedSimple
@@ -11,7 +10,7 @@ namespace CourseAsCode.Model.Questions.Types.CalculatedSimple
 
         [Description("Numerical units (unused by default)")]
         public List<CalculatedHelper.NumericalUnit> NumericalUnits { get; set; } = new();
-    
+
         [Description("Numerical options configuration")]
         public CalculatedHelper.NumericalOption NumericalOptions { get; set; } = new();
 

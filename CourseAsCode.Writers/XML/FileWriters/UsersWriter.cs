@@ -1,6 +1,5 @@
 using System.Xml;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;

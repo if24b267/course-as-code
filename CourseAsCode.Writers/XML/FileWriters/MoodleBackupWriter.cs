@@ -253,7 +253,7 @@ namespace CourseAsCode.Writers.XML.Writer
                         writer.WriteElementString("insubsection", string.Empty);
                         writer.WriteEndElement(); // close <activity>
                     }
-                    
+
                     if (activity is Page page)
                     {
                         writer.WriteStartElement("activity");

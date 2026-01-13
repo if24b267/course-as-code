@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
-using SchedulerModel = CourseAsCode.Model.Activities.Resources.Scheduler;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Interfaces;
 using Microsoft.Extensions.Logging;
-using CourseAsCode.Writers.XML.Writer;
+using SchedulerModel = CourseAsCode.Model.Activities.Resources.Scheduler;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Scheduler
 {

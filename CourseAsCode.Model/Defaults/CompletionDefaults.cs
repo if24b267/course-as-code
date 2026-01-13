@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CourseAsCode.Model.Defaults
 {
     public static class CompletionDefaults

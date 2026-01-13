@@ -1,12 +1,12 @@
 using System.Xml;
 using System.Xml.Schema;
-using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

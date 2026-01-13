@@ -1,5 +1,4 @@
 using System.Xml;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -20,7 +19,7 @@ namespace CourseAsCode.Writers.XML.Writer
         {
         }
 
-        
+
         public void WriteGroups(Model.Course course, string outputPath)
         {
             try

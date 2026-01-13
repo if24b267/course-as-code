@@ -1,8 +1,6 @@
 using System.Text.Json;
 
 using CourseAsCode.Model;
-using CourseAsCode.Model.Defaults;
-using CourseAsCode.Model.Defaults.Grading;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Grading;
 using CourseAsCode.Readers.Helper;
@@ -205,6 +203,7 @@ namespace CourseAsCode.Readers
             services.AddSingleton<IYamlGradingInfosReader, YamlGradingInfosReader>();
             services.AddSingleton<IYamlPageReader, YamlPageReader>();
             services.AddSingleton<IChoiceReader, YamlChoiceReader>();
+            services.AddSingleton<IFeedbackReader, YamlFeedbackReader>();
         }
     }
 }

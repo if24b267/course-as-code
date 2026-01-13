@@ -1,4 +1,3 @@
-using System;
 using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Defaults.Activities.Resources

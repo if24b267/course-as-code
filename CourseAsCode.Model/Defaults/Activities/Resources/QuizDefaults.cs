@@ -1,4 +1,3 @@
-﻿using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Grading;

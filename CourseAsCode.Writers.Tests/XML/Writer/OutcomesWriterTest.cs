@@ -1,6 +1,4 @@
-﻿using System.Xml;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;

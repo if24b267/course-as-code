@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.Calculated;

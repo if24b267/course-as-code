@@ -1,7 +1,6 @@
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using Microsoft.Extensions.Logging;
-using NLog;
 using TimeZone = CourseAsCode.Model.Enums.TimeZone;
 
 namespace CourseAsCode.Writers.XML.Helper

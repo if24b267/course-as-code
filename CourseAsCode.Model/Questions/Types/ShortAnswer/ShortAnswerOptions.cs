@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Questions.Types.ShortAnswer
