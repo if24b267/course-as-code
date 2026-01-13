@@ -1,7 +1,5 @@
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
 {

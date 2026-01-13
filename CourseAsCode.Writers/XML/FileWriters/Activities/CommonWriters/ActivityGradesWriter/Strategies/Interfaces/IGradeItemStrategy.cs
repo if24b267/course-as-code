@@ -1,6 +1,4 @@
-﻿using System.Xml;
 using CourseAsCode.Model.Activities;
-using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 
 namespace CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces

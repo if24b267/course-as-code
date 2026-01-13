@@ -1,15 +1,5 @@
 using CourseAsCode.Model;
-using CourseAsCode.Model.Activities;
-using CourseAsCode.Model.Activities.Choice;
-using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Enums.Grading;
-using CourseAsCode.Model.Grading;
-using CourseAsCode.Model.Questions.Types.Description;
-using CourseAsCode.Model.Questions.Types.MultipleChoice;
-using CourseAsCode.Model.Questions.Types.ShortAnswer;
-using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;

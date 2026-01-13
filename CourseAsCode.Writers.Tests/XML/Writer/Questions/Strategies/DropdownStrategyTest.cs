@@ -197,14 +197,16 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             // SubQ1 has "WrongA"
             question.SubQuestions.Add(new DropdownSubQuestion
             {
-                QuestionText = "Q1", CorrectAnswer = "A",
+                QuestionText = "Q1",
+                CorrectAnswer = "A",
                 WrongAnswers = new List<string> { "WrongA" },
             });
 
             // SubQ2 also has "WrongA" (same distractor string)
             question.SubQuestions.Add(new DropdownSubQuestion
             {
-                QuestionText = "Q2", CorrectAnswer = "B",
+                QuestionText = "Q2",
+                CorrectAnswer = "B",
                 WrongAnswers = new List<string> { "WrongA" },
             });
 

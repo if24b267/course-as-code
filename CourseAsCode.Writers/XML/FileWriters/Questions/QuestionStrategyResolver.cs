@@ -1,5 +1,4 @@
 using CourseAsCode.Model.Questions;
-using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.Calculated;
 using CourseAsCode.Model.Questions.Types.CalculatedMulti;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
@@ -7,9 +6,9 @@ using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Model.Questions.Types.ShortAnswer;
-using CourseAsCode.Model.Questions.Types.Essay;
 using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;

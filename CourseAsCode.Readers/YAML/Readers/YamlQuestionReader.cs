@@ -1,8 +1,6 @@
-using System.ComponentModel;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.Calculated;
 using CourseAsCode.Model.Questions.Types.CalculatedMulti;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;
@@ -247,9 +245,12 @@ namespace CourseAsCode.Readers.YAML.Readers
         private List<DropdownSubQuestion> ConvertYamlSubQuestionListToMoodleSubQuestionList(List<YamlSubQuestion> yamlSubQuestions)
         {
             return yamlSubQuestions.Select(yamlSubQuestion => new DropdownSubQuestion()
-                {
-                    QuestionText = yamlSubQuestion.SubQuestionText, QuestionTextFormat = yamlSubQuestion.SubQuestionTextFormat, CorrectAnswer = yamlSubQuestion.CorrectAnswer, WrongAnswers = yamlSubQuestion.WrongAnswers ?? [],
-                })
+            {
+                QuestionText = yamlSubQuestion.SubQuestionText,
+                QuestionTextFormat = yamlSubQuestion.SubQuestionTextFormat,
+                CorrectAnswer = yamlSubQuestion.CorrectAnswer,
+                WrongAnswers = yamlSubQuestion.WrongAnswers ?? [],
+            })
                 .ToList();
         }
 
@@ -424,9 +425,9 @@ namespace CourseAsCode.Readers.YAML.Readers
             {
                 AnswerText = yamlAnswer.AnswerText,
                 AnswerTextFormat = yamlAnswer.AnswerTextFormat,
-                AnswerGrade = yamlAnswer.AnswerGrade,     
-                AnswerFeedback = yamlAnswer.Feedback,     
-                AnswerFeedbackFormat = yamlAnswer.FeedbackFormat 
+                AnswerGrade = yamlAnswer.AnswerGrade,
+                AnswerFeedback = yamlAnswer.Feedback,
+                AnswerFeedbackFormat = yamlAnswer.FeedbackFormat
             }).ToList();
         }
 

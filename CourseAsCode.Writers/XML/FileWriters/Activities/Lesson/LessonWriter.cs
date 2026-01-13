@@ -1,5 +1,4 @@
 using System.Xml;
-using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;

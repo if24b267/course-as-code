@@ -1,5 +1,4 @@
 using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
 using CourseAsCode.Writers.XML.Helper;
@@ -7,7 +6,6 @@ using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
 {
@@ -71,7 +69,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             _mockXmlService.Received().WriteElementWithAttributes("numerical_unit", Arg.Any<Dictionary<string, string>>());
 
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
-                d.ContainsKey("unit") && d["unit"] == "km" && 
+                d.ContainsKey("unit") && d["unit"] == "km" &&
                 d.ContainsKey("multiplier") && d["multiplier"] == "1000.0000000"
             ));
         }
@@ -126,7 +124,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
             _mockXmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("tolerance") && d["tolerance"] == "0.05" &&
                 d.ContainsKey("tolerancetype") && d["tolerancetype"] == "2" &&
-                d.ContainsKey("answer") 
+                d.ContainsKey("answer")
             ));
         }
 

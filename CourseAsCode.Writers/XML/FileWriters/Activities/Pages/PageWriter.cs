@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 using PageModel = CourseAsCode.Model.Activities.Resources.Page;
-using CourseAsCode.Writers.XML.Writer;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Pages
 {

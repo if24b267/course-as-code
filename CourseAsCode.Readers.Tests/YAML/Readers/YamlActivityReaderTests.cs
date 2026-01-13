@@ -169,10 +169,10 @@ Content:
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result, Is.TypeOf<TextAndMediaArea>());
 
-				// Verify TextMediaArea reader was called
-				_mockTextMediaAreaReader.Received(1).Read(filePath);
-			});
-		}
+                // Verify TextMediaArea reader was called
+                _mockTextMediaAreaReader.Received(1).Read(filePath);
+            });
+        }
 
         [Test]
         public void Read_MarkdownFileActivity_ReturnsMoodleFile()

@@ -1,6 +1,4 @@
 using System.Xml;
-using CourseAsCode.Model;
-using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;

@@ -4,6 +4,6 @@ namespace CourseAsCode.Readers.Interfaces
 {
     public interface IFeedbackReader : IModelObjectReader<Feedback>
     {
-        
+
     }
 }

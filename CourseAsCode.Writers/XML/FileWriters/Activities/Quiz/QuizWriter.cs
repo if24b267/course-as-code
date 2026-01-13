@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Xml;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
@@ -414,10 +414,10 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.Quiz
             Func<Model.Activities.Resources.Quiz.ReviewOptionsQuiz, bool> flagSelector)
         {
             int mask = 0;
-            if (flagSelector(closed))      mask |= 1 << 4;   // QuizClosed  → 2^4   = 16
-            if (flagSelector(after))       mask |= 1 << 8;   // AfterAttempt → 2^8   = 256
+            if (flagSelector(closed)) mask |= 1 << 4;   // QuizClosed  → 2^4   = 16
+            if (flagSelector(after)) mask |= 1 << 8;   // AfterAttempt → 2^8   = 256
             if (flagSelector(immediately)) mask |= 1 << 12;  // ImmediatelyAfter → 2^12 = 4096
-            if (flagSelector(during))      mask |= 1 << 16;  // DuringAttempt → 2^16 = 65536
+            if (flagSelector(during)) mask |= 1 << 16;  // DuringAttempt → 2^16 = 65536
             return mask;
         }
     }

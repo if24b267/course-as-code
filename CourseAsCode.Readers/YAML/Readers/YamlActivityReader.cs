@@ -1,7 +1,5 @@
 using CourseAsCode.Model.Activities;
-using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Readers.Enums;
-using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 

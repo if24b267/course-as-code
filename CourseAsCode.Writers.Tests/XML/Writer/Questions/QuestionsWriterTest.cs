@@ -194,7 +194,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
 
             // Assert
             _xmlService.Received().WriteElement("question_version");
-            _xmlService.Received().WriteElementWithAttributes("question_versions", Arg.Is<Dictionary<string,string>>(d => d["id"] == question.QuestionId.ToString()));
+            _xmlService.Received().WriteElementWithAttributes("question_versions", Arg.Is<Dictionary<string, string>>(d => d["id"] == question.QuestionId.ToString()));
             _xmlService.Received().WriteElements(elements: Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("version") && d["version"] == "1"));
 
@@ -217,7 +217,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
 
             // Assert
             _xmlService.Received().WriteElement("question_version");
-            _xmlService.Received().WriteElementWithAttributes("question_versions", Arg.Is<Dictionary<string,string>>(d => d["id"] == q.QuestionId.ToString()));
+            _xmlService.Received().WriteElementWithAttributes("question_versions", Arg.Is<Dictionary<string, string>>(d => d["id"] == q.QuestionId.ToString()));
             _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d.ContainsKey("status") && d["status"] == "ready"));
 
@@ -243,7 +243,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
             _questionsWriter.WriteQuestions(course, "dummy");
 
             // Assert
-            _xmlService.Received().WriteElementWithAttributes("question", Arg.Is<Dictionary<string,string>>(d => d["id"] == q.QuestionId.ToString()));
+            _xmlService.Received().WriteElementWithAttributes("question", Arg.Is<Dictionary<string, string>>(d => d["id"] == q.QuestionId.ToString()));
 
             _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d["name"] == "My Test Question" &&
@@ -347,7 +347,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions
 
             // Assert
             _xmlService.Received().WriteElement("question_hints");
-            _xmlService.Received().WriteElementWithAttributes("question_hint", Arg.Any<Dictionary<string,string>>());
+            _xmlService.Received().WriteElementWithAttributes("question_hint", Arg.Any<Dictionary<string, string>>());
 
             _xmlService.Received().WriteElements(Arg.Is<Dictionary<string, string>>(d =>
                 d["hint"] == "Try harder" &&

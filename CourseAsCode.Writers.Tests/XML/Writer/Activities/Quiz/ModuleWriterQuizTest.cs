@@ -36,7 +36,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
 
             // Create substitutes for helper dependencies
             _fakeMoodleVersionHelper = Substitute.For<IMoodleVersionHelper>();
-            _fakeGeneralHelper       = Substitute.For<IGeneralHelper>();
+            _fakeGeneralHelper = Substitute.For<IGeneralHelper>();
 
             // Configure the fake helpers to return fixed values
             _fakeMoodleVersionHelper.GetMoodleVersionStringFromEnum(Arg.Any<MoodleVersion>()).Returns("2024100700");
@@ -123,7 +123,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             var moduleEl = doc.DocumentElement!;
 
             // Assert: "id" attribute is set to the quiz's module id and "version" attribute via the moodle version helper'
-            Assert.That(moduleEl.GetAttribute("id"),    Is.EqualTo(_dummyQuiz.ModuleId.ToString()));
+            Assert.That(moduleEl.GetAttribute("id"), Is.EqualTo(_dummyQuiz.ModuleId.ToString()));
             Assert.That(moduleEl.GetAttribute("version"), Is.EqualTo("2024100700"));
         }
 
@@ -142,8 +142,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             var moduleElement = doc.DocumentElement!;
 
             // Verify inner elements from the dictionary
-            Assert.That(moduleElement["modulename"]?.InnerText,  Is.EqualTo(_dummyQuiz.ModuleName));
-            Assert.That(moduleElement["sectionid"]?.InnerText,   Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
+            Assert.That(moduleElement["modulename"]?.InnerText, Is.EqualTo(_dummyQuiz.ModuleName));
+            Assert.That(moduleElement["sectionid"]?.InnerText, Is.EqualTo(_dummySection.SystemDefaults.SectionId.ToString()));
             Assert.That(moduleElement["sectionnumber"]?.InnerText, Is.EqualTo(_dummyCourse.Sections.IndexOf(_dummySection).ToString()));
 
             // Inner elements from the mocked helper methods

@@ -411,7 +411,7 @@ namespace CourseAsCode.Writers.Tests.Fakes
                     },
                     new ShortAnswerOptions
                     {
-                        AnswerText = "*", 
+                        AnswerText = "*",
                         AnswerTextFormat = FormattingFormat.PlainText,
                         AnswerGrade = 0.0f,
                         AnswerFeedback = "Wrong answer.",
@@ -668,7 +668,7 @@ namespace CourseAsCode.Writers.Tests.Fakes
                     Synchronize = 0,
                     Single = 0,
                     ShuffleAnswers = true,
-                    CorrectFeedback = "good job", 
+                    CorrectFeedback = "good job",
                     CorrectFeedbackFormat = FormattingFormat.PlainText,
                     PartiallyCorrectFeedback = "Almost",
                     PartiallyCorrectFeedbackFormat = FormattingFormat.PlainText,
@@ -676,7 +676,7 @@ namespace CourseAsCode.Writers.Tests.Fakes
                     IncorrectFeedbackFormat = FormattingFormat.PlainText,
                     AnswerNumbering = "abc",
                     ShowNumCorrect = false,
-                 },
+                },
 
                 Tags = new List<string> { $"TagSimpleCalc{id}" },
             };

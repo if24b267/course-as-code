@@ -7,7 +7,6 @@ using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 

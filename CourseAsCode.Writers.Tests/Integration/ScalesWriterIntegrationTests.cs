@@ -3,7 +3,6 @@ using System.Xml.Schema;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

@@ -11,5 +11,5 @@ public enum Archetype
     AuthenticatedUser, // the role all logged-in users have
     AuthenticatedUserOnFrontpage, // a logged-in user role for the front page only
 
-                                          // Note: The administrator is not included here, as it is a special case
+    // Note: The administrator is not included here, as it is a special case
 }
