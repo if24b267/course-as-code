@@ -4,6 +4,6 @@ namespace CourseAsCode.Readers.Interfaces
 {
     public interface IYamlGradingInfosReader : IModelObjectReader<List<YamlGradingInfo>>
     {
-        
+
     }
 }

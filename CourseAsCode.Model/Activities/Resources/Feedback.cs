@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Model.Enums;
@@ -79,12 +77,14 @@ public class Feedback : Activity
         public string Name { get; set; } = string.Empty;
         public string? Label { get; set; } = string.Empty;
         public string? Presentation { get; set; } = string.Empty;
-        public string Typ { get; set; } = string.Empty;
+        // TODO: convert this to enum
+        public string Type { get; set; } = string.Empty;
         public int HasValue { get; set; } = 0;
         public int Position { get; set; } = 0;
         public int Required { get; set; } = 0;
         public int DependItem { get; set; } = 0;
         public string? DependValue { get; set; } = string.Empty;
+        // TODO: maybe convert to extra class?
         public string? Options { get; set; } = string.Empty;
     }
 }

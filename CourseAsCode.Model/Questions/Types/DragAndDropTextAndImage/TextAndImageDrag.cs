@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage
 {
@@ -18,7 +17,7 @@ namespace CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage
         public bool Infinite { get; set; }
 
         [Description("Determines the displayed value, in case there is no image")]
-        public string? Label { get; set; } 
+        public string? Label { get; set; }
 
         [Description("Path to the image")]
         public string? ImagePath { get; set; }

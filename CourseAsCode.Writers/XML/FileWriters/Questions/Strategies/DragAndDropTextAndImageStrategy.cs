@@ -1,5 +1,3 @@
-using System.Globalization;
-using System.Reflection.Metadata.Ecma335;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;

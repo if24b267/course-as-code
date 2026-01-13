@@ -1,5 +1,3 @@
-using System.IO;
-using System.Reflection.Emit;
 using System.Security.Cryptography;
 using System.Xml;
 using CourseAsCode.Model;
@@ -7,7 +5,6 @@ using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;

@@ -1,9 +1,6 @@
-using System.ComponentModel;
-using System.IO;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.Calculated;
 using CourseAsCode.Model.Questions.Types.CalculatedMulti;
 using CourseAsCode.Model.Questions.Types.CalculatedSimple;

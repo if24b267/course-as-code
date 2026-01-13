@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types.CalculatedMulti;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
@@ -9,7 +6,6 @@ using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
 {
@@ -130,7 +126,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
         {
             // Arrange
             var question = CreateBasicCalculatedMultiChoiceQuestion();
-            question.CategoryId = 99; 
+            question.CategoryId = 99;
 
             string uniqueVarName = $"shared_var_multi_{Guid.NewGuid()}";
 
@@ -139,7 +135,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
                 new()
                 {
                     Name = uniqueVarName,
-                    Category = 1, 
+                    Category = 1,
                     Options = "uniform:1:10:1",
                     Items = new List<CalculatedHelper.DatasetItem> { new() { Number = 1, Value = 5.0f } },
                 },
@@ -168,7 +164,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Questions.Strategies
                 new()
                 {
                     Name = uniqueVarName,
-                    Category = 0, 
+                    Category = 0,
                     Options = "uniform:1:10:1",
                     Items = new List<CalculatedHelper.DatasetItem> { new() { Number = 1, Value = 5.0f } },
                 },

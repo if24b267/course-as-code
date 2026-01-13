@@ -3,9 +3,7 @@ using System.Globalization;
 
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML;
-using YamlDotNet.Core;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.Converters;
 using YamlDotNet.Serialization.NodeDeserializers;
 
 namespace CourseAsCode.Readers.Helper

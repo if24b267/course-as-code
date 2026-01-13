@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Enums;

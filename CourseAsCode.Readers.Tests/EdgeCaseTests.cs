@@ -148,7 +148,12 @@ Name: Test URL
 ";
             var filePath = CreateTestYamlFile("malformed.yaml", yamlContent);
 
-            var reader = new YamlActivityReader(_mockFileReader, _mockTextMediaReader, _mockUrlReader, new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()), _mockWikiReader, new YamlPageReader(new YamlFileReaderHelper()), new YamlChoiceReader(new YamlFileReaderHelper()));
+            var reader = new YamlActivityReader(_mockFileReader, _mockTextMediaReader, _mockUrlReader,
+                new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()),
+                new YamlAssignmentReader(new YamlFileReaderHelper()), _mockWikiReader,
+                new YamlPageReader(new YamlFileReaderHelper()), new YamlChoiceReader(new YamlFileReaderHelper()),
+                new YamlFeedbackReader(new YamlFileReaderHelper()),
+                new YamlFolderReader(new YamlFileReaderHelper(), new YamlFileReader(new YamlFileReaderHelper())));
 
             // Act & Assert
             Assert.Throws<YamlDotNet.Core.YamlException>(() => reader.Read(filePath));

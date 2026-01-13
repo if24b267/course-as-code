@@ -6,3 +6,5 @@ Sections:
   - SectionPath: Sections/WikiSection
   - SectionPath: Sections/PageSection
   - SectionPath: Sections/ChoiceSection
+  - SectionPath: Sections/FeedbackSection
+  - SectionPath: Sections/FolderSection

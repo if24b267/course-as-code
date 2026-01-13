@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Xml;
-using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
-using CourseAsCode.Writers.XML.Writer;
 using FeedbackModel = CourseAsCode.Model.Activities.Resources.Feedback;
 
 namespace CourseAsCode.Writers.XML.Writer.Activities.Feedback;
@@ -71,7 +67,7 @@ public class FeedbackWriter : XmlWriterBase
                         { "name", item.Name },
                         { "label", item.Label ?? string.Empty },
                         { "presentation", item.Presentation ?? string.Empty },
-                        { "typ", item.Typ },
+                        { "typ", item.Type },
                         { "hasvalue", item.HasValue.ToString() },
                         { "position", item.Position.ToString() },
                         { "required", item.Required.ToString() },

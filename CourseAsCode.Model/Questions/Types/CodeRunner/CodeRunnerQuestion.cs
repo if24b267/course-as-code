@@ -1,6 +1,4 @@
 using System.ComponentModel;
-using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Questions.Helper;
 
 namespace CourseAsCode.Model.Questions.Types.CodeRunner;
 

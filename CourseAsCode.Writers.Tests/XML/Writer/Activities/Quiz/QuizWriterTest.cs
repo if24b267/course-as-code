@@ -219,10 +219,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             doc.LoadXml(output);
 
             // Assert: timeopen and timeclose should be set to 0
-            var openNode  = doc.DocumentElement?.SelectSingleNode("quiz/timeopen");
+            var openNode = doc.DocumentElement?.SelectSingleNode("quiz/timeopen");
             var closeNode = doc.DocumentElement?.SelectSingleNode("quiz/timeclose");
 
-            Assert.That(openNode?.InnerText, Is.EqualTo("0"),  "timeopen should default to 0");
+            Assert.That(openNode?.InnerText, Is.EqualTo("0"), "timeopen should default to 0");
             Assert.That(closeNode?.InnerText, Is.EqualTo("0"), "timeclose should default to 0");
         }
 
@@ -244,10 +244,10 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             doc.LoadXml(output);
 
             // Assert: timeopen and timeclose should be set to the correct Unix timestamp
-            var openNode  = doc.DocumentElement?.SelectSingleNode("quiz/timeopen");
+            var openNode = doc.DocumentElement?.SelectSingleNode("quiz/timeopen");
             var closeNode = doc.DocumentElement?.SelectSingleNode("quiz/timeclose");
 
-            Assert.That(openNode?.InnerText, Is.EqualTo("1234567890"),  "timeopen should be set to 1234567890"); // from mocked DateTimeToUnixTimestamp
+            Assert.That(openNode?.InnerText, Is.EqualTo("1234567890"), "timeopen should be set to 1234567890"); // from mocked DateTimeToUnixTimestamp
             Assert.That(closeNode?.InnerText, Is.EqualTo("1234567890"), "timeclose should be set to 1234567890"); // from mocked DateTimeToUnixTimestamp
         }
 
@@ -276,7 +276,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Activities.Quiz
             QuizModel dummyQuiz = FakeQuizFactory.CreateBasicQuiz(1);
 
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            var writer          = new QuizWriter(throwingFactory, _logger, _generalHelper, _quizHelper);
+            var writer = new QuizWriter(throwingFactory, _logger, _generalHelper, _quizHelper);
 
             // Act and assert: The logger should have been called with an error message and the exception should be rethrown
             Assert.Throws<InvalidOperationException>(() => writer.WriteQuiz(DEFAULT_DEFAULT_OUTPUT_PATH, dummyQuiz));

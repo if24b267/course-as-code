@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;

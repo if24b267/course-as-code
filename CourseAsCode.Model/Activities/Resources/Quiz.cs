@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Model.Enums.Grading;
 using CourseAsCode.Model.Enums.Quizzes;
@@ -111,7 +111,7 @@ namespace CourseAsCode.Model.Activities.Resources
         public ReviewOptionsQuiz ReviewOptionsImmediatelyAfterAttempt { get; set; } = new ReviewOptionsQuiz();
 
         [Description("Review options available to the student two minutes after they clicked on 'Submit all and finish'")]
-        public ReviewOptionsQuiz ReviewOptionsAfterAttempt{ get; set; } = new ReviewOptionsQuiz();
+        public ReviewOptionsQuiz ReviewOptionsAfterAttempt { get; set; } = new ReviewOptionsQuiz();
 
         [Description("Review options available to the student after the quiz was closed | If the quiz doesn't have a close date, this state is never reached")]
         public ReviewOptionsQuiz ReviewOptionsQuizClosed { get; set; } = new ReviewOptionsQuiz();

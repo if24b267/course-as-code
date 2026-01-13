@@ -1,8 +1,8 @@
+using System.ComponentModel;
 using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Grading;
 using CourseAsCode.Model.Questions;
-using System.ComponentModel;
 
 namespace CourseAsCode.Model
 {

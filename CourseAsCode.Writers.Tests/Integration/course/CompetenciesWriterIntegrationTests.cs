@@ -1,10 +1,9 @@
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
-using CourseAsCode.Writers.XML.Writer.Course;
 using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
+using CourseAsCode.Writers.XML.Writer.Course;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

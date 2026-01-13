@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 public static class PathHelper
 {
     /// <summary>
@@ -15,7 +12,7 @@ public static class PathHelper
     }
 
     /// <summary>
-    /// Stellt sicher, dass ein Verzeichnis existiert, und gibt den absoluten Pfad zurück.
+    /// Stellt sicher, dass ein Verzeichnis existiert, und gibt den absoluten Pfad zurÃ¼ck.
     /// </summary>
     /// <param name="relativePath">Der relative Pfad zum Verzeichnis.</param>
     /// <returns>Der absolute Pfad zum Verzeichnis.</returns>

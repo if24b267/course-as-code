@@ -1,15 +1,5 @@
 using CourseAsCode.Model;
-using CourseAsCode.Model.Activities;
-using CourseAsCode.Model.Activities.Choice;
-using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Enums.Grading;
-using CourseAsCode.Model.Grading;
-using CourseAsCode.Model.Questions.Types.Description;
-using CourseAsCode.Model.Questions.Types.MultipleChoice;
-using CourseAsCode.Model.Questions.Types.ShortAnswer;
-using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -304,7 +294,7 @@ namespace CourseAsCode.Writers
                             Template = 0,
                             Name = "label",
                             Label = "",
-                            Typ = "label",
+                            Type = "label",
                             Presentation = "<p>Legend: (1) low … (4) high</p>",
                             HasValue = 0,
                             Position = 1,
@@ -320,7 +310,7 @@ namespace CourseAsCode.Writers
                             Template = 0,
                             Name = "I can describe the basics",
                             Label = "",
-                            Typ = "multichoice",
+                            Type = "multichoice",
                             Presentation = "r>>>>>1|2|3|4<<<<<1",
                             HasValue = 1,
                             Position = 2,

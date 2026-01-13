@@ -1,5 +1,3 @@
-using System;
-
 namespace CourseAsCode.Model.Defaults.Activities
 {
     public static class ChoiceDefaults

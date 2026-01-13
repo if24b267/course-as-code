@@ -1,4 +1,3 @@
-using System;
 using CourseAsCode.Model.Defaults;
 
 namespace CourseAsCode.Model

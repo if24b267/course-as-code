@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using CourseAsCode.Model.Enums;
 
 namespace CourseAsCode.Readers.YAML.Model
