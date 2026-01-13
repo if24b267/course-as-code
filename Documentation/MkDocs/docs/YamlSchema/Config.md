@@ -28,3 +28,30 @@ The `config.yaml` file defines the general settings and metadata for the entire 
 | `ShowActivityDates` | `bool` | No | Whether to show activity dates on the course page. |
 | `ShowCompletionConditions`| `bool` | No | If enabled, conditions for activity completion are shown on the course page. |
 | `QuestionListPaths` | `List<string>`| No | A list of paths to YAML files containing questions for the question bank. |
+
+### Example
+```YAML
+CourseName: Introduction to Course as Code
+# ShortName has to be unique
+ShortName: CaCIntro
+Summary: Explore Course as Code through this sample course, which covers its fundamental concepts and practical activities.
+
+Visible: true
+Category: Showcases
+StartDate: 01-01-2025 00:00
+EndDate: 31-12-2030 23:59
+
+ForcedLanguage: en
+ShowGrades: true
+NumberOfAnnouncements: 3
+ShowActivityDates: true
+
+ShowCompletionConditions: true
+EnableCompletionTracking: true
+
+GroupMode: 0
+ForceGroupMode: false
+
+QuestionListPaths:
+  - ./Questions/quiz-questions.yaml
+```

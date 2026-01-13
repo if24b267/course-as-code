@@ -9,6 +9,15 @@ Individual `section.yaml` files define the content of each section and are place
 | :--- | :--- | :--- | :--- |
 | `Sections` | `List<SectionPaths>` | No | A list of (relative) section folder paths pointing to the section folders. |
 
+### Example
+```YAML
+Sections:
+  - SectionPath: Sections/01-Introduction
+  - SectionPath: Sections/02-Supported-Activities
+  - SectionPath: Sections/03-Quizzes
+  - SectionPath: Sections/04-CS-Basics
+```
+
 ## Properties - section.yaml
 
 | Property | Type | Required | Description |
@@ -17,3 +26,13 @@ Individual `section.yaml` files define the content of each section and are place
 | `Summary` | `string` | No | A summary or description of the section. |
 | `VisibleToStudents` | `bool` | No | Whether the section is visible to students (default: `true`). |
 | `Activities` | `List<string>` | No | A list of (relative) file paths pointing to the YAML files for the activities contained in this section. |
+
+### Example
+```YAML
+SectionName: Introduction to Course as Code
+Summary: This section covers basics about Course as Code. What is it? What are its core components and the benefits of using it?
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/what-is-cac.yaml
+  - ActivityFilePath: Activities/cac-components.yaml
+```
