@@ -19,8 +19,9 @@ namespace CourseAsCode.Readers.YAML.Readers
         private readonly IWikiReader _wikiReader;
         private readonly IYamlPageReader _pageReader;
         private readonly IChoiceReader _choiceReader;
+        private readonly IFeedbackReader _feedbackReader;
 
-        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader, IWikiReader wikiReader, IYamlPageReader pageReader, IChoiceReader choiceReader)
+        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader, IWikiReader wikiReader, IYamlPageReader pageReader, IChoiceReader choiceReader, IFeedbackReader feedbackReader)
         {
             _fileReader = fileReader;
             _textMediaAreaReader = textMediaAreaReader;
@@ -31,6 +32,7 @@ namespace CourseAsCode.Readers.YAML.Readers
             _wikiReader = wikiReader;
             _pageReader = pageReader;
             _choiceReader = choiceReader;
+            _feedbackReader = feedbackReader;
         }
 
         public Activity? Read(string modelObjectPath)
@@ -79,6 +81,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case ActivityType.CHOICE:
                     _logger.Debug($"Reading choice activity from {modelObjectPath}");
                     return _choiceReader.Read(modelObjectPath);
+                case ActivityType.FEEDBACK:
+                    _logger.Debug($"Reading feedback activity from {modelObjectPath}");
+                    return _feedbackReader.Read(modelObjectPath);
             }
 
             return null;

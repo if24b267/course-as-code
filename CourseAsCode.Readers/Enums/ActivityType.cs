@@ -10,6 +10,7 @@ namespace CourseAsCode.Readers.Enums
         ASSIGNMENT,
         WIKI,
         PAGE,
-        CHOICE
+        CHOICE,
+        FEEDBACK
     }
 }

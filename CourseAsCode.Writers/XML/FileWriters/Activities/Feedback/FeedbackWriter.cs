@@ -71,7 +71,7 @@ public class FeedbackWriter : XmlWriterBase
                         { "name", item.Name },
                         { "label", item.Label ?? string.Empty },
                         { "presentation", item.Presentation ?? string.Empty },
-                        { "typ", item.Typ },
+                        { "typ", item.Type },
                         { "hasvalue", item.HasValue.ToString() },
                         { "position", item.Position.ToString() },
                         { "required", item.Required.ToString() },
