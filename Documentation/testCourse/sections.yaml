@@ -5,3 +5,4 @@ Sections:
   - SectionPath: Sections/Assignment Section
   - SectionPath: Sections/WikiSection
   - SectionPath: Sections/PageSection
+  - SectionPath: Sections/ChoiceSection
