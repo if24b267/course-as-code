@@ -203,6 +203,7 @@ namespace CourseAsCode.Readers
             services.AddSingleton<IWikiPageReader, YamlWikiPageReader>();
             services.AddSingleton<IGradeCategoriesReader, YamlGradeCategoriesReader>();
             services.AddSingleton<IYamlGradingInfosReader, YamlGradingInfosReader>();
+            services.AddSingleton<IYamlPageReader, YamlPageReader>();
         }
     }
 }

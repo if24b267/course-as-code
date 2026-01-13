@@ -113,6 +113,7 @@ namespace CourseAsCode.Writers
             }
 
             // --- Dummy Data LESSONS ---
+            /*
             var section = course.Sections[0];
             section.Activities ??= new List<Activity>();
 
@@ -370,7 +371,7 @@ namespace CourseAsCode.Writers
                 });
 
                 section.Activities.Add(folder);
-            }
+            }*/
         }
     }
 }
