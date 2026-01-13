@@ -329,7 +329,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
                 string contentHash = GetMoodleContentHash(stream);
                 long fileSize = stream.Length;
 
-                string uniqueId = Math.Abs((fileName + itemId + contentHash).GetHashCode()).ToString();
+                string uniqueId = _idGenerator.GetNextAnswerId().ToString();
                 WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string> { { "id", uniqueId } });
 
                 var elements = new Dictionary<string, string>
