@@ -14,7 +14,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
         [SetUp]
         public void Setup()
         {
-            _activityReader = new YamlActivityReader(new YamlFileReader(new YamlFileReaderHelper()), new YamlTextMediaAreaReader(), new YamlUrlReader(), new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()), new YamlWikiReader(new YamlFileReaderHelper(), new YamlWikiPageReader(new YamlFileReaderHelper())));
+            _activityReader = new YamlActivityReader(new YamlFileReader(new YamlFileReaderHelper()), new YamlTextMediaAreaReader(), new YamlUrlReader(), new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()), new YamlWikiReader(new YamlFileReaderHelper(), new YamlWikiPageReader(new YamlFileReaderHelper())), new YamlPageReader(new YamlFileReaderHelper()));
             _sectionReader = new YamlSectionReader(_activityReader, new YamlFileReaderHelper());
             ValueKeeper.CurrentSectionId = 1;
         }

@@ -4,3 +4,4 @@ Sections:
   - SectionPath: Sections/Quiz Section
   - SectionPath: Sections/Assignment Section
   - SectionPath: Sections/WikiSection
+  - SectionPath: Sections/PageSection
