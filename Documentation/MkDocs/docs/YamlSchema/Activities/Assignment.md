@@ -23,3 +23,21 @@ Defines a Moodle Assignment activity where students can submit work.
 | `MarkingAllocation` | `bool` | Whether marking allocation (assigning graders to students) is enabled. |
 | `SendNotifications` | `bool` | Whether to send notifications to graders when submissions are made. |
 | `Grade` | `int` | The maximum grade for the assignment. |
+
+## Example
+```YAML
+Type: ASSIGNMENT
+Name: Document your findings so far!
+Description: Write a short summary of all the things you have learned so far in this course. Which things stood out to you especially?
+
+# Assignment Specific Settings
+Intro: Write a short summary of all the things you have learned so far in this course. Which things stood out to you especially?
+AllowSubmissionDrafts: true
+SendNotifications: false
+DueDate: 31-08-2025 23:59
+AllowSubmissionsFromDate: 31-01-2023 00:00
+Grade: 50
+CompletionSubmit: true
+RequireSubmissionStatement: true
+MaxAttempts: 1
+```
