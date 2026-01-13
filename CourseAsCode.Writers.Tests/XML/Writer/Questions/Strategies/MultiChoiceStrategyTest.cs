@@ -1,4 +1,4 @@
-﻿using CourseAsCode.Model.Enums.Quizzes;
+using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
 using CourseAsCode.Model.Questions.Types.MultipleChoice;
 using CourseAsCode.Writers.Tests.Fakes;

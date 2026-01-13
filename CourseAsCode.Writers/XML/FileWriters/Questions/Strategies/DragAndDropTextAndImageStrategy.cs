@@ -43,7 +43,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
                 { "partiallycorrectfeedbackformat", _generalHelper.EnumIntegerToString(ddimagortext.PartiallyCorrectResponseFeedbackFormat) },
                 { "incorrectfeedback", ddimagortext.IncorrectResponseFeedback },
                 { "incorrectfeedbackformat", _generalHelper.EnumIntegerToString(ddimagortext.IncorrectResponseFeedbackFormat) },
-                { "shownumcorrect", ddimagortext.Hints?.Any(h => h.ShowNumberOfCorrectAnswers) ?? false ? "1" : "0" },
+                { "shownumcorrect", ddimagortext.ShowNumCorrect ? "1" : "0" },
                 { "dropzonevisibility", ddimagortext.DropZoneVisibility ? "1" : "0" },
             };
             xmlService.WriteElements(ddimageortextElements);
@@ -54,11 +54,9 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions.Strategies
             xmlService.WriteElement("drags");
             foreach (var drag in ddimagortext.Drags)
             {
-                int dragId = _sequentialIdGenerator.GetNextAnswerId();
-
                 xmlService.WriteElementWithAttributes("drag", new Dictionary<string, string>
                 {
-                    { "id", dragId.ToString() },
+                    { "id", drag.ID.ToString() },
                 });
 
                 xmlService.WriteElements(new Dictionary<string, string>

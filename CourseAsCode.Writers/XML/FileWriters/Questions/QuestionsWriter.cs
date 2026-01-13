@@ -1,4 +1,5 @@
 using System.Globalization;
+using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
@@ -18,7 +19,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Questions
         private const int DEFAULT_SERVER_PORT = 8080;
 
         private const int DEFAULT_TOP_CATEGORY_ID = 1;
-        private const int DEFAULT_CONTEXT_ID = 383; // Every value >> 100 seems to be working fine | Needs to be the same as in `QuizWriter.cs`
+        private const int DEFAULT_CONTEXT_ID = CourseDefaults.QUESTION_BANK_CONTEXT_ID; // Every value >> 100 seems to be working fine | Needs to be the same as in `QuizWriter.cs`
         private const int DEFAULT_CONTEXT_LEVEL = 50; // 50 = course, 70 = module
         private const int DEFAULT_CONTEXT_INSTANCE_ID = 135; // Honestly, no idea what this is for
 

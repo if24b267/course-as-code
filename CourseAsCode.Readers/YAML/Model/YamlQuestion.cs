@@ -1,4 +1,6 @@
+using System.ComponentModel;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Readers.Enums;
 
 namespace CourseAsCode.Readers.YAML.Model
@@ -67,5 +69,13 @@ namespace CourseAsCode.Readers.YAML.Model
         public List<YamlDatasetDefinition>? DatasetDefinitions { get; set; }
         public List<YamlCalculatedRecord>? CalculatedRecords { get; set; }
         public YamlCalculatedOption? CalculatedOptions { get; set; }
+
+        // DragAndDropTextAndImage specific properties
+        public bool DropZoneVisibility { get; set; } = true;
+        public bool ShowNumCorrect { get; set; } = false;
+        public string? BackgroundImagePath { get; set; }
+        public string? BackgroundImageName { get; set; }
+        public required List<TextAndImageDragModel> Drags { get; set; } = new();
+        public required List<TextAndImageDropModel> Drops { get; set; } = new();
     }
 }
