@@ -11,3 +11,12 @@ Defines a folder resource containing multiple files.
 | `YamlFilePaths` | `List<string>` | A list of [YamlFile](File.md) paths (strings) to be included in the folder. |
 
 ## Example
+```YAML
+Name: Example Folder
+Type: FOLDER
+DisplayDescription: true
+YamlFilePaths:
+  - ./file1.yaml
+  - ./file2.yaml
+  - ./file3.yaml
+```
