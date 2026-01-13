@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Readers.Enums;
 
 namespace CourseAsCode.Readers.YAML.Model
@@ -12,5 +12,6 @@ namespace CourseAsCode.Readers.YAML.Model
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
+        public FormattingFormat DescriptionFormat { get; set; } = FormattingFormat.MoodleAutoFormat;
     }
 }

@@ -1,0 +1,3 @@
+SectionName: Choice Section
+Activities:
+  - ActivityFilePath: Activities/choice1.yaml
