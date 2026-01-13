@@ -101,6 +101,22 @@ nav:
       - Overview: Grading/index.md
       - Grade Categories: Grading/Grade_Categories.md
       - Grade Items: Grading/Grade_Items.md
+  - YAML Schema:
+      - Course Configuration: YamlSchema/Config.md
+      - Sections: YamlSchema/Sections.md
+      - Activities:
+        - Overview: YamlSchema/Activities/index.md
+        - Assignment: YamlSchema/Activities/Assignment.md
+        - Choice: YamlSchema/Activities/Choice.md
+        - Feedback: YamlSchema/Activities/Feedback.md
+        - File: YamlSchema/Activities/File.md
+        - Folder: YamlSchema/Activities/Folder.md
+        - Page: YamlSchema/Activities/Page.md
+        - Quiz: YamlSchema/Activities/Quiz.md
+        - Text and Media Area: YamlSchema/Activities/TextMediaArea.md
+        - URL: YamlSchema/Activities/Url.md
+        - Wiki: YamlSchema/Activities/Wiki.md
+      - Question Bank: YamlSchema/Questions.md
   - Moodle Backup File (.mbz):
       - Overview: MoodleBackupFile/index.md
       - Base Structure: MoodleBackupFile/Base_Structure.md
