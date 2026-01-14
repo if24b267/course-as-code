@@ -1,0 +1,3 @@
+SectionName: Forum Section
+Activities:
+  - ActivityFilePath: Activities/forum.yaml

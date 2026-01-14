@@ -13,6 +13,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
         private IFileReader _mockFileReader;
         private ITextAndMediaAreaReader _mockTextMediaAreaReader;
         private IUrlReader _mockUrlReader;
+        private IForumReader _mockForumReader;
 
         [SetUp]
         public void Setup()
@@ -21,7 +22,8 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
             _mockFileReader = Substitute.For<IFileReader>();
             _mockTextMediaAreaReader = Substitute.For<ITextAndMediaAreaReader>();
             _mockUrlReader = Substitute.For<IUrlReader>();
-            _activityReader = new YamlActivityReader(new YamlFileReader(new YamlFileReaderHelper()), _mockTextMediaAreaReader, _mockUrlReader, new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()));
+            _mockForumReader = Substitute.For<IForumReader>();
+            _activityReader = new YamlActivityReader(new YamlFileReader(new YamlFileReaderHelper()), _mockTextMediaAreaReader, _mockUrlReader, new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()), _mockForumReader);
 
             // Configure mock URL reader to return a valid URL object
             _mockUrlReader.Read(Arg.Any<string>()).Returns(new URL
@@ -55,11 +57,11 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
         {
             // Arrange
             var yamlContent = @"
-Type: URL
-Name: Test URL
-Description: URL Description
-URL: https://example.com
-";
+                Type: URL
+                Name: Test URL
+                Description: URL Description
+                URL: https://example.com
+            ";
             var filePath = CreateTestYamlFile("url.yaml", yamlContent);
 
             // Act
@@ -87,10 +89,10 @@ URL: https://example.com
         {
             // Arrange
             var yamlContent = @"
-Type: UNKNOWN
-Name: Test Activity
-Description: Activity Description
-";
+                Type: UNKNOWN
+                Name: Test Activity
+                Description: Activity Description
+            ";
             var filePath = CreateTestYamlFile("invalid.yaml", yamlContent);
 
             // Act & Assert
@@ -102,11 +104,11 @@ Description: Activity Description
         {
             // Arrange
             var yamlContent = @"
-Type: FILE
-Name: Test File
-Description: File Description
-FilePath: files/test.txt
-";
+                Type: FILE
+                Name: Test File
+                Description: File Description
+                FilePath: files/test.txt
+            ";
             var filePath = CreateTestYamlFile("file.yaml", yamlContent);
 
             // Configure mock file reader
@@ -137,12 +139,12 @@ FilePath: files/test.txt
         {
             // Arrange
             var yamlContent = @"
-Type: LABEL
-Name: Test Label
-Content:
-  - Type: MARKDOWN
-    ContentFilePath: test
-";
+                Type: LABEL
+                Name: Test Label
+                Content:
+                  - Type: MARKDOWN
+                ContentFilePath: test
+            ";
             var filePath = CreateTestYamlFile("label.yaml", yamlContent);
 
             // Configure mock text media reader
@@ -163,21 +165,21 @@ Content:
                 Assert.That(result, Is.Not.Null);
                 Assert.That(result, Is.TypeOf<TextAndMediaArea>());
 
-				// Verify TextMediaArea reader was called
-				_mockTextMediaAreaReader.Received(1).Read(filePath);
-			});
-		}
+                // Verify TextMediaArea reader was called
+                _mockTextMediaAreaReader.Received(1).Read(filePath);
+            });
+        }
 
         [Test]
         public void Read_MarkdownFileActivity_ReturnsMoodleFile()
         {
             // Arrange
             var yamlContent = @"
-Type: MARKDOWN
-Name: example
-Description: Markdown example
-FilePath: files/example.md
-";
+                Type: MARKDOWN
+                Name: example
+                Description: Markdown example
+                FilePath: files/example.md
+            ";
             var filePath = CreateTestYamlFile("file3.yaml", yamlContent);
 
             // Configure mock file reader to return a valid MoodleFile object

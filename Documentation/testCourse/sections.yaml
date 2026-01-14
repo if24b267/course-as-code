@@ -3,3 +3,5 @@ Sections:
   - SectionPath: Sections/Another Cool Section
   - SectionPath: Sections/Quiz Section
   - SectionPath: Sections/Assignment Section
+  - SectionPath: Sections/WikiSection
+  - SectionPath: Sections/Forum Section

@@ -61,8 +61,7 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
 
         // Forum Activity Writers
         private readonly ForumWriter _forumWriter;
-        private readonly ModuleWriterForum _moduleForumWiki;
-
+        private readonly ModuleWriterForum _moduleWriterForum;
 
         public ActivitiesWriterService(
             ILogger<ActivitiesWriterService> logger,
@@ -88,7 +87,9 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             ModuleWriterQuiz moduleWriterQuiz,
             QuizWriter quizWriter,
             WikiWriter wikiWriter,
-            ModuleWriterWiki moduleWriterWiki)
+            ModuleWriterWiki moduleWriterWiki,
+            ForumWriter forumWriter,
+            ModuleWriterForum moduleWriterForum)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
@@ -129,8 +130,11 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             // Wiki Activity Writers
             _wikiWriter = wikiWriter ?? throw new ArgumentNullException(nameof(wikiWriter));
             _moduleWriterWiki = moduleWriterWiki ?? throw new ArgumentNullException(nameof(moduleWriterWiki));
-        }
 
+            // Forum Activity Writers
+            _forumWriter = forumWriter ?? throw new ArgumentNullException(nameof(forumWriter));
+            _moduleWriterForum = moduleWriterForum ?? throw new ArgumentNullException(nameof(moduleWriterForum));
+        }
 
         /// <summary>
         /// Writes all activity data for a given course into their respective directories
@@ -191,12 +195,12 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
                         _wikiWriter.WriteWiki(activityPath, wiki);
                         _moduleWriterWiki.WriteModule(activityPath, course, section, wiki);
                     }
-                    else if (activity is MoodleForum forum)
+                    else if (activity is Forum forum)
                     {
                         activityPath = CreateActivityDirectory(outputPath, activity, "forum");
 
                         _forumWriter.WriteForum(activityPath, forum);
-                        _moduleWriterWiki.WriteModule(activityPath, course, section, forum);
+                        _moduleWriterForum.WriteModule(activityPath, course, section, forum);
                     }
                     else
                     {

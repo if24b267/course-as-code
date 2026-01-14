@@ -33,7 +33,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum
             try
             {
                 // Cast auf das spezifische Modell (Forum)
-                if (activityObject is not MoodleForum forumObject)
+                if (activityObject is not Model.Activities.Resources.Forum forumObject)
                 {
                     throw new InvalidCastException("The provided activity is not of type Forum");
                 }
@@ -68,7 +68,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum
         }
 
         // 2. Hilfsmethode zum Schreiben der XML-Elemente
-        private void WriteGeneralInformationToModules(XmlWriter writer, string outputPath, Course course, Section section, MoodleForum forumObject)
+        private void WriteGeneralInformationToModules(XmlWriter writer, string outputPath, Course course, Section section, Model.Activities.Resources.Forum forumObject)
         {
             var elements = new Dictionary<string, string>
             {
@@ -89,8 +89,8 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum
                 // Gruppeneinstellungen
                 { "groupmode", _generalHelper.EnumIntegerToString(forumObject.GroupMode) },
                 // Im Forum gibt es kein direktes GroupingId-Feld wie bei Assignment, daher 0 oder Null
-                { "groupingid", "0" }, 
-                
+                { "groupingid", "0" },
+
                 // Abschluss (Completion)
                 // Die Abschluss-Logik für Foren ist komplexer (CompletionDiscussions, etc.) und wird hier vereinfacht
                 { "completion", "0" },

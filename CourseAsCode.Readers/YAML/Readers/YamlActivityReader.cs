@@ -16,8 +16,9 @@ namespace CourseAsCode.Readers.YAML.Readers
         private readonly IYamlFileReaderHelper _yamlFileReaderHelper;
         private readonly IQuizReader _quizReader;
         private readonly IAssignmentReader _assignmentReader;
+        private readonly IForumReader _forumReader;
 
-        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader)
+        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader, IForumReader forumReader)
         {
             _fileReader = fileReader;
             _textMediaAreaReader = textMediaAreaReader;
@@ -25,6 +26,7 @@ namespace CourseAsCode.Readers.YAML.Readers
             _yamlFileReaderHelper = yamlFileReaderHelper;
             _quizReader = quizReader;
             _assignmentReader = assignmentReader;
+            _forumReader = forumReader;
         }
 
         public Activity? Read(string modelObjectPath)
@@ -64,6 +66,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case ActivityType.ASSIGNMENT:
                     _logger.Debug($"Reading assignment activity from {modelObjectPath}");
                     return _assignmentReader.Read(modelObjectPath);
+                case ActivityType.FORUM:
+                    _logger.Debug($"Reading forum activity from {modelObjectPath}");
+                    return _forumReader.Read(modelObjectPath);
             }
 
             return null;

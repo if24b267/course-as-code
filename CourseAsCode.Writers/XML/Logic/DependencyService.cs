@@ -1,10 +1,10 @@
-﻿using CourseAsCode.Writers.Interfaces;
+using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
+using CourseAsCode.Writers.XML.FileWriters.Activities.Forum;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
-using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter.Plugins;
 using CourseAsCode.Writers.XML.GeneralWriter;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
@@ -49,15 +49,6 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<IQuizHelper, QuizHelper>();
             services.AddSingleton<ITagsWriter, TagsWriter>();
 
-            // Plugins for the QuestionWriter
-            services.AddSingleton<IQuestionPluginWriter, DragDropTextPluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, DropdownPluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, MultiChoicePluginWriter>();
-            services.AddSingleton<IQuestionPluginWriter, CodeRunnerPluginWriter>();
-
-            // Register QuestionsWriter (depends on the plugins registered above)
-            services.AddSingleton<QuestionsWriter>();
-
             // Register all other writers
             // -- General Writers --
             services.AddSingleton<CalendarWriter>();
@@ -72,7 +63,6 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<GroupsWriter>();
             services.AddSingleton<MoodleBackupWriter>();
             services.AddSingleton<OutcomesWriter>();
-            services.AddSingleton<QuestionsWriter>();
             services.AddSingleton<RolesWriter>();
             services.AddSingleton<ScalesWriter>();
             services.AddSingleton<UsersWriter>();
@@ -117,6 +107,9 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<QuizWriter>();
             services.AddSingleton<WikiWriter>();
             services.AddSingleton<ModuleWriterWiki>();
+            services.AddSingleton<ForumWriter>();
+            services.AddSingleton<ModuleWriterForum>();
+            services.AddSingleton<QuestionsWriter>();
 
             // Register the main writer and its dependencies
             services.AddSingleton<IActivitiesWriterService, ActivitiesWriterService>();

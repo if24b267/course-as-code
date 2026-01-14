@@ -8,14 +8,14 @@ namespace CourseAsCode.Model.Activities.Resources
     /// Repräsentiert eine Forum-Aktivität im Kurs.
     /// Erbt von der abstrakten Basisklasse Activity.
     /// </summary>
-    public class MoodleForum : Activity
+    public class Forum : Activity
     {
         // ────────────────────────────────────────────────────────────────────────────
         // Forum Specific Settings
         // ────────────────────────────────────────────────────────────────────────────
 
         [Description("The type of forum (e.g., standard, blog)")]
-        public string Type { get; set; } = string.Empty; // Entspricht <type>
+        public string ForumType { get; set; } = string.Empty; // Entspricht <type>
 
         [Description("Introduction text for the forum")]
         public string Intro { get; set; } = string.Empty; // Entspricht <intro>

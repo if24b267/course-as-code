@@ -25,7 +25,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum // Habe den Name
         /// </summary>
         /// <param name="outputPath">The output path where the forum.xml file will be saved.</param>
         /// <param name="forum">The forum object to write.</param>
-        public void WriteForum(string outputPath, MoodleForum forum)
+        public void WriteForum(string outputPath, Model.Activities.Resources.Forum forum)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum // Habe den Name
         /// <summary>
         /// Writes the activity tag and its attributes.
         /// </summary>
-        private void WriteActivityAttributes(XmlWriter writer, MoodleForum forum)
+        private void WriteActivityAttributes(XmlWriter writer, Model.Activities.Resources.Forum forum)
         {
             writer.WriteAttributeString("id", forum.ActivityId.ToString());
             writer.WriteAttributeString("moduleid", forum.ModuleId.ToString());
@@ -66,7 +66,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum // Habe den Name
         /// <summary>
         /// Writes the forum element and its child elements based on forum.xml structure.
         /// </summary>
-        private void WriteForumTag(XmlWriter writer, MoodleForum forum)
+        private void WriteForumTag(XmlWriter writer, Model.Activities.Resources.Forum forum)
         {
             writer.WriteStartElement("forum");
             writer.WriteAttributeString("id", forum.ActivityId.ToString()); // ID des Forum-Tags ist ActivityId
@@ -74,7 +74,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum // Habe den Name
             // Schreibe die einfachen Forum-spezifischen Elemente
             var forumElements = new Dictionary<string, string>
             {
-                { "type", forum.Type },
+                { "type", forum.ForumType },
                 { "name", forum.Name }, // Name kommt von Activity, wird aber hier wiederholt
                 { "intro", forum.Intro ?? "" },
                 { "introformat", _generalHelper.EnumIntegerToString(forum.IntroFormat) },
@@ -121,7 +121,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum // Habe den Name
         /// <summary>
         /// Writes the <discussions> element and all nested discussions, posts, and subscriptions.
         /// </summary>
-        private void WriteDiscussions(XmlWriter writer, MoodleForum forum)
+        private void WriteDiscussions(XmlWriter writer, Model.Activities.Resources.Forum forum)
         {
             writer.WriteStartElement("discussions");
 
