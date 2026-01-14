@@ -5,19 +5,19 @@
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
-         <loc>https://davimalu.github.io/course-as-code/Activities/Assignment/</loc>
+         <loc>https://davimalu.github.io/course-as-code/Activities/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/Activities/Assignment_Dev/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/Activities/Assignment_User/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
          <loc>https://davimalu.github.io/course-as-code/Activities/Moodle_File/</loc>
-         <lastmod>2026-01-14</lastmod>
-    </url>
-    <url>
-         <loc>https://davimalu.github.io/course-as-code/Activities/Overview/</loc>
-         <lastmod>2026-01-14</lastmod>
-    </url>
-    <url>
-         <loc>https://davimalu.github.io/course-as-code/Activities/Quiz/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
@@ -29,11 +29,23 @@
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
-         <loc>https://davimalu.github.io/course-as-code/Architecture/Overview/</loc>
+         <loc>https://davimalu.github.io/course-as-code/Activities/Quiz/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
-         <loc>https://davimalu.github.io/course-as-code/Architecture/Reader/</loc>
+         <loc>https://davimalu.github.io/course-as-code/Activities/Quiz/Question_Types/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/Activities/Quiz/Quiz_Architecture_and_Extensibility/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/Architecture/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/Architecture/Readers/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
@@ -57,6 +69,22 @@
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
+         <loc>https://davimalu.github.io/course-as-code/Development/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/Development/Known_Issues/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/Development/Roadmap/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/Grading/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
          <loc>https://davimalu.github.io/course-as-code/Grading/Grade_Categories/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
@@ -65,15 +93,11 @@
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
-         <loc>https://davimalu.github.io/course-as-code/Grading/Overview/</loc>
+         <loc>https://davimalu.github.io/course-as-code/MoodleBackupFile/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
          <loc>https://davimalu.github.io/course-as-code/MoodleBackupFile/Base_Structure/</loc>
-         <lastmod>2026-01-14</lastmod>
-    </url>
-    <url>
-         <loc>https://davimalu.github.io/course-as-code/MoodleBackupFile/General/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
@@ -105,6 +129,10 @@
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
+         <loc>https://davimalu.github.io/course-as-code/Usage/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
          <loc>https://davimalu.github.io/course-as-code/Usage/Course_As_Code_Setup/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
@@ -125,7 +153,59 @@
          <lastmod>2026-01-14</lastmod>
     </url>
     <url>
-         <loc>https://davimalu.github.io/course-as-code/Usage/Overview/</loc>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Config/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Questions/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Sections/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/Assignment/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/Choice/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/Feedback/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/File/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/Folder/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/Page/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/Quiz/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/TextMediaArea/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/Url/</loc>
+         <lastmod>2026-01-14</lastmod>
+    </url>
+    <url>
+         <loc>https://davimalu.github.io/course-as-code/YamlSchema/Activities/Wiki/</loc>
          <lastmod>2026-01-14</lastmod>
     </url>
 </urlset>
