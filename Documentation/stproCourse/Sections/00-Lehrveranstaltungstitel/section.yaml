@@ -1,0 +1,8 @@
+SectionName: "Kursübersicht"
+Summary: ""
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/00-Header-Image.yaml
+  - ActivityFilePath: Activities/01-Leistungsbeurteilung.yaml
+  - ActivityFilePath: Activities/02-Beurteilungskriterien.yaml
+  - ActivityFilePath: Activities/03-Anwesenheit.yaml

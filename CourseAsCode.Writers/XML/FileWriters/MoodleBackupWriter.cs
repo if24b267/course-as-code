@@ -1,4 +1,5 @@
 using System.Xml;
+using CourseAsCode.Model.Activities.Choice;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -255,6 +256,74 @@ namespace CourseAsCode.Writers.XML.Writer
                         writer.WriteEndElement(); // closes <activity>
                     }
 
+                    if (activity is Lesson lesson)
+                    {
+                        writer.WriteStartElement("activity");
+                        writer.WriteElementString("moduleid", lesson.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", lesson.ModuleName);
+                        writer.WriteElementString("title", lesson.Name);
+                        writer.WriteElementString("directory", $"activities/lesson_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+                        writer.WriteEndElement(); // close <activity>
+                    }
+
+                    if (activity is Page page)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", page.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", page.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", page.Name);
+                        writer.WriteElementString("directory", $"activities/page_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // Closes <activity>
+                    }
+
+                    if (activity is Choice choice)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", choice.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", choice.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", choice.Name);
+                        writer.WriteElementString("directory", $"activities/choice_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // </activity>
+                    }
+
+                    if (activity is Feedback feedback)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", feedback.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", feedback.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", feedback.Name);
+                        writer.WriteElementString("directory", $"activities/feedback_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // </activity>
+                    }
+
+                    if (activity is Folder folder)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", folder.SystemDefaults.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", folder.SystemDefaults.ModuleName);
+                        writer.WriteElementString("title", folder.Name);
+                        writer.WriteElementString("directory", $"activities/folder_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // </activity>
+
+                    }
 
                     LogTrace($"Added reference for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");
                 }
@@ -302,7 +371,7 @@ namespace CourseAsCode.Writers.XML.Writer
             {
                 { "courseid", course.SystemDefaults.Id.ToString() },
                 { "title", course.ShortName },
-                { "directory", "course" },
+                { "directory", "course" }
             };
 
             WriteElements(writer, elements);
@@ -432,6 +501,34 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"forum_{activity.ActivityId}", $"forum_{activity.ActivityId}_included", "1");
                         WriteSingleBackupSettingTag(writer, "activity", $"forum_{activity.ActivityId}", $"forum_{activity.ActivityId}_userinfo", "1");
+                    if (activity is Choice)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"choice_{activity.ActivityId}", $"choice_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"choice_{activity.ActivityId}", $"choice_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is Feedback)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"feedback_{activity.ActivityId}", $"feedback_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"feedback_{activity.ActivityId}", $"feedback_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is Lesson lesson)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"lesson_{activity.ActivityId}", $"lesson_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"lesson_{activity.ActivityId}", $"lesson_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is Page page)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"page_{activity.ActivityId}", $"page_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"page_{activity.ActivityId}", $"page_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is Folder folder)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"folder_{activity.ActivityId}", $"folder_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"folder_{activity.ActivityId}", $"folder_{activity.ActivityId}_userinfo", "1");
                     }
 
                     LogTrace($"Added setting for 'Activity {activity.ActivityId}: {activity.Name}' to {DEFAULT_MOODLE_BACKUP_RELATIVE_PATH}");

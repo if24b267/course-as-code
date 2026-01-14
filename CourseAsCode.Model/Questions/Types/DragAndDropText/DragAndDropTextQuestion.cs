@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using CourseAsCode.Model.Enums;
-using CourseAsCode.Model.Questions.Helper;
 
 namespace CourseAsCode.Model.Questions.Types.DragAndDropText
 {
@@ -24,8 +23,5 @@ namespace CourseAsCode.Model.Questions.Types.DragAndDropText
         [Description("Feedback shown after the question was answered incorrectly")]
         public string? IncorrectResponseFeedback { get; set; }
         public FormattingFormat IncorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
-
-        [Description("Hints offered when using interactive/adaptive behaviour")]
-        public List<Hint>? Hints { get; set; }
     }
 }

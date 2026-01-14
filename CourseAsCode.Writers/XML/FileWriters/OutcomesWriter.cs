@@ -1,47 +1,49 @@
-using System.Xml;
-using CourseAsCode.Writers.XML.Logic;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace CourseAsCode.Writers.XML.Writer
+namespace CourseAsCode.Writers.XML.FileWriters
 {
-    public class OutcomesWriter : XmlWriterBase
+    public class OutcomesWriter
     {
         private const string DEFAULT_OUTCOMES_RELATIVE_PATH = "outcomes.xml";
 
+        private readonly IXmlServiceFactory _xmlServiceFactory;
+        private readonly ILogger<OutcomesWriter> _logger;
 
         /// <summary>
         /// Creates a new instance of the OutcomesWriter class
         /// </summary>
-        /// <param name="xmlWriterFactory">Factory for creating XmlWriters</param>
+        /// <param name="xmlServiceFactory">Factory to create XML services</param>
         /// <param name="logger">Logger instance specific to OutcomesWriter</param>
-        public OutcomesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<OutcomesWriter> logger)
-            : base(xmlWriterFactory, logger)
+        public OutcomesWriter(IXmlServiceFactory xmlServiceFactory, ILogger<OutcomesWriter> logger)
         {
+            this._xmlServiceFactory = xmlServiceFactory ?? throw new ArgumentNullException(nameof(xmlServiceFactory));
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        
+
+        /// <summary>
+        /// Writes the outcomes.xml file required for a course
+        /// </summary>
+        /// <param name="course">The course model for which outcomes.xml will be written</param>
+        /// <param name="outputPath">The base output path where the outcomes.xml file will be created</param>
         public void WriteOutcomes(Model.Course course, string outputPath)
         {
             try
             {
                 string filePath = Path.GetFullPath(Path.Combine(outputPath, DEFAULT_OUTCOMES_RELATIVE_PATH));
 
-                using (XmlWriter writer = CreateXmlWriter(filePath))
+                using (var xmlHelper = _xmlServiceFactory.Create(filePath))
                 {
-                    writer.WriteStartDocument();
-
-                    writer.WriteStartElement("outcomes_definition");
-                    writer.WriteEndElement(); // Close <outcomes_definition>
-
-                    writer.WriteEndDocument();
+                    xmlHelper.WriteElement("outcomes_definition");
+                    xmlHelper.CloseElement(); // Close <outcomes_definition>
                 }
 
-                LogDebug($"Created {DEFAULT_OUTCOMES_RELATIVE_PATH}");
+                _logger.LogDebug("Created {DEFAULT_OUTCOMES_RELATIVE_PATH}", DEFAULT_OUTCOMES_RELATIVE_PATH);
             }
             catch (Exception e)
             {
-                LogError(e, $"Error writing {DEFAULT_OUTCOMES_RELATIVE_PATH}");
+                _logger.LogError(e, "Error writing {DEFAULT_OUTCOMES_RELATIVE_PATH}", DEFAULT_OUTCOMES_RELATIVE_PATH);
                 throw;
             }
         }

@@ -1,4 +1,6 @@
+using System.ComponentModel;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Readers.Enums;
 
 namespace CourseAsCode.Readers.YAML.Model
@@ -25,6 +27,8 @@ namespace CourseAsCode.Readers.YAML.Model
         public string? IncorrectResponseFeedback { get; set; }
         public FormattingFormat IncorrectResponseFeedbackFormat { get; set; } = FormattingFormat.PlainText;
         public List<YamlDragDropAnswerText>? DragDropAnswers { get; set; }
+        public bool CorrectAnswer { get; set; } = true;
+        public bool ShowStandardInstructions { get; set; } = true;
 
         // CodeRunner Question specific properties
         public string CodeRunnerType { get; set; }
@@ -40,5 +44,38 @@ namespace CourseAsCode.Readers.YAML.Model
         public bool DisplayFeedback { get; set; } = true;
         public bool GiveUpAllowed { get; set; } = true;
         public List<YamlCodeRunnerTestCase> CodeRunnerTestCases { get; set; }
+
+        // Short Answer specific property
+        public bool UseCase { get; set; } = false;
+
+        // Essay specific properties
+        public string ResponseFormat { get; set; } = "editor";
+        public bool ResponseRequired { get; set; } = true;
+        public int ResponseFieldLines { get; set; } = 15;
+        public int? MinWordLimit { get; set; }
+        public int? MaxWordLimit { get; set; }
+        public int AttachmentsAllowed { get; set; } = 0;
+        public int AttachmentsRequired { get; set; } = 0;
+        public string FileTypesList { get; set; } = string.Empty;
+        public long MaxBytes { get; set; } = 0;
+        public string GraderInfo { get; set; }
+        public FormattingFormat GraderInfoFormat { get; set; } = FormattingFormat.HTML;
+        public string ResponseTemplate { get; set; }
+        public FormattingFormat ResponseTemplateFormat { get; set; } = FormattingFormat.HTML;
+
+        // Calculated Questions specific properties
+        public YamlNumericalOption? NumericalOptions { get; set; }
+        public List<YamlNumericalUnit>? NumericalUnits { get; set; }
+        public List<YamlDatasetDefinition>? DatasetDefinitions { get; set; }
+        public List<YamlCalculatedRecord>? CalculatedRecords { get; set; }
+        public YamlCalculatedOption? CalculatedOptions { get; set; }
+
+        // DragAndDropTextAndImage specific properties
+        public bool DropZoneVisibility { get; set; } = true;
+        public bool ShowNumCorrect { get; set; } = false;
+        public string? BackgroundImagePath { get; set; }
+        public string? BackgroundImageName { get; set; }
+        public required List<TextAndImageDragModel> Drags { get; set; } = new();
+        public required List<TextAndImageDropModel> Drops { get; set; } = new();
     }
 }

@@ -1,0 +1,6 @@
+Name: "Example Page: Welcome"
+Type: PAGE
+Intro: "<p>This is a short intro shown on the course page.</p>"
+IntroFormat: HTML
+Content: "<h2>Welcome to the Example Page</h2><p>This is the main content of the page.</p>"
+ContentFormat: HTML

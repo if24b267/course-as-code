@@ -3,9 +3,17 @@ namespace CourseAsCode.Readers.Enums
     public enum QuestionType
     {
         SINGLECHOICE,
+        TRUEFALSE,
         MULTIPLECHOICE,
         DROPDOWN,
         DRAGANDDROPTEXT,
-        CODERUNNER
+        DRAGANDDROPTEXTANDIMAGE,
+        CODERUNNER,
+        DESCRIPTION,
+        SHORTANSWER,
+        ESSAY,
+        SIMPLECALCULATED,
+        CALCULATED,
+        CALCULATEDMULTICHOICE,
     }
 }

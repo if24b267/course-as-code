@@ -1,4 +1,4 @@
-using CourseAsCode.Model.Questions.Helper;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
 
 namespace CourseAsCode.Readers.Interfaces
 {

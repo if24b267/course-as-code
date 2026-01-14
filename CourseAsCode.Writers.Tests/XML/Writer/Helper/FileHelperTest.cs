@@ -1,7 +1,5 @@
-﻿using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Writers.XML.Helper;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
 {
@@ -13,8 +11,8 @@ namespace CourseAsCode.Writers.Tests.XML.Writer.Helper
         [SetUp]
         public void SetUp()
         {
-            ILogger<FileHelper> fileHelperLogger = NullLogger<FileHelper>.Instance; // Use NullLogger to avoid log output during tests
-            _fileHelper = new FileHelper(fileHelperLogger);
+            // FileHelper does not take a logger; use the parameterless constructor
+            _fileHelper = new FileHelper();
         }
 
         [TestCase(FileArea.Overview, "overviewfiles")]

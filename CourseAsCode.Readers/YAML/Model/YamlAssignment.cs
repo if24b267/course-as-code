@@ -31,5 +31,7 @@ namespace CourseAsCode.Readers.YAML.Model
         public bool? MarkingAllocation { get; set; }
         public bool? MarkingAnonymous { get; set; }
         public bool? PreventSubmissionNotInGroup { get; set; }
+        public bool? GradingLocked { get; set; }
+        public DateTime? GradingLockedAfter { get; set; }
     }
 }

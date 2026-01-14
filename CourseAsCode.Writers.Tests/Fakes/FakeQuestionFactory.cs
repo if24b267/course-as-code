@@ -1,10 +1,17 @@
-﻿using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.Calculated;
+using CourseAsCode.Model.Questions.Types.CalculatedMulti;
+using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Model.Questions.Types.Essay;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.ShortAnswer;
+using CourseAsCode.Model.Questions.Types.TrueFalse;
 
 namespace CourseAsCode.Writers.Tests.Fakes
 {
@@ -317,6 +324,564 @@ namespace CourseAsCode.Writers.Tests.Fakes
             }
 
             return ddtq;
+        }
+
+
+        /// <summary>
+        /// Creates a basic true-false question with specified parameters
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withFeedback">Indicates whether the question should include feedback for responses</param>
+        /// <returns>A <see cref="TrueFalseQuestion"/> object initialized with specified settings and default structure</returns>
+        public static TrueFalseQuestion CreateBasicTrueFalseQuestion(int id, string category, bool withFeedback = false)
+        {
+            var trueFalseQuestion = new TrueFalseQuestion
+            {
+                QuestionId = id,
+                QuestionName = "DavidsGreatness",
+                QuestionText = "Is David the greatest person to have ever lived?",
+                QuestionTextFormat = FormattingFormat.PlainText,
+                DefaultMark = 1,
+                CorrectAnswer = true,
+                Answers = new List<MultiChoiceAnswer>
+                {
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "True",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 1.0f,
+                        AnswerFeedback = withFeedback ? "Correct! David is indeed the greatest person to have ever lived." : string.Empty,
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new MultiChoiceAnswer
+                    {
+                        AnswerText = "False",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = withFeedback ? "Incorrect! David is indeed the greatest person to have ever lived." : string.Empty,
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                },
+                Category = category,
+            };
+
+            return trueFalseQuestion;
+        }
+
+        /// <summary>
+        /// Creates a basic short answer question with predefined structure and configuration
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withHints">Indicates whether the question includes hints</param>
+        /// <param name="withFeedback">Indicates whether the question provides general feedback</param>
+        /// <returns>A <see cref="ShortAnswerQuestion"/> object with initialized values and structure</returns>
+        public static ShortAnswerQuestion CreateBasicShortAnswerQuestion(int id, string category, bool withHints = false)
+        {
+            var saq = new ShortAnswerQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"ShortAnswer_{id}",
+                QuestionText = $"<p>Short Answer Text {id}</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = $"General Feedback SA {id}",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.33f,
+                UseCase = false,
+                QuestionReady = true,
+                Answers = new List<ShortAnswerOptions>
+                {
+                    new ShortAnswerOptions
+                    {
+                        AnswerText = "Correct Answer",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 1.0f,
+                        AnswerFeedback = "Excellent!",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new ShortAnswerOptions
+                    {
+                        AnswerText = "Almost Correct",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = "Close, but not perfect.",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                    new ShortAnswerOptions
+                    {
+                        AnswerText = "*",
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        AnswerGrade = 0.0f,
+                        AnswerFeedback = "Wrong answer.",
+                        AnswerFeedbackFormat = FormattingFormat.PlainText,
+                    },
+                },
+                Hints = null, // Hints are added below
+                Tags = new List<string> { $"TagSA{id}" },
+            };
+
+            if (withHints)
+            {
+                saq.Hints = new List<Hint>
+                {
+                    new Hint
+                    {
+                        HintText = "SA Hint 1",
+                        HintTextFormat = FormattingFormat.HTML,
+                        ShowNumberOfCorrectAnswers = true,
+                        ClearIncorrectResponses = false,
+                    },
+                    new Hint
+                    {
+                        HintText = "SA Hint 2",
+                        HintTextFormat = FormattingFormat.PlainText,
+                        ShowNumberOfCorrectAnswers = false,
+                        ClearIncorrectResponses = true,
+                    },
+                };
+            }
+
+            return saq;
+        }
+
+        /// <summary>
+        /// Creates a basic essay question with predefined structure and configuration
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <param name="withHints">Indicates whether the question includes hints</param>
+        /// <param name="withFeedback">Indicates whether the question provides general feedback</param>
+        /// <returns>A <see cref="EssayaQuestion"/> object with initialized values and structure</returns>
+        public static EssayQuestion CreateBasicEssayQuestion(int id, string category, bool withHints = false)
+        {
+            var eq = new EssayQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"Essay_{id}",
+                QuestionText = $"<p>Essay Text {id}</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = $"General Feedback SA {id}",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                HintPenalty = 0.33f,
+                QuestionReady = true,
+                ResponseFormat = "editor",
+                ResponseRequired = true,
+                ResponseFieldLines = 20,
+                MinWordLimit = 3,
+                MaxWordLimit = 300,
+                AttachmentsAllowed = 1,
+                AttachmentsRequired = 0,
+                FileTypesList = ".pdf",
+                MaxBytes = 0,
+                GraderInfo = "Make sure that the person is passionate",
+                GraderInfoFormat = FormattingFormat.Markdown,
+                ResponseTemplate = "Start your essay here...",
+                ResponseTemplateFormat = FormattingFormat.Markdown,
+                Tags = new List<string> { $"TagSA{id}" },
+            };
+
+            return eq;
+        }
+
+        /// <summary>
+        /// Creates a basic simple calculated question with predefined datasets, units and tolerance settings.
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <returns>A <see cref="SimpleCalculatedQuestion"/> object initialized with default values</returns>
+        public static SimpleCalculatedQuestion CreateBasicSimpleCalculatedQuestion(int id, string category)
+        {
+            var scq = new SimpleCalculatedQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"SimpleCalc_{id}",
+                QuestionText = "<p>Calculate the sum of {a} and {b}.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "General Feedback",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                QuestionReady = true,
+
+                NumericalOptions = new CalculatedHelper.NumericalOption
+                {
+                    ShowUnits = 3,
+                    UnitsLeft = false,
+                    UnitGradingType = 1,
+                    UnitPenalty = 0.1f,
+                },
+
+                NumericalUnits = new List<CalculatedHelper.NumericalUnit>
+                {
+                    new CalculatedHelper.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
+                    new CalculatedHelper.NumericalUnit { UnitName = "m", Multiplier = 0.01f },
+                },
+
+                DatasetDefinitions = new List<CalculatedHelper.DatasetDefinition>
+                {
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "a",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 5.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 3.5f },
+                        },
+                    },
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "b",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 2.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 6.1f },
+                        },
+                    },
+                },
+
+                Answers = new List<CalculatedHelper.CalculatedAnswer>
+                {
+                    new CalculatedHelper.CalculatedAnswer
+                    {
+                        AnswerText = "{a} + {b}",
+                        Fraction = 1.0f,
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        Feedback = "Well done!",
+                        FeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+
+                CalculatedRecords = new List<CalculatedHelper.CalculatedRecord>
+                {
+                    new CalculatedHelper.CalculatedRecord
+                    {
+                        Tolerance = 0.01f,
+                        ToleranceType = 1,
+                        CorrectAnswerLength = 2,
+                        CorrectAnswerFormat = 1,
+                    },
+                },
+
+                Tags = new List<string> { $"TagSimpleCalc{id}" },
+            };
+
+            return scq;
+        }
+
+        /// <summary>
+        /// Creates a basic  calculated question with predefined datasets, units and tolerance settings.
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <returns>A <see cref="CalculatedQuestion"/> object initialized with default values</returns>
+        public static CalculatedQuestion CreateBasicCalculatedQuestion(int id, string category)
+        {
+            var cq = new CalculatedQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"Calc_{id}",
+                QuestionText = "<p>Calculate the sum of {a} and {b}.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "General Feedback",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                QuestionReady = true,
+
+                NumericalOptions = new CalculatedHelper.NumericalOption
+                {
+                    ShowUnits = 3,
+                    UnitsLeft = false,
+                    UnitGradingType = 1,
+                    UnitPenalty = 0.1f,
+                },
+
+                NumericalUnits = new List<CalculatedHelper.NumericalUnit>
+                {
+                    new CalculatedHelper.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
+                    new CalculatedHelper.NumericalUnit { UnitName = "m", Multiplier = 0.01f },
+                },
+
+                DatasetDefinitions = new List<CalculatedHelper.DatasetDefinition>
+                {
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "a",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 5.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 3.5f },
+                        },
+                    },
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "b",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 2.0f },
+                            new CalculatedHelper.DatasetItem { Number = 2, Value = 6.1f },
+                        },
+                    },
+                },
+
+                Answers = new List<CalculatedHelper.CalculatedAnswer>
+                {
+                    new CalculatedHelper.CalculatedAnswer
+                    {
+                        AnswerText = "{a} + {b}",
+                        Fraction = 1.0f,
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        Feedback = "Well done!",
+                        FeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+
+                CalculatedRecords = new List<CalculatedHelper.CalculatedRecord>
+                {
+                    new CalculatedHelper.CalculatedRecord
+                    {
+                        Tolerance = 0.01f,
+                        ToleranceType = 1,
+                        CorrectAnswerLength = 2,
+                        CorrectAnswerFormat = 1,
+                    },
+                },
+
+                CalculatedOptions = new CalculatedHelper.CalculatedOption
+                {
+                    Synchronize = 0,
+                    Single = 0,
+                    ShuffleAnswers = true,
+                    CorrectFeedback = "good job",
+                    CorrectFeedbackFormat = FormattingFormat.PlainText,
+                    PartiallyCorrectFeedback = "Almost",
+                    PartiallyCorrectFeedbackFormat = FormattingFormat.PlainText,
+                    IncorrectFeedback = "incorrect",
+                    IncorrectFeedbackFormat = FormattingFormat.PlainText,
+                    AnswerNumbering = "abc",
+                    ShowNumCorrect = false,
+                },
+
+                Tags = new List<string> { $"TagSimpleCalc{id}" },
+            };
+
+            return cq;
+        }
+
+        /// <summary>
+        /// Creates a basic calculated multi-choice question with datasets, multiple formulas as answers, and tolerance settings.
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <returns>A <see cref="CalculatedMultiChoiceQuestion"/> object initialized with default values</returns>
+        public static CalculatedMultiChoiceQuestion CreateBasicCalculatedMultiChoiceQuestion(int id, string category)
+        {
+            var cmq = new CalculatedMultiChoiceQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"CalcMulti_{id}",
+                QuestionText = "<p>Select the correct formula for the sum of {a} and {b}.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "General Feedback",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                QuestionReady = true,
+
+                NumericalOptions = new CalculatedHelper.NumericalOption
+                {
+                    ShowUnits = 3,
+                    UnitsLeft = false,
+                    UnitGradingType = 1,
+                    UnitPenalty = 0.1f,
+                },
+
+                NumericalUnits = new List<CalculatedHelper.NumericalUnit>
+                {
+                    new CalculatedHelper.NumericalUnit { UnitName = "cm", Multiplier = 1.0f },
+                },
+
+                DatasetDefinitions = new List<CalculatedHelper.DatasetDefinition>
+                {
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "a",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 5.0f },
+                        },
+                    },
+                    new CalculatedHelper.DatasetDefinition
+                    {
+                        Name = "b",
+                        Category = 0,
+                        Type = 1,
+                        Options = "uniform:1.0:10.0:1",
+                        Items = new List<CalculatedHelper.DatasetItem>
+                        {
+                            new CalculatedHelper.DatasetItem { Number = 1, Value = 3.0f },
+                        },
+                    },
+                },
+
+                Answers = new List<CalculatedHelper.CalculatedAnswer>
+                {
+                    new CalculatedHelper.CalculatedAnswer
+                    {
+                        AnswerText = "{={a} + {b}}",
+                        Fraction = 1.0f,
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        Feedback = "Correct!",
+                        FeedbackFormat = FormattingFormat.HTML,
+                    },
+                    new CalculatedHelper.CalculatedAnswer
+                    {
+                        AnswerText = "{={a} - {b}}",
+                        Fraction = 0.0f,
+                        AnswerTextFormat = FormattingFormat.PlainText,
+                        Feedback = "Wrong formula.",
+                        FeedbackFormat = FormattingFormat.HTML,
+                    },
+                },
+
+                CalculatedRecords = new List<CalculatedHelper.CalculatedRecord>
+                {
+                    new CalculatedHelper.CalculatedRecord
+                    {
+                        Tolerance = 0.01f,
+                        ToleranceType = 1,
+                        CorrectAnswerLength = 2,
+                        CorrectAnswerFormat = 1,
+                    },
+                    new CalculatedHelper.CalculatedRecord
+                    {
+                        Tolerance = 0.01f,
+                        ToleranceType = 1,
+                        CorrectAnswerLength = 2,
+                        CorrectAnswerFormat = 1,
+                    },
+                },
+
+                CalculatedOptions = new CalculatedHelper.CalculatedOption
+                {
+                    Synchronize = 0,
+                    Single = 1,
+                    ShuffleAnswers = true,
+                    CorrectFeedback = "Correct",
+                    CorrectFeedbackFormat = FormattingFormat.PlainText,
+                    PartiallyCorrectFeedback = "Partial",
+                    PartiallyCorrectFeedbackFormat = FormattingFormat.PlainText,
+                    IncorrectFeedback = "Incorrect",
+                    IncorrectFeedbackFormat = FormattingFormat.PlainText,
+                    AnswerNumbering = "abc",
+                    ShowNumCorrect = true,
+                },
+
+                Tags = new List<string> { $"TagCalcMulti{id}" },
+            };
+
+            return cmq;
+        }
+
+        /// <summary>
+        /// Creates a basic drag-and-drop text and image question with predefined background and draggable items.
+        /// </summary>
+        /// <param name="id">The unique identifier for the question</param>
+        /// <param name="category">The category to which the question belongs</param>
+        /// <returns>A <see cref="DragAndDropTextAndImageQuestion"/> object initialized with default values</returns>
+        public static DragAndDropTextAndImageQuestion CreateBasicDragDropTextAndImageQuestion(int id, string category)
+        {
+            return new DragAndDropTextAndImageQuestion
+            {
+                QuestionId = id,
+                Category = category,
+                QuestionName = $"DragDropImage_{id}",
+                QuestionText = "<p>Place the correct labels on the diagram.</p>",
+                QuestionTextFormat = FormattingFormat.HTML,
+                GeneralFeedback = "General Feedback for DragDropImage",
+                GeneralFeedbackFormat = FormattingFormat.HTML,
+                DefaultMark = 1.0f,
+                QuestionReady = true,
+                ShuffleAnswers = true,
+                DropZoneVisibility = true,
+
+                BackgroundImagePath = "Resources/background.png",
+                BackgroundImageName = "background.png",
+
+                // Draggable items (Drags)
+                Drags = new List<TextAndImageDrag>
+                {
+                    new TextAndImageDrag
+                    {
+                        ID = 0, 
+                        Number = 1,
+                        Label = "Label 1",
+                        DragGroup = 1,
+                        Infinite = false
+                    },
+                    new TextAndImageDrag
+                    {
+                        ID = 0,
+                        Number = 2,
+                        ImagePath = "Resources/drag_icon.png",
+                        ImageName = "drag_icon.png",
+                        DragGroup = 1,
+                        Infinite = true
+                    }
+                },
+
+                // Drop zones (Drops)
+                Drops = new List<TextAndImageDrop>
+                {
+                    new TextAndImageDrop
+                    {
+                        ID = 0,
+                        Number = 1,
+                        XLeft = 50,
+                        YTop = 50,
+                        Choice = 1,
+                        Label = "Target 1"
+                    },
+                    new TextAndImageDrop
+                    {
+                        ID = 0,
+                        Number = 2,
+                        XLeft = 150,
+                        YTop = 150,
+                        Choice = 2,
+                        Label = "Target 2"
+                    }
+                },
+
+                CorrectResponseFeedback = "Great job!",
+                CorrectResponseFeedbackFormat = FormattingFormat.PlainText,
+                PartiallyCorrectResponseFeedback = "Almost there.",
+                PartiallyCorrectResponseFeedbackFormat = FormattingFormat.PlainText,
+                IncorrectResponseFeedback = "Try again.",
+                IncorrectResponseFeedbackFormat = FormattingFormat.PlainText,
+
+                Tags = new List<string> { $"TagDDImage{id}" }
+            };
         }
     }
 }

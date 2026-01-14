@@ -1,13 +1,13 @@
-﻿using System.Xml;
+using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Writers.Tests.Fakes;
 using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
-using CourseAsCode.Writers.XML.Writer;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -21,6 +21,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         private ILogger<FilesWriter> _testLogger;
         private IFileHelper _fakeFileHelper;
         private IGeneralHelper _fakeGeneralHelper;
+        private ISequentialIdGenerator _fakeIdGenerator;
         private FilesWriter _filesWriter;
         private Model.Course _dummyCourse;
         private const string DEFAULT_OUTPUT_PATH = "dummyOutput";
@@ -31,6 +32,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
             _fileService = Substitute.For<IFileService>();
             _testLogger = Substitute.For<ILogger<FilesWriter>>();
+            _fakeIdGenerator = Substitute.For<ISequentialIdGenerator>();
 
             _fakeFileHelper = Substitute.For<IFileHelper>();
             _fakeFileHelper.GetComponentFromEnum(Arg.Any<Component>()).Returns("course");
@@ -41,7 +43,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             _fakeGeneralHelper.DateTimeToUnixTimestamp(Arg.Any<DateTime>()).Returns("123456789");
 
 
-            _filesWriter = new FilesWriter(_testFactory, _testLogger, _fakeFileHelper, _fakeGeneralHelper, _fileService); // Inject dependencies
+            _filesWriter = new FilesWriter(_testFactory, _testLogger, _fakeFileHelper, _fakeGeneralHelper, _fileService, _fakeIdGenerator); // Inject dependencies
 
             // Create a dummy course with one section
             _dummyCourse = new Model.Course();
@@ -86,6 +88,59 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             doc.LoadXml(output);
             Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
             Assert.That(doc.DocumentElement.Name, Is.EqualTo("files"));
+        }
+
+        [Test]
+        public void WriteFiles_ProcessQuizImages_GeneratesIdIfMissing()
+        {
+            // Arrange
+            string tempFilePath = Path.GetTempFileName();
+            File.WriteAllBytes(tempFilePath, new byte[10]);
+
+            try
+            {
+                var quiz = new Quiz { Name = "Test", Questions = new List<CourseAsCode.Model.Questions.Question>() };
+                var ddQuestion = new DragAndDropTextAndImageQuestion
+                {
+                    QuestionName = "TestName",
+                    QuestionText = "TestText",
+                    Category = "TestCategorie",
+                    Drags = new List<TextAndImageDrag>
+            {
+                new TextAndImageDrag { ID = 0, ImagePath = "dummy.png" }
+            },
+                    Drops = new List<TextAndImageDrop>(),
+                };
+                quiz.Questions.Add(ddQuestion);
+                _dummyCourse.Sections[0].Activities.Add(quiz);
+
+                _fileService.Exists(Arg.Any<string>()).Returns(true);
+
+                _fileService.OpenRead(Arg.Any<string>()).Returns(_ => File.OpenRead(tempFilePath));
+
+                _fakeIdGenerator.GetNextAnswerId().Returns(999);
+
+                // Act
+                _filesWriter.WriteFiles(_dummyCourse, DEFAULT_OUTPUT_PATH);
+                string output = _testFactory.StringWriter.ToString();
+
+                // Assert
+                var doc = new XmlDocument();
+                doc.LoadXml(output);
+
+                var itemidNode = doc.DocumentElement?.SelectSingleNode("//file[itemid='999']");
+                Assert.That(itemidNode, Is.Not.Null, "The XML should contain the generated ID 999");
+
+                Assert.That(ddQuestion.Drags[0].ID, Is.EqualTo(999), "The Drag object ID should be updated to 999");
+            }
+            finally
+            {
+                // 3. Cleanup: Delete the temp file after the test
+                if (File.Exists(tempFilePath))
+                {
+                    File.Delete(tempFilePath);
+                }
+            }
         }
 
         [Test]
@@ -229,7 +284,7 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
         {
             // Arrange: Use an XML writer factory that throws an exception
             var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _filesWriter = new FilesWriter(throwingFactory, _testLogger, _fakeFileHelper, _fakeGeneralHelper, _fileService); // Inject dependencies
+            _filesWriter = new FilesWriter(throwingFactory, _testLogger, _fakeFileHelper, _fakeGeneralHelper, _fileService, _fakeIdGenerator); // Inject dependencies
 
             // Act & Assert: An exception should be thrown
             Assert.Throws<InvalidOperationException>(() =>

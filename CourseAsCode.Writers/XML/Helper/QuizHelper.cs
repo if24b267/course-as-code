@@ -1,9 +1,11 @@
 using CourseAsCode.Model.Enums.Quizzes;
 using CourseAsCode.Model.Questions;
-using CourseAsCode.Model.Questions.Types;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
+using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.TrueFalse;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Helper
@@ -64,6 +66,8 @@ namespace CourseAsCode.Writers.XML.Helper
                 DropdownQuestion => "match",
                 DragAndDropTextQuestion => "ddwtos",
                 CodeRunnerQuestion => "coderunner",
+                DescriptionQuestion => "description",
+                TrueFalseQuestion => "truefalse",
 
                 // Implement other question types here
                 _ => "multichoice",

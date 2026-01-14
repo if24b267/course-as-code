@@ -1,0 +1,6 @@
+Type: label
+Name: "Week 1: Hello World, FormattedOutput and Arithmetic"
+Format: HTML
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/01-Week1Content.md

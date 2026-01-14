@@ -114,7 +114,7 @@ public class WikiPage
 public class WikiPageVersion
 {
     [Description("Unique identifier for the version")]
-    public int VersionId { get; set; }
+    public int VersionId { get; set; } = WikiDefaults.DEFAULT_VERSION_ID;
 
     [Description("Content of this version")]
     public string Content { get; set; } = WikiDefaults.DEFAULT_VERSION_CONTENT;

@@ -1,0 +1,5 @@
+SectionName: "Service for Students"
+Summary: ""
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/00-ServiceButtons.yaml

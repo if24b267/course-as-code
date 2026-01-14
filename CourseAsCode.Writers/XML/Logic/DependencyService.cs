@@ -5,6 +5,10 @@ using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGrad
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.Activities.Forum;
 using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
+using CourseAsCode.Writers.XML.FileWriters.Activities.Lesson;
+using CourseAsCode.Writers.XML.FileWriters.Questions;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
+using CourseAsCode.Writers.XML.FileWriters.Questions.Strategies;
 using CourseAsCode.Writers.XML.GeneralWriter;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Helper;
@@ -12,14 +16,18 @@ using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
+using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
+using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
+using CourseAsCode.Writers.XML.Writer.Activities.Folder;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
+using CourseAsCode.Writers.XML.Writer.Activities.Pages;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
+using CourseAsCode.Writers.XML.Writer.Activities.Scheduler;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Activities.Wiki;
 using CourseAsCode.Writers.XML.Writer.Course;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Sections;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -48,6 +56,23 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<IUserHelper, UserHelper>();
             services.AddSingleton<IQuizHelper, QuizHelper>();
             services.AddSingleton<ITagsWriter, TagsWriter>();
+
+            // Strategies for the QuestionWriter
+            services.AddScoped<IQuestionStrategyResolver, QuestionStrategyResolver>();
+            services.AddTransient<CodeRunnerStrategy>();
+            services.AddTransient<DropdownStrategy>();
+            services.AddTransient<MultiChoiceStrategy>();
+            services.AddTransient<DragDropTextStrategy>();
+            services.AddTransient<DragAndDropTextAndImageStrategy>();
+            services.AddTransient<ShortAnswerStrategy>();
+            services.AddTransient<EssayStrategy>();
+            services.AddTransient<TrueFalseStrategy>();
+            services.AddTransient<CalculatedStrategy>();
+            services.AddTransient<CalculatedMultiStrategy>();
+            services.AddTransient<CalculatedSimpleStrategy>();
+
+            // Register QuestionsWriter (depends on the plugins registered above)
+            services.AddSingleton<QuestionsWriter>();
 
             // Register all other writers
             // -- General Writers --
@@ -110,6 +135,18 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<ForumWriter>();
             services.AddSingleton<ModuleWriterForum>();
             services.AddSingleton<QuestionsWriter>();
+            services.AddSingleton<ChoiceWriter>();
+            services.AddSingleton<ModuleWriterChoice>();
+            services.AddSingleton<FeedbackWriter>();
+            services.AddSingleton<ModuleWriterFeedback>();
+            services.AddSingleton<FolderWriter>();
+            services.AddSingleton<ModuleWriterFolder>();
+            services.AddSingleton<PageWriter>();
+            services.AddSingleton<ModuleWriterPage>();
+            services.AddSingleton<SchedulerWriter>();
+            services.AddSingleton<ModuleWriterScheduler>();
+            services.AddSingleton<LessonWriter>();
+            services.AddSingleton<ModuleWriterLesson>();
 
             // Register the main writer and its dependencies
             services.AddSingleton<IActivitiesWriterService, ActivitiesWriterService>();

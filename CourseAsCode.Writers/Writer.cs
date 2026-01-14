@@ -1,8 +1,5 @@
 using CourseAsCode.Model;
-using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Model.Defaults;
-using CourseAsCode.Model.Enums.Grading;
-using CourseAsCode.Model.Grading;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -41,7 +38,6 @@ namespace CourseAsCode.Writers
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
 
-
         /// <summary>
         /// Writes the specified course to disk, creating the necessary folder structure and files.
         /// </summary>
@@ -59,15 +55,10 @@ namespace CourseAsCode.Writers
             {
                 EnsureFolderStructureExists(outputPath);
 
-                // --- Uncomment the following lines to test the grading functionality | Only works with exampleCourse --- //
-                // AddGradingCategories(course);
-                // ModifyQuizzesWithGradingInfo(course);
-                // ModifyAssignmentWithGradingInfo(course);
-
-                _rootFilesWriterService.WriteRootFiles(course, outputPath); // Files in /
-                _courseFilesWriterService.WriteCourseFiles(course, outputPath); // Files in /course
-                _sectionFilesWriterService.WriteSectionFiles(course, outputPath); // Files in /sections
-                _activitiesWriterService.WriteActivities(course, outputPath); // Files in /activities
+                _rootFilesWriterService.WriteRootFiles(course, outputPath);
+                _courseFilesWriterService.WriteCourseFiles(course, outputPath);
+                _sectionFilesWriterService.WriteSectionFiles(course, outputPath);
+                _activitiesWriterService.WriteActivities(course, outputPath);
 
                 _logger.LogInformation($"Course '{course.FullName}' successfully written to {outputPath}");
                 return true;
@@ -78,7 +69,6 @@ namespace CourseAsCode.Writers
                 return false;
             }
         }
-
 
         /// <summary>
         /// Ensures the required folder structure for the Moodle Backup exists by creating necessary directories under the specified output path.
@@ -93,9 +83,9 @@ namespace CourseAsCode.Writers
             _fileService.CreateDirectory(Path.Combine(outputPath, "files"));
         }
 
-
         /// <summary>
         /// Equip the course with default values for enrolled users and sections if they are not defined
+        /// + injects 2 example Lessons (hardcoded) if none exist yet.
         /// </summary>
         /// <param name="course">The course object to populate with default values</param>
         private void PrepareCourseDefaults(Course course)
@@ -111,110 +101,267 @@ namespace CourseAsCode.Writers
                 _logger.LogInformation("No sections specified by user, adding default section");
                 course.Sections = new List<Section> { SectionDefaults.GetDefaultSection() };
             }
-        }
 
+            // --- Dummy Data LESSONS ---
+            /*
+            var section = course.Sections[0];
+            section.Activities ??= new List<Activity>();
 
-        /// <summary>
-        /// Temporary method to add grading categories to the course | can be removed once grading is implemented in the Readers
-        /// </summary>
-        /// <param name="course">The course to which grading categories will be added</param>
-        private void AddGradingCategories(Course course)
-        {
-            course.GradeCategories.Add(new GradeCategory() {
-                GradeCategoryId = 1,
-                GradeName = "Course Overall",
-                AggregationType = GradeAggregation.Natural,
-                Created = DateTime.Now,
-                Modified = DateTime.Now,
-                MaxGrade = 30,
-                GradeToPass = 15,
-            });
-
-            course.GradeCategories.Add(new GradeCategory()
+            if (section.Activities.Any(a => a is Lesson))
             {
-                GradeCategoryId = 2,
-                GradeName = "Theoretical Part",
-                Parent = course.GradeCategories[0],
-                AggregationType = GradeAggregation.MeanOfGrades,
-                Created = DateTime.Now,
-                Modified = DateTime.Now,
-                MaxGrade = 10,
-                GradeToPass = 5,
-                GradingWeight = 30,
-            });
+                return;
+            }
 
-            course.GradeCategories.Add(new GradeCategory()
+            section.Activities.Add(new Lesson
             {
-                GradeCategoryId = 3,
-                GradeName = "Practical Part",
-                Parent = course.GradeCategories[0],
-                AggregationType = GradeAggregation.Natural,
-                Created = DateTime.Now,
-                Modified = DateTime.Now,
-                MaxGrade = 70,
-                GradeToPass = 15,
-                DropLowestGrades = 1,
-                GradingWeight = 70,
-                GradeHidden = true,
-                GradingLocked = true,
+                Name = "Example Lesson 1",
+                ActivityId = 9001,
+                ModuleId = 50,
+                ModuleName = "lesson",
+                CourseId = course.SystemDefaults.Id,
+                Context = Context.Course,
+
+                Intro = "<p>Example Lesson 1 Intro</p>",
+                IntroFormat = FormattingFormat.HTML,
+                Grade = 100,
+                Practice = false,
+                MaxAttempts = 3,
+                Review = true,
+                Retake = true,
+                ProgressBar = true,
+                DisplayLeft = true,
+
+                Conditions = new Lesson.LessonConditions
+                {
+                    TimeSpentSeconds = 0,
+                    Completed = 0,
+                    GradeBetterThan = 0
+                },
+
+                Pages = new List<Lesson.LessonPage>
+                {
+                    new Lesson.LessonPage { PageId = 1, Title = "Page 1", Content = "<p>Welcome</p>" },
+                    new Lesson.LessonPage { PageId = 2, Title = "Page 2", Content = "<p>Concepts</p>" },
+                    new Lesson.LessonPage { PageId = 3, Title = "Page 3", Content = "<p>Example</p>" },
+                    new Lesson.LessonPage { PageId = 4, Title = "Page 4", Content = "<p>Mini quiz placeholder</p>" },
+                    new Lesson.LessonPage { PageId = 5, Title = "Page 5", Content = "<p>Summary</p>" },
+                    new Lesson.LessonPage { PageId = 6, Title = "Page 6", Content = "<p>End</p>" },
+                },
             });
-        }
 
+            section.Activities.Add(new Lesson
+            {
+                Name = "Example Lesson 2",
+                ActivityId = 9002,
+                ModuleId = 51,
+                ModuleName = "lesson",
+                CourseId = course.SystemDefaults.Id,
+                Context = Context.Course,
 
-        /// <summary>
-        /// Temporary method to modify the grading information of the quizzes in the course | can be removed once grading is implemented in the Readers
-        /// </summary>
-        /// <param name="course">The course containing the quizzes to be modified</param>
-        private void ModifyQuizzesWithGradingInfo(Course course)
-        {
-            // Get activity with ID 14
-            var quiz1 = course.Sections[2].Activities
-                .OfType<Quiz>()
-                .FirstOrDefault(a => a.ActivityId == 14);
+                Intro = "<p>Example Lesson 2 Intro</p>",
+                IntroFormat = FormattingFormat.HTML,
+                Grade = 50,
+                Practice = false,
+                MaxAttempts = 1,
+                Review = false,
+                Retake = false,
+                ProgressBar = false,
+                DisplayLeft = false,
+                UsePassword = true,
+                Password = "letmein",
+                TimeLimit = 15 * 60,
+                Available = DateTime.UtcNow.AddDays(-1),
+                Deadline = DateTime.UtcNow.AddDays(7),
 
-            // Get activity with ID 16
-            var quiz2 = course.Sections[3].Activities
-                .OfType<Quiz>()
-                .FirstOrDefault(a => a.ActivityId == 16);
+                Pages = new List<Lesson.LessonPage>
+                {
+                    new Lesson.LessonPage { PageId = 10, Title = "Page 1", Content = "<p>Instructions</p>" },
+                    new Lesson.LessonPage { PageId = 11, Title = "Page 2", Content = "<p>Task 1</p>" },
+                    new Lesson.LessonPage { PageId = 12, Title = "Page 3", Content = "<p>Task 2</p>" },
+                    new Lesson.LessonPage { PageId = 13, Title = "Page 4", Content = "<p>Finish</p>" },
+                },
+            });
 
-            // Get activity with ID 18
-            var quiz3 = course.Sections[3].Activities
-                .OfType<Quiz>()
-                .FirstOrDefault(a => a.ActivityId == 18);
+            // --- DUMMY PAGE DATA ---
+            section.Activities ??= new List<Activity>();
 
-            quiz1.GradeCategory = course.GradeCategories[1];
-            quiz1.GradingLocked = true;
-            quiz1.GradeName = "Different from the Activities name";
-            quiz1.GradeMultiplicator = 2.0f;
+            if (!section.Activities.Any(a => a is Page))
+            {
+                section.Activities.Add(new Page
+                {
+                    Name = "Example Page: Welcome",
+                    ActivityId = 8001,
+                    Context = Context.Course,
 
-            quiz2.GradeCategory = course.GradeCategories[2];
-            quiz2.GradingWeight = 15;
+                    Intro = "<p>This is a short intro shown on the course page.</p>",
+                    IntroFormat = FormattingFormat.HTML,
 
-            quiz3.GradeCategory = course.GradeCategories[2];
-            quiz3.GradingWeight = 35;
-            quiz3.GradeToPass = 10;
-            quiz3.GradeHiddenUntil = DateTime.Now.AddDays(10);
-        }
+                    Content = "<h2>Welcome</h2><p>This is an example HTML page.</p>",
+                    ContentFormat = FormattingFormat.HTML,
 
+                    TimeModified = DateTime.UtcNow,
 
-        /// <summary>
-        /// Temporary method to modify the grading information of the assignments in the course | can be removed once grading is implemented in the Readers
-        /// </summary>
-        /// <param name="course">The course containing the assignments to be modified</param>
-        private void ModifyAssignmentWithGradingInfo(Course course)
-        {
-            // Get activity with ID 10
-            var assignment1 = course.Sections[1].Activities
-                .OfType<Assignment>()
-                .FirstOrDefault(a => a.ActivityId == 10);
+                    ModuleId = 200,
+                    ModuleName = "page",
+                });
 
-            assignment1.GradeCategory = course.GradeCategories[2];
-            assignment1.GradingWeight = 50;
-            assignment1.GradingLocked = true;
-            assignment1.GradeName = "Documentation Report";
-            assignment1.GradeOffset = 1.0f;
-            assignment1.BlindMarking = true;
-            assignment1.HideGrader = true;
+                section.Activities.Add(new Page
+                {
+                    Name = "Example Page: Markdown Content",
+                    ActivityId = 8002,
+                    Context = Context.Course,
+
+                    Intro = "This page uses Markdown.",
+                    IntroFormat = FormattingFormat.PlainText,
+
+                    Content = "## Heading\n- Item A\n- Item B\n",
+                    ContentFormat = FormattingFormat.Markdown,
+
+                    TimeModified = DateTime.UtcNow,
+
+                    ModuleId = 201,
+                    ModuleName = "page",
+                });
+            }
+
+            // --- DUMMY CHOICE DATA ---
+            if (!section.Activities.Any(a => a is Choice))
+            {
+                var now = DateTime.UtcNow;
+
+                section.Activities.Add(new Choice
+                {
+                    Name = "Example Choice",
+                    ActivityId = 8201,
+                    Context = Context.Course,
+                    TimeCreated = now.AddMinutes(-5),
+                    TimeModified = now,
+
+                    Description = "<p>Please pick one topic.</p>",
+                    DescriptionFormat = FormattingFormat.HTML,
+
+                    Publish = false,
+                    ShowResults = false,
+                    Display = 0,
+                    AllowUpdate = false,
+                    AllowMultiple = false,
+                    ShowUnanswered = false,
+                    LimitAnswers = false,
+                    TimeOpen = null,
+                    TimeClose = null,
+                    CompletionSubmit = false,
+                    ShowPreview = false,
+                    IncludeInactive = false,
+                    ShowAvailable = false,
+                    Options = new List<Choice.ChoiceOption>
+                    {
+                        new Choice.ChoiceOption { Id = 1, Text = "Topic A", MaxAnswers = 0, TimeModified = now },
+                        new Choice.ChoiceOption { Id = 2, Text = "Topic B", MaxAnswers = 0, TimeModified = now },
+                        new Choice.ChoiceOption { Id = 3, Text = "Topic C", MaxAnswers = 0, TimeModified = now },
+
+                    },
+                });
+            }
+            // --- DUMMY FEEDBACK DATA ---
+            if (!section.Activities.Any(a => a is Feedback))
+            {
+                var now = DateTime.UtcNow;
+
+                section.Activities.Add(new Feedback
+                {
+                    Name = "Example Feedback",
+                    ActivityId = 8301,
+                    Context = Context.Course,
+                    TimeCreated = now.AddMinutes(-10),
+                    TimeModified = now,
+
+                    Description = "<p>Please fill out this self-assessment.</p>",
+                    DescriptionFormat = FormattingFormat.HTML,
+
+                    Anonymous = 2,
+                    EmailNotification = 0,
+                    MultipleSubmit = 0,
+                    Autonumbering = 0,
+                    PublishStats = 1,
+                    CompletionSubmit = false,
+
+                    // items
+                    Items = new List<Feedback.FeedbackItem>
+                    {
+                        new Feedback.FeedbackItem
+                        {
+                            Id = 1,
+                            Template = 0,
+                            Name = "label",
+                            Label = "",
+                            Type = "label",
+                            Presentation = "<p>Legend: (1) low … (4) high</p>",
+                            HasValue = 0,
+                            Position = 1,
+                            Required = 0,
+                            DependItem = 0,
+                            DependValue = "",
+                            Options = ""
+                        },
+
+                        new Feedback.FeedbackItem
+                        {
+                            Id = 2,
+                            Template = 0,
+                            Name = "I can describe the basics",
+                            Label = "",
+                            Type = "multichoice",
+                            Presentation = "r>>>>>1|2|3|4<<<<<1",
+                            HasValue = 1,
+                            Position = 2,
+                            Required = 0,
+                            DependItem = 0,
+                            DependValue = "",
+                            Options = "h"
+                        },
+                    },
+                });
+            }
+
+            // --- DUMMY FOLDER DATA ---
+            if (!section.Activities.Any(a => a is Folder))
+            {
+                var now = DateTime.UtcNow;
+
+                var folder = new Folder
+                {
+                    Name = "Example Folder",
+                    ActivityId = 8401,
+                    Context = Context.Course,
+
+                    TimeCreated = now,
+                    TimeModified = now,
+                    VisibleToStudents = true,
+                    DisplayDescription = false,
+                };
+
+                folder.Files.Add(new MoodleFile
+                {
+                    ActivityId = 8501,
+                    Name = "test.txt",
+                    FileName = "test.txt",
+
+                    //Pfusch lösung ich weiß
+                    FilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Documentation", "SampleFiles", "test.txt")),
+
+                    TimeCreated = now,
+                    TimeModified = now,
+
+                    SystemDefaults =
+                    {
+                        Component = Component.Folder,
+                        FileArea = FileArea.CourseContent,
+                        ItemId = 0
+                    },
+                });
+
+                section.Activities.Add(folder);
+            }*/
         }
     }
 }

@@ -1,0 +1,5 @@
+SectionName: "Week 1: Hello World, FormattedOutput and Arithmetic"
+Summary: ""
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/01-Week1Label.yaml

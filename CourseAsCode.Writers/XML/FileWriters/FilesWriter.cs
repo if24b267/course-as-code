@@ -3,7 +3,10 @@ using System.Xml;
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Defaults;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
+using CourseAsCode.Writers.XML.Helper;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Static;
@@ -17,6 +20,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
         private readonly IFileHelper _fileHelper;
         private readonly IGeneralHelper _generalHelper;
         private readonly IFileService _fileService;
+        private readonly ISequentialIdGenerator _idGenerator;
 
 
         /// <summary>
@@ -28,13 +32,15 @@ namespace CourseAsCode.Writers.XML.FileWriters
         /// <param name="fileHelper">Helper method providing specific helper methods focused on file management</param>
         /// <param name="fileService">Service that handles operations on the file system</param>
         /// <exception cref="ArgumentNullException">Thrown if any dependency is null</exception>
-        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<FilesWriter> logger, IFileHelper fileHelper, IGeneralHelper generalHelper, IFileService fileService)
+        public FilesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<FilesWriter> logger, IFileHelper fileHelper, IGeneralHelper generalHelper, IFileService fileService, ISequentialIdGenerator idGenerator)
             : base(xmlWriterFactory, logger)
         {
             _fileHelper = fileHelper ?? throw new ArgumentNullException(nameof(fileHelper));
             _generalHelper = generalHelper ?? throw new ArgumentNullException(nameof(generalHelper));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
+            _idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
         }
+
 
 
         public void WriteFiles(Model.Course course, string outputPath)
@@ -54,12 +60,25 @@ namespace CourseAsCode.Writers.XML.FileWriters
                         {
                             if (activity is MoodleFile file)
                             {
-                                WriteSingleFile(writer, outputPath, file);
+                                WriteSingleFile(writer, outputPath, file, contextIdOverride: null);
+                            }
+
+                            if (activity is Folder folder && folder.Files != null)
+                            {
+                                foreach (var folderFile in folder.Files)
+                                {
+                                    WriteSingleFile(writer, outputPath, folderFile, contextIdOverride: folder.ActivityId);
+                                }
+                            }
+
+                            if (activity is Quiz quiz && quiz.Questions != null)
+                            {
+                                ProcessQuizImages(writer, outputPath, quiz);
                             }
                         }
                     }
 
-                    writer.WriteEndElement(); // Close <files>
+                    writer.WriteEndElement(); // </files>
                     writer.WriteEndDocument();
                 }
 
@@ -114,7 +133,7 @@ namespace CourseAsCode.Writers.XML.FileWriters
             var elements = new Dictionary<string, string>
         {
             { "contenthash", contentHash },
-            { "contextid", _generalHelper.EnumIntegerToString(file.Context) },
+            { "contextid", file.ActivityId.ToString() },
             { "component", file.SystemDefaults.Component != null ? _fileHelper.GetComponentFromEnum((Component)file.SystemDefaults.Component) : "course" },
             { "filearea", file.SystemDefaults.FileArea != null ? _fileHelper.GetFileAreaFromEnum((FileArea)file.SystemDefaults.FileArea) : "content" },
             { "itemid", "0" }, // If there is only one of a file area per context, the itemid is 0, see https://moodledev.io/docs/5.0/apis/subsystems/files#file-areas
@@ -136,6 +155,79 @@ namespace CourseAsCode.Writers.XML.FileWriters
         };
 
             WriteElements(writer, elements);
+            writer.WriteEndElement(); // Close <file>
+            CopyFileToBackupFolder(outputPath, fileStream, contentHash);
+            fileStream.Dispose();
+        }
+
+        /// <summary>
+        /// Writes a single file entry to the XML document, with an option to override the context ID.
+        /// </summary>
+        private void WriteSingleFile(XmlWriter writer, string outputPath, MoodleFile file, int? contextIdOverride)
+        {
+            FileStream? fileStream = null;
+            try
+            {
+                if (!_fileService.Exists(file.FilePath))
+                {
+                    LogWarn($"{file.FilePath} does not exist. Skipping file");
+                    return;
+                }
+
+                fileStream = _fileService.OpenRead(file.FilePath);
+                LogDebug($"Found {file.FilePath}");
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Error opening {file.FilePath}. Skipping file");
+                return;
+            }
+
+            string? contentHash = null;
+            try
+            {
+                contentHash = GetMoodleContentHash(fileStream);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Skipping file {Path.GetFileName(fileStream.Name)}");
+                return;
+            }
+
+            var contextId = (contextIdOverride ?? file.ActivityId).ToString();
+
+            WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string>
+            {
+                { "id", file.ActivityId.ToString() },
+            });
+
+            var elements = new Dictionary<string, string>
+        {
+            { "contenthash", contentHash },
+            { "contextid", contextId },
+            { "component", file.SystemDefaults.Component != null ? _fileHelper.GetComponentFromEnum((Component)file.SystemDefaults.Component) : "course" },
+            { "filearea", file.SystemDefaults.FileArea != null ? _fileHelper.GetFileAreaFromEnum((FileArea)file.SystemDefaults.FileArea) : "content" },
+            { "itemid", "0" },
+            { "filepath", "/" },
+            { "filename", file.FileName },
+            { "userid", file.SensibleDefaults.Author?.SystemDefaults.Id.ToString() ?? GeneralDefaults.DEFAULTADMINUSERID.ToString() },
+            { "filesize", fileStream.Length.ToString() },
+            { "mimetype", MimeTypes.GetMimeType(file.FilePath) },
+            { "status", "0" },
+            { "timecreated", _generalHelper.DateTimeToUnixTimestamp(file.TimeCreated) },
+            { "timemodified", _generalHelper.DateTimeToUnixTimestamp(file.TimeModified) },
+            { "source", file.FileName },
+            { "author", file.SensibleDefaults.Author?.Username ?? "$@NULL@$" },
+            { "license", file.SensibleDefaults.License != null ? _fileHelper.GetLicenseFromEnum((License)file.SensibleDefaults.License) : "unknown" },
+            { "sortorder", "0" },
+            { "repositorytype", "$@NULL@$" },
+            { "repositoryid", "$@NULL@$" },
+            { "reference", "$@NULL@$" },
+        };
+
+            WriteElements(writer, elements);
+            writer.WriteEndElement(); // </file>
+
             CopyFileToBackupFolder(outputPath, fileStream, contentHash);
             fileStream.Dispose();
         }
@@ -185,6 +277,90 @@ namespace CourseAsCode.Writers.XML.FileWriters
 
             LogDebug($"Calculated hash {hash} for file {Path.GetFileName(fileStream.Name)}");
             return hash;
+        }
+
+        /// <summary>
+        /// Is responsible for processing the images used in quizzes
+        /// </summary>
+        private void ProcessQuizImages(XmlWriter writer, string outputPath, Quiz quiz)
+        {
+            foreach (var question in quiz.Questions)
+            {
+                if (question is not DragAndDropTextAndImageQuestion ddQuestion) continue;
+
+                question.ContextId = CourseDefaults.QUESTION_BANK_CONTEXT_ID;
+
+                // Backgroundimage
+                if (!string.IsNullOrEmpty(ddQuestion.BackgroundImagePath))
+                {
+                    string fileName = ddQuestion.BackgroundImageName ?? Path.GetFileName(ddQuestion.BackgroundImagePath);
+
+                    WriteQuizImage(writer, outputPath, ddQuestion.BackgroundImagePath, fileName,
+                        question.ContextId, "qtype_ddimageortext", "bgimage", ddQuestion.QuestionId);
+                }
+
+                // Drag Images
+                if (ddQuestion.Drags != null)
+                {
+                    foreach (var drag in ddQuestion.Drags)
+                    {
+                        if (string.IsNullOrEmpty(drag.ImagePath)) continue;
+
+                        if (drag.ID == 0) drag.ID = _idGenerator.GetNextAnswerId();
+
+                        string dragName = drag.ImageName ?? Path.GetFileName(drag.ImagePath);
+
+                        WriteQuizImage(writer, outputPath, drag.ImagePath, dragName,
+                            question.ContextId, "qtype_ddimageortext", "dragimage", drag.ID);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method logic mirrors WriteSingleFile but uses simple parameters instead of MoodleFile objects.
+        /// </summary>
+        private void WriteQuizImage(XmlWriter writer, string outputPath, string filePath, string fileName, int contextId, string component, string fileArea, int itemId)
+        {
+            if (!_fileService.Exists(filePath)) return;
+
+            using (var stream = _fileService.OpenRead(filePath))
+            {
+                string contentHash = GetMoodleContentHash(stream);
+                long fileSize = stream.Length;
+
+                string uniqueId = _idGenerator.GetNextAnswerId().ToString();
+                WriteStartElementWithAttributes(writer, "file", new Dictionary<string, string> { { "id", uniqueId } });
+
+                var elements = new Dictionary<string, string>
+                {
+                    { "contenthash", contentHash },
+                    { "contextid", contextId.ToString() },
+                    { "component", component },
+                    { "filearea", fileArea },
+                    { "itemid", itemId.ToString() },
+                    { "filepath", "/" },
+                    { "filename", fileName },
+                    { "userid", "2" }, // Admin
+                    { "filesize", fileSize.ToString() },
+                    { "mimetype", MimeTypes.GetMimeType(filePath) },
+                    { "status", "0" },
+                    { "timecreated", _generalHelper.DateTimeToUnixTimestamp(DateTime.Now) },
+                    { "timemodified", _generalHelper.DateTimeToUnixTimestamp(DateTime.Now) },
+                    { "source", fileName },
+                    { "author", "$@NULL@$" },
+                    { "license", "unknown" },
+                    { "sortorder", "0" },
+                    { "repositorytype", "$@NULL@$" },
+                    { "repositoryid", "$@NULL@$" },
+                    { "reference", "$@NULL@$" },
+                };
+
+                WriteElements(writer, elements);
+                writer.WriteEndElement();
+
+                CopyFileToBackupFolder(outputPath, stream, contentHash);
+            }
         }
     }
 }

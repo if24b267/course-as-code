@@ -1,0 +1,5 @@
+SectionName: "Introduction to the Subject"
+Summary: ""
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/00-IntroductionContent.yaml

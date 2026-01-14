@@ -1,19 +1,26 @@
 using CourseAsCode.Model;
 using CourseAsCode.Model.Activities;
+using CourseAsCode.Model.Activities.Choice;
 using CourseAsCode.Model.Activities.Resources;
-using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.Forum;
+using CourseAsCode.Writers.XML.FileWriters.Activities.Lesson;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using CourseAsCode.Writers.XML.Writer.Activities.Assignment;
+using CourseAsCode.Writers.XML.Writer.Activities.Choice;
 using CourseAsCode.Writers.XML.Writer.Activities.CommonWriters;
+using CourseAsCode.Writers.XML.Writer.Activities.Feedback;
 using CourseAsCode.Writers.XML.Writer.Activities.File;
+using CourseAsCode.Writers.XML.Writer.Activities.Folder;
 using CourseAsCode.Writers.XML.Writer.Activities.Labels;
+using CourseAsCode.Writers.XML.Writer.Activities.Pages;
 using CourseAsCode.Writers.XML.Writer.Activities.Quiz;
+using CourseAsCode.Writers.XML.Writer.Activities.Scheduler;
 using CourseAsCode.Writers.XML.Writer.Activities.Url;
 using CourseAsCode.Writers.XML.Writer.Activities.Wiki;
 using Microsoft.Extensions.Logging;
+using LessonModel = CourseAsCode.Model.Activities.Resources.Lesson;
 
 namespace CourseAsCode.Writers.XML.GeneralWriter
 {
@@ -62,6 +69,29 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
         // Forum Activity Writers
         private readonly ForumWriter _forumWriter;
         private readonly ModuleWriterForum _moduleWriterForum;
+        //Choice Activity Writers
+        private readonly ChoiceWriter _choiceWriter;
+        private readonly ModuleWriterChoice _moduleWriterChoice;
+
+        // Feedback Activity Writers
+        private readonly FeedbackWriter _feedbackWriter;
+        private readonly ModuleWriterFeedback _moduleWriterFeedback;
+
+        // Folder Activity Writers
+        private readonly FolderWriter _folderWriter;
+        private readonly ModuleWriterFolder _moduleWriterFolder;
+
+        // Page Activity Writers
+        private readonly PageWriter _pageWriter;
+        private readonly ModuleWriterPage _moduleWriterPage;
+
+        // Scheduler Activity Writers
+        private readonly SchedulerWriter _schedulerWriter;
+        private readonly ModuleWriterScheduler _moduleWriterScheduler;
+
+        //Lesson Activity Writers
+        private readonly LessonWriter _lessonWriter;
+        private readonly ModuleWriterLesson _moduleWriterLesson;
 
         public ActivitiesWriterService(
             ILogger<ActivitiesWriterService> logger,
@@ -90,6 +120,18 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             ModuleWriterWiki moduleWriterWiki,
             ForumWriter forumWriter,
             ModuleWriterForum moduleWriterForum)
+            ChoiceWriter choiceWriter,
+            ModuleWriterChoice moduleWriterChoice,
+            FeedbackWriter feedbackWriter,
+            ModuleWriterFeedback moduleWriterFeedback,
+            FolderWriter folderWriter,
+            ModuleWriterFolder moduleWriterFolder,
+            PageWriter pageWriter,
+            ModuleWriterPage moduleWriterPage,
+            SchedulerWriter schedulerWriter,
+            ModuleWriterScheduler moduleWriterScheduler,
+            LessonWriter lessonWriter,
+            ModuleWriterLesson moduleWriterLesson)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
@@ -134,7 +176,33 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             // Forum Activity Writers
             _forumWriter = forumWriter ?? throw new ArgumentNullException(nameof(forumWriter));
             _moduleWriterForum = moduleWriterForum ?? throw new ArgumentNullException(nameof(moduleWriterForum));
+
+            //Choice Activity Writers
+            _choiceWriter = choiceWriter ?? throw new ArgumentNullException(nameof(choiceWriter));
+            _moduleWriterChoice = moduleWriterChoice ?? throw new ArgumentNullException(nameof(moduleWriterChoice));
+
+            // Feedback Activity Writers
+            _feedbackWriter = feedbackWriter ?? throw new ArgumentNullException(nameof(feedbackWriter));
+            _moduleWriterFeedback = moduleWriterFeedback ?? throw new ArgumentNullException(nameof(moduleWriterFeedback));
+
+            // Folder Activity Writers
+            _folderWriter = folderWriter ?? throw new ArgumentNullException(nameof(folderWriter));
+            _moduleWriterFolder = moduleWriterFolder ?? throw new ArgumentNullException(nameof(moduleWriterFolder));
+
+            // Page Activity Writers
+            _pageWriter = pageWriter ?? throw new ArgumentNullException(nameof(pageWriter));
+            _moduleWriterPage = moduleWriterPage ?? throw new ArgumentNullException(nameof(moduleWriterPage));
+
+            // Scheduler Activity Writers
+            _schedulerWriter = schedulerWriter ?? throw new ArgumentNullException(nameof(schedulerWriter));
+            _moduleWriterScheduler = moduleWriterScheduler ?? throw new ArgumentNullException(nameof(moduleWriterScheduler));
+
+            //Lesson Activity Writers
+            _lessonWriter = lessonWriter ?? throw new ArgumentNullException(nameof(lessonWriter));
+            _moduleWriterLesson = moduleWriterLesson ?? throw new ArgumentNullException(nameof(moduleWriterLesson));
+
         }
+
 
         /// <summary>
         /// Writes all activity data for a given course into their respective directories
@@ -201,6 +269,41 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
 
                         _forumWriter.WriteForum(activityPath, forum);
                         _moduleWriterForum.WriteModule(activityPath, course, section, forum);
+                    else if (activity is Choice choice)
+                    {
+                        activityPath = CreateActivityDirectory(outputPath, activity, "choice");
+                        _choiceWriter.WriteChoice(activityPath, choice);
+                        _moduleWriterChoice.WriteModule(activityPath, course, section, choice);
+                    }
+                    else if (activity is Feedback feedback)
+                    {
+                        activityPath = CreateActivityDirectory(outputPath, activity, "feedback");
+                        _feedbackWriter.WriteFeedback(activityPath, feedback);
+                        _moduleWriterFeedback.WriteModule(activityPath, course, section, feedback);
+                    }
+                    else if (activity is Folder folder)
+                    {
+                        activityPath = CreateActivityDirectory(outputPath, activity, "folder");
+                        _folderWriter.WriteFolder(activityPath, folder);
+                        _moduleWriterFolder.WriteModule(activityPath, course, section, folder);
+                    }
+                    else if (activity is Page page)
+                    {
+                        activityPath = CreateActivityDirectory(outputPath, activity, "page");
+                        _pageWriter.WritePage(activityPath, page);
+                        _moduleWriterPage.WriteModule(activityPath, course, section, page);
+                    }
+                    else if (activity is Scheduler scheduler)
+                    {
+                        activityPath = CreateActivityDirectory(outputPath, activity, "scheduler");
+                        _schedulerWriter.WriteScheduler(activityPath, scheduler);
+                        _moduleWriterScheduler.WriteModule(activityPath, course, section, scheduler);
+                    }
+                    else if (activity is LessonModel lesson)
+                    {
+                        activityPath = CreateActivityDirectory(outputPath, activity, "lesson");
+                        _lessonWriter.WriteLesson(activityPath, lesson);
+                        _moduleWriterLesson.WriteModule(activityPath, course, section, lesson);
                     }
                     else
                     {

@@ -1,5 +1,6 @@
 using System.Xml;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CourseAsCode.Writers.XML.Helper
@@ -44,6 +45,35 @@ namespace CourseAsCode.Writers.XML.Helper
             }
 
             xmlWriter.WriteEndElement(); // Close <tags>
+        }
+
+
+        public void WriteTags(IXmlService xmlHelper, List<string>? tags)
+        {
+            int tagId = 0;
+
+            xmlHelper.WriteElement("tags");
+
+            if (tags != null)
+            {
+                foreach (string tag in tags)
+                {
+                    xmlHelper.WriteElementWithAttributes("tag", new Dictionary<string, string>
+                    {
+                        { "id", tagId++.ToString() }
+                    });
+
+                    xmlHelper.WriteElements(new Dictionary<string, string>
+                    {
+                        { "name", tag },
+                        { "rawname", tag },
+                    });
+
+                    xmlHelper.CloseElement(); // Close <tag>
+                }
+            }
+
+            xmlHelper.CloseElement(); // Close <tags>
         }
     }
 }

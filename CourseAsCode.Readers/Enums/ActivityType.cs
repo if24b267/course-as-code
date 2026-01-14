@@ -9,5 +9,10 @@ namespace CourseAsCode.Readers.Enums
         FILE,
         ASSIGNMENT,
         FORUM
+        WIKI,
+        PAGE,
+        CHOICE,
+        FEEDBACK,
+        FOLDER
     }
 }

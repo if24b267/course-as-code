@@ -1,5 +1,4 @@
 using System.Xml;
-
 using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -10,7 +9,6 @@ namespace CourseAsCode.Writers.XML.Writer
     public class RolesWriter : XmlWriterBase
     {
         private const string DEFAULT_ROLES_RELATIVE_PATH = "roles.xml";
-
         private readonly IRolesHelper _rolesHelper;
 
         public RolesWriter(IXmlWriterFactory xmlWriterFactory, ILogger<RolesWriter> logger, IRolesHelper rolesHelper)
@@ -34,20 +32,11 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         foreach (var role in course.Roles)
                         {
-                            WriteSingleRole(
-                                writer,
-                                role.SystemDefaults.RoleId,
-                                role.Name ?? string.Empty,
-                                role.ShortName,
-                                role.LocalName ?? "$@NULL@$",
-                                role.Description ?? string.Empty,
-                                role.SystemDefaults.RoleId.ToString(),
-                                "editingteacher" // ggf. anpassen
-                            );
+                            WriteSingleRole(writer, role);
                         }
                     }
 
-                    writer.WriteEndElement(); // Close <roles_definition>
+                    writer.WriteEndElement(); // </roles_definition>
                     writer.WriteEndDocument();
                 }
 
@@ -60,27 +49,27 @@ namespace CourseAsCode.Writers.XML.Writer
             }
         }
 
-        private void WriteSingleRole(XmlWriter writer, int id, string name, string shortname, string nameincourse, string description, string sortorder, string archetype)
+        private void WriteSingleRole(XmlWriter writer, Role role)
         {
             WriteStartElementWithAttributes(writer, "role", new Dictionary<string, string>
-    {
-        { "id", id.ToString() }
-    });
+            {
+                { "id", role.SystemDefaults.RoleId.ToString() }
+            });
 
             var elements = new Dictionary<string, string>
-    {
-        { "name", name },
-        { "shortname", shortname },
-        { "nameincourse", nameincourse },
-        { "description", description },
-        { "sortorder", sortorder },
-        { "archetype", archetype }
-    };
+            {
+                { "name", role.Name ?? string.Empty },
+                { "shortname", role.ShortName },
+                { "nameincourse", role.LocalName ?? "$@NULL@$" },
+                { "description", role.Description ?? string.Empty },
+                { "sortorder", role.SystemDefaults.RoleId.ToString() }, // Use RoleId as sortorder, adjust if needed
+                { "archetype", role.Archetype.ToString().ToLowerInvariant() }
+            };
 
             WriteElements(writer, elements);
 
-            writer.WriteEndElement(); // Close <role>
+            writer.WriteEndElement(); // </role>
+            LogTrace($"Added role {role.SystemDefaults.RoleId}: '{role.Name}' to {DEFAULT_ROLES_RELATIVE_PATH}");
         }
-
     }
 }

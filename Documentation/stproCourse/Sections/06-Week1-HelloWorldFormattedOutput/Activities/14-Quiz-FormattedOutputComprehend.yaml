@@ -1,0 +1,9 @@
+Name: "FORMATTED_OUTPUT_COMPREHEND+"
+Type: QUIZ
+Description: |
+  <p>predict the format for given format specifiers.</p>
+AttemptsAllowed: 5
+GradingMethod: HighestGrade
+QuestionBehaviour: Deferred
+ShuffleQuestions: false
+QuestionIds: [35, 36, 37, 38, 39, 40, 41, 42, 43, 44]

@@ -48,6 +48,17 @@ namespace CourseAsCode.Writers.XML.Writer.Activities.CommonWriters
                         writer.WriteEndElement(); // Close </fileref>
                     }
 
+                    if (activityInstace is Model.Activities.Resources.Folder folder && folder.Files != null && folder.Files.Count > 0)
+                    {
+                        writer.WriteStartElement("fileref");
+
+                        foreach (var f in folder.Files)
+                        {
+                            WriteOneInforefSection(writer, f.ActivityId, "file");
+                        }
+
+                        writer.WriteEndElement(); // </fileref>
+                    }
 
                     // For the Quiz activity, reference the question categories and Grading Item
                     if (activityInstace is Model.Activities.Resources.Quiz quiz)

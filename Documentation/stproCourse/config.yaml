@@ -1,0 +1,22 @@
+CourseName: Strukturierte Programmierung
+ShortName: STPRO-Demo
+Summary: We will explore the basics of structured programming and data structures and algorithms.
+
+Visible: true
+Category: Software Engineering & Architecture
+StartDate: 06-02-2020 00:00
+EndDate: 31-12-2030 23:59
+
+ForcedLanguage: en
+ShowGrades: true
+NumberOfAnnouncements: 5
+ShowActivityDates: true
+
+ShowCompletionConditions: true
+EnableCompletionTracking: true
+
+GroupMode: 2
+ForceGroupMode: false
+
+QuestionListPaths:
+  - ./Questions/quiz-questions.yaml

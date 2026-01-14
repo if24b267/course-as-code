@@ -21,6 +21,8 @@ EnableCompletionTracking: true
 
 GroupMode: 1
 ForceGroupMode: false
+GradeCategoriesPath: ./Grading/gradeCategories.yaml
+GradingInfosPath: ./Grading/gradingInfos.yaml
 
 QuestionListPaths:
   - ./Questions/questions1.yaml
@@ -29,3 +31,9 @@ QuestionListPaths:
   - ./Questions/questions4.yaml
   - ./Questions/questions5.yaml
   - ./Questions/questions6.yaml
+  - ./Questions/questions7.yaml 
+  - ./Questions/questions8.yaml 
+  - ./Questions/questions9.yaml 
+  - ./Questions/questions10.yaml 
+  - ./Questions/questions11.yaml 
+  - ./Questions/questions12.yaml 

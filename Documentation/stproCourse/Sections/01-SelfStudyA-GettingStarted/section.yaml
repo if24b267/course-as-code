@@ -1,0 +1,24 @@
+SectionName: "Self study A: Getting started"
+Summary: |
+  <p>After completing this self-study you will be <strong>able to</strong></p>
+  <ul>
+    <li><strong>create, compile and run</strong> a project in an IDE.</li>
+    <li><strong>test</strong> your <strong>programs</strong> with CodeRunner</li>
+  </ul>
+  <hr>
+  <h5>IDE</h5>
+  <p>An Integrated Development Environment (IDE) is a software tool that makes coding easier by providing features like syntax highlighting, debugging, and easy access to libraries. It's your coding workspace where you can write, test, and debug your Java programs all in one place, saving you time and effort.</p>
+  <h5>HelloWorld</h5>
+  <p>"HelloWorld" is the first program most people write in Java, and it's all about getting you comfortable with the basics of coding and running your code. It's a simple way to see how Java works and gives you a quick win as you start your programming journey.</p>
+  <h5>CodeRunner</h5>
+  <p>Coderunner in Moodle is a tool that allows you to write, run, and test your code directly within the learning platform. It's important because it gives you instant feedback on your code, helping you quickly identify and fix errors. Plus, it ensures that your solutions meet the requirements of your assignments, making it easier to learn and practice coding in a structured way.</p>
+  <hr>
+  <p>In this <strong>Self Study</strong> you will</p>
+  <ul>
+    <li><strong>set up</strong> your IDE</li>
+    <li><strong>write</strong> your first HelloWorld programm</li>
+    <li><strong>get familiar</strong> with CodeRunner</li>
+  </ul>
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/01-SelfStudyInstructions.yaml

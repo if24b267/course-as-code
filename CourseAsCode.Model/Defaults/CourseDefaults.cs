@@ -23,6 +23,7 @@ public static class CourseDefaults
           ManualEnrolmentDefaults.GetDefaultManualEnrolment(),
      };
     public static readonly List<User> DEFAULT_ENROLLED_USERS = new List<User>();
+    public static readonly List<Scale> DEFAULT_SCALES = ScaleDefaults.DEFAULT_SCALES;
 
     // Sensible Defaults
     public static readonly int? DEFAULT_NUMBER_OF_ANNOUNCEMENTS_TO_DISPLAY = 3;
@@ -48,6 +49,7 @@ public static class CourseDefaults
     public const string? DEFAULT_PDF_EXPORT_FONT = null;
     public const string? DEFAULT_CUSTOM_FIELDS = null;
     public const string DEFAULT_FILE_PATH = "course";
+    public const int QUESTION_BANK_CONTEXT_ID = 383;
 
     /// <summary>
     /// Returns a course object with all properties set to the default values

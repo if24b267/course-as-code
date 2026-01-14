@@ -1,9 +1,8 @@
 ﻿using CourseAsCode.Model;
 using CourseAsCode.Writers.XML.FileWriters;
-using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
+using CourseAsCode.Writers.XML.FileWriters.Questions;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Writer;
-using CourseAsCode.Writers.XML.Writer.QuestionsWriter;
 
 namespace CourseAsCode.Writers.XML.GeneralWriter
 {
@@ -59,7 +58,7 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
         /// <param name="outputPath">The directory path where the generated files will be written.</param>
         public void WriteRootFiles(Course course, string outputPath)
         {
-            _badgesWriter.WriteBadges(outputPath);
+            _badgesWriter.WriteBadges(course, outputPath);
             _completionWriter.WriteCompletion(course, outputPath);
             _filesWriter.WriteFiles(course, outputPath);
             _gradebookWriter.WriteGradebook(course, outputPath);

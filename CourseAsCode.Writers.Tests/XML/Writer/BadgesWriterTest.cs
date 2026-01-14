@@ -1,6 +1,6 @@
-using System.Xml;
-using CourseAsCode.Writers.Tests.Fakes;
-using CourseAsCode.Writers.XML.Writer;
+using CourseAsCode.Model.Defaults;
+using CourseAsCode.Writers.XML.FileWriters;
+using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -9,34 +9,34 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
     [TestFixture]
     public class BadgesWriterTests
     {
-        private XmlWriterFactoryTest _testFactory;
-        private ILogger<BadgesWriter> _testLogger;
-        private BadgesWriter _testBadgesWriter;
+        private IXmlServiceFactory _mockXmlFactory;
+        private IXmlService _mockXmlService;
+        private ILogger<BadgesWriter> _mockLogger;
+        private BadgesWriter _badgesWriter;
+        private CourseAsCode.Model.Course _dummyCourse;
 
         [SetUp]
         public void SetUp()
         {
-            _testFactory = new XmlWriterFactoryTest(); // fake XML Writer factory that creates an XML writer that writes to an in-memory StringWriter instead
-            _testLogger = Substitute.For<ILogger<BadgesWriter>>();
-            _testBadgesWriter = new BadgesWriter(_testFactory, _testLogger); // Use DI to inject the test factory and logger
+            // Arrange Mocks
+            _mockXmlFactory = Substitute.For<IXmlServiceFactory>();
+            _mockXmlService = Substitute.For<IXmlService>();
+            _mockLogger = Substitute.For<ILogger<BadgesWriter>>();
+
+            // Setup the factory to return the mock service when Create is called
+            _mockXmlFactory.Create(Arg.Any<string>()).Returns(_mockXmlService);
+
+            // Create dummy data
+            _dummyCourse = CourseDefaults.GetDefaultCourse();
+
+            // Instantiate System Under Test (SUT)
+            _badgesWriter = new BadgesWriter(_mockXmlFactory, _mockLogger);
         }
 
-        [Test]
-        public void WriteBadges_GeneratesValidXml()
+        [TearDown]
+        public void Dispose()
         {
-            // Arrange
-            string dummyOutputPath = "dummyPath";
-
-            // Act
-            _testBadgesWriter.WriteBadges(dummyOutputPath);
-            string output = _testFactory.StringWriter.ToString();
-
-            // Assert: Loading the XML should not throw an exception (well-formed XML)
-            Assert.DoesNotThrow(() =>
-            {
-                var doc = new XmlDocument();
-                doc.LoadXml(output);
-            });
+            _mockXmlService.Dispose();
         }
 
         [Test]
@@ -46,53 +46,14 @@ namespace CourseAsCode.Writers.Tests.XML.Writer
             string dummyOutputPath = "dummyPath";
 
             // Act
-            _testBadgesWriter.WriteBadges(dummyOutputPath);
-            string output = _testFactory.StringWriter.ToString();
+            _badgesWriter.WriteBadges(_dummyCourse, dummyOutputPath);
 
             // Assert: The root element should be "badges"
-            var doc = new XmlDocument();
-            doc.LoadXml(output);
-            Assert.That(doc.DocumentElement, Is.Not.Null, "The XML document should have a root element");
-            Assert.That(doc.DocumentElement.Name, Is.EqualTo("badges"));
-        }
+            _mockXmlService.Received(1).WriteElement("badges");
 
-        [Test]
-        public void WriteBadges_LogsDebugOnSuccess()
-        {
-            // Arrange
-            string dummyOutputPath = "dummyPath";
-
-            // Act
-            _testBadgesWriter.WriteBadges(dummyOutputPath);
-
-            // Assert: Verify that logger.Debug is called with a message containing "badges.xml"
-            _testLogger.Received().Log(
-                LogLevel.Debug,
-                Arg.Any<EventId>(),
-                Arg.Is<object>(o => o.ToString().Contains("badges.xml")),
-                null,
-                Arg.Any<Func<object, Exception, string>>()!);
-        }
-
-        [Test]
-        public void WriteBadges_LogsErrorOnException()
-        {
-            // Arrange
-            var throwingFactory = new ExceptionThrowingXmlWriterFactory();
-            _testBadgesWriter = new BadgesWriter(throwingFactory, _testLogger);
-
-            string dummyOutputPath = "dummyPath";
-
-            // Act & Assert: An exception should be thrown
-            Assert.Throws<InvalidOperationException>(() => _testBadgesWriter.WriteBadges(dummyOutputPath));
-
-            // Verify that logger.Error is called with a message containing "badges.xml"
-            _testLogger.Received().Log(
-                LogLevel.Error,
-                Arg.Any<EventId>(),
-                Arg.Is<object>(o => o.ToString().Contains("badges.xml")),
-                Arg.Any<Exception>(),
-                Arg.Any<Func<object, Exception, string>>()!);
+            // Check if all opened tags were closed
+            int openTags = _mockXmlService.ReceivedCalls().Count(call => call.GetMethodInfo().Name == "WriteElement" || call.GetMethodInfo().Name == "WriteElementWithAttributes");
+            _mockXmlService.Received(openTags).CloseElement();
         }
     }
 }

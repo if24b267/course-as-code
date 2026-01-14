@@ -70,15 +70,15 @@ plugins:
 nav:
   - Home: index.md
   - Usage:
-      - Overview: Usage/Overview.md
+      - Overview: Usage/index.md
       - Moodle Environment Setup: Usage/Moodle_Environment_Setup.md
       - Course As Code Setup: Usage/Course_As_Code_Setup.md
       - Creating a Course: Usage/Creating_A_Course.md
       - Exporting a Course: Usage/Exporting_A_Course.md
       - Importing a Course: Usage/Importing_A_Course.md
   - Architecture:
-      - Overview: Architecture/Overview.md
-      - Reader: Architecture/Reader.md
+      - Overview: Architecture/index.md
+      - Readers: Architecture/Readers.md
       - Internal Data Model:
         - Architecture/DataModel/index.md
         - General Concepts: Architecture/DataModel/Nomenclature.md
@@ -86,18 +86,39 @@ nav:
         - User-specific Concepts: Architecture/DataModel/User_Nomenclature.md
       - Writer: Architecture/Writer.md
   - Activities:
-      - Overview: Activities/Overview.md
-      - Assignment: Activities/Assignment.md
+      - Overview: Activities/index.md
+      - Assignment:
+        - Assignment Developer: Activities/Assignment_Dev.md
+        - Assignment User: Activities/Assignment_User.md
       - Moodle File: Activities/Moodle_File.md
       - Text and Media Area: Activities/Text_and_Media_Area.md
       - URL: Activities/URL.md
-      - Quiz: Activities/Quiz.md
+      - Quiz:
+        - Activities/Quiz/index.md
+        - Question Types: Activities/Quiz/Question_Types.md
+        - Quiz Architecture & Developer Guide: Activities/Quiz/Quiz_Architecture_and_Extensibility.md
   - Grading:
-      - Overview: Grading/Overview.md
+      - Overview: Grading/index.md
       - Grade Categories: Grading/Grade_Categories.md
       - Grade Items: Grading/Grade_Items.md
+  - YAML Schema:
+      - Course Configuration: YamlSchema/Config.md
+      - Sections: YamlSchema/Sections.md
+      - Activities:
+        - Overview: YamlSchema/Activities/index.md
+        - Assignment: YamlSchema/Activities/Assignment.md
+        - Choice: YamlSchema/Activities/Choice.md
+        - Feedback: YamlSchema/Activities/Feedback.md
+        - File: YamlSchema/Activities/File.md
+        - Folder: YamlSchema/Activities/Folder.md
+        - Page: YamlSchema/Activities/Page.md
+        - Quiz: YamlSchema/Activities/Quiz.md
+        - Text and Media Area: YamlSchema/Activities/TextMediaArea.md
+        - URL: YamlSchema/Activities/Url.md
+        - Wiki: YamlSchema/Activities/Wiki.md
+      - Question Bank: YamlSchema/Questions.md
   - Moodle Backup File (.mbz):
-      - General: MoodleBackupFile/General.md
+      - Overview: MoodleBackupFile/index.md
       - Base Structure: MoodleBackupFile/Base_Structure.md
       - Activites:
         - Assignment: MoodleBackupFile/Activities/Assignment.md
@@ -107,3 +128,7 @@ nav:
         - CodeRunner: MoodleBackupFile/QuestionTypes/CodeRunner.md
         - Dropdown: MoodleBackupFile/QuestionTypes/Dropdown.md
         - Matching: MoodleBackupFile/QuestionTypes/DragAndDropText.md
+  - Development:
+      - Overview: Development/index.md
+      - Roadmap: Development/Roadmap.md
+      - Known Issues: Development/Known_Issues.md

@@ -2,6 +2,7 @@ using System.Text.Json;
 
 using CourseAsCode.Model;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Grading;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
@@ -22,18 +23,22 @@ namespace CourseAsCode.Readers
         private readonly IServiceProvider _serviceProvider;
         private readonly IYamlFileReaderHelper _yamlReader;
         private readonly IQuestionReader _questionReader;
+        private readonly IGradeCategoriesReader _gradeCategoriesReader;
+        private readonly IYamlGradingInfosReader _gradingInfosReader;
 
-        public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader, IQuestionReader questionReader)
+        public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider, IYamlFileReaderHelper yamlReader, IQuestionReader questionReader, IGradeCategoriesReader gradeCategoriesReader, IYamlGradingInfosReader gradingInfosReader)
         {
             _sectionReader = sectionReader;
             _serviceProvider = serviceProvider;
             _yamlReader = yamlReader;
             _questionReader = questionReader;
+            _gradeCategoriesReader = gradeCategoriesReader;
+            _gradingInfosReader = gradingInfosReader;
         }
 
         // For backward compatibility
         public CourseReader(ISectionReader sectionReader, IServiceProvider serviceProvider)
-            : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()))
+            : this(sectionReader, serviceProvider, new YamlFileReaderHelper(), new YamlQuestionReader(new YamlFileReaderHelper()), new YamlGradeCategoriesReader(new YamlFileReaderHelper()), new YamlGradingInfosReader(new YamlFileReaderHelper()))
         {
         }
 
@@ -78,10 +83,23 @@ namespace CourseAsCode.Readers
             var yamlYamlCourse = _yamlReader.DeserializeFromFile<YamlCourse>(Path.Combine(coursePath, courseConfigYamlFile.Name));
             var yamlSectionsDefinition = _yamlReader.DeserializeFromFile<YamlSectionsDefinition>(Path.Combine(coursePath, courseSectionsYamlFile.Name));
 
+            List<GradeCategory> gradeCategories = [];
+            List<YamlGradingInfo> gradingInfos = [];
+
+
+            if (yamlYamlCourse.GradeCategoriesPath != null)
+            {
+                gradeCategories = _gradeCategoriesReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradeCategoriesPath)));
+                gradingInfos =
+                    _gradingInfosReader.Read(Path.GetFullPath(Path.Combine(coursePath, yamlYamlCourse.GradingInfosPath)));
+            }
+
             List<Section> sections = [];
             ValueKeeper.Questions = [];
             ValueKeeper.CurrentActivityId = 1;
             ValueKeeper.CurrentSectionId = 1;
+            ValueKeeper.GradeCategories = gradeCategories;
+            ValueKeeper.GradingInfos = gradingInfos;
 
             if (yamlYamlCourse.QuestionListPaths != null)
             {
@@ -127,6 +145,7 @@ namespace CourseAsCode.Readers
                 CourseLanguage = courseLanguage,
                 Sections = sections,
                 Questions = ValueKeeper.Questions,
+                GradeCategories = gradeCategories ?? [],
 
                 // TODO: maybe add a helper class where you can get the default SensibleDefaults class
                 SensibleDefaults = new Course.SensibleDefaultsCourse
@@ -179,6 +198,14 @@ namespace CourseAsCode.Readers
             services.AddSingleton<IAssignmentReader, YamlAssignmentReader>();
             services.AddSingleton<ICourseReader, CourseReader>();
             services.AddSingleton<IForumReader, YamlForumReader>();
+            services.AddSingleton<IWikiReader, YamlWikiReader>();
+            services.AddSingleton<IWikiPageReader, YamlWikiPageReader>();
+            services.AddSingleton<IGradeCategoriesReader, YamlGradeCategoriesReader>();
+            services.AddSingleton<IYamlGradingInfosReader, YamlGradingInfosReader>();
+            services.AddSingleton<IYamlPageReader, YamlPageReader>();
+            services.AddSingleton<IChoiceReader, YamlChoiceReader>();
+            services.AddSingleton<IFeedbackReader, YamlFeedbackReader>();
+            services.AddSingleton<IFolderReader, YamlFolderReader>();
         }
     }
 }

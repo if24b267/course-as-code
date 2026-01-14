@@ -1,0 +1,42 @@
+SectionName: "Self Study A: Resources"
+Summary: ""
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/01-HelloWorld-slides.yaml
+  - ActivityFilePath: Activities/02-HelloWorld-HelloWorldClip.yaml
+  - ActivityFilePath: Activities/03-HelloWorld-HowtoTestYourPrograms.yaml
+  - ActivityFilePath: Activities/04-URL-JavaReading.yaml
+  - ActivityFilePath: Activities/05-Quiz-GettingToKnowCoderunner.yaml
+  - ActivityFilePath: Activities/06-Quiz-SelfChecksGettingStarted.yaml
+  - ActivityFilePath: Activities/07-Quiz-HelloWorldKnow.yaml
+  - ActivityFilePath: Activities/08-Quiz-HelloWorldComprehend.yaml
+  - ActivityFilePath: Activities/09-FormattedOutput-slides.yaml
+  - ActivityFilePath: Activities/10-PrintClip.yaml
+  - ActivityFilePath: Activities/11-SpecialCharacterClip.yaml
+  - ActivityFilePath: Activities/12-IntegerFormattingClip.yaml
+  - ActivityFilePath: Activities/13-FloatingPointFormattingClip.yaml
+  - ActivityFilePath: Activities/14-StringFormattingClip.yaml
+  - ActivityFilePath: Activities/15-Calculations-slides.yaml
+  - ActivityFilePath: Activities/16-IntegerArithmeticClip.yaml
+  - ActivityFilePath: Activities/17-DoubleArithmeticClip.yaml
+  - ActivityFilePath: Activities/18-MixedArithmeticClip.yaml
+  - ActivityFilePath: Activities/19-VariableDemoClip.yaml
+  - ActivityFilePath: Activities/20-Quiz-FormattedOutputKnow.yaml
+  - ActivityFilePath: Activities/21-Quiz-FormattedOutputComprehend.yaml
+  - ActivityFilePath: Activities/22-Quiz-FormattedOutputApply.yaml
+  - ActivityFilePath: Activities/23-FormattedInput-slides.yaml
+  - ActivityFilePath: Activities/24-ReadingIntegerValuesClip.yaml
+  - ActivityFilePath: Activities/25-ReadingDoubleValuesClip.yaml
+  - ActivityFilePath: Activities/26-ReadingStringsClip.yaml
+  - ActivityFilePath: Activities/27-Quiz-SelfCheckCalculations.yaml
+  - ActivityFilePath: Activities/28-Quiz-SelfCheckCalculationsIPO.yaml
+  - ActivityFilePath: Activities/29-SelectionStatements-slides.yaml
+  - ActivityFilePath: Activities/30-ConditionalStatementsClip.yaml
+  - ActivityFilePath: Activities/31-SingleAlternativesClip.yaml
+  - ActivityFilePath: Activities/32-ConsecutiveIfStatementsClip.yaml
+  - ActivityFilePath: Activities/33-NestedIfsClip.yaml
+  - ActivityFilePath: Activities/34-MultipleAlternativeClip.yaml
+  - ActivityFilePath: Activities/35-DebuggerClip.yaml
+  - ActivityFilePath: Activities/36-Quiz-SelectionBasic.yaml
+  - ActivityFilePath: Activities/37-Quiz-SelectionProgramming.yaml
+  - ActivityFilePath: Activities/38-IterationStatements-slides.yaml

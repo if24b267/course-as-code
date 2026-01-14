@@ -1,0 +1,15 @@
+Name: Cool Wiki
+Type: WIKI
+Description: This is a wiki activity.
+Intro: This is a cool intro
+IntroFormat: HTML
+FirstPageTitle: This is the first page title
+WikiMode: Collaborative
+WikiFormat: HTML
+ForceFormat: false
+Subwikis:
+  - PagePaths:
+      - ./wikiPages/wikiPage1.yaml
+      - ./wikiPages/wikiPage2.yaml
+  - PagePaths:
+      - ./wikiPages/wikiPage3.yaml

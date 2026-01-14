@@ -1,10 +1,18 @@
 using CourseAsCode.Model.Enums;
 using CourseAsCode.Model.Questions;
 using CourseAsCode.Model.Questions.Helper;
-using CourseAsCode.Model.Questions.Types;
+using CourseAsCode.Model.Questions.Types.Calculated;
+using CourseAsCode.Model.Questions.Types.CalculatedMulti;
+using CourseAsCode.Model.Questions.Types.CalculatedSimple;
 using CourseAsCode.Model.Questions.Types.CodeRunner;
+using CourseAsCode.Model.Questions.Types.Description;
 using CourseAsCode.Model.Questions.Types.DragAndDropText;
+using CourseAsCode.Model.Questions.Types.DragAndDropTextAndImage;
 using CourseAsCode.Model.Questions.Types.Dropdown;
+using CourseAsCode.Model.Questions.Types.Essay;
+using CourseAsCode.Model.Questions.Types.MultipleChoice;
+using CourseAsCode.Model.Questions.Types.ShortAnswer;
+using CourseAsCode.Model.Questions.Types.TrueFalse;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Readers.Interfaces;
@@ -51,7 +59,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                             PathUtils.InlineIfFile(yamlQuestionCodeRunnerTestCase.StdIn, baseDir);
                     }
                 }
-                var question = ConvertYamlQuestionToMoodleQuestion(yamlQuestion);
+                var question = ConvertYamlQuestionToMoodleQuestion(yamlQuestion, baseDir);
                 if (finalQuestionList.Any(questionFromList => questionFromList.QuestionId == question.QuestionId))
                 {
                     _logger.Error($"Question with ID {question.QuestionId} already exists in the list.");
@@ -64,7 +72,7 @@ namespace CourseAsCode.Readers.YAML.Readers
             return finalQuestionList;
         }
 
-        private Question? ConvertYamlQuestionToMoodleQuestion(YamlQuestion yamlQuestion)
+        private Question? ConvertYamlQuestionToMoodleQuestion(YamlQuestion yamlQuestion, string baseDir)
         {
             // TODO: add some kind of verification that all required properties are set for that question type (e.g. coderunner -> coderunnertype)
             switch (yamlQuestion.QuestionType)
@@ -72,6 +80,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.SINGLECHOICE:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to SingleChoiceQuestion");
                     return ConvertYamlQuestionToSingleChoiceQuestion(yamlQuestion);
+                case QuestionType.TRUEFALSE:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to TrueFalseQuestion");
+                    return ConvertYamlQuestionToTrueFalseQuestion(yamlQuestion);
                 case QuestionType.MULTIPLECHOICE:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to MultipleChoiceQuestion");
                     return ConvertYamlQuestionToMultipleChoiceQuestion(yamlQuestion);
@@ -81,9 +92,30 @@ namespace CourseAsCode.Readers.YAML.Readers
                 case QuestionType.DRAGANDDROPTEXT:
                     _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
                     return ConvertYamlQuestionToDragAndDropTextQuestion(yamlQuestion);
+                case QuestionType.DRAGANDDROPTEXTANDIMAGE:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextAndImageQuestion");
+                    return ConvertYamlQuestionToDragAndDropTextAndImageQuestion(yamlQuestion, baseDir);
                 case QuestionType.CODERUNNER:
-                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DragAndDropTextQuestion");
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CoderunnerQuestion");
                     return ConvertYamlQuestionToCodeRunnerQuestion(yamlQuestion);
+                case QuestionType.DESCRIPTION:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to DescriptionQuestion");
+                    return ConvertYamlQuestionToDescriptionQuestion(yamlQuestion);
+                case QuestionType.ESSAY:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to EssayQuestion");
+                    return ConvertYamlQuestionToEssayQuestion(yamlQuestion);
+                case QuestionType.SHORTANSWER:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to ShortAnswerQuestion");
+                    return ConvertYamlQuestionToShortAnswerQuestion(yamlQuestion);
+                case QuestionType.SIMPLECALCULATED:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedSimpleQuestion");
+                    return ConvertYamlQuestionToSimpleCalculatedQuestion(yamlQuestion);
+                case QuestionType.CALCULATED:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedQuestion");
+                    return ConvertYamlQuestionToCalculatedQuestion(yamlQuestion);
+                case QuestionType.CALCULATEDMULTICHOICE:
+                    _logger.Debug($"Converting question {yamlQuestion.QuestionName} to CalculatedMultiChoiceQuestion");
+                    return ConvertYamlQuestionToCalculatedMultiChoiceQuestion(yamlQuestion);
                 default:
                     _logger.Error($"Question type {yamlQuestion.QuestionType} is not supported.");
                     break;
@@ -113,7 +145,22 @@ namespace CourseAsCode.Readers.YAML.Readers
                 ValidateOnSave = yamlQuestion.ValidateOnSave,
                 DisplayFeedback = yamlQuestion.DisplayFeedback,
                 GiveUpAllowed = yamlQuestion.GiveUpAllowed,
-                TestCases = ConvertYamlCodeRunnerTestCasesToCodeRunnerTestCases(yamlQuestion.CodeRunnerTestCases)
+                TestCases = ConvertYamlCodeRunnerTestCasesToCodeRunnerTestCases(yamlQuestion.CodeRunnerTestCases),
+            };
+
+            return question;
+        }
+
+        private DescriptionQuestion ConvertYamlQuestionToDescriptionQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new DescriptionQuestion()
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                DefaultMark = yamlQuestion.DefaultMark,
             };
 
             return question;
@@ -132,7 +179,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 HideRestIfFail = yamlTestCase.HideRestIfFail,
                 Mark = yamlTestCase.Mark,
                 StdIn = yamlTestCase.StdIn,
-                Extra = yamlTestCase.Extra
+                Extra = yamlTestCase.Extra,
             }).ToList();
         }
 
@@ -156,7 +203,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
                 IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
                 IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
-                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
             };
 
             return question;
@@ -202,9 +249,12 @@ namespace CourseAsCode.Readers.YAML.Readers
         private List<DropdownSubQuestion> ConvertYamlSubQuestionListToMoodleSubQuestionList(List<YamlSubQuestion> yamlSubQuestions)
         {
             return yamlSubQuestions.Select(yamlSubQuestion => new DropdownSubQuestion()
-                {
-                    QuestionText = yamlSubQuestion.SubQuestionText, QuestionTextFormat = yamlSubQuestion.SubQuestionTextFormat, CorrectAnswer = yamlSubQuestion.CorrectAnswer, WrongAnswers = yamlSubQuestion.WrongAnswers ?? [],
-                })
+            {
+                QuestionText = yamlSubQuestion.SubQuestionText,
+                QuestionTextFormat = yamlSubQuestion.SubQuestionTextFormat,
+                CorrectAnswer = yamlSubQuestion.CorrectAnswer,
+                WrongAnswers = yamlSubQuestion.WrongAnswers ?? [],
+            })
                 .ToList();
         }
 
@@ -228,7 +278,28 @@ namespace CourseAsCode.Readers.YAML.Readers
                 PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
                 IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
                 IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
-                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
+            };
+
+            return question;
+        }
+
+        private TrueFalseQuestion ConvertYamlQuestionToTrueFalseQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new TrueFalseQuestion
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                CorrectAnswer = yamlQuestion.CorrectAnswer,
+                ShowStandardInstructions = yamlQuestion.ShowStandardInstructions,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                Answers = GetMoodleAnswersFromYamlAnswers(yamlQuestion.Answers),
+                HintPenalty = yamlQuestion.HintPenalty,
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
             };
 
             return question;
@@ -254,7 +325,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                 PartiallyCorrectResponseFeedbackFormat = yamlQuestion.PartiallyCorrectResponseFeedbackFormat,
                 IncorrectResponseFeedback = yamlQuestion.IncorrectResponseFeedback,
                 IncorrectResponseFeedbackFormat = yamlQuestion.IncorrectResponseFeedbackFormat,
-                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints)
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
             };
 
             return question;
@@ -279,6 +350,10 @@ namespace CourseAsCode.Readers.YAML.Readers
 
         private List<MultiChoiceAnswer> GetMoodleAnswersFromYamlAnswers(List<YamlQuestionAnswer> yamlAnswers)
         {
+            if (yamlAnswers == null)
+            {
+                return [];
+            }
             return yamlAnswers.Select(yamlAnswer => ConvertYamlAnswerToMoodleAnswer(yamlAnswer)).ToList();
         }
 
@@ -290,8 +365,312 @@ namespace CourseAsCode.Readers.YAML.Readers
                 AnswerTextFormat = questionAnswer.AnswerTextFormat,
                 AnswerGrade = questionAnswer.AnswerGrade,
                 AnswerFeedback = questionAnswer.Feedback,
-                AnswerFeedbackFormat = questionAnswer.FeedbackFormat
+                AnswerFeedbackFormat = questionAnswer.FeedbackFormat,
             };
+        }
+
+        private EssayQuestion ConvertYamlQuestionToEssayQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new EssayQuestion
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                ResponseFormat = yamlQuestion.ResponseFormat,
+                ResponseRequired = yamlQuestion.ResponseRequired,
+                ResponseFieldLines = yamlQuestion.ResponseFieldLines,
+                MinWordLimit = yamlQuestion.MinWordLimit,
+                MaxWordLimit = yamlQuestion.MaxWordLimit,
+                AttachmentsAllowed = yamlQuestion.AttachmentsAllowed,
+                AttachmentsRequired = yamlQuestion.AttachmentsRequired,
+                FileTypesList = yamlQuestion.FileTypesList,
+                MaxBytes = yamlQuestion.MaxBytes,
+                GraderInfo = yamlQuestion.GraderInfo,
+                GraderInfoFormat = yamlQuestion.GraderInfoFormat,
+                ResponseTemplate = yamlQuestion.ResponseTemplate,
+                ResponseTemplateFormat = yamlQuestion.ResponseTemplateFormat,
+            };
+
+            return question;
+        }
+
+        private ShortAnswerQuestion ConvertYamlQuestionToShortAnswerQuestion(YamlQuestion yamlQuestion)
+        {
+            var question = new ShortAnswerQuestion
+            {
+                QuestionName = yamlQuestion.QuestionName,
+                QuestionText = yamlQuestion.QuestionText,
+                Category = yamlQuestion.Category,
+                QuestionId = yamlQuestion.QuestionId,
+                QuestionTextFormat = yamlQuestion.QuestionTextFormat,
+                DefaultMark = yamlQuestion.DefaultMark,
+                QuestionReady = yamlQuestion.QuestionReady,
+                Answers = ConvertYamlAnswersToShortAnswerOptions(yamlQuestion.Answers),
+                HintPenalty = yamlQuestion.HintPenalty,
+                UseCase = yamlQuestion.UseCase,
+                Hints = yamlQuestion.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yamlQuestion.Hints),
+            };
+
+            return question;
+        }
+
+        private List<ShortAnswerOptions> ConvertYamlAnswersToShortAnswerOptions(List<YamlQuestionAnswer> yamlAnswers)
+        {
+            if (yamlAnswers == null)
+            {
+                return new List<ShortAnswerOptions>();
+            }
+
+            return yamlAnswers.Select(yamlAnswer => new ShortAnswerOptions
+            {
+                AnswerText = yamlAnswer.AnswerText,
+                AnswerTextFormat = yamlAnswer.AnswerTextFormat,
+                AnswerGrade = yamlAnswer.AnswerGrade,
+                AnswerFeedback = yamlAnswer.Feedback,
+                AnswerFeedbackFormat = yamlAnswer.FeedbackFormat
+            }).ToList();
+        }
+
+        private SimpleCalculatedQuestion ConvertYamlQuestionToSimpleCalculatedQuestion(YamlQuestion yaml)
+        {
+            return new SimpleCalculatedQuestion
+            {
+                QuestionName = yaml.QuestionName,
+                QuestionText = yaml.QuestionText,
+                QuestionId = yaml.QuestionId,
+                Category = yaml.Category,
+                DefaultMark = yaml.DefaultMark,
+                QuestionReady = yaml.QuestionReady,
+                QuestionTextFormat = yaml.QuestionTextFormat,
+
+                NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
+                NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
+                DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
+                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords, yaml.Answers),
+
+                Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
+            };
+        }
+
+        private List<CalculatedHelper.CalculatedAnswer> ConvertYamlAnswersToCalculatedOptions(List<YamlQuestionAnswer> yamlAnswers)
+        {
+            if (yamlAnswers == null)
+            {
+                return new List<CalculatedHelper.CalculatedAnswer>();
+            }
+
+            return yamlAnswers.Select(yamlAnswer => new CalculatedHelper.CalculatedAnswer
+            {
+                AnswerText = yamlAnswer.AnswerText,
+                AnswerTextFormat = yamlAnswer.AnswerTextFormat,
+                Fraction = yamlAnswer.AnswerGrade,
+                Feedback = yamlAnswer.Feedback,
+                FeedbackFormat = yamlAnswer.FeedbackFormat,
+            }).ToList();
+        }
+
+        private CalculatedHelper.NumericalOption MapNumericalOptions(YamlNumericalOption? yamlOpt)
+        {
+            if (yamlOpt == null) return new CalculatedHelper.NumericalOption();
+
+            return new CalculatedHelper.NumericalOption
+            {
+                ShowUnits = yamlOpt.ShowUnits,
+                UnitsLeft = yamlOpt.UnitsLeft,
+                UnitGradingType = yamlOpt.UnitGradingType,
+                UnitPenalty = yamlOpt.UnitPenalty,
+            };
+        }
+
+        private List<CalculatedHelper.NumericalUnit> MapNumericalUnits(List<YamlNumericalUnit>? yamlList)
+        {
+            return yamlList?.Select(u => new CalculatedHelper.NumericalUnit
+            {
+                UnitName = u.UnitName,
+                Multiplier = u.Multiplier,
+            }).ToList() ?? new();
+        }
+
+        private List<CalculatedHelper.DatasetDefinition> MapDatasetDefinitions(List<YamlDatasetDefinition>? yamlList)
+        {
+            return yamlList?.Select(d => new CalculatedHelper.DatasetDefinition
+            {
+                Name = d.Name,
+                Category = d.Category,
+                Type = d.Type,
+                Options = d.Options,
+                Items = d.Items.Select(i => new CalculatedHelper.DatasetItem
+                {
+                    Number = i.Number,
+                    Value = i.Value,
+                }).ToList(),
+            }).ToList() ?? new();
+        }
+
+        private List<CalculatedHelper.CalculatedRecord> MapCalculatedRecords(List<YamlCalculatedRecord>? yamlRecords, List<YamlQuestionAnswer>? answers)
+        {
+            var template = yamlRecords?.FirstOrDefault();
+
+            return answers?.Select(a =>
+            {
+                var rec = new CalculatedHelper.CalculatedRecord();
+
+                if (template != null)
+                {
+                    rec.Tolerance = template.Tolerance;
+                    rec.ToleranceType = template.ToleranceType;
+                    rec.CorrectAnswerLength = template.CorrectAnswerLength;
+                    rec.CorrectAnswerFormat = template.CorrectAnswerFormat;
+                }
+
+                return rec;
+            }).ToList() ?? new();
+        }
+
+        private CalculatedHelper.CalculatedOption MapCalculatedOptions(YamlCalculatedOption? yamlOpt)
+        {
+            if (yamlOpt == null) return new CalculatedHelper.CalculatedOption();
+
+            return new CalculatedHelper.CalculatedOption
+            {
+                Synchronize = yamlOpt.Synchronize,
+                Single = yamlOpt.Single,
+                ShuffleAnswers = yamlOpt.ShuffleAnswers,
+                CorrectFeedback = yamlOpt.CorrectFeedback,
+                CorrectFeedbackFormat = yamlOpt.CorrectFeedbackFormat,
+                PartiallyCorrectFeedback = yamlOpt.PartiallyCorrectFeedback,
+                PartiallyCorrectFeedbackFormat = yamlOpt.PartiallyCorrectFeedbackFormat,
+                IncorrectFeedback = yamlOpt.IncorrectFeedback,
+                IncorrectFeedbackFormat = yamlOpt.IncorrectFeedbackFormat,
+                AnswerNumbering = yamlOpt.AnswerNumbering,
+                ShowNumCorrect = yamlOpt.ShowNumCorrect,
+            };
+        }
+
+        private CalculatedQuestion ConvertYamlQuestionToCalculatedQuestion(YamlQuestion yaml)
+        {
+            return new CalculatedQuestion
+            {
+                QuestionName = yaml.QuestionName,
+                QuestionText = yaml.QuestionText,
+                QuestionId = yaml.QuestionId,
+                Category = yaml.Category,
+                DefaultMark = yaml.DefaultMark,
+                QuestionReady = yaml.QuestionReady,
+                QuestionTextFormat = yaml.QuestionTextFormat,
+
+                NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
+                NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
+                DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
+                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords, yaml.Answers),
+                CalculatedOptions = MapCalculatedOptions(yaml.CalculatedOptions),
+
+                Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
+            };
+        }
+
+        private CalculatedMultiChoiceQuestion ConvertYamlQuestionToCalculatedMultiChoiceQuestion(YamlQuestion yaml)
+        {
+            return new CalculatedMultiChoiceQuestion
+            {
+                QuestionName = yaml.QuestionName,
+                QuestionText = yaml.QuestionText,
+                QuestionId = yaml.QuestionId,
+                Category = yaml.Category,
+                DefaultMark = yaml.DefaultMark,
+                QuestionReady = yaml.QuestionReady,
+                QuestionTextFormat = yaml.QuestionTextFormat,
+
+                NumericalOptions = MapNumericalOptions(yaml.NumericalOptions),
+                NumericalUnits = MapNumericalUnits(yaml.NumericalUnits),
+                DatasetDefinitions = MapDatasetDefinitions(yaml.DatasetDefinitions),
+                CalculatedRecords = MapCalculatedRecords(yaml.CalculatedRecords, yaml.Answers),
+                CalculatedOptions = MapCalculatedOptions(yaml.CalculatedOptions),
+
+                Answers = ConvertYamlAnswersToCalculatedOptions(yaml.Answers),
+            };
+        }
+
+        private DragAndDropTextAndImageQuestion ConvertYamlQuestionToDragAndDropTextAndImageQuestion(YamlQuestion yaml, string baseDir)
+        {
+            return new DragAndDropTextAndImageQuestion
+            {
+                QuestionName = yaml.QuestionName,
+                QuestionText = yaml.QuestionText,
+                QuestionId = yaml.QuestionId,
+                Category = yaml.Category,
+                DefaultMark = yaml.DefaultMark,
+                QuestionReady = yaml.QuestionReady,
+                QuestionTextFormat = yaml.QuestionTextFormat,
+                HintPenalty = yaml.HintPenalty,
+                CorrectResponseFeedback = yaml.CorrectResponseFeedback,
+                CorrectResponseFeedbackFormat = yaml.CorrectResponseFeedbackFormat,
+                PartiallyCorrectResponseFeedback = yaml.PartiallyCorrectResponseFeedback,
+                PartiallyCorrectResponseFeedbackFormat = yaml.PartiallyCorrectResponseFeedbackFormat,
+                IncorrectResponseFeedback = yaml.IncorrectResponseFeedback,
+                IncorrectResponseFeedbackFormat = yaml.IncorrectResponseFeedbackFormat,
+                ShowNumCorrect = yaml.ShowNumCorrect,
+                Hints = yaml.Hints == null ? null : ConvertYamlHintListToMoodleHintList(yaml.Hints),
+                ShuffleAnswers = yaml.ShuffleAnswers,
+
+                DropZoneVisibility = yaml.DropZoneVisibility,
+                BackgroundImagePath = ResolveFilePath(yaml.BackgroundImagePath, baseDir),
+                BackgroundImageName = yaml.BackgroundImageName,
+
+                Drags = MapDragOptions(yaml.Drags, baseDir),
+                Drops = MapDropOptions(yaml.Drops),
+            };
+        }
+
+        private List<TextAndImageDrag> MapDragOptions(List<TextAndImageDragModel> yamlDrags, string baseDir)
+        {
+            if (yamlDrags == null)
+            {
+                return new List<TextAndImageDrag>();
+            }
+
+            return yamlDrags.Select(yamlDrag => new TextAndImageDrag
+            {
+                Number = yamlDrag.Number,
+                DragGroup = yamlDrag.DragGroup,
+                Infinite = yamlDrag.Infinite,
+                Label = yamlDrag.Label,
+                ImagePath = ResolveFilePath(yamlDrag.ImagePath, baseDir),
+                ImageName = yamlDrag.ImageName,
+            }).ToList();
+        }
+
+        private List<TextAndImageDrop> MapDropOptions(List<TextAndImageDropModel> yamlDrops)
+        {
+            if (yamlDrops == null)
+            {
+                return new List<TextAndImageDrop>();
+            }
+
+            return yamlDrops.Select(yamlDrop => new TextAndImageDrop
+            {
+                Number = yamlDrop.Number,
+                XLeft = yamlDrop.XLeft,
+                YTop = yamlDrop.YTop,
+                Choice = yamlDrop.Choice,
+                Label = yamlDrop.Label,
+            }).ToList();
+        }
+
+        private string? ResolveFilePath(string relativePath, string? yamlDirectory)
+        {
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                return null;
+            }
+
+            string combinedPath = Path.Combine(yamlDirectory, relativePath);
+
+            return Path.GetFullPath(combinedPath);
         }
     }
 }

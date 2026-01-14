@@ -33,6 +33,39 @@ namespace CourseAsCode.Readers.YAML.Readers
             }
 
             var moodleAssignment = ConvertYamlAssignmentToMoodleAssignment(yamlAssignment);
+
+            var grading = ValueKeeper.GradingInfos.FirstOrDefault(gi => gi.PathToActivity == modelObjectPath);
+
+            if (grading != null)
+            {
+                moodleAssignment = AddGradingToMoodleAssignment(moodleAssignment, grading);
+            }
+
+            return moodleAssignment;
+        }
+
+        private Assignment AddGradingToMoodleAssignment(Assignment moodleAssignment, YamlGradingInfo gradingInfo)
+        {
+            var gradeCategory =
+                ValueKeeper.GradeCategories.FirstOrDefault(gc => gc.GradeCategoryId == gradingInfo.GradeCategoryId);
+
+            if (gradeCategory == null)
+            {
+                return moodleAssignment;
+            }
+
+            moodleAssignment.GradingLocked = gradingInfo.GradingLocked;
+            moodleAssignment.GradeName = gradingInfo.GradeName;
+            moodleAssignment.GradeMultiplicator = gradingInfo.GradeMultiplicator;
+            moodleAssignment.GradingWeight = gradingInfo.GradingWeight;
+            moodleAssignment.GradeToPass = gradingInfo.GradeToPass;
+            moodleAssignment.GradeHiddenUntil = gradingInfo.GradeHiddenUntil;
+            moodleAssignment.GradeOffset = gradingInfo.GradeOffset;
+            moodleAssignment.GradeHidden = gradingInfo.GradeHidden;
+            moodleAssignment.BlindMarking = gradingInfo.BlindMarking;
+            moodleAssignment.HideGrader = gradingInfo.HideGrader;
+            moodleAssignment.GradeCategory = gradeCategory;
+
             return moodleAssignment;
         }
 
@@ -77,6 +110,8 @@ namespace CourseAsCode.Readers.YAML.Readers
                 MarkingAnonymous = yamlAssignment.MarkingAnonymous ?? AssignmentDefaults.DEFAULT_MARKING_ANONYMOUS,
                 PreventSubmissionNotInGroup = yamlAssignment.PreventSubmissionNotInGroup ??
                                               AssignmentDefaults.DEFAULT_PREVENT_SUBMISSION_NOT_IN_GROUP,
+                GradingLocked = yamlAssignment.GradingLocked ?? AssignmentDefaults.DEFAULT_LOCKED_GRADE,
+                GradingLockedAfter = yamlAssignment.GradingLockedAfter ?? AssignmentDefaults.DEFAULT_GRADE_LOCKED_UNTIL,
 
                 ModuleId = ValueKeeper.CurrentModuleId,
                 ModuleName = "assign",
