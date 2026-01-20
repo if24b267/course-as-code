@@ -1,0 +1,203 @@
+Name: "Learn more about the Page Activity!"
+Type: PAGE
+Intro: "<p>Check out our detailed showcase on page activity!</p>"
+IntroFormat: HTML
+Content: |
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <title>Moodle Page Activity Showcase</title>
+  <style>
+      /* Scoped Styles for Moodle Page Content */
+      .cac-showcase-container {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 1000px; /* Prevents text from becoming too wide on large screens */
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #fff;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      }
+
+      /* Headings */
+      .cac-showcase-container h2 {
+          color: #0f6cbf; /* Moodle Blue-ish */
+          border-bottom: 2px solid #eee;
+          padding-bottom: 10px;
+          margin-top: 30px;
+      }
+      
+      .cac-showcase-container h3 {
+          color: #444;
+          margin-top: 20px;
+      }
+
+      /* Concept Cards (Grid Layout) */
+      .cac-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          margin-bottom: 30px;
+      }
+
+      .cac-card {
+          background-color: #f8f9fa;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          padding: 15px;
+      }
+
+      /* Callout/Alert Boxes */
+      .cac-alert {
+          padding: 15px;
+          margin: 20px 0;
+          border-left: 5px solid;
+          background-color: #f9f9f9;
+          border-radius: 4px;
+      }
+
+      .cac-alert.info {
+          border-color: #0f6cbf;
+          background-color: #eef6fc;
+      }
+
+      .cac-alert.warning {
+          border-color: #f0ad4e;
+          background-color: #fcf8e3;
+      }
+
+      /* Multimedia styling */
+      .cac-media {
+          width: 100%;
+          max-width: 100%;
+          height: auto;
+          border-radius: 6px;
+          margin: 10px 0;
+      }
+
+      /* Code Block Styling */
+      .cac-code-block {
+          background-color: #2d2d2d;
+          color: #f8f8f2;
+          padding: 15px;
+          border-radius: 6px;
+          overflow-x: auto;
+          font-family: "Courier New", Courier, monospace;
+          font-size: 0.9em;
+      }
+
+      /* Interactive Details */
+      details {
+          background-color: #f1f1f1;
+          padding: 10px;
+          margin-bottom: 10px;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+      
+      summary {
+          font-weight: bold;
+          color: #0f6cbf;
+      }
+  </style>
+  </head>
+  <body>
+
+  <div class="cac-showcase-container">
+
+      <!-- Header Section -->
+      <div style="text-align: center; padding-bottom: 20px;">
+          <h1 style="margin-bottom: 10px;">The Power of the Moodle "Page"</h1>
+          <p style="font-size: 1.2em; color: #666;">Why use a standard file when you can create a rich web experience?</p>
+      </div>
+
+      <!-- Introduction Section -->
+      <div class="cac-alert">
+          <strong>Note:</strong> This page was created using Generative AI (Gemini 3 Pro)
+      </div>
+
+      <div class="cac-alert info">
+          <strong>What is this?</strong> This is a standard Moodle <em>Page Resource</em>. Unlike a PDF or Word document, this content loads instantly in the browser, adapts to mobile screens, and is fully accessible to screen readers.
+      </div>
+
+      <h2>1. Flexible Typography & Layouts</h2>
+      <p>Using the Page resource, you can format text extensively to guide student learning. You can use bolding, italics, lists, and even columns.</p>
+
+      <div class="cac-grid">
+          <div class="cac-card">
+              <h3>Accessibility First</h3>
+              <p>Because this is HTML, users can resize text, use high-contrast plugins, or screen readers seamlessly. PDF documents often break these features.</p>
+          </div>
+          <div class="cac-card">
+              <h3>Mobile Ready</h3>
+              <p>Try shrinking your browser window. Notice how these columns stack on top of each other? A Word document would force you to scroll horizontally.</p>
+          </div>
+          <div class="cac-card">
+              <h3>No Downloads</h3>
+              <p>Students access content deeply linked within the course structure without needing to manage file downloads on their devices.</p>
+          </div>
+      </div>
+
+      <h2>2. Rich Multimedia Support</h2>
+      <p>The Page resource allows you to embed media directly alongside your text instructions.</p>
+
+      <h3>Images</h3>
+      <p>Images can be responsive and include "alt text" for accessibility.</p>
+      <!-- Placeholder image representing course structure -->
+      <img src="https://placehold.co/800x200/0f6cbf/white?text=Weekly+Course+Structure+Visualized" alt="A banner showing weekly course structure" class="cac-media">
+
+      <h3>Video & Audio</h3>
+      <p>You can embed video players natively. This is vastly superior to linking to an external file.</p>
+      
+      <!-- Native Audio Element with placeholder source -->
+      <div style="background: #f4f4f4; padding: 15px; border-radius: 8px;">
+          <p><strong>🎧 Instructor Note:</strong> Listen to the introduction for this week.</p>
+          <audio controls style="width: 100%;">
+              <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+          </audio>
+      </div>
+
+      <h2>3. Code & Technical Content</h2>
+      <p>For technical courses (like <em>Course as Code</em>), you can display pre-formatted code blocks that maintain indentation and readability.</p>
+
+      <div class="cac-code-block">
+  <pre># Example: Defining this Page in YAML used by Course as Code
+  - type: page
+    title: "Showcase: The Power of HTML"
+    content: "include: showcase_content.html"
+    settings:
+      displayInput: true
+      showLegacyDate: false</pre>
+      </div>
+
+      <h2>4. Interactivity</h2>
+      <p>You can even use simple HTML elements to create interactive "reveal" interactions without needing complex plugins.</p>
+      
+      <div class="cac-alert warning">
+          <strong>Try it out:</strong> Click the item below to reveal the answer or hidden content.
+      </div>
+
+      <details>
+          <summary>Self-Reflection Question (Click to Expand)</summary>
+          <div style="padding: 10px; background: #fff; border-top: 1px solid #eee; margin-top: 10px;">
+              <p><strong>Why is HTML better than PDF for mobile learning?</strong></p>
+              <p>HTML reflows text to fit the screen width, whereas a PDF maintains a fixed page size, forcing mobile users to "pinch and zoom" to read.</p>
+          </div>
+      </details>
+
+      <hr style="margin: 40px 0; border: 0; border-top: 1px solid #e0e0e0;">
+      
+      <p style="text-align: center; font-size: 0.9em; color: #999;">
+          <em>Generated via Course as Code</em>
+      </p>
+
+  </div>
+
+  </body>
+  </html>
+ContentFormat: HTML

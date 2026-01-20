@@ -13,6 +13,7 @@ Activities:
   - ActivityFilePath: Activities/TMA_wikies.yaml
   - ActivityFilePath: Activities/WKI_course-as-code-wiki.yaml
   - ActivityFilePath: Activities/TMA_pages.yaml
+  - ActivityFilePath: Activities/PGE_page-showcase.yaml
   - ActivityFilePath: Activities/TMA_folders.yaml
   - ActivityFilePath: Activities/TMA_feedbacks.yaml
   - ActivityFilePath: Activities/FBK_rate-this-example-course.yaml

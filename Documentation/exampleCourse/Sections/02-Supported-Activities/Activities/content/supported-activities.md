@@ -9,6 +9,6 @@
 5.  **Quizzes**
 6.  **Wikis**
 7.  **Pages**
-8.  **Choices**
+8.  **Folders**
 9.  **Feedbacks**
-10. **Folders**
+10. **Choices**
