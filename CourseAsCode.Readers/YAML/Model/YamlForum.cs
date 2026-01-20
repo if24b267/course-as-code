@@ -1,8 +1,10 @@
+using CourseAsCode.Model.Enums.Forums;
+
 namespace CourseAsCode.Readers.YAML.Model
 {
     public class YamlForum : YamlActivity
     {
-        public string? ForumType { get; set; }
+        public ForumType? ForumType { get; set; }
         public string? Intro { get; set; }
         public int? IntroFormat { get; set; }
         public int? DueDate { get; set; }
@@ -13,9 +15,9 @@ namespace CourseAsCode.Readers.YAML.Model
         public int? Scale { get; set; }
         public int? MaxBytes { get; set; }
         public int? MaxAttachments { get; set; }
-        public bool? ForceSubscribe { get; set; }
-        public int? TrackingType { get; set; }
-        public int? RssType { get; set; }
+        public SubscriptionMode? SubscriptionMode { get; set; }
+        public ForumTrackingType? TrackingType { get; set; }
+        public ForumRssType? RssType { get; set; }
         public int? RssArticles { get; set; }
         public int? WarnAfter { get; set; }
         public int? BlockAfter { get; set; }

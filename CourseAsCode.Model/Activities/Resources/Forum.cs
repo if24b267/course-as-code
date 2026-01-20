@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using CourseAsCode.Model.Defaults.Activities.Resources;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums.Forums;
 
 namespace CourseAsCode.Model.Activities.Resources
 {
@@ -14,80 +15,80 @@ namespace CourseAsCode.Model.Activities.Resources
         // Forum Specific Settings
         // ────────────────────────────────────────────────────────────────────────────
 
-        [Description("The type of forum (e.g., standard, blog)")]
-        public string ForumType { get; set; } = string.Empty; // Entspricht <type>
+        [Description("The type of forum (General, Blog, Single, EachUser, QAndA)")]
+        public ForumType ForumType { get; set; } = ForumDefaults.DEFAULT_FORUM_TYPE;
 
         [Description("Introduction text for the forum")]
-        public string Intro { get; set; } = string.Empty; // Entspricht <intro>
+        public string Intro { get; set; } = ForumDefaults.DEFAULT_INTRO;
 
         [Description("Format of the introduction text")]
-        public FormattingFormat IntroFormat { get; set; } // Entspricht <introformat> (muss auf Enum gemappt werden)
+        public FormattingFormat IntroFormat { get; set; } = ForumDefaults.DEFAULT_INTRO_FORMAT;
 
         [Description("The due date for the forum activity")]
-        public int DueDate { get; set; } // Entspricht <duedate> (wahrscheinlich ein Unix-Timestamp, wird hier als int beibehalten)
+        public int DueDate { get; set; } = ForumDefaults.DEFAULT_DUE_DATE;
 
         [Description("The cutoff date for the forum activity")]
-        public int CutoffDate { get; set; } // Entspricht <cutoffdate> (wahrscheinlich ein Unix-Timestamp)
+        public int CutoffDate { get; set; } = ForumDefaults.DEFAULT_CUTOFF_DATE;
 
         [Description("Whether the forum is assessed")]
-        public bool Assessed { get; set; } // Entspricht <assessed> (0/1 zu bool)
+        public bool Assessed { get; set; } = ForumDefaults.DEFAULT_ASSESSED;
 
         [Description("Assessment start time")]
-        public int AssessTimeStart { get; set; } // Entspricht <assesstimestart>
+        public int AssessTimeStart { get; set; } = ForumDefaults.DEFAULT_ASSESS_TIME_START;
 
         [Description("Assessment finish time")]
-        public int AssessTimeFinish { get; set; } // Entspricht <assesstimefinish>
+        public int AssessTimeFinish { get; set; } = ForumDefaults.DEFAULT_ASSESS_TIME_FINISH;
 
         [Description("The maximum scale/points for the forum")]
-        public int Scale { get; set; } // Entspricht <scale>
+        public int Scale { get; set; } = ForumDefaults.DEFAULT_SCALE;
 
         [Description("Maximum number of bytes for attachments")]
-        public int MaxBytes { get; set; } // Entspricht <maxbytes>
+        public int MaxBytes { get; set; } = ForumDefaults.DEFAULT_MAX_BYTES;
 
         [Description("Maximum number of attachments")]
-        public int MaxAttachments { get; set; } // Entspricht <maxattachments>
+        public int MaxAttachments { get; set; } = ForumDefaults.DEFAULT_MAX_ATTACHMENTS;
 
-        [Description("Whether all participants are forced to subscribe")]
-        public bool ForceSubscribe { get; set; } // Entspricht <forcesubscribe>
+        [Description("Subscription mode (Optional, Forced, Auto, Disabled)")]
+        public SubscriptionMode SubscriptionMode { get; set; } = ForumDefaults.DEFAULT_SUBSCRIPTION_MODE;
 
-        [Description("Tracking type for reading posts")]
-        public int TrackingType { get; set; } // Entspricht <trackingtype>
+        [Description("Tracking type for reading posts (Off, Optional, Forced)")]
+        public ForumTrackingType TrackingType { get; set; } = ForumDefaults.DEFAULT_TRACKING_TYPE;
 
-        [Description("RSS feed type")]
-        public int RssType { get; set; } // Entspricht <rsstype>
+        [Description("RSS feed type (None, Discussions, Posts)")]
+        public ForumRssType RssType { get; set; } = ForumDefaults.DEFAULT_RSS_TYPE;
 
         [Description("Number of RSS articles")]
-        public int RssArticles { get; set; } // Entspricht <rssarticles>
+        public int RssArticles { get; set; } = ForumDefaults.DEFAULT_RSS_ARTICLES;
 
         [Description("Time of last modification")]
-        public DateTime TimeModified { get; set; } // Entspricht <timemodified> (Unix-Timestamp)
+        public DateTime TimeModified { get; set; } = ForumDefaults.DEFAULT_TIME_MODIFIED;
 
         [Description("Warn users after this period of inactivity")]
-        public int WarnAfter { get; set; } // Entspricht <warnafter>
+        public int WarnAfter { get; set; } = ForumDefaults.DEFAULT_WARN_AFTER;
 
         [Description("Block users after this period of inactivity")]
-        public int BlockAfter { get; set; } // Entspricht <blockafter>
+        public int BlockAfter { get; set; } = ForumDefaults.DEFAULT_BLOCK_AFTER;
 
         [Description("Blocking period in seconds")]
-        public int BlockPeriod { get; set; } // Entspricht <blockperiod>
+        public int BlockPeriod { get; set; } = ForumDefaults.DEFAULT_BLOCK_PERIOD;
 
         [Description("Required number of discussions for completion")]
-        public int CompletionDiscussions { get; set; } // Entspricht <completiondiscussions>
+        public int CompletionDiscussions { get; set; } = ForumDefaults.DEFAULT_COMPLETION_DISCUSSIONS;
 
         [Description("Required number of replies for completion")]
-        public int CompletionReplies { get; set; } // Entspricht <completionreplies>
+        public int CompletionReplies { get; set; } = ForumDefaults.DEFAULT_COMPLETION_REPLIES;
 
         [Description("Required number of posts for completion")]
-        public int CompletionPosts { get; set; } // Entspricht <completionposts>
+        public int CompletionPosts { get; set; } = ForumDefaults.DEFAULT_COMPLETION_POSTS;
 
         [Description("Whether to display word count")]
-        public bool DisplayWordCount { get; set; } // Entspricht <displaywordcount>
+        public bool DisplayWordCount { get; set; } = ForumDefaults.DEFAULT_DISPLAY_WORD_COUNT;
 
         [Description("Lock discussion after this period of inactivity")]
-        public int LockDiscussionAfter { get; set; } // Entspricht <lockdiscussionafter>
+        public int LockDiscussionAfter { get; set; } = ForumDefaults.DEFAULT_LOCK_DISCUSSION_AFTER;
 
         [Description("Whether the forum is graded")]
-        public bool GradeForum { get; set; } // Entspricht <grade_forum>
+        public bool GradeForum { get; set; } = ForumDefaults.DEFAULT_GRADE_FORUM;
 
         // ────────────────────────────────────────────────────────────────────────────
         // Nested Structures

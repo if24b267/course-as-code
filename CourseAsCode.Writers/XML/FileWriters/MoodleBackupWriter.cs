@@ -501,6 +501,8 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"forum_{activity.ActivityId}", $"forum_{activity.ActivityId}_included", "1");
                         WriteSingleBackupSettingTag(writer, "activity", $"forum_{activity.ActivityId}", $"forum_{activity.ActivityId}_userinfo", "1");
+                    }
+
                     if (activity is Choice)
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"choice_{activity.ActivityId}", $"choice_{activity.ActivityId}_included", "1");

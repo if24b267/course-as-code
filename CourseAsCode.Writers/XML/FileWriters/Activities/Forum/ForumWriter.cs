@@ -1,5 +1,6 @@
 using System.Xml;
 using CourseAsCode.Model.Activities.Resources;
+using CourseAsCode.Model.Enums.Forums;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -74,7 +75,7 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum // Habe den Name
             // Schreibe die einfachen Forum-spezifischen Elemente
             var forumElements = new Dictionary<string, string>
             {
-                { "type", forum.ForumType },
+                { "type", ConvertForumTypeToString(forum.ForumType) },
                 { "name", forum.Name }, // Name kommt von Activity, wird aber hier wiederholt
                 { "intro", forum.Intro ?? "" },
                 { "introformat", _generalHelper.EnumIntegerToString(forum.IntroFormat) },
@@ -86,9 +87,9 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum // Habe den Name
                 { "scale", forum.Scale.ToString() },
                 { "maxbytes", forum.MaxBytes.ToString() },
                 { "maxattachments", forum.MaxAttachments.ToString() },
-                { "forcesubscribe", forum.ForceSubscribe ? "1" : "0" },
-                { "trackingtype", forum.TrackingType.ToString() },
-                { "rsstype", forum.RssType.ToString() },
+                { "forcesubscribe", _generalHelper.EnumIntegerToString(forum.SubscriptionMode) },
+                { "trackingtype", _generalHelper.EnumIntegerToString(forum.TrackingType) },
+                { "rsstype", _generalHelper.EnumIntegerToString(forum.RssType) },
                 { "rssarticles", forum.RssArticles.ToString() },
                 { "timemodified", _generalHelper.DateTimeToUnixTimestamp(forum.TimeModified) }, // TimeModified sollte vom Activity-Objekt kommen
                 { "warnafter", forum.WarnAfter.ToString() },
@@ -223,6 +224,22 @@ namespace CourseAsCode.Writers.XML.FileWriters.Activities.Forum // Habe den Name
         {
             writer.WriteStartElement(elementName);
             writer.WriteEndElement();
+        }
+
+        /// <summary>
+        /// Converts the ForumType enum to the Moodle string representation.
+        /// </summary>
+        private string ConvertForumTypeToString(ForumType forumType)
+        {
+            return forumType switch
+            {
+                ForumType.General => "general",
+                ForumType.Blog => "blog",
+                ForumType.Single => "single",
+                ForumType.EachUser => "eachuser",
+                ForumType.QAndA => "qanda",
+                _ => "general"
+            };
         }
     }
 }

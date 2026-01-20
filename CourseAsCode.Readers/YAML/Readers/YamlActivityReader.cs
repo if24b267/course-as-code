@@ -21,7 +21,7 @@ namespace CourseAsCode.Readers.YAML.Readers
         private readonly IFeedbackReader _feedbackReader;
         private readonly IFolderReader _folderReader;
 
-        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader, IWikiReader wikiReader, IYamlPageReader pageReader, IChoiceReader choiceReader, IFeedbackReader feedbackReader, IFolderReader folderReader)
+        public YamlActivityReader(IFileReader fileReader, ITextAndMediaAreaReader textMediaAreaReader, IUrlReader urlReader, IYamlFileReaderHelper yamlFileReaderHelper, IQuizReader quizReader, IAssignmentReader assignmentReader, IForumReader forumReader, IWikiReader wikiReader, IYamlPageReader pageReader, IChoiceReader choiceReader, IFeedbackReader feedbackReader, IFolderReader folderReader)
         {
             _fileReader = fileReader;
             _textMediaAreaReader = textMediaAreaReader;

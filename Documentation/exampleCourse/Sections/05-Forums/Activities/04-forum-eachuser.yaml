@@ -1,0 +1,26 @@
+Type: FORUM
+Name: "Each User Posts One Discussion"
+Description: "<p>This is an <strong>Each User Posts One Discussion</strong> forum.</p><p>Each participant can start exactly one discussion topic, but can reply to as many others as they wish. Great for individual presentations or when you want learners to 'take ownership' of a topic.</p>"
+
+# Forum Type
+ForumType: EachUser
+
+# Introduction displayed at the top of the forum
+Intro: "<p>Create your own discussion topic!</p><p>Each student can start one discussion thread. Choose your topic wisely and engage with your classmates' discussions by replying to their posts.</p>"
+IntroFormat: 1
+
+# Subscription and Tracking
+SubscriptionMode: Auto
+TrackingType: Optional
+
+# Attachments
+MaxAttachments: 3
+MaxBytes: 5242880
+
+# Completion Requirements
+CompletionDiscussions: 1
+CompletionReplies: 3
+CompletionPosts: 4
+
+# Display Options
+DisplayWordCount: true

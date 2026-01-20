@@ -119,7 +119,7 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             WikiWriter wikiWriter,
             ModuleWriterWiki moduleWriterWiki,
             ForumWriter forumWriter,
-            ModuleWriterForum moduleWriterForum)
+            ModuleWriterForum moduleWriterForum,
             ChoiceWriter choiceWriter,
             ModuleWriterChoice moduleWriterChoice,
             FeedbackWriter feedbackWriter,
@@ -269,6 +269,7 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
 
                         _forumWriter.WriteForum(activityPath, forum);
                         _moduleWriterForum.WriteModule(activityPath, course, section, forum);
+                    }
                     else if (activity is Choice choice)
                     {
                         activityPath = CreateActivityDirectory(outputPath, activity, "choice");

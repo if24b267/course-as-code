@@ -4,7 +4,6 @@ using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGrad
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
 using CourseAsCode.Writers.XML.FileWriters.Activities.Forum;
-using CourseAsCode.Writers.XML.FileWriters.QuestionsWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.Lesson;
 using CourseAsCode.Writers.XML.FileWriters.Questions;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;

@@ -3,6 +3,7 @@ using CourseAsCode.Readers.Interfaces;
 using CourseAsCode.Readers.YAML.Model;
 using CourseAsCode.Readers.Helper;
 using CourseAsCode.Model.Enums;
+using CourseAsCode.Model.Enums.Forums;
 
 namespace CourseAsCode.Readers.YAML.Readers
 {
@@ -39,7 +40,7 @@ namespace CourseAsCode.Readers.YAML.Readers
                     ModuleId = ValueKeeper.CurrentModuleId,
                     ModuleName = "forum",
                     Name = yamlForum.Name ?? "Forum",
-                    ForumType = yamlForum.ForumType ?? "general",
+                    ForumType = yamlForum.ForumType ?? ForumType.General,
                     Intro = yamlForum.Intro ?? "",
                     IntroFormat = (FormattingFormat)(yamlForum.IntroFormat ?? 1),
                     DueDate = yamlForum.DueDate ?? 0,
@@ -50,9 +51,9 @@ namespace CourseAsCode.Readers.YAML.Readers
                     Scale = yamlForum.Scale ?? 0,
                     MaxBytes = yamlForum.MaxBytes ?? 512000,
                     MaxAttachments = yamlForum.MaxAttachments ?? 1,
-                    ForceSubscribe = yamlForum.ForceSubscribe ?? true,
-                    TrackingType = yamlForum.TrackingType ?? 1,
-                    RssType = yamlForum.RssType ?? 0,
+                    SubscriptionMode = yamlForum.SubscriptionMode ?? SubscriptionMode.Optional,
+                    TrackingType = yamlForum.TrackingType ?? ForumTrackingType.Optional,
+                    RssType = yamlForum.RssType ?? ForumRssType.None,
                     RssArticles = yamlForum.RssArticles ?? 0,
                     TimeModified = DateTime.UtcNow,
                     WarnAfter = yamlForum.WarnAfter ?? 0,

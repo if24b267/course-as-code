@@ -1,0 +1,26 @@
+Type: FORUM
+Name: "General Discussion Forum"
+Description: "<p>This is a <strong>General Forum</strong> - the most common forum type in Moodle.</p><p>Anyone can start new discussion topics or respond to existing ones. Perfect for open discussions where all participants can freely contribute.</p>"
+
+# Forum Type
+ForumType: General
+
+# Introduction displayed at the top of the forum
+Intro: "<p>Welcome to our general discussion forum!</p><p>Feel free to start new topics or reply to existing discussions. This is a space for open conversation about course topics.</p>"
+IntroFormat: 1
+
+# Subscription and Tracking
+SubscriptionMode: Optional
+TrackingType: Optional
+
+# Attachments
+MaxAttachments: 3
+MaxBytes: 5242880
+
+# Completion Requirements
+CompletionDiscussions: 1
+CompletionReplies: 2
+CompletionPosts: 3
+
+# Display Options
+DisplayWordCount: true
