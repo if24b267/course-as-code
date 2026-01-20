@@ -1,0 +1,6 @@
+Type: label
+Name: Wikies
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/wikies.md

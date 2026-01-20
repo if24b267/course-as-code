@@ -1,0 +1,3 @@
+### 📂 Page
+
+Die Page Aktivität kann verwendet werden, um Studierende auf eine Seite (innerhalb von Moodle) weiterzuleiten, auf der beliebiger - vom Lehrenden erstellter - Content wie bspw. Audio, Videos, Fotos, Text oder eine Kombination all dieser Dinge angezeigt werden. Sie können damit als nutzerfreundlichere Alternative zu Word-Dokumenten dienen, da diese nicht extra heruntergeladen, sondern direkt im Browser betrachtet werden können.

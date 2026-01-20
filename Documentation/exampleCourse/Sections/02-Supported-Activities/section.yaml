@@ -10,3 +10,8 @@ Activities:
   - ActivityFilePath: Activities/FILE_moodle-backup-file.yaml
   - ActivityFilePath: Activities/TMA_assignments.yaml
   - ActivityFilePath: Activities/ASN_course-as-code-summary.yaml
+  - ActivityFilePath: Activities/TMA_wikies.yaml
+  - ActivityFilePath: Activities/TMA_pages.yaml
+  - ActivityFilePath: Activities/TMA_folders.yaml
+  - ActivityFilePath: Activities/TMA_feedbacks.yaml
+  - ActivityFilePath: Activities/TMA_chats.yaml
