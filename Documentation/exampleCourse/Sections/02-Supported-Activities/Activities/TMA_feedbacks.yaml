@@ -1,0 +1,6 @@
+Type: label
+Name: Feedbacks
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/feedbacks.md

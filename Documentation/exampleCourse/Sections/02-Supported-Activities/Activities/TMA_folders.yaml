@@ -1,0 +1,6 @@
+Type: label
+Name: Folders
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/folders.md

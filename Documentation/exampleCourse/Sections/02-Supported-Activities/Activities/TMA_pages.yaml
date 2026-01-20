@@ -1,0 +1,6 @@
+Type: label
+Name: Pages
+Format: markdown
+Content:
+  - Type: markdown
+    ContentFilePath: ./content/pages.md
