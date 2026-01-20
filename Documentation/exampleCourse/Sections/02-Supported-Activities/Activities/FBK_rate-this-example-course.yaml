@@ -26,3 +26,12 @@ Items:
     Required: 0
     DependItem: 0
     Options: h
+  - Template: 0
+    Name: I would recommend Course As Code to my colleagues!
+    Type: multichoice
+    Presentation: "r>>>>>1|2|3|4<<<<<1"
+    HasValue: 1
+    Position: 3
+    Required: 0
+    DependItem: 0
+    Options: h

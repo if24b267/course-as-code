@@ -15,6 +15,7 @@ Activities:
   - ActivityFilePath: Activities/TMA_pages.yaml
   - ActivityFilePath: Activities/PGE_page-showcase.yaml
   - ActivityFilePath: Activities/TMA_folders.yaml
+  - ActivityFilePath: Activities/FLD_activity-config-files.yaml
   - ActivityFilePath: Activities/TMA_feedbacks.yaml
   - ActivityFilePath: Activities/FBK_rate-this-example-course.yaml
   - ActivityFilePath: Activities/TMA_choices.yaml
