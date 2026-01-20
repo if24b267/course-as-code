@@ -1,3 +1,3 @@
 ### 📂 Folder
 
-Folders werden dazu eingesetzt, um mehreren Dateien (z.B. mehrere thematisch verwandte PDF Files) gemeinsam gruppiert im Kurs anzubieten. Es handelt sich also quasi um eine Reihe von File-Aktivitäten, wobei die einzelnen Dateien gemeinsam im konfigurierten Folder angezeigt werden.
+`Folders` are used to provide multiple files (e.g., several thematically related PDF files) grouped together within the course. It essentially acts as a series of file activities, where the individual files are displayed together within the configured folder.

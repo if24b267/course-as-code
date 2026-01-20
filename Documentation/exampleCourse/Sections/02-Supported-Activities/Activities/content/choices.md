@@ -1,4 +1,4 @@
-### Choices
+### ☑️ Choice
 
-Die Choice Aktivität ermöglicht es, die Studierenden aus einer Reihe von vorgebenen Antwortmöglichkeiten, die ihnen in Form von Radio Buttons präsentiert werden, auswählen zu lassen. Je nach Konfiguration können die Studierenden nur eine oder mehrere Antwortmöglichkeiten auswählen und ihre Antworten später auch updaten.  
-Choices sind vor allem nützlich, um kurze Umfragen durchzuführen oder den Studierenden die Möglichkeit zu geben, eines von mehreren Projekten für etwaige Assignments auszuwählen.
+The `Choice` activity allows students to select from a series of predefined answer options presented to them in the form of radio buttons. Depending on the configuration, students can select only one or multiple options and may be able to update their answers later.  
+`Choices` are primarily useful for conducting quick polls or giving students the opportunity to select one of several projects for potential assignments.

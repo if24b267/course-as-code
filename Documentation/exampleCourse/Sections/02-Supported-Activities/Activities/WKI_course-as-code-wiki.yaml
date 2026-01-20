@@ -1,0 +1,9 @@
+Name: Course As Code Wiki
+Type: WIKI
+Description: Work together with your fellow students and gather helpful knowledge about Course As Code!
+Intro: Work together with your fellow students and gather helpful knowledge about Course As Code!
+IntroFormat: HTML
+FirstPageTitle: Overview
+WikiMode: Collaborative
+WikiFormat: HTML
+ForceFormat: false

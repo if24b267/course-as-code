@@ -1,3 +1,3 @@
-### 📂 Page
+### 📄 Page
 
-Die Page Aktivität kann verwendet werden, um Studierende auf eine Seite (innerhalb von Moodle) weiterzuleiten, auf der beliebiger - vom Lehrenden erstellter - Content wie bspw. Audio, Videos, Fotos, Text oder eine Kombination all dieser Dinge angezeigt werden. Sie können damit als nutzerfreundlichere Alternative zu Word-Dokumenten dienen, da diese nicht extra heruntergeladen, sondern direkt im Browser betrachtet werden können.
+The `Page` activity can be used to direct students to a page (within Moodle) where arbitrary content created by the instructor - such as audio, videos, photos, text, or a combination of these - is displayed. They can thus serve as a more user-friendly alternative to Word documents, as they do not need to be downloaded separately but can be viewed directly in the browser.

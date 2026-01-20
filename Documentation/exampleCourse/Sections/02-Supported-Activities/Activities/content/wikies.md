@@ -1,3 +1,3 @@
-### 📂 Wiki
+### 🌐 Wiki
 
-Die Wiki Aktivität ermöglicht es Studierenden gemeinsam, d.h. kollaborativ, an einem Dokument zu arbeiten, ähnlich wie bei Wikipedia. Alternativ kann auch jeder Studierenden individuell für sich sein eigenes Wiki erstellen.
+The Wiki activity enables students to collaboratively work on a single document - similar to Wikipedia. Alternatively, each student can also create their own individual wiki.

@@ -11,7 +11,10 @@ Activities:
   - ActivityFilePath: Activities/TMA_assignments.yaml
   - ActivityFilePath: Activities/ASN_course-as-code-summary.yaml
   - ActivityFilePath: Activities/TMA_wikies.yaml
+  - ActivityFilePath: Activities/WKI_course-as-code-wiki.yaml
   - ActivityFilePath: Activities/TMA_pages.yaml
   - ActivityFilePath: Activities/TMA_folders.yaml
   - ActivityFilePath: Activities/TMA_feedbacks.yaml
-  - ActivityFilePath: Activities/TMA_chats.yaml
+  - ActivityFilePath: Activities/FBK_rate-this-example-course.yaml
+  - ActivityFilePath: Activities/TMA_choices.yaml
+  - ActivityFilePath: Activities/CHO_your-favorite-activity.yaml

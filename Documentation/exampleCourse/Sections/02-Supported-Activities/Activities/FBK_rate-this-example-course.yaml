@@ -1,0 +1,28 @@
+Name: Rate this course!
+Type: FEEDBACK
+Description: "<p>Please let us know if this exampleCourse was helpful in understanding Course As Code and what we can do better!</p>"
+DescriptionFormat: HTML
+Anonymous: 2
+EmailNotification: 0
+MultipleSubmit: 0
+Autonumbering: 0
+PublishStats: 1
+CompletionSubmit: false
+Items:
+  - Template: 0
+    Name: label
+    Type: label
+    Presentation: "<p>Legend: (1) low … (4) high</p>"
+    HasValue: 0
+    Position: 1
+    Required: 0
+    DependItem: 0
+  - Template: 0
+    Name: The ExampleCourse helped me understand Course As Code
+    Type: multichoice
+    Presentation: "r>>>>>1|2|3|4<<<<<1"
+    HasValue: 1
+    Position: 2
+    Required: 0
+    DependItem: 0
+    Options: h
