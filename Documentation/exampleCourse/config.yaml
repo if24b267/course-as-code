@@ -19,5 +19,10 @@ EnableCompletionTracking: true
 GroupMode: 0  # We should strongly reconsider how this is implemented | This makes no sense to the user
 ForceGroupMode: false
 
+GradeCategoriesPath: ./Grading/gradeCategories.yaml
+GradingInfosPath: ./Grading/gradingInfos.yaml
 QuestionListPaths:
   - ./Questions/quiz-questions.yaml
+  - ./Questions/code-runner-questions.yaml
+  - ./Questions/calculated-questions.yaml
+  - ./Questions/additional-questions.yaml

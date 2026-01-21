@@ -1,0 +1,38 @@
+Name: Your favorite activity?
+Type: CHOICE
+Description: "<p>Which of the supported activities do you find most useful/interesting?</p>"
+DescriptionFormat: HTML
+Publish: false
+ShowResults: false
+Display: 0
+AllowUpdate: false
+AllowMultiple: false
+ShowUnanswered: true
+LimitAnswers: false
+TimeOpen: 01-01-2026 00:00
+TimeClose: 31-12-2026 00:00
+CompletionSubmit: false
+ShowPreview: false
+IncludeInactive: false
+ShowAvailable: false
+Options:
+  - Text: "Text and Media Area (Label)"
+    MaxAnswers: 0
+  - Text: "URL"
+    MaxAnswers: 0
+  - Text: "Files"
+    MaxAnswers: 0
+  - Text: "Assignments"
+    MaxAnswers: 0
+  - Text: "Quizzes"
+    MaxAnswers: 0
+  - Text: "Wiki"
+    MaxAnswers: 0
+  - Text: "Page"
+    MaxAnswers: 0
+  - Text: "Choice"
+    MaxAnswers: 0
+  - Text: "Feedback"
+    MaxAnswers: 0
+  - Text: "Folder"
+    MaxAnswers: 0

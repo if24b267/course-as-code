@@ -1,0 +1,6 @@
+SectionName: Additional Question Types
+VisibleToStudents: true
+Summary:
+Activities:
+  - ActivityFilePath: Activities/TMA_Additional-Questions-Intro.yaml
+  - ActivityFilePath: Activities/QUIZ_Additional-Questions.yaml

@@ -1,0 +1,10 @@
+Name: Activity Definitions
+Type: FOLDER
+Description: "Check out some of the code files that define the activities shown here!"
+DescriptionFormat: MARKDOWN
+DisplayDescription: true
+YamlFilePaths:
+  - ./files/FLD_file1.yaml
+  - ./files/FLD_file2.yaml
+  - ./files/FLD_file3.yaml
+  - ./files/FLD_file4.yaml

@@ -1,0 +1,1 @@
+Contains resources (text files, images, etc.) that are required by **multiple courses**

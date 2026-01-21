@@ -1,0 +1,16 @@
+Name: Additional Question Types
+Type: QUIZ
+Description: Try solving this quiz utilizing various uncommon question types that you may never have seen before!
+DescriptionFormat: MARKDOWN
+OpeningTime: 31-01-2023 00:00
+ClosingTime: 31-12-2026 23:59
+TimeLimit: 1200
+TimeExpiryHandling: AutoSubmit
+AllowedAttempts: 2
+GradeToPass: 5
+BuildOnPreviousAttempt: false
+GradingMethod: HighestGrade
+QuestionBehaviour: Deferred
+ShuffleQuestions: true
+AllowRedosDuringAttempt: false
+QuestionIds: [101, 102, 103, 104, 105, 106, 107, 201, 202, 203, 204, 205, 206]

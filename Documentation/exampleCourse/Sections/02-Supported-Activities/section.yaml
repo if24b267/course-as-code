@@ -10,3 +10,13 @@ Activities:
   - ActivityFilePath: Activities/FILE_moodle-backup-file.yaml
   - ActivityFilePath: Activities/TMA_assignments.yaml
   - ActivityFilePath: Activities/ASN_course-as-code-summary.yaml
+  - ActivityFilePath: Activities/TMA_wikies.yaml
+  - ActivityFilePath: Activities/WKI_course-as-code-wiki.yaml
+  - ActivityFilePath: Activities/TMA_pages.yaml
+  - ActivityFilePath: Activities/PGE_page-showcase.yaml
+  - ActivityFilePath: Activities/TMA_folders.yaml
+  - ActivityFilePath: Activities/FLD_activity-config-files.yaml
+  - ActivityFilePath: Activities/TMA_feedbacks.yaml
+  - ActivityFilePath: Activities/FBK_rate-this-example-course.yaml
+  - ActivityFilePath: Activities/TMA_choices.yaml
+  - ActivityFilePath: Activities/CHO_your-favorite-activity.yaml

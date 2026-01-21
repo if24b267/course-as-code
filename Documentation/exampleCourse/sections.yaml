@@ -3,4 +3,5 @@ Sections:
   - SectionPath: Sections/02-Supported-Activities
   - SectionPath: Sections/03-Quizzes
   - SectionPath: Sections/04-CS-Basics
-  - SectionPath: Sections/05-Forums
+  - SectionPath: Sections/05-Additional-Question-Types
+  - SectionPath: Sections/06-Forums
