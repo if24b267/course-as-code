@@ -1,5 +1,0 @@
-discs: 
-towersOfHanoi(1, A, C) |
-  --> Moving disk 1 from rod A to rod C
-|
-1 move(s) in total.

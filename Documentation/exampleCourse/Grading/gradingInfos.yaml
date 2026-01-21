@@ -1,0 +1,23 @@
+GradingInfos:
+  - GradeCategoryId: 2
+    PathToActivity: "../../Sections/02-Supported-Activities/Activities/ASN_course-as-code-summary.yaml"
+    GradingLocked: true
+    GradeMultiplicator: 2.0
+  - GradeCategoryId: 2
+    PathToActivity: "../../Sections/03-Quizzes/Activities/QUIZ_quizzes.yaml"
+    GradingWeight: 15
+  - GradeCategoryId: 2
+    PathToActivity: "../../Sections/04-CS-Basics/Activities/QUIZ_Intro-to-C.yaml"
+    GradeName: "Theoretical Quiz about C"
+    GradingWeight: 35
+    GradeToPass: 10
+    GradeHiddenUntil: 31-08-2026 23:59
+  - GradeCategoryId: 3
+    PathToActivity: "../../Sections/04-CS-Basics/Activities/QUIZ_Intro-to-Java.yaml"
+    BlindMarking: true
+    GradingWeight: 50
+    GradeOffset: 1.0
+    HideGrader: true
+  - GradeCategoryId: 3
+    PathToActivity: "../../Sections/05-Additional-Question-Types/Activities/QUIZ_Additional-Questions.yaml"
+    GradingWeight: 15
