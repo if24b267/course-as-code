@@ -48,7 +48,7 @@ namespace CourseAsCode.Readers.Tests.Integration
                 Assert.That(section1.Name, Is.EqualTo("Test Section 1"));
                 Assert.That(section1.Summary, Is.EqualTo("Test section 1 summary"));
                 Assert.That(section1.VisibleToStudents, Is.True);
-                Assert.That(section1.Activities, Has.Count.EqualTo(3));
+                Assert.That(section1.Activities, Has.Count.EqualTo(4));
 
                 // Verify second section
                 var section2 = result.Sections[1];

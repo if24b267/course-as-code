@@ -24,12 +24,11 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
             _mockTextMediaAreaReader = Substitute.For<ITextAndMediaAreaReader>();
             _mockUrlReader = Substitute.For<IUrlReader>();
             _mockForumReader = Substitute.For<IForumReader>();
-            _activityReader = new YamlActivityReader(new YamlFileReader(new YamlFileReaderHelper()), _mockTextMediaAreaReader, _mockUrlReader, new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()), _mockForumReader);
             _mockWikiReader = Substitute.For<IWikiReader>();
             _activityReader = new YamlActivityReader(new YamlFileReader(new YamlFileReaderHelper()),
                 _mockTextMediaAreaReader, _mockUrlReader, new YamlFileReaderHelper(),
                 new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()),
-                _mockWikiReader, new YamlPageReader(new YamlFileReaderHelper()),
+                new YamlForumReader(new YamlFileReaderHelper()), _mockWikiReader, new YamlPageReader(new YamlFileReaderHelper()),
                 new YamlChoiceReader(new YamlFileReaderHelper()), new YamlFeedbackReader(new YamlFileReaderHelper()),
                 new YamlFolderReader(new YamlFileReaderHelper(), _mockFileReader));
 

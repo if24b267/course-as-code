@@ -2,7 +2,7 @@
   "profiles": {
     "CourseAsCode": {
       "commandName": "Project",
-      "commandLineArgs": "-i \"../../../../Documentation/testCourse\" -o \"../../../../Documentation/out\""
+      "commandLineArgs": "-i \"C:/Users/rohit/source/repos/FH/course-as-code/Documentation/exampleCourse\" -o \"C:/Users/rohit/source/repos/FH/course-as-code/CourseAsCode/bin/Debug/net8.0/output\""
     },
     "exampleCourse": {
       "commandName": "Project",
