@@ -3,7 +3,7 @@ Questions:
     Category: coderunner
     QuestionId: 9
     QuestionType: CODERUNNER
-    QuestionText: ./extSrcs/AgeOfEmpires/aoe_angabe.html
+    QuestionText: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/aoe_angabe.html
     QuestionTextFormat: HTML
     DefaultMark: 1
     CodeRunnerType: java_program
@@ -13,8 +13,8 @@ Questions:
     ShowSource: false
     AnswerBoxLines: 18
     AnswerBoxColumns: 100
-    AnswerPreload: ./extSrcs/AgeOfEmpires/aoe_answer_preload.java
-    Answer: ./extSrcs/AgeOfEmpires/aoe_answer.java
+    AnswerPreload: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/aoe_answer_preload.java
+    Answer: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/aoe_answer.java
     ValidateOnSave: true
     DisplayFeedback: true
     GiveUpAllowed: true
@@ -22,35 +22,35 @@ Questions:
       - Id: 1
         TestCode: "AgeOfEmpires Test Case 1"
         TestType: 0
-        Expected: ./extSrcs/AgeOfEmpires/testCases/1/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/testCases/1/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/AgeOfEmpires/testCases/1/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/testCases/1/input.txt
       - Id: 2
         TestCode: "AgeOfEmpires Test Case 2"
         TestType: 0
-        Expected: ./extSrcs/AgeOfEmpires/testCases/2/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/testCases/2/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/AgeOfEmpires/testCases/2/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/testCases/2/input.txt
       - Id: 3
         TestCode: "AgeOfEmpires Test Case 3"
         TestType: 0
-        Expected: ./extSrcs/AgeOfEmpires/testCases/3/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/testCases/3/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/AgeOfEmpires/testCases/3/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/AgeOfEmpires/testCases/3/input.txt
   - QuestionName: Collatz Sequence
     Category: coderunner
     QuestionId: 10
     QuestionType: CODERUNNER
-    QuestionText: ./extSrcs/CollatzSequence/cs_angabe.md
+    QuestionText: ../../SharedResources/CodeRunner_Questions/CollatzSequence/cs_angabe.md
     QuestionTextFormat: MARKDOWN
     DefaultMark: 1
     CodeRunnerType: java_program
@@ -60,8 +60,8 @@ Questions:
     ShowSource: false
     AnswerBoxLines: 18
     AnswerBoxColumns: 100
-    AnswerPreload: ./extSrcs/CollatzSequence/cs_answer_preload.java
-    Answer: ./extSrcs/CollatzSequence/cs_answer.java
+    AnswerPreload: ../../SharedResources/CodeRunner_Questions/CollatzSequence/cs_answer_preload.java
+    Answer: ../../SharedResources/CodeRunner_Questions/CollatzSequence/cs_answer.java
     ValidateOnSave: true
     DisplayFeedback: true
     GiveUpAllowed: true
@@ -69,107 +69,107 @@ Questions:
       - Id: 1
         TestCode: "CollatzSequence Test Case 1"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/01/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/01/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/01/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/01/input.txt
       - Id: 2
         TestCode: "CollatzSequence Test Case 2"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/02/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/02/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/02/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/02/input.txt
       - Id: 3
         TestCode: "CollatzSequence Test Case 3"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/03/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/03/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/03/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/03/input.txt
       - Id: 4
         TestCode: "CollatzSequence Test Case 4"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/04/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/04/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/04/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/04/input.txt
       - Id: 5
         TestCode: "CollatzSequence Test Case 5"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/05/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/05/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/05/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/05/input.txt
       - Id: 6
         TestCode: "CollatzSequence Test Case 6"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/06/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/06/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/06/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/06/input.txt
       - Id: 7
         TestCode: "CollatzSequence Test Case 7"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/07/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/07/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/07/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/07/input.txt
       - Id: 8
         TestCode: "CollatzSequence Test Case 8"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/08/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/08/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/08/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/08/input.txt
       - Id: 9
         TestCode: "CollatzSequence Test Case 9"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/09/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/09/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/09/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/09/input.txt
       - Id: 10
         TestCode: "CollatzSequence Test Case 10"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/10/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/10/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/10/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/10/input.txt
       - Id: 11
         TestCode: "CollatzSequence Test Case 11"
         TestType: 0
-        Expected: ./extSrcs/CollatzSequence/testCases/11/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/11/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/CollatzSequence/testCases/11/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/CollatzSequence/testCases/11/input.txt
   - QuestionName: Game of Life
     Category: coderunner
     QuestionId: 11
     QuestionType: CODERUNNER
-    QuestionText: ./extSrcs/GameOfLife/gol_angabe.md
+    QuestionText: ../../SharedResources/CodeRunner_Questions/GameOfLife/gol_angabe.md
     QuestionTextFormat: MARKDOWN
     DefaultMark: 1
     CodeRunnerType: java_program
@@ -179,8 +179,8 @@ Questions:
     ShowSource: false
     AnswerBoxLines: 18
     AnswerBoxColumns: 100
-    AnswerPreload: ./extSrcs/GameOfLife/gol_answer_preload.java
-    Answer: ./extSrcs/GameOfLife/gol_answer.java
+    AnswerPreload: ../../SharedResources/CodeRunner_Questions/GameOfLife/gol_answer_preload.java
+    Answer: ../../SharedResources/CodeRunner_Questions/GameOfLife/gol_answer.java
     ValidateOnSave: true
     DisplayFeedback: true
     GiveUpAllowed: true
@@ -188,107 +188,107 @@ Questions:
       - Id: 1
         TestCode: "GameOfLife Test Case 1"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/01/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/01/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/01/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/01/input.txt
       - Id: 2
         TestCode: "GameOfLife Test Case 2"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/02/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/02/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/02/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/02/input.txt
       - Id: 3
         TestCode: "GameOfLife Test Case 3"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/03/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/03/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/03/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/03/input.txt
       - Id: 4
         TestCode: "GameOfLife Test Case 4"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/04/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/04/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/04/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/04/input.txt
       - Id: 5
         TestCode: "GameOfLife Test Case 5"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/05/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/05/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/05/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/05/input.txt
       - Id: 6
         TestCode: "GameOfLife Test Case 6"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/06/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/06/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/06/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/06/input.txt
       - Id: 7
         TestCode: "GameOfLife Test Case 7"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/07/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/07/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/07/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/07/input.txt
       - Id: 8
         TestCode: "GameOfLife Test Case 8"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/08/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/08/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/08/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/08/input.txt
       - Id: 9
         TestCode: "GameOfLife Test Case 9"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/09/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/09/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/09/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/09/input.txt
       - Id: 10
         TestCode: "GameOfLife Test Case 10"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/10/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/10/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/10/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/10/input.txt
       - Id: 11
         TestCode: "GameOfLife Test Case 11"
         TestType: 0
-        Expected: ./extSrcs/GameOfLife/testCases/11/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/11/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/GameOfLife/testCases/11/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/GameOfLife/testCases/11/input.txt
   - QuestionName: Hanoi
     Category: coderunner
     QuestionId: 12
     QuestionType: CODERUNNER
-    QuestionText: ./extSrcs/Hanoi/hanoi_angabe.html
+    QuestionText: ../../SharedResources/CodeRunner_Questions/Hanoi/hanoi_angabe.html
     QuestionTextFormat: HTML
     DefaultMark: 1
     CodeRunnerType: java_program
@@ -298,8 +298,8 @@ Questions:
     ShowSource: false
     AnswerBoxLines: 18
     AnswerBoxColumns: 100
-    AnswerPreload: ./extSrcs/Hanoi/hanoi_answer_preload.java
-    Answer: ./extSrcs/Hanoi/hanoi_answer.java
+    AnswerPreload: ../../SharedResources/CodeRunner_Questions/Hanoi/hanoi_answer_preload.java
+    Answer: ../../SharedResources/CodeRunner_Questions/Hanoi/hanoi_answer.java
     ValidateOnSave: true
     DisplayFeedback: true
     GiveUpAllowed: true
@@ -307,71 +307,71 @@ Questions:
       - Id: 1
         TestCode: "Hanoi Test Case 1"
         TestType: 0
-        Expected: ./extSrcs/Hanoi/testCases/01/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/01/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hanoi/testCases/01/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/01/input.txt
       - Id: 2
         TestCode: "Hanoi Test Case 2"
         TestType: 0
-        Expected: ./extSrcs/Hanoi/testCases/02/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/02/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hanoi/testCases/02/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/02/input.txt
       - Id: 3
         TestCode: "Hanoi Test Case 3"
         TestType: 0
-        Expected: ./extSrcs/Hanoi/testCases/03/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/03/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hanoi/testCases/03/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/03/input.txt
       - Id: 4
         TestCode: "Hanoi Test Case 4"
         TestType: 0
-        Expected: ./extSrcs/Hanoi/testCases/04/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/04/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hanoi/testCases/04/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/04/input.txt
       - Id: 5
         TestCode: "Hanoi Test Case 5"
         TestType: 0
-        Expected: ./extSrcs/Hanoi/testCases/05/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/05/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hanoi/testCases/05/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/05/input.txt
       - Id: 6
         TestCode: "Hanoi Test Case 6"
         TestType: 0
-        Expected: ./extSrcs/Hanoi/testCases/06/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/06/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hanoi/testCases/06/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/06/input.txt
       - Id: 7
         TestCode: "Hanoi Test Case 7"
         TestType: 0
-        Expected: ./extSrcs/Hanoi/testCases/07/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/07/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hanoi/testCases/07/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hanoi/testCases/07/input.txt
   - QuestionName: Hyperbel
     Category: coderunner
     QuestionId: 13
     QuestionType: CODERUNNER
-    QuestionText: ./extSrcs/Hyperbel/hyperbel_angabe.html
+    QuestionText: ../../SharedResources/CodeRunner_Questions/Hyperbel/hyperbel_angabe.html
     QuestionTextFormat: HTML
     DefaultMark: 1
     CodeRunnerType: java_program
@@ -381,8 +381,8 @@ Questions:
     ShowSource: false
     AnswerBoxLines: 18
     AnswerBoxColumns: 100
-    AnswerPreload: ./extSrcs/Hyperbel/hyperbel_answer_preload.java
-    Answer: ./extSrcs/Hyperbel/hyperbel_answer.java
+    AnswerPreload: ../../SharedResources/CodeRunner_Questions/Hyperbel/hyperbel_answer_preload.java
+    Answer: ../../SharedResources/CodeRunner_Questions/Hyperbel/hyperbel_answer.java
     ValidateOnSave: true
     DisplayFeedback: true
     GiveUpAllowed: true
@@ -390,36 +390,36 @@ Questions:
       - Id: 1
         TestCode: "Hyperbel Test Case 1"
         TestType: 0
-        Expected: ./extSrcs/Hyperbel/testCases/01/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hyperbel/testCases/01/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hyperbel/testCases/01/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hyperbel/testCases/01/input.txt
       - Id: 2
         TestCode: "Hyperbel Test Case 2"
         TestType: 0
-        Expected: ./extSrcs/Hyperbel/testCases/02/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hyperbel/testCases/02/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hyperbel/testCases/02/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hyperbel/testCases/02/input.txt
       - Id: 3
         TestCode: "Hyperbel Test Case 3"
         TestType: 0
-        Expected: ./extSrcs/Hyperbel/testCases/03/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hyperbel/testCases/03/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hyperbel/testCases/03/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hyperbel/testCases/03/input.txt
       - Id: 4
         TestCode: "Hyperbel Test Case 4"
         TestType: 0
-        Expected: ./extSrcs/Hyperbel/testCases/04/output.txt
+        Expected: ../../SharedResources/CodeRunner_Questions/Hyperbel/testCases/04/output.txt
         UseAsExample: false
         Display: "SHOW"
         HideRestIfFail: false
         Mark: 1
-        StdIn: ./extSrcs/Hyperbel/testCases/04/input.txt
+        StdIn: ../../SharedResources/CodeRunner_Questions/Hyperbel/testCases/04/input.txt

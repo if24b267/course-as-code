@@ -15,7 +15,7 @@ Questions:
 
     # Question specific
     DropZoneVisibility: true
-    BackgroundImagePath: "./img/question12/DDTextAndImageBackground.png"
+    BackgroundImagePath: "../../SharedResources/img/DragDropImageDemoQuestion/DDTextAndImageBackground.png"
     BackgroundImageName: "BackgroundImage.png"
 
     Drags:
@@ -23,19 +23,19 @@ Questions:
         DragGroup: 1
         Infinite: false
         Label: "A"
-        ImagePath: "./img/question12/A.png"
+        ImagePath: "../../SharedResources/img/DragDropImageDemoQuestion/A.png"
         ImageName: "A.png"
       - Number: 2
         DragGroup: 1
         Infinite: false
         Label: "B"
-        ImagePath: "./img/question12/B.png"
+        ImagePath: "../../SharedResources/img/DragDropImageDemoQuestion/B.png"
         ImageName: "B.png"
       - Number: 3
         DragGroup: 1
         Infinite: false
         Label: "C"
-        ImagePath: "./img/question12/C.png"
+        ImagePath: "../../SharedResources/img/DragDropImageDemoQuestion/C.png"
         ImageName: "C.png"
       - Number: 4
         DragGroup: 1
