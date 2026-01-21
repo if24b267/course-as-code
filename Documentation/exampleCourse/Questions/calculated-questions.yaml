@@ -1,0 +1,613 @@
+Questions:
+  # ==================================================================================
+  # QUESTION 1: Network Transmission Time
+  # ==================================================================================
+  - QuestionName: "Net Calc 1: Download Time"
+    Category: cs_network_calculations
+    QuestionId: 201
+    QuestionText: "<p>You are downloading a file of size <b>{filesize}</b> Megabits (Mb).</p><p>Your network bandwidth is <b>{bandwidth}</b> Mbps.</p><p>Calculate how many seconds it will take to download the file (Time = Size / Bandwidth):</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATED
+    QuestionReady: true
+
+    # KEY SETTING FOR SYNC
+    CalculatedOptions:
+      Synchronize: 1      # Synchronize datasets
+      Single: 0
+      ShuffleAnswers: true
+      CorrectFeedback: "Correct! Time = Size / Bandwidth."
+      CorrectFeedbackFormat: HTML
+      IncorrectFeedback: "Incorrect. Check your formula."
+      IncorrectFeedbackFormat: HTML
+
+    # Numerical Options
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    # Numerical Units
+    NumericalUnits:
+      - UnitName: "s"
+        Multiplier: 1.0
+
+    # Dataset Definitions
+    DatasetDefinitions:
+      - Name: "filesize"
+        Category: 1       # Shared category dataset
+        Type: 1
+        Options: "uniform:100.0:1000.0:0"
+        Items:
+          - Number: 1
+            Value: 500.0
+          - Number: 2
+            Value: 200.0
+          - Number: 3
+            Value: 800.0
+          - Number: 4
+            Value: 150.0
+          - Number: 5
+            Value: 300.0
+          - Number: 6
+            Value: 450.0
+          - Number: 7
+            Value: 600.0
+          - Number: 8
+            Value: 750.0
+          - Number: 9
+            Value: 900.0
+          - Number: 10
+            Value: 1000.0
+      - Name: "bandwidth"
+        Category: 1
+        Type: 1
+        Options: "uniform:10.0:50.0:0"
+        Items:
+          - Number: 1
+            Value: 10.0
+          - Number: 2
+            Value: 5.0
+          - Number: 3
+            Value: 20.0
+          - Number: 4
+            Value: 50.0
+          - Number: 5
+            Value: 25.0
+          - Number: 6
+            Value: 15.0
+          - Number: 7
+            Value: 30.0
+          - Number: 8
+            Value: 40.0
+          - Number: 9
+            Value: 12.0
+          - Number: 10
+            Value: 35.0
+
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 2
+        CorrectAnswerFormat: 1
+
+    Answers:
+      - AnswerText: "{filesize} / {bandwidth}"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1.0
+        Feedback: "Good job."
+        FeedbackFormat: HTML
+
+  # ==================================================================================
+  # QUESTION 2: Remaining Data (Dependent on Q1 variables)
+  # ==================================================================================
+  - QuestionName: "Net Calc 2: Remaining Data"
+    Category: cs_network_calculations
+    QuestionId: 202
+    QuestionText: "<p>Consider the same scenario: A <b>{filesize}</b> Mb file and <b>{bandwidth}</b> Mbps connection.</p><p>If the connection drops after exactly <b>5 seconds</b>, how much data (in Mb) was NOT yet transferred?</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATED
+    QuestionReady: true
+
+    # KEY SETTING FOR SYNC
+    CalculatedOptions:
+      Synchronize: 1      # MUST be 1 to share variables with Q1
+      Single: 0
+      ShuffleAnswers: true
+
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    NumericalUnits:
+      - UnitName: "Mb"
+        Multiplier: 1.0
+
+    # Dataset Definitions (Must match Q1 exactly)
+    DatasetDefinitions:
+      - Name: "filesize"
+        Category: 1
+        Type: 1
+        Options: "uniform:100.0:1000.0:0"
+        Items:
+          - Number: 1
+            Value: 500.0
+          - Number: 2
+            Value: 200.0
+          - Number: 3
+            Value: 800.0
+          - Number: 4
+            Value: 150.0
+          - Number: 5
+            Value: 300.0
+          - Number: 6
+            Value: 450.0
+          - Number: 7
+            Value: 600.0
+          - Number: 8
+            Value: 750.0
+          - Number: 9
+            Value: 900.0
+          - Number: 10
+            Value: 1000.0
+      - Name: "bandwidth"
+        Category: 1
+        Type: 1
+        Options: "uniform:10.0:50.0:0"
+        Items:
+          - Number: 1
+            Value: 10.0
+          - Number: 2
+            Value: 5.0
+          - Number: 3
+            Value: 20.0
+          - Number: 4
+            Value: 50.0
+          - Number: 5
+            Value: 25.0
+          - Number: 6
+            Value: 15.0
+          - Number: 7
+            Value: 30.0
+          - Number: 8
+            Value: 40.0
+          - Number: 9
+            Value: 12.0
+          - Number: 10
+            Value: 35.0
+
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 2
+        CorrectAnswerFormat: 1
+
+    # Formula: Total Size - (Bandwidth * 5 seconds)
+    Answers:
+      - AnswerText: "{filesize} - ({bandwidth} * 5)"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1.0
+        Feedback: "Correct. You subtracted the transferred data from the total."
+        FeedbackFormat: HTML
+
+  # ==================================================================================
+  # QUESTION 3: Independent Storage Conversion
+  # ==================================================================================
+  - QuestionName: "Storage Calc: Bits to Bytes"
+    Category: cs_network_calculations
+    QuestionId: 203
+    QuestionText: "<p>A register holds <b>{bits}</b> bits of data.</p><p>How many **Bytes** is this?</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATED
+    QuestionReady: true
+
+    # KEY SETTING FOR SYNC
+    CalculatedOptions:
+      Synchronize: 0      # Not synchronized
+      Single: 0
+      ShuffleAnswers: true
+
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    NumericalUnits:
+      - UnitName: "B"
+        Multiplier: 1.0
+      - UnitName: "Bytes"
+        Multiplier: 1.0
+
+    # Dataset Definitions (Independent Category 0)
+    DatasetDefinitions:
+      - Name: "bits"
+        Category: 0
+        Type: 1
+        Options: "uniform:8.0:64.0:0"
+        Items:
+          - Number: 1
+            Value: 8.0
+          - Number: 2
+            Value: 16.0
+          - Number: 3
+            Value: 32.0
+          - Number: 4
+            Value: 64.0
+          - Number: 5
+            Value: 128.0
+          - Number: 6
+            Value: 256.0
+          - Number: 7
+            Value: 80.0
+          - Number: 8
+            Value: 40.0
+          - Number: 9
+            Value: 24.0
+          - Number: 10
+            Value: 48.0
+
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 2
+        CorrectAnswerFormat: 1
+
+    # Formula: Bits / 8
+    Answers:
+      - AnswerText: "{bits} / 8"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1.0
+        Feedback: "Correct (8 bits = 1 Byte)."
+        FeedbackFormat: HTML
+
+  # ==================================================================================
+  # QUESTION 1: Network Download Time (Synchronized)
+  # Concept: Converting MB to Mb and dividing by Mbps
+  # ==================================================================================
+  - QuestionName: "CS Network 1: Download Time {file_mb} / {speed_mbps}"
+    Category: cs_network_calculations
+    QuestionId: 204
+    QuestionText: "<p>You need to download a project archive.</p><p>The file size is <b>{file_mb} MB</b> (Megabytes).</p><p>Your network download speed is <b>{speed_mbps} Mbps</b> (Megabits per second).</p><p>Calculate the effective download time in seconds:</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATEDMULTICHOICE
+    QuestionReady: true
+
+    # Enabled Synchronization
+    CalculatedOptions:
+      Synchronize: 1
+      Single: 0
+      ShuffleAnswers: true
+      CorrectFeedback: "Correct! You remembered to convert Bytes to bits (*8)."
+      CorrectFeedbackFormat: HTML
+      IncorrectFeedback: "Incorrect. Check your unit conversions (Bytes vs bits)."
+      IncorrectFeedbackFormat: HTML
+
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    NumericalUnits:
+      - UnitName: "s"
+        Multiplier: 1.0
+
+    # Dataset: Shared Category (1)
+    DatasetDefinitions:
+      - Name: "file_mb"
+        Category: 1
+        Type: 1
+        Options: "uniform:10.0:100.0:0"
+        Items:
+          - Number: 1
+            Value: 10
+          - Number: 2
+            Value: 20
+          - Number: 3
+            Value: 25
+          - Number: 4
+            Value: 40
+          - Number: 5
+            Value: 50
+          - Number: 6
+            Value: 60
+          - Number: 7
+            Value: 75
+          - Number: 8
+            Value: 80
+          - Number: 9
+            Value: 100
+          - Number: 10
+            Value: 120
+      - Name: "speed_mbps"
+        Category: 1
+        Type: 1
+        Options: "uniform:2.0:20.0:0"
+        Items:
+          - Number: 1
+            Value: 2
+          - Number: 2
+            Value: 4
+          - Number: 3
+            Value: 5
+          - Number: 4
+            Value: 8
+          - Number: 5
+            Value: 10
+          - Number: 6
+            Value: 12
+          - Number: 7
+            Value: 15
+          - Number: 8
+            Value: 16
+          - Number: 9
+            Value: 20
+          - Number: 10
+            Value: 25
+
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 1
+        CorrectAnswerFormat: 1
+
+    Answers:
+      # Correct: (Size * 8) / Speed
+      - AnswerText: "{= ({file_mb} * 8) / {speed_mbps} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: "Correct."
+        FeedbackFormat: HTML
+      # Distractor: Forgot the * 8 conversion
+      - AnswerText: "{= {file_mb} / {speed_mbps} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect. Did you treat Megabytes and Megabits as the same unit?"
+        FeedbackFormat: HTML
+      # Distractor: Multiplied Speed by 8 instead of Size
+      - AnswerText: "{= {file_mb} / ({speed_mbps} * 8) }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect."
+        FeedbackFormat: HTML
+      # Distractor: Multiplication instead of division
+      - AnswerText: "{= {file_mb} * {speed_mbps} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect."
+        FeedbackFormat: HTML
+
+  # ==================================================================================
+  # QUESTION 2: Storage Overhead (Synchronized with Q1)
+  # Concept: Calculates 10% overhead on the specific file size generated in Q1
+  # ==================================================================================
+  - QuestionName: "CS Network 2: Protocol Overhead {file_mb}"
+    Category: cs_network_calculations
+    QuestionId: 205
+    QuestionText: "<p>Consider the <b>{file_mb} MB</b> file from the previous question.</p><p>When storing this file on the server, the filesystem header adds exactly 10% overhead to the total size.</p><p>What is the total storage space required (Original + Overhead)?</p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATEDMULTICHOICE
+    QuestionReady: true
+
+    # Enabled Synchronization
+    CalculatedOptions:
+      Synchronize: 1 
+      Single: 0
+      ShuffleAnswers: true
+
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    NumericalUnits:
+      - UnitName: "MB"
+        Multiplier: 1.0
+
+    # Dataset: Identical to Q1 to ensure the student sees the same "file_mb" value
+    DatasetDefinitions:
+      - Name: "file_mb"
+        Category: 1
+        Type: 1
+        Options: "uniform:10.0:100.0:0"
+        Items:
+          - Number: 1
+            Value: 10
+          - Number: 2
+            Value: 20
+          - Number: 3
+            Value: 25
+          - Number: 4
+            Value: 40
+          - Number: 5
+            Value: 50
+          - Number: 6
+            Value: 60
+          - Number: 7
+            Value: 75
+          - Number: 8
+            Value: 80
+          - Number: 9
+            Value: 100
+          - Number: 10
+            Value: 120
+      - Name: "speed_mbps"
+        Category: 1
+        Type: 1
+        Options: "uniform:2.0:20.0:0"
+        Items:
+          - Number: 1
+            Value: 2
+          - Number: 2
+            Value: 4
+          - Number: 3
+            Value: 5
+          - Number: 4
+            Value: 8
+          - Number: 5
+            Value: 10
+          - Number: 6
+            Value: 12
+          - Number: 7
+            Value: 15
+          - Number: 8
+            Value: 16
+          - Number: 9
+            Value: 20
+          - Number: 10
+            Value: 25
+
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 1
+        CorrectAnswerFormat: 1
+
+    Answers:
+      # Correct: Size * 1.10
+      - AnswerText: "{= {file_mb} * 1.1 }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: "Correct."
+        FeedbackFormat: HTML
+      # Distractor: Just the overhead (10%)
+      - AnswerText: "{= {file_mb} * 0.1 }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect. That is just the size of the header, not the total."
+        FeedbackFormat: HTML
+      # Distractor: Subtracted overhead
+      - AnswerText: "{= {file_mb} * 0.9 }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect."
+        FeedbackFormat: HTML
+      # Distractor: Added static 10 MB instead of 10%
+      - AnswerText: "{= {file_mb} + 10 }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect."
+        FeedbackFormat: HTML
+
+  # ==================================================================================
+  # QUESTION 3: Image Size Calculation (Standalone)
+  # Concept: Uncompressed bitmap size
+  # ==================================================================================
+  - QuestionName: "CS Image 1: Resolution {w} x {h}"
+    Category: cs_network_calculations
+    QuestionId: 206
+    QuestionText: "<p>An uncompressed grayscale bitmap image has a resolution of <b>{img_w}</b> pixels wide by <b>{img_h}</b> pixels high.</p><p>The color depth is 8 bits (1 byte) per pixel.</p><p>Calculate the file size in <b>Kilobytes (KB)</b>.</p><p><i>(Use 1 KB = 1024 Bytes)</i></p>"
+    QuestionTextFormat: HTML
+    DefaultMark: 1
+    QuestionType: CALCULATEDMULTICHOICE
+    QuestionReady: true
+
+    # Disabled Synchronization (Standalone)
+    CalculatedOptions:
+      Synchronize: 0
+      Single: 0
+      ShuffleAnswers: true
+
+    NumericalOptions:
+      ShowUnits: 3
+      UnitsLeft: false
+      UnitGradingType: 0
+      UnitPenalty: 0.1
+
+    NumericalUnits:
+      - UnitName: "KB"
+        Multiplier: 1.0
+
+    # Dataset: Private Category (0)
+    DatasetDefinitions:
+      - Name: "img_w"
+        Category: 0
+        Type: 1
+        Options: "uniform:100.0:1000.0:0"
+        Items:
+          - Number: 1
+            Value: 100
+          - Number: 2
+            Value: 200
+          - Number: 3
+            Value: 320
+          - Number: 4
+            Value: 400
+          - Number: 5
+            Value: 500
+          - Number: 6
+            Value: 640
+          - Number: 7
+            Value: 800
+          - Number: 8
+            Value: 1024
+          - Number: 9
+            Value: 1200
+          - Number: 10
+            Value: 1920
+      - Name: "img_h"
+        Category: 0
+        Type: 1
+        Options: "uniform:100.0:1000.0:0"
+        Items:
+          - Number: 1
+            Value: 100
+          - Number: 2
+            Value: 200
+          - Number: 3
+            Value: 240
+          - Number: 4
+            Value: 300
+          - Number: 5
+            Value: 400
+          - Number: 6
+            Value: 480
+          - Number: 7
+            Value: 600
+          - Number: 8
+            Value: 768
+          - Number: 9
+            Value: 900
+          - Number: 10
+            Value: 1080
+
+    CalculatedRecords:
+      - Tolerance: 0.01
+        ToleranceType: 1
+        CorrectAnswerLength: 1
+        CorrectAnswerFormat: 1
+
+    Answers:
+      # Correct: (Area in pixels * 1 byte per pixel) / 1024
+      - AnswerText: "{= ({img_w} * {img_h}) / 1024 }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 1
+        Feedback: "Correct!"
+        FeedbackFormat: HTML
+      # Distractor: Forgot to divide by 1024 (Result in Bytes)
+      - AnswerText: "{= {img_w} * {img_h} }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect. This is the size in Bytes, not Kilobytes."
+        FeedbackFormat: HTML
+      # Distractor: Divided by 1000 instead of 1024
+      - AnswerText: "{= ({img_w} * {img_h}) / 1000 }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect. Remember 1 KB = 1024 Bytes in this context."
+        FeedbackFormat: HTML
+      # Distractor: Added dimensions instead of multiplying
+      - AnswerText: "{= ({img_w} + {img_h}) / 1024 }"
+        AnswerTextFormat: MARKDOWN
+        AnswerGrade: 0
+        Feedback: "Incorrect. Image size is Area, not Perimeter."
+        FeedbackFormat: HTML

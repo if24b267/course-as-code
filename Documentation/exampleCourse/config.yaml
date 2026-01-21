@@ -21,3 +21,6 @@ ForceGroupMode: false
 
 QuestionListPaths:
   - ./Questions/quiz-questions.yaml
+  - ./Questions/code-runner-questions.yaml
+  - ./Questions/calculated-questions.yaml
+  - ./Questions/additional-questions.yaml
