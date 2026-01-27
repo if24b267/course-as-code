@@ -92,8 +92,8 @@ namespace CourseAsCode
                 return;
             }
 
-            inputPath = ResolvePath(inputPath, "input");
-            outputPath = ResolvePath(outputPath, "output");
+            inputPath = ResolvePath(inputPath);
+            outputPath = ResolvePath(outputPath);
 
             if (inputPath == null || outputPath == null)
             {
@@ -144,16 +144,15 @@ namespace CourseAsCode
             Console.WriteLine("DONE!");
         }
 
-        private static string? ResolvePath(string path, string argName)
+        private static string ResolvePath(string path)
         {
             var absolutePath = Path.GetFullPath(path);
-            if (Directory.Exists(absolutePath))
+            if (!Directory.Exists(absolutePath))
             {
-                return absolutePath;
+                Directory.CreateDirectory(absolutePath);
             }
 
-            Console.WriteLine($"Error: Invalid {argName} path '{path}'. Path does not exist.");
-            return null;
+            return absolutePath;
         }
 
         private static void PrintHelp()

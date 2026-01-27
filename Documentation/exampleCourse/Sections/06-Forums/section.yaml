@@ -1,0 +1,9 @@
+SectionName: Forum Activities
+Summary: This section demonstrates all available forum types in Moodle - General, Blog, Single Discussion, Each User Posts One, and Q&A forums.
+VisibleToStudents: true
+Activities:
+  - ActivityFilePath: Activities/01-forum-general.yaml
+  - ActivityFilePath: Activities/02-forum-blog.yaml
+  - ActivityFilePath: Activities/03-forum-single.yaml
+  - ActivityFilePath: Activities/04-forum-eachuser.yaml
+  - ActivityFilePath: Activities/05-forum-qanda.yaml

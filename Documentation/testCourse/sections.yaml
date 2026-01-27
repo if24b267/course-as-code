@@ -4,6 +4,7 @@ Sections:
   - SectionPath: Sections/Quiz Section
   - SectionPath: Sections/Assignment Section
   - SectionPath: Sections/WikiSection
+  - SectionPath: Sections/Forum Section
   - SectionPath: Sections/PageSection
   - SectionPath: Sections/ChoiceSection
   - SectionPath: Sections/FeedbackSection

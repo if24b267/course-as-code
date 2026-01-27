@@ -150,7 +150,8 @@ Name: Test URL
 
             var reader = new YamlActivityReader(_mockFileReader, _mockTextMediaReader, _mockUrlReader,
                 new YamlFileReaderHelper(), new YamlQuizReader(new YamlFileReaderHelper()),
-                new YamlAssignmentReader(new YamlFileReaderHelper()), _mockWikiReader,
+                new YamlAssignmentReader(new YamlFileReaderHelper()),
+                new YamlForumReader(new YamlFileReaderHelper()), _mockWikiReader,
                 new YamlPageReader(new YamlFileReaderHelper()), new YamlChoiceReader(new YamlFileReaderHelper()),
                 new YamlFeedbackReader(new YamlFileReaderHelper()),
                 new YamlFolderReader(new YamlFileReaderHelper(), new YamlFileReader(new YamlFileReaderHelper())));

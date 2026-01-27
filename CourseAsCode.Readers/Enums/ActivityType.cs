@@ -8,6 +8,7 @@ namespace CourseAsCode.Readers.Enums
         QUIZ,
         FILE,
         ASSIGNMENT,
+        FORUM,
         WIKI,
         PAGE,
         CHOICE,

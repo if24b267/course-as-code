@@ -242,6 +242,20 @@ namespace CourseAsCode.Writers.XML.Writer
                         writer.WriteEndElement(); // Closes <activity>
                     }
 
+                    if (activity is Forum forumActivity)
+                    {
+                        writer.WriteStartElement("activity");
+
+                        writer.WriteElementString("moduleid", forumActivity.ModuleId.ToString());
+                        writer.WriteElementString("sectionid", section.SystemDefaults.SectionId.ToString());
+                        writer.WriteElementString("modulename", "forum");
+                        writer.WriteElementString("title", forumActivity.Name);
+                        writer.WriteElementString("directory", $"activities/forum_{activity.ActivityId}");
+                        writer.WriteElementString("insubsection", string.Empty);
+
+                        writer.WriteEndElement(); // closes <activity>
+                    }
+
                     if (activity is Lesson lesson)
                     {
                         writer.WriteStartElement("activity");
@@ -481,6 +495,12 @@ namespace CourseAsCode.Writers.XML.Writer
                     {
                         WriteSingleBackupSettingTag(writer, "activity", $"wiki_{activity.ActivityId}", $"wiki_{activity.ActivityId}_included", "1");
                         WriteSingleBackupSettingTag(writer, "activity", $"wiki_{activity.ActivityId}", $"wiki_{activity.ActivityId}_userinfo", "1");
+                    }
+
+                    if (activity is Forum forumActivity)
+                    {
+                        WriteSingleBackupSettingTag(writer, "activity", $"forum_{activity.ActivityId}", $"forum_{activity.ActivityId}_included", "1");
+                        WriteSingleBackupSettingTag(writer, "activity", $"forum_{activity.ActivityId}", $"forum_{activity.ActivityId}_userinfo", "1");
                     }
 
                     if (activity is Choice)

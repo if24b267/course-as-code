@@ -3,6 +3,7 @@ using CourseAsCode.Model.Activities;
 using CourseAsCode.Model.Activities.Choice;
 using CourseAsCode.Model.Activities.Resources;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
+using CourseAsCode.Writers.XML.FileWriters.Activities.Forum;
 using CourseAsCode.Writers.XML.FileWriters.Activities.Lesson;
 using CourseAsCode.Writers.XML.GeneralWriter.Interfaces;
 using CourseAsCode.Writers.XML.Logic.Interfaces;
@@ -65,6 +66,9 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
         private readonly WikiWriter _wikiWriter;
         private readonly ModuleWriterWiki _moduleWriterWiki;
 
+        // Forum Activity Writers
+        private readonly ForumWriter _forumWriter;
+        private readonly ModuleWriterForum _moduleWriterForum;
         //Choice Activity Writers
         private readonly ChoiceWriter _choiceWriter;
         private readonly ModuleWriterChoice _moduleWriterChoice;
@@ -114,6 +118,8 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             QuizWriter quizWriter,
             WikiWriter wikiWriter,
             ModuleWriterWiki moduleWriterWiki,
+            ForumWriter forumWriter,
+            ModuleWriterForum moduleWriterForum,
             ChoiceWriter choiceWriter,
             ModuleWriterChoice moduleWriterChoice,
             FeedbackWriter feedbackWriter,
@@ -166,6 +172,10 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
             // Wiki Activity Writers
             _wikiWriter = wikiWriter ?? throw new ArgumentNullException(nameof(wikiWriter));
             _moduleWriterWiki = moduleWriterWiki ?? throw new ArgumentNullException(nameof(moduleWriterWiki));
+
+            // Forum Activity Writers
+            _forumWriter = forumWriter ?? throw new ArgumentNullException(nameof(forumWriter));
+            _moduleWriterForum = moduleWriterForum ?? throw new ArgumentNullException(nameof(moduleWriterForum));
 
             //Choice Activity Writers
             _choiceWriter = choiceWriter ?? throw new ArgumentNullException(nameof(choiceWriter));
@@ -252,6 +262,13 @@ namespace CourseAsCode.Writers.XML.GeneralWriter
 
                         _wikiWriter.WriteWiki(activityPath, wiki);
                         _moduleWriterWiki.WriteModule(activityPath, course, section, wiki);
+                    }
+                    else if (activity is Forum forum)
+                    {
+                        activityPath = CreateActivityDirectory(outputPath, activity, "forum");
+
+                        _forumWriter.WriteForum(activityPath, forum);
+                        _moduleWriterForum.WriteModule(activityPath, course, section, forum);
                     }
                     else if (activity is Choice choice)
                     {

@@ -455,3 +455,5 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 **/.claude/settings.local.json
+.vscode/launch.json
+.vscode/tasks.json

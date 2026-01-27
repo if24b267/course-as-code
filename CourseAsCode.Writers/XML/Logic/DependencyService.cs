@@ -3,6 +3,7 @@ using CourseAsCode.Writers.XML.FileWriters;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies;
 using CourseAsCode.Writers.XML.FileWriters.Activities.CommonWriters.ActivityGradesWriter.Strategies.Interfaces;
+using CourseAsCode.Writers.XML.FileWriters.Activities.Forum;
 using CourseAsCode.Writers.XML.FileWriters.Activities.Lesson;
 using CourseAsCode.Writers.XML.FileWriters.Questions;
 using CourseAsCode.Writers.XML.FileWriters.Questions.Interfaces;
@@ -86,7 +87,6 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<GroupsWriter>();
             services.AddSingleton<MoodleBackupWriter>();
             services.AddSingleton<OutcomesWriter>();
-            services.AddSingleton<QuestionsWriter>();
             services.AddSingleton<RolesWriter>();
             services.AddSingleton<ScalesWriter>();
             services.AddSingleton<UsersWriter>();
@@ -131,6 +131,9 @@ namespace CourseAsCode.Writers.XML.Logic
             services.AddSingleton<QuizWriter>();
             services.AddSingleton<WikiWriter>();
             services.AddSingleton<ModuleWriterWiki>();
+            services.AddSingleton<ForumWriter>();
+            services.AddSingleton<ModuleWriterForum>();
+            services.AddSingleton<QuestionsWriter>();
             services.AddSingleton<ChoiceWriter>();
             services.AddSingleton<ModuleWriterChoice>();
             services.AddSingleton<FeedbackWriter>();

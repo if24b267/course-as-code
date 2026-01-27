@@ -17,6 +17,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
             _activityReader = new YamlActivityReader(new YamlFileReader(new YamlFileReaderHelper()),
                 new YamlTextMediaAreaReader(), new YamlUrlReader(), new YamlFileReaderHelper(),
                 new YamlQuizReader(new YamlFileReaderHelper()), new YamlAssignmentReader(new YamlFileReaderHelper()),
+                new YamlForumReader(new YamlFileReaderHelper()),
                 new YamlWikiReader(new YamlFileReaderHelper(), new YamlWikiPageReader(new YamlFileReaderHelper())),
                 new YamlPageReader(new YamlFileReaderHelper()), new YamlChoiceReader(new YamlFileReaderHelper()),
                 new YamlFeedbackReader(new YamlFileReaderHelper()),

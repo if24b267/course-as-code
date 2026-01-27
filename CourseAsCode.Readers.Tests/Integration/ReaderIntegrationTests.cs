@@ -82,12 +82,12 @@ namespace CourseAsCode.Readers.Tests.Integration
                 Assert.That(result.Name, Is.EqualTo("Test Section 1"));
                 Assert.That(result.Summary, Is.EqualTo("Test section 1 summary"));
                 Assert.That(result.VisibleToStudents, Is.True);
-                Assert.That(result.Activities, Has.Count.EqualTo(3));
+                Assert.That(result.Activities, Has.Count.EqualTo(4));
                 Assert.That(result.SystemDefaults.SectionId, Is.EqualTo(5));
                 Assert.That(result.SystemDefaults.PathToSection, Is.EqualTo("sections/section_5"));
 
                 // Activity count check - actual IDs may vary based on implementation
-                Assert.That(result.Activities.Count, Is.EqualTo(3));
+                Assert.That(result.Activities.Count, Is.EqualTo(4));
 
                 // Verify the current activity ID was incremented
                 Assert.That(ValueKeeper.CurrentActivityId, Is.GreaterThan(1));
@@ -115,7 +115,7 @@ namespace CourseAsCode.Readers.Tests.Integration
                 Assert.That(result.Sections.Count, Is.EqualTo(2));
 
                 // Check activity counts
-                Assert.That(result.Sections[0].Activities.Count, Is.EqualTo(3));
+                Assert.That(result.Sections[0].Activities.Count, Is.EqualTo(4));
                 Assert.That(result.Sections[1].Activities.Count, Is.EqualTo(1));
 
                 // Check IDs were assigned correctly
