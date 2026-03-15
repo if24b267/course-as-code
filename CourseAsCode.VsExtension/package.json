@@ -1,0 +1,75 @@
+{
+  "name": "courseascodetools",
+  "displayName": "CourseAsCode Tools",
+  "description": "Autocomplete, validation, and scaffolding for CourseAsCode YAML files",
+  "version": "0.1.0",
+  "publisher": "courseascodetools",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/src/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/local/courseascodetools"
+  },
+  "extensionDependencies": [
+    "redhat.vscode-yaml"
+  ],
+  "contributes": {
+    "yamlValidation": [
+      {
+        "fileMatch": "**/config.yaml",
+        "url": "./schemas/config.schema.json"
+      },
+      {
+        "fileMatch": "**/section.yaml",
+        "url": "./schemas/section.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FRM_*.yaml",
+        "url": "./schemas/activity-forum.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/PGE_*.yaml",
+        "url": "./schemas/activity-page.schema.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "courseascodetools.newActivity",
+        "title": "New CourseAsCode Activity"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "courseascodetools.newActivity",
+          "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "mocha --require ts-node/register \"test/**/*.test.ts\""
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "mocha": "^10.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.1"
+  }
+}
