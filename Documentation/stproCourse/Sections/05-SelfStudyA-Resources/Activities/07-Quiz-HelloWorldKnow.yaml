@@ -1,8 +1,4 @@
 Name: "HELLO_WORLD_KNOW+"
-Type: QUIZ
 Description: |
   <p>identify, recall, recognize and reproduce the elements of a hello world application in Java.</p>
-GradingMethod: HighestGrade
-QuestionBehaviour: Deferred
-ShuffleQuestions: false
 QuestionIds: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]

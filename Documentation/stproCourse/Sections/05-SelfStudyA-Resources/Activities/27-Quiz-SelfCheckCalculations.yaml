@@ -1,9 +1,5 @@
 Name: "Self-check: Calculations"
-Type: QUIZ
 Description: |
   <p>Apply arithmetic operations with variables.</p>
 AttemptsAllowed: 0
-GradingMethod: HighestGrade
-QuestionBehaviour: Deferred
-ShuffleQuestions: false
 QuestionIds: [50, 51]

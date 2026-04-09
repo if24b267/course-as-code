@@ -1,18 +1,9 @@
 Name: Cool Quiz
-Type: QUIZ
 Description: This is a quiz activity.
-DescriptionFormat: MARKDOWN
-OpeningTime: 31-01-2023 23:59
-ClosingTime: 31-08-2025 23:59
 TimeLimit: 600
-TimeExpiryHandling: AutoSubmit
 AllowedAttempts: 1
 GradeToPass: 2
-BuildOnPreviousAttempt: false
-GradingMethod: HighestGrade
 QuestionBehaviour: InteractiveMultipleTries
-ShuffleQuestions: true
-AllowRedosDuringAttempt: false
 Password: password
 QuestionIds: [1, 2, 3, 14, 15]
 # TODO: add feedback
