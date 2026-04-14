@@ -1,10 +1,5 @@
 Name: Getting to know Coderunner
-Type: QUIZ
 Description: |
   <p><span>CodeRunner is a tool in moodle that lets you submit and test programs. It also gives you feedback if the output of your program is correct (or not).</span></p>
   <p><span>Start the quiz to see more....</span></p>
-DescriptionFormat: HTML
-GradingMethod: HighestGrade
-QuestionBehaviour: Deferred
-ShuffleQuestions: false
 QuestionIds: [1]

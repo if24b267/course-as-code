@@ -1,0 +1,11 @@
+Type: QUIZ
+DescriptionFormat: MARKDOWN
+OpeningTime: 06-02-2020 00:00
+ClosingTime: 31-12-2025 23:59
+TimeExpiryHandling: AutoSubmit
+AllowedAttempts: 1
+BuildOnPreviousAttempt: false
+GradingMethod: HighestGrade
+QuestionBehaviour: Deferred
+ShuffleQuestions: true
+AllowRedosDuringAttempt: false

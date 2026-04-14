@@ -71,6 +71,57 @@ namespace CourseAsCode.Readers.Helper
             }
 
             var yamlContent = File.ReadAllText(filePath);
+
+            try
+            {
+                var coursePath = ValueKeeper.CoursePath;
+                var currentDir = Path.GetDirectoryName(Path.GetFullPath(filePath));
+                
+                if (!string.IsNullOrEmpty(coursePath) && currentDir != null)
+                {
+                    var fullCoursePath = Path.GetFullPath(coursePath);
+                    var defaultContents = new List<string>();
+                    
+                    var dir = currentDir;
+                    while (dir != null && dir.StartsWith(fullCoursePath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var defaultsPath = Path.Combine(dir, "defaults.yaml");
+                        // Don't merge a file with itself
+                        if (!string.Equals(defaultsPath, Path.GetFullPath(filePath), StringComparison.OrdinalIgnoreCase) 
+                            && File.Exists(defaultsPath))
+                        {
+                            defaultContents.Insert(0, File.ReadAllText(defaultsPath));
+                        }
+                        
+                        if (dir.Equals(fullCoursePath, StringComparison.OrdinalIgnoreCase))
+                        {
+                            break;
+                        }
+                        
+                        var parentDir = Directory.GetParent(dir);
+                        if (parentDir == null) break;
+                        dir = parentDir.FullName;
+                    }
+                    
+                    // Collapse all defaults iteratively
+                    var mergedDefaults = string.Empty;
+                    foreach (var content in defaultContents)
+                    {
+                        mergedDefaults = string.IsNullOrEmpty(mergedDefaults) ? content : YamlMerger.MergeYamlStrings(mergedDefaults, content);
+                    }
+                    
+                    // Final merge: specific file overrides the defaults
+                    if (!string.IsNullOrEmpty(mergedDefaults))
+                    {
+                        yamlContent = YamlMerger.MergeYamlStrings(mergedDefaults, yamlContent);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, $"Failed to apply cascading defaults to {filePath}. Proceeding with original file contents.");
+            }
+
             return DeserializeFromContent<T>(yamlContent);
         }
 

@@ -1,0 +1,9 @@
+Type: QUIZ
+DescriptionFormat: MARKDOWN
+OpeningTime: 31-01-2023 23:59
+ClosingTime: 31-12-2025 23:59
+TimeExpiryHandling: AutoSubmit
+BuildOnPreviousAttempt: false
+GradingMethod: HighestGrade
+ShuffleQuestions: true
+AllowRedosDuringAttempt: false
