@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode defaults.yaml",
+  "description": "Schema for defaults.yaml — cascading default values applied to activity files in the same directory tree",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "Type": {
+      "type": "string",
+      "enum": ["FORUM", "PAGE", "QUIZ", "ASSIGNMENT"],
+      "description": "Default activity type for this directory"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown", "MARKDOWN"],
+      "description": "Default formatting for Description fields"
+    },
+    "OpeningTime": {
+      "type": "string",
+      "description": "Default quiz opening time (ISO 8601 or dd-MM-yyyy HH:mm)"
+    },
+    "ClosingTime": {
+      "type": "string",
+      "description": "Default quiz closing time (ISO 8601 or dd-MM-yyyy HH:mm)"
+    },
+    "TimeExpiryHandling": {
+      "type": "string",
+      "enum": ["AutoSubmit", "GracePeriod", "Open"],
+      "description": "Default handling when quiz time expires"
+    },
+    "BuildOnPreviousAttempt": {
+      "type": "boolean",
+      "description": "Default: start new attempt from previous attempt's answers"
+    },
+    "QuestionBehaviour": {
+      "type": "string",
+      "enum": ["DeferredFeedback", "ImmediateFeedback", "InteractiveMultipleTries", "Deferred"],
+      "description": "Default question behaviour for quizzes"
+    },
+    "ShuffleQuestions": {
+      "type": "boolean",
+      "description": "Default: shuffle questions per attempt"
+    },
+    "AllowRedosDuringAttempt": {
+      "type": "boolean",
+      "description": "Default: allow redoing questions within an attempt"
+    },
+    "GradingMethod": {
+      "type": "string",
+      "enum": ["HighestGrade", "AverageGrade", "FirstAttempt", "LastAttempt"],
+      "description": "Default grading method for quizzes"
+    },
+    "AllowedAttempts": {
+      "type": "integer",
+      "description": "Default number of allowed attempts; 0 = unlimited"
+    },
+    "TimeLimit": {
+      "type": "integer",
+      "description": "Default time limit in seconds; 0 = no limit"
+    },
+    "ForumType": {
+      "type": "string",
+      "enum": ["General", "Blog", "Single", "EachUser", "QAndA"],
+      "description": "Default forum type"
+    },
+    "SubscriptionMode": {
+      "type": "string",
+      "enum": ["Optional", "Forced", "Auto", "Disabled"],
+      "description": "Default forum subscription mode"
+    },
+    "TrackingType": {
+      "type": "string",
+      "enum": ["Off", "Optional", "Forced"],
+      "description": "Default forum read tracking type"
+    },
+    "ContentFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Default content format for Page activities"
+    },
+    "AssignmentTextFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Default text format for Assignment activities"
+    },
+    "SendStudentNotifications": {
+      "type": "boolean",
+      "description": "Default: notify students when their assignment is graded"
+    },
+    "Grade": {
+      "type": "number",
+      "description": "Default maximum grade for assignments"
+    }
+  }
+}

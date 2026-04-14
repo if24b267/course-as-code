@@ -20,6 +20,40 @@
     "redhat.vscode-yaml"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "courseascodetools.initCourse",
+        "title": "Init Course",
+        "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.updateSections",
+        "title": "Update Sections",
+        "category": "CourseAsCode",
+        "enablement": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "courseascodetools.createActivity",
+        "title": "Create Activity",
+        "category": "CourseAsCode",
+        "enablement": "courseascodetools.hasSections"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "courseascodetools.initCourse",
+          "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        }
+      ]
+    },
+    "snippets": [
+      {
+        "language": "yaml",
+        "path": "./snippets/courseascodetools.code-snippets"
+      }
+    ],
     "yamlValidation": [
       {
         "fileMatch": "**/config.yaml",
@@ -30,29 +64,26 @@
         "url": "./schemas/section.schema.json"
       },
       {
-        "fileMatch": "**/Activities/FRM_*.yaml",
+        "fileMatch": "**/Activities/Forum_*.yaml",
         "url": "./schemas/activity-forum.schema.json"
       },
       {
-        "fileMatch": "**/Activities/PGE_*.yaml",
+        "fileMatch": "**/Activities/Page_*.yaml",
         "url": "./schemas/activity-page.schema.json"
-      }
-    ],
-    "commands": [
+      },
       {
-        "command": "courseascodetools.newActivity",
-        "title": "New CourseAsCode Activity"
+        "fileMatch": "**/Activities/Quiz_*.yaml",
+        "url": "./schemas/activity-quiz.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/Assignment_*.yaml",
+        "url": "./schemas/activity-assignment.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults.yaml",
+        "url": "./schemas/defaults.schema.json"
       }
-    ],
-    "menus": {
-      "explorer/context": [
-        {
-          "command": "courseascodetools.newActivity",
-          "when": "explorerResourceIsFolder",
-          "group": "navigation"
-        }
-      ]
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -71,5 +102,8 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.1"
-  }
+  },
+  "bundledDependencies": [
+    "js-yaml"
+  ]
 }

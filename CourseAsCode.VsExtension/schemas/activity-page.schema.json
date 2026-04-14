@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Page Activity",
+  "description": "Schema for PGE_*.yaml Page activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "PAGE",
+      "description": "Activity type identifier — must be PAGE"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the page"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description of the activity (from YamlActivity base)"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    },
+    "Intro": {
+      "type": "string",
+      "description": "Short intro text shown above the page content"
+    },
+    "IntroFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Intro field"
+    },
+    "Content": {
+      "type": "string",
+      "description": "Full page body — typically a multi-line HTML string using YAML block scalar (|)"
+    },
+    "ContentFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Content field"
+    },
+    "Context": {
+      "type": "string",
+      "enum": ["System", "User", "CourseCategory", "Course", "Module", "Block"],
+      "description": "Moodle context level for the page"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "CourseAsCode Section Path": {
+    "scope": "yaml",
+    "prefix": "section",
+    "body": [
+      "  - SectionPath: Sections/$0"
+    ],
+    "description": "Add a new section path entry to sections.yaml"
+  }
+}
