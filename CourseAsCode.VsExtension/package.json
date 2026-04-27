@@ -41,7 +41,8 @@
       {
         "command": "courseascodetools.createSection",
         "title": "Create Section",
-        "category": "CourseAsCode"
+        "category": "CourseAsCode",
+        "enablement": "workspaceFolderCount > 0"
       },
       {
         "command": "courseascodetools.refreshExplorer",
