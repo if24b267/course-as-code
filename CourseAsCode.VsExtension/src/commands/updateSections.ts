@@ -17,9 +17,9 @@ function sectionNameFromPath(sectionPath: string): string {
   return path.basename(sectionPath);
 }
 
-export function scaffoldMissingSection(root: string, sectionPath: string): void {
+export function scaffoldMissingSection(root: string, sectionPath: string, displayName?: string): void {
   const absDir = path.join(root, sectionPath);
-  const sectionName = sectionNameFromPath(sectionPath);
+  const sectionName = displayName ?? sectionNameFromPath(sectionPath);
 
   fs.mkdirSync(absDir, { recursive: true });
   fs.mkdirSync(path.join(absDir, 'Activities'), { recursive: true });
