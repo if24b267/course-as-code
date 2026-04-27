@@ -27,7 +27,10 @@ function updateContext(): void {
   );
 }
 
-export function registerSectionWatcher(context: vscode.ExtensionContext): void {
+export function registerSectionWatcher(
+  context: vscode.ExtensionContext,
+  onRefresh?: () => void
+): void {
   updateContext(); // set initial state on activation
 
   const root = getWorkspaceRoot();
@@ -44,8 +47,8 @@ export function registerSectionWatcher(context: vscode.ExtensionContext): void {
     false   // onDidDelete fires
   );
 
-  watcher.onDidCreate(() => updateContext());
-  watcher.onDidDelete(() => updateContext());
+  watcher.onDidCreate(() => { updateContext(); onRefresh?.(); });
+  watcher.onDidDelete(() => { updateContext(); onRefresh?.(); });
 
   context.subscriptions.push(watcher);
 }

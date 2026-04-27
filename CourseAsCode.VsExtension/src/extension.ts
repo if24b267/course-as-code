@@ -2,10 +2,15 @@ import * as vscode from 'vscode';
 import { initCourseCommand } from './commands/initCourse';
 import { updateSectionsCommand } from './commands/updateSections';
 import { createActivityCommand } from './commands/createActivity';
+import { createSectionCommand } from './commands/createSection';
+import { CourseExplorerProvider } from './providers/courseExplorerProvider';
 import { registerSectionWatcher } from './utils/sectionWatcher';
 
 export function activate(context: vscode.ExtensionContext): void {
-  registerSectionWatcher(context);
+  const provider = new CourseExplorerProvider();
+  vscode.window.registerTreeDataProvider('courseascodetools.explorer', provider);
+
+  registerSectionWatcher(context, () => provider.refresh());
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -19,7 +24,15 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       'courseascodetools.createActivity',
       () => createActivityCommand()
-    )
+    ),
+    vscode.commands.registerCommand(
+      'courseascodetools.createSection',
+      () => createSectionCommand()
+    ),
+    vscode.commands.registerCommand(
+      'courseascodetools.refreshExplorer',
+      () => provider.refresh()
+    ),
   );
 }
 
