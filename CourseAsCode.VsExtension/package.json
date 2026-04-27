@@ -37,13 +37,55 @@
         "title": "Create Activity",
         "category": "CourseAsCode",
         "enablement": "courseascodetools.hasSections"
+      },
+      {
+        "command": "courseascodetools.createSection",
+        "title": "Create Section",
+        "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.refreshExplorer",
+        "title": "Refresh",
+        "category": "CourseAsCode",
+        "icon": "$(refresh)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "courseExplorer",
+          "title": "Course Explorer",
+          "icon": "resources/course-explorer.svg"
+        }
+      ]
+    },
+    "views": {
+      "courseExplorer": [
+        {
+          "id": "courseascodetools.explorer",
+          "name": "Course Explorer"
+        }
+      ]
+    },
     "menus": {
       "explorer/context": [
         {
           "command": "courseascodetools.initCourse",
           "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "courseascodetools.refreshExplorer",
+          "when": "view == courseascodetools.explorer",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "courseascodetools.createActivity",
+          "when": "view == courseascodetools.explorer && viewItem == section",
           "group": "navigation"
         }
       ]
