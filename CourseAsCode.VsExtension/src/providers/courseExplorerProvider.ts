@@ -75,7 +75,8 @@ export class CourseExplorerProvider implements vscode.TreeDataProvider<CourseNod
         Sections?: Array<{ SectionPath: string }>;
       } | null;
       entries = parsed?.Sections ?? [];
-    } catch {
+    } catch (err) {
+      console.error(`CourseExplorer: failed to parse sections.yaml: ${err instanceof Error ? err.message : String(err)}`);
       return [];
     }
 
@@ -89,7 +90,9 @@ export class CourseExplorerProvider implements vscode.TreeDataProvider<CourseNod
             SectionName?: string;
           } | null;
           if (p?.SectionName) label = p.SectionName;
-        } catch { /* fall back to folder name */ }
+        } catch (err) {
+          console.warn(`CourseExplorer: failed to parse section.yaml in ${absDir}: ${err instanceof Error ? err.message : String(err)}`);
+        }
       }
       return new SectionItem(label, absDir);
     });
