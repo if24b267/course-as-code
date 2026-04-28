@@ -6,4 +6,17 @@ TimeLimit: 1200
 AllowedAttempts: 2
 GradeToPass: 5
 GradingMethod: HighestGrade
-QuestionIds: [101, 102, 103, 104, 105, 106, 107, 201, 202, 203, 204, 205, 206]
+Questions:
+  - Ref: "../../../questionpool/additional-questions"
+  - Ref: "../../../questionpool/additional-questions_1"
+  - Ref: "../../../questionpool/additional-questions_2"
+  - Ref: "../../../questionpool/additional-questions_3"
+  - Ref: "../../../questionpool/additional-questions_4"
+  - Ref: "../../../questionpool/additional-questions_5"
+  - Ref: "../../../questionpool/additional-questions_6"
+  - Ref: "../../../questionpool/calculated-questions"
+  - Ref: "../../../questionpool/calculated-questions_1"
+  - Ref: "../../../questionpool/calculated-questions_2"
+  - Ref: "../../../questionpool/calculated-questions_3"
+  - Ref: "../../../questionpool/calculated-questions_4"
+  - Ref: "../../../questionpool/calculated-questions_5"

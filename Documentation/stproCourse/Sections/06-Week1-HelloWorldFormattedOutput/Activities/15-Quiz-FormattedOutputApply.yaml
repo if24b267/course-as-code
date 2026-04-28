@@ -2,4 +2,10 @@ Name: "FORMATTED_OUTPUT_APPLY+"
 Description: |
   <p>create formatted output using format specifiers.</p>
 AttemptsAllowed: 5
-QuestionIds: [45, 46, 47, 48, 49]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_44"
+  - Ref: "../../../questionpool/quiz-questions_45"
+  - Ref: "../../../questionpool/quiz-questions_46"
+  - Ref: "../../../questionpool/quiz-questions_47"
+  - Ref: "../../../questionpool/quiz-questions_48"
+

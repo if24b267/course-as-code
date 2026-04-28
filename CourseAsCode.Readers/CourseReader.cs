@@ -101,13 +101,20 @@ namespace CourseAsCode.Readers
             ValueKeeper.GradeCategories = gradeCategories;
             ValueKeeper.GradingInfos = gradingInfos;
 
-            if (yamlYamlCourse.QuestionListPaths != null)
+            var questionPoolPath = Path.GetFullPath(Path.Combine(coursePath, "questionpool"));
+            if (Directory.Exists(questionPoolPath))
             {
-                foreach (var questionListPath in yamlYamlCourse.QuestionListPaths)
+                var questionFiles = Directory.GetFiles(questionPoolPath, "*.yaml", SearchOption.AllDirectories);
+                foreach (var qPath in questionFiles)
                 {
-                    var questionPath = Path.GetFullPath(Path.Combine(coursePath, questionListPath));
-                    var moodleQuestionList = _questionReader.Read(questionPath);
-                    ValueKeeper.Questions.AddRange(moodleQuestionList);
+                    // Ignore defaults when crawling
+                    if (Path.GetFileName(qPath).StartsWith("default", StringComparison.OrdinalIgnoreCase)) continue;
+                    
+                    var moodleQuestion = _questionReader.Read(qPath);
+                    if (moodleQuestion != null)
+                    {
+                        ValueKeeper.Questions.Add(moodleQuestion);
+                    }
                 }
             }
 

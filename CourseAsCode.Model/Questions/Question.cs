@@ -12,6 +12,9 @@ namespace CourseAsCode.Model.Questions
         [Description("Unique identifier for the question")]
         public int QuestionId { get; set; }
 
+        [Description("Absolute path of the YAML file defining this question")]
+        public string? SourcePath { get; set; }
+
         [Description("Identifier for the context")]
         public int ContextId { get; set; }
 

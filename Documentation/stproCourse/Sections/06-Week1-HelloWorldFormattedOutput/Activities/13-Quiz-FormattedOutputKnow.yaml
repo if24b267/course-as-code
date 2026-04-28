@@ -2,4 +2,15 @@ Name: "FORMATTED_OUTPUT_KNOW+"
 Description: |
   <p>identify, recall, recognize and reproduce format specifications.</p>
 AttemptsAllowed: 5
-QuestionIds: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_24"
+  - Ref: "../../../questionpool/quiz-questions_25"
+  - Ref: "../../../questionpool/quiz-questions_26"
+  - Ref: "../../../questionpool/quiz-questions_27"
+  - Ref: "../../../questionpool/quiz-questions_28"
+  - Ref: "../../../questionpool/quiz-questions_29"
+  - Ref: "../../../questionpool/quiz-questions_30"
+  - Ref: "../../../questionpool/quiz-questions_31"
+  - Ref: "../../../questionpool/quiz-questions_32"
+  - Ref: "../../../questionpool/quiz-questions_33"
+

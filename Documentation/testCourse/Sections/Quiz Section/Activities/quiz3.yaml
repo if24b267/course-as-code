@@ -4,7 +4,11 @@ TimeLimit: 600
 AllowedAttempts: 1
 GradeToPass: 2
 QuestionBehaviour: InteractiveMultipleTries
-QuestionIds: [4, 5, 6]
+Questions:
+  - Ref: "../../../questionpool/questions3"
+  - Ref: "../../../questionpool/questions4"
+  - Ref: "../../../questionpool/questions4_1"
 # TODO: add feedback
 # TODO: how to set to take a number of questions from the question file?
 # TODO: do we want to support the question bank or does every quiz require its own questions?
+

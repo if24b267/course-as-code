@@ -2,4 +2,7 @@ Name: "Self-check: Calculations (IPO)"
 Description: |
   <p>Apply Input-Process-Output pattern.</p>
 AttemptsAllowed: 0
-QuestionIds: [52, 53]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_51"
+  - Ref: "../../../questionpool/quiz-questions_52"
+

@@ -2,4 +2,15 @@ Name: "FORMATTED_OUTPUT_COMPREHEND+"
 Description: |
   <p>predict the format for given format specifiers.</p>
 AttemptsAllowed: 5
-QuestionIds: [35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_34"
+  - Ref: "../../../questionpool/quiz-questions_35"
+  - Ref: "../../../questionpool/quiz-questions_36"
+  - Ref: "../../../questionpool/quiz-questions_37"
+  - Ref: "../../../questionpool/quiz-questions_38"
+  - Ref: "../../../questionpool/quiz-questions_39"
+  - Ref: "../../../questionpool/quiz-questions_40"
+  - Ref: "../../../questionpool/quiz-questions_41"
+  - Ref: "../../../questionpool/quiz-questions_42"
+  - Ref: "../../../questionpool/quiz-questions_43"
+

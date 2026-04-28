@@ -5,5 +5,14 @@ TimeLimit: 600
 AllowedAttempts: 1
 GradeToPass: 2
 GradingMethod: HighestGrade
-QuestionIds: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions"
+  - Ref: "../../../questionpool/quiz-questions_1"
+  - Ref: "../../../questionpool/quiz-questions_2"
+  - Ref: "../../../questionpool/quiz-questions_3"
+  - Ref: "../../../questionpool/quiz-questions_4"
+  - Ref: "../../../questionpool/quiz-questions_5"
+  - Ref: "../../../questionpool/quiz-questions_6"
+  - Ref: "../../../questionpool/quiz-questions_7"
+  - Ref: "../../../questionpool/quiz-questions_8"
 ClosingTime: 15-03-2026 23:59

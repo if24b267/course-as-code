@@ -2,4 +2,17 @@ Name: "HELLO_WORLD_COMPREHEND+"
 Description: |
   <p>predict the output of a hello world application in Java.</p>
 AttemptsAllowed: 5
-QuestionIds: [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_12"
+  - Ref: "../../../questionpool/quiz-questions_13"
+  - Ref: "../../../questionpool/quiz-questions_14"
+  - Ref: "../../../questionpool/quiz-questions_15"
+  - Ref: "../../../questionpool/quiz-questions_16"
+  - Ref: "../../../questionpool/quiz-questions_17"
+  - Ref: "../../../questionpool/quiz-questions_18"
+  - Ref: "../../../questionpool/quiz-questions_19"
+  - Ref: "../../../questionpool/quiz-questions_20"
+  - Ref: "../../../questionpool/quiz-questions_21"
+  - Ref: "../../../questionpool/quiz-questions_22"
+  - Ref: "../../../questionpool/quiz-questions_23"
+
