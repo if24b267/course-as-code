@@ -14,10 +14,11 @@ export function appendSectionEntry(sectionsFilePath: string, sectionPath: string
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const yaml = require('js-yaml') as typeof yamlTypes;
   const raw = fs.readFileSync(sectionsFilePath, 'utf8');
-  const parsed = yaml.load(raw) as { Sections?: Array<{ SectionPath: string }> } | null;
-  const sections = parsed?.Sections ?? [];
+  const parsed = (yaml.load(raw) ?? {}) as Record<string, unknown>;
+  const sections = (parsed['Sections'] as Array<{ SectionPath: string }> | undefined) ?? [];
   sections.push({ SectionPath: sectionPath });
-  fs.writeFileSync(sectionsFilePath, yaml.dump({ Sections: sections }), 'utf8');
+  parsed['Sections'] = sections;
+  fs.writeFileSync(sectionsFilePath, yaml.dump(parsed), 'utf8');
 }
 
 export async function createSectionCommand(): Promise<void> {
@@ -44,7 +45,7 @@ export async function createSectionCommand(): Promise<void> {
 
   const trimmed = rawName.trim();
   const sanitized = sanitizeName(trimmed);
-  if (!sanitized) {
+  if (!sanitized || /^[-_]+$/.test(sanitized)) {
     vs.window.showErrorMessage(
       'Section name is empty after sanitization. Use letters, digits, hyphens, or underscores.'
     );
@@ -59,8 +60,15 @@ export async function createSectionCommand(): Promise<void> {
     return;
   }
 
-  appendSectionEntry(sectionsFile, sectionPath);
-  scaffoldMissingSection(root, sectionPath, trimmed);
+  try {
+    appendSectionEntry(sectionsFile, sectionPath);
+    scaffoldMissingSection(root, sectionPath, trimmed);
+  } catch (err) {
+    vs.window.showErrorMessage(
+      `Failed to create section: ${err instanceof Error ? err.message : String(err)}`
+    );
+    return;
+  }
 
   vs.window.showInformationMessage(`Created section: ${trimmed}`);
 }

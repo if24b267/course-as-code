@@ -41,14 +41,16 @@ export function registerSectionWatcher(
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const vs = require('vscode') as typeof vscode;
   const watcher = vs.workspace.createFileSystemWatcher(
-    new vs.RelativePattern(root, 'Sections/*'),
+    new vs.RelativePattern(root, '{sections.yaml,Sections/**}'),
     false,  // onDidCreate fires
-    true,   // ignore content changes
+    false,  // onDidChange fires (catches sections.yaml edits)
     false   // onDidDelete fires
   );
 
-  watcher.onDidCreate(() => { updateContext(); onRefresh?.(); });
-  watcher.onDidDelete(() => { updateContext(); onRefresh?.(); });
+  const handler = () => { updateContext(); onRefresh?.(); };
+  watcher.onDidCreate(handler);
+  watcher.onDidChange(handler);
+  watcher.onDidDelete(handler);
 
   context.subscriptions.push(watcher);
 }

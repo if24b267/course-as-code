@@ -23,9 +23,11 @@ export function scaffoldMissingSection(root: string, sectionPath: string, displa
 
   fs.mkdirSync(absDir, { recursive: true });
   fs.mkdirSync(path.join(absDir, 'Activities'), { recursive: true });
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const yaml = require('js-yaml') as typeof yamlTypes;
   fs.writeFileSync(
     path.join(absDir, 'section.yaml'),
-    `SectionName: ${sectionName}\n`,
+    yaml.dump({ SectionName: sectionName }),
     'utf8'
   );
 }
