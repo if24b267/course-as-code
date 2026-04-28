@@ -82,15 +82,42 @@ namespace CourseAsCode.Readers.Helper
                     var fullCoursePath = Path.GetFullPath(coursePath);
                     var defaultContents = new List<string>();
                     
+                    var typeName = typeof(T).Name;
+                    var typeSuffix = typeName.StartsWith("Yaml", StringComparison.OrdinalIgnoreCase) 
+                        ? typeName.Substring(4).ToLowerInvariant() 
+                        : typeName.ToLowerInvariant();
+                        
                     var dir = currentDir;
                     while (dir != null && dir.StartsWith(fullCoursePath, StringComparison.OrdinalIgnoreCase))
                     {
-                        var defaultsPath = Path.Combine(dir, "defaults.yaml");
-                        // Don't merge a file with itself
-                        if (!string.Equals(defaultsPath, Path.GetFullPath(filePath), StringComparison.OrdinalIgnoreCase) 
-                            && File.Exists(defaultsPath))
+                        var defaultsDir = Path.Combine(dir, "defaults");
+                        
+                        var genericDefaultsPath = Path.Combine(defaultsDir, "default.yaml");
+                        var specificDefaultsPath = Path.Combine(defaultsDir, $"default_{typeSuffix}.yaml");
+                        
+                        // Merge specific first (so it's added to the top of the list, evaluating generic right after)
+                        // Actually, since we Insert(0), we should insert generic, then specific. So the base properties are evaluated first.
+                        // Wait, if defaultContents is Insert(0), the LAST item inserted is the FIRST item in the list.
+                        // The items at the START of the list are merged first. Wait.
+                        // If we insert the higher-level (parent) folders first, they end up at index 0. 
+                        // Let's just collect them in order from child to parent, and Insert(0) each.
+                        // Inside a single folder: generic is parent to specific. 
+                        // So for a given folder, we want generic to be merged BEFORE specific.
+                        // Since we are iterating defaultContents from beginning to end:
+                        // "mergedDefaults = YamlMerger.MergeYamlStrings(mergedDefaults, content)" -> right-side overwrites left-side.
+                        // So if we have [ParentGeneric, ParentSpecific, ChildGeneric, ChildSpecific], it perfectly cascades!
+                        // To achieve this, when walking UP the tree (child -> parent), we must Insert(0) Specific, THEN Insert(0) Generic!
+                        
+                        if (!string.Equals(specificDefaultsPath, Path.GetFullPath(filePath), StringComparison.OrdinalIgnoreCase) 
+                            && File.Exists(specificDefaultsPath))
                         {
-                            defaultContents.Insert(0, File.ReadAllText(defaultsPath));
+                            defaultContents.Insert(0, File.ReadAllText(specificDefaultsPath));
+                        }
+                        
+                        if (!string.Equals(genericDefaultsPath, Path.GetFullPath(filePath), StringComparison.OrdinalIgnoreCase) 
+                            && File.Exists(genericDefaultsPath))
+                        {
+                            defaultContents.Insert(0, File.ReadAllText(genericDefaultsPath));
                         }
                         
                         if (dir.Equals(fullCoursePath, StringComparison.OrdinalIgnoreCase))

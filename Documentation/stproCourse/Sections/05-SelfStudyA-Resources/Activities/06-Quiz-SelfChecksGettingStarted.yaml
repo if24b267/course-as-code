@@ -1,3 +1,5 @@
 Name: "Self-checks: Getting Started"
 Description: ""
-QuestionIds: [2]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_1"
+

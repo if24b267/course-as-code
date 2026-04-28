@@ -1,2 +1,5 @@
 Name: "Self-check: Selection (programming)"
-QuestionIds: [56, 57]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_55"
+  - Ref: "../../../questionpool/quiz-questions_56"
+
