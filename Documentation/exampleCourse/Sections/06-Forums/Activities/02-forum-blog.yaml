@@ -7,11 +7,8 @@ ForumType: Blog
 
 # Introduction displayed at the top of the forum
 Intro: "<p>Share your thoughts in blog format!</p><p>Each discussion's first post will be displayed in full, making it easy to browse through contributions like reading a blog.</p>"
-IntroFormat: 1
 
 # Subscription and Tracking
-SubscriptionMode: Optional
-TrackingType: Optional
 
 # Attachments
 MaxAttachments: 5

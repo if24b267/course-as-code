@@ -7,10 +7,8 @@ ForumType: QAndA
 
 # Introduction displayed at the top of the forum
 Intro: "<p>Answer the question below!</p><p><strong>Important:</strong> You must submit your own answer before you can view responses from other students. This encourages independent thinking.</p>"
-IntroFormat: 1
 
 # Subscription and Tracking
-SubscriptionMode: Optional
 TrackingType: Forced
 
 # Attachments
@@ -22,8 +20,5 @@ CompletionPosts: 1
 CompletionReplies: 2
 
 # Display Options
-DisplayWordCount: false
 
 # Assessment (optional - can be graded)
-Assessed: false
-GradeForum: false
