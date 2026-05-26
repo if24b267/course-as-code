@@ -3,14 +3,28 @@ import { initCourseCommand } from './commands/initCourse';
 import { updateSectionsCommand } from './commands/updateSections';
 import { createActivityCommand } from './commands/createActivity';
 import { createSectionCommand } from './commands/createSection';
+import { createQuestionCommand } from './commands/createQuestion';
 import { CourseExplorerProvider } from './providers/courseExplorerProvider';
 import { registerSectionWatcher } from './utils/sectionWatcher';
+import { validateDocument } from './utils/cascadeValidator';
 
 export function activate(context: vscode.ExtensionContext): void {
   const provider = new CourseExplorerProvider();
   vscode.window.registerTreeDataProvider('courseascodetools.explorer', provider);
 
   registerSectionWatcher(context, () => provider.refresh());
+
+  const diagnostics = vscode.languages.createDiagnosticCollection('courseascodetools');
+  context.subscriptions.push(diagnostics);
+
+  context.subscriptions.push(
+    vscode.workspace.onDidOpenTextDocument(doc => validateDocument(doc, diagnostics)),
+    vscode.workspace.onDidChangeTextDocument(e => validateDocument(e.document, diagnostics)),
+    vscode.workspace.onDidCloseTextDocument(doc => diagnostics.delete(doc.uri))
+  );
+
+  // Validate all currently open documents
+  vscode.workspace.textDocuments.forEach(doc => validateDocument(doc, diagnostics));
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -28,6 +42,10 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       'courseascodetools.createSection',
       () => createSectionCommand()
+    ),
+    vscode.commands.registerCommand(
+      'courseascodetools.createQuestion',
+      () => createQuestionCommand()
     ),
     vscode.commands.registerCommand(
       'courseascodetools.refreshExplorer',

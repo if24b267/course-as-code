@@ -22,7 +22,7 @@ const FORUM_TEMPLATE = `Type: FORUM\nName: ""\n`;
 
 const PAGE_TEMPLATE = `Type: PAGE\nName: ""\nContent: |\n  <p>Page content goes here.</p>\n`;
 
-const QUIZ_TEMPLATE = `Type: QUIZ\nName: ""\nQuestionIds: []\n`;
+const QUIZ_TEMPLATE = `Type: QUIZ\nName: ""\nQuestions: []\n`;
 
 const ASSIGNMENT_TEMPLATE = `Type: ASSIGNMENT\nName: ""\n`;
 

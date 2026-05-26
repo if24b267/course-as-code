@@ -10,7 +10,15 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:courseascodetools.initCourse",
+    "onCommand:courseascodetools.updateSections",
+    "onCommand:courseascodetools.createActivity",
+    "onCommand:courseascodetools.createSection",
+    "onCommand:courseascodetools.createQuestion",
+    "onCommand:courseascodetools.refreshExplorer",
+    "onView:courseascodetools.explorer"
+  ],
   "main": "./out/src/extension.js",
   "repository": {
     "type": "git",
@@ -41,6 +49,12 @@
       {
         "command": "courseascodetools.createSection",
         "title": "Create Section",
+        "category": "CourseAsCode",
+        "enablement": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "courseascodetools.createQuestion",
+        "title": "Create Question",
         "category": "CourseAsCode",
         "enablement": "workspaceFolderCount > 0"
       },
@@ -123,7 +137,7 @@
         "url": "./schemas/activity-assignment.schema.json"
       },
       {
-        "fileMatch": "**/defaults.yaml",
+        "fileMatch": "**/defaults/default*.yaml",
         "url": "./schemas/defaults.schema.json"
       }
     ]
@@ -139,7 +153,7 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
-    "mocha": "^10.3.0",
+    "mocha": "^11.7.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.0"
   },
@@ -147,6 +161,9 @@
     "js-yaml": "^4.1.1"
   },
   "bundledDependencies": [
+    "js-yaml"
+  ],
+  "bundleDependencies": [
     "js-yaml"
   ]
 }

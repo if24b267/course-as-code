@@ -73,19 +73,21 @@ describe('scaffoldCourse', () => {
     fs.rmSync(root, { recursive: true });
   });
 
-  it('creates defaults.yaml at course root', () => {
+  it('creates defaults directory and its default files', () => {
     const root = makeTempDir();
     scaffoldCourse(root);
-    assert.ok(fs.existsSync(path.join(root, 'defaults.yaml')));
+    assert.ok(fs.existsSync(path.join(root, 'defaults')));
+    assert.ok(fs.existsSync(path.join(root, 'defaults', 'default_quiz.yaml')));
+    assert.ok(fs.existsSync(path.join(root, 'defaults', 'default_assignment.yaml')));
+    assert.ok(fs.existsSync(path.join(root, 'defaults', 'default_forum.yaml')));
+    assert.ok(fs.existsSync(path.join(root, 'defaults', 'default_question.yaml')));
     fs.rmSync(root, { recursive: true });
   });
 
-  it('defaults.yaml contains commented example fields', () => {
+  it('creates empty questionpool directory at course root', () => {
     const root = makeTempDir();
     scaffoldCourse(root);
-    const content = fs.readFileSync(path.join(root, 'defaults.yaml'), 'utf8');
-    assert.ok(content.includes('defaults.yaml'));
-    assert.ok(content.includes('ShuffleQuestions'));
+    assert.ok(fs.existsSync(path.join(root, 'questionpool')));
     fs.rmSync(root, { recursive: true });
   });
 
