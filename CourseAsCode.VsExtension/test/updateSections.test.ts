@@ -115,3 +115,27 @@ describe('getMissingSections', () => {
     fs.rmSync(root, { recursive: true });
   });
 });
+
+describe('getMissingSections + validateSections interaction', () => {
+  it('getMissingSections does not catch a section dir that exists but has no section.yaml', () => {
+    const root = makeTempDir();
+    // Section A: dir missing entirely
+    // Section B: dir exists but no section.yaml
+    fs.writeFileSync(
+      path.join(root, 'sections.yaml'),
+      'Sections:\n  - SectionPath: Sections/A\n  - SectionPath: Sections/B\n'
+    );
+    fs.mkdirSync(path.join(root, 'Sections', 'B'), { recursive: true });
+
+    const missing = getMissingSections(root);
+    assert.deepStrictEqual(missing, ['Sections/A']); // B is not in missing (dir exists)
+
+    // After scaffolding A, validateSections should catch B's missing section.yaml
+    const root2 = root;
+    scaffoldMissingSection(root2, 'Sections/A');
+    const results = validateSections(root2);
+    const warnings = results.filter(r => r.type === 'warning');
+    assert.ok(warnings.some(w => w.message.includes('Sections/B')));
+    fs.rmSync(root, { recursive: true });
+  });
+});

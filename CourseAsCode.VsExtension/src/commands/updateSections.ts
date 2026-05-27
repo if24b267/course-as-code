@@ -119,7 +119,6 @@ export async function updateSectionsCommand(): Promise<void> {
     vs.window.showInformationMessage(
       `Created ${missing.length} section(s): ${missing.map(p => path.basename(p)).join(', ')}`
     );
-    return;
   }
 
   const results = validateSections(root);
