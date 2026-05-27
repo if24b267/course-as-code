@@ -105,4 +105,12 @@ describe('scaffoldCourse', () => {
     assert.notStrictEqual(before, after); // documents that scaffoldCourse is not idempotent
     fs.rmSync(root, { recursive: true });
   });
+
+  it('creates Activities/ subdirectory inside Introduction section', () => {
+    const root = makeTempDir();
+    scaffoldCourse(root);
+    const activitiesDir = path.join(root, 'Sections', 'Introduction', 'Activities');
+    assert.ok(fs.existsSync(activitiesDir), 'Activities/ should exist after scaffoldCourse');
+    fs.rmSync(root, { recursive: true });
+  });
 });
