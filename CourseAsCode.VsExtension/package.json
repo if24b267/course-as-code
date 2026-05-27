@@ -45,6 +45,12 @@
         "enablement": "workspaceFolderCount > 0"
       },
       {
+        "command": "courseascodetools.createQuestion",
+        "title": "Create Question",
+        "category": "CourseAsCode",
+        "enablement": "workspaceFolderCount > 0"
+      },
+      {
         "command": "courseascodetools.refreshExplorer",
         "title": "Refresh",
         "category": "CourseAsCode",
@@ -125,6 +131,26 @@
       {
         "fileMatch": "**/defaults.yaml",
         "url": "./schemas/defaults.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/URL_*.yaml",
+        "url": "./schemas/activity-url.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FILE_*.yaml",
+        "url": "./schemas/activity-file.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/TMA_*.yaml",
+        "url": "./schemas/activity-label.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FLD_*.yaml",
+        "url": "./schemas/activity-folder.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/WKI_*.yaml",
+        "url": "./schemas/activity-wiki.schema.json"
       }
     ]
   },
