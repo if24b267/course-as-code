@@ -106,6 +106,7 @@ const ASSIGNMENT_TEMPLATE = [
 ].join('\n');
 
 const URL_TEMPLATE = [
+  'Type: URL',
   'Name: ""',
   'URL: ""',
   '# Description: ""',
