@@ -106,8 +106,7 @@ export async function createActivityCommand(): Promise<void> {
     fs.mkdirSync(activitiesDir, { recursive: true });
   }
 
-  // Use sanitized name directly with buildFileName (avoids double-sanitization)
-  const fileName = `${selectedType}_${sanitized}.yaml`;
+  const fileName = buildFileName(selectedType, sanitized);
   const activityFilePath = path.join(activitiesDir, fileName);
 
   if (fs.existsSync(activityFilePath)) {

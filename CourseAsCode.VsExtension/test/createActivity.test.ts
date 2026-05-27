@@ -39,6 +39,18 @@ describe('buildActivityEntry', () => {
   it('works with already-clean names', () => {
     assert.strictEqual(buildActivityEntry('Quiz', 'midterm'), 'Activities/Quiz_midterm.yaml');
   });
+
+  it('Url type uses URL_ prefix', () => {
+    assert.strictEqual(buildActivityEntry('Url', 'my-link'), 'Activities/URL_my-link.yaml');
+  });
+
+  it('Label type uses TMA_ prefix', () => {
+    assert.strictEqual(buildActivityEntry('Label', 'intro'), 'Activities/TMA_intro.yaml');
+  });
+
+  it('Folder type uses FLD_ prefix', () => {
+    assert.strictEqual(buildActivityEntry('Folder', 'resources'), 'Activities/FLD_resources.yaml');
+  });
 });
 
 describe('appendActivityToSection', () => {
