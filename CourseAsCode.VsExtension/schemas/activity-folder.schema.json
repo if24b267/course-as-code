@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Folder Activity",
+  "description": "Schema for FLD_*.yaml Folder activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "FOLDER",
+      "description": "Activity type identifier — must be FOLDER (case-insensitive)"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the folder"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description shown on the course page"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    },
+    "VisibleToStudents": {
+      "type": "boolean",
+      "description": "Whether the folder is visible to students (default: true)"
+    },
+    "DisplayDescription": {
+      "type": "boolean",
+      "description": "Show the description above the file list (default: false)"
+    },
+    "YamlFilePaths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Relative paths to FILE_*.yaml files to include in this folder"
+    }
+  }
+}

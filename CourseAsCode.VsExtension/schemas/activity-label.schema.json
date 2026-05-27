@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Text and Media Area (Label) Activity",
+  "description": "Schema for TMA_*.yaml Text and Media Area activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "enum": ["LABEL", "TEXTMEDIAAREA", "label", "textmediaarea"],
+      "description": "Activity type identifier — LABEL or TEXTMEDIAAREA (case-insensitive)"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the text and media area"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description shown on the course page"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    },
+    "Format": {
+      "type": "string",
+      "enum": ["AUTO", "HTML", "PLAIN", "MARKDOWN", "auto", "html", "plain", "markdown"],
+      "description": "Overall format of the content block"
+    },
+    "Content": {
+      "type": "array",
+      "description": "Ordered list of content items (files to include)",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ContentFilePath"],
+        "properties": {
+          "Type": {
+            "type": "string",
+            "enum": ["MARKDOWN", "markdown"],
+            "description": "Content item type — currently only MARKDOWN is supported"
+          },
+          "ContentFilePath": {
+            "type": "string",
+            "description": "Relative path to the content file (e.g. ./content/intro.md)"
+          }
+        }
+      }
+    }
+  }
+}

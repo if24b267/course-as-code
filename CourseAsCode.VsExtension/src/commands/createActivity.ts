@@ -5,7 +5,7 @@ import * as path from 'path';
 import { ActivityType, buildFileName, sanitizeName, getTemplate } from '../templates';
 import { getWorkspaceRoot } from '../utils/workspace';
 
-const ACTIVITY_TYPES: ActivityType[] = ['Forum', 'Page', 'Quiz', 'Assignment'];
+const ACTIVITY_TYPES: ActivityType[] = ['Forum', 'Page', 'Quiz', 'Assignment', 'Url', 'File', 'Label', 'Folder', 'Wiki'];
 
 interface SectionYaml {
   SectionName?: string;

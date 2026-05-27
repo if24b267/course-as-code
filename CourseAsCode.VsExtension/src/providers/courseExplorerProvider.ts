@@ -80,22 +80,24 @@ export class CourseExplorerProvider implements vscode.TreeDataProvider<CourseNod
       return [];
     }
 
-    return entries.map(entry => {
-      const absDir = path.join(root, entry.SectionPath);
-      let label = path.basename(entry.SectionPath);
-      const sectionYamlPath = path.join(absDir, 'section.yaml');
-      if (fs.existsSync(sectionYamlPath)) {
-        try {
-          const p = yaml.load(fs.readFileSync(sectionYamlPath, 'utf8')) as {
-            SectionName?: string;
-          } | null;
-          if (p?.SectionName) label = p.SectionName;
-        } catch (err) {
-          console.warn(`CourseExplorer: failed to parse section.yaml in ${absDir}: ${err instanceof Error ? err.message : String(err)}`);
+    return entries
+      .filter(entry => typeof entry?.SectionPath === 'string' && entry.SectionPath.length > 0)
+      .map(entry => {
+        const absDir = path.join(root, entry.SectionPath);
+        let label = path.basename(entry.SectionPath);
+        const sectionYamlPath = path.join(absDir, 'section.yaml');
+        if (fs.existsSync(sectionYamlPath)) {
+          try {
+            const p = yaml.load(fs.readFileSync(sectionYamlPath, 'utf8')) as {
+              SectionName?: string;
+            } | null;
+            if (p?.SectionName) label = p.SectionName;
+          } catch (err) {
+            console.warn(`CourseExplorer: failed to parse section.yaml in ${absDir}: ${err instanceof Error ? err.message : String(err)}`);
+          }
         }
-      }
-      return new SectionItem(label, absDir);
-    });
+        return new SectionItem(label, absDir);
+      });
   }
 
   private _getActivities(sectionDir: string): ActivityItem[] {

@@ -52,7 +52,8 @@ export function validateSections(root: string): ValidationResult[] {
   const results: ValidationResult[] = [];
 
   for (const entry of sections) {
-    const sectionPath = entry.SectionPath;
+    const sectionPath = entry?.SectionPath;
+    if (typeof sectionPath !== 'string' || !sectionPath) continue;
     const absDir = path.join(root, sectionPath);
 
     if (!fs.existsSync(absDir)) {
@@ -83,6 +84,7 @@ export function getMissingSections(root: string): string[] {
   const sections = parsed?.Sections ?? [];
 
   return sections
+    .filter(e => typeof e?.SectionPath === 'string' && e.SectionPath.length > 0)
     .map(e => e.SectionPath)
     .filter(p => !fs.existsSync(path.join(root, p)));
 }
