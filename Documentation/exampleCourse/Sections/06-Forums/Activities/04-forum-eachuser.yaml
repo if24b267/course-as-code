@@ -7,11 +7,9 @@ ForumType: EachUser
 
 # Introduction displayed at the top of the forum
 Intro: "<p>Create your own discussion topic!</p><p>Each student can start one discussion thread. Choose your topic wisely and engage with your classmates' discussions by replying to their posts.</p>"
-IntroFormat: 1
 
 # Subscription and Tracking
 SubscriptionMode: Auto
-TrackingType: Optional
 
 # Attachments
 MaxAttachments: 3

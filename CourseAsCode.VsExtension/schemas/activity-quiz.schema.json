@@ -75,10 +75,20 @@
       "type": "boolean",
       "description": "Allow student to redo questions within an attempt"
     },
-    "QuestionIds": {
+    "Questions": {
       "type": "array",
-      "items": { "type": "integer" },
-      "description": "List of integer question IDs to include in the quiz"
+      "items": {
+        "type": "object",
+        "required": ["Ref"],
+        "properties": {
+          "Ref": {
+            "type": "string",
+            "description": "Relative path to the question YAML file in the questionpool, without .yaml extension"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "List of question references to include in the quiz"
     }
   }
 }

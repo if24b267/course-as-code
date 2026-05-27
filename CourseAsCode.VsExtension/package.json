@@ -123,63 +123,7 @@
         "url": "./schemas/activity-assignment.schema.json"
       },
       {
-        "fileMatch": "**/Activities/URL_*.yaml",
-        "url": "./schemas/activity-url.schema.json"
-      },
-      {
-        "fileMatch": "**/Activities/FILE_*.yaml",
-        "url": "./schemas/activity-file.schema.json"
-      },
-      {
-        "fileMatch": "**/Activities/TMA_*.yaml",
-        "url": "./schemas/activity-label.schema.json"
-      },
-      {
-        "fileMatch": "**/Activities/FLD_*.yaml",
-        "url": "./schemas/activity-folder.schema.json"
-      },
-      {
-        "fileMatch": "**/Activities/WKI_*.yaml",
-        "url": "./schemas/activity-wiki.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_forum.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_page.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_quiz.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_assignment.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_url.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_file.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_textmediaarea.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_folder.yaml",
-        "url": "./schemas/defaults.schema.json"
-      },
-      {
-        "fileMatch": "**/defaults/default_wiki.yaml",
+        "fileMatch": "**/defaults.yaml",
         "url": "./schemas/defaults.schema.json"
       }
     ]

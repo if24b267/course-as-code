@@ -62,8 +62,8 @@ describe('getTemplate', () => {
     assert.ok(getTemplate('Assignment').startsWith('Type: ASSIGNMENT'));
   });
 
-  it('Quiz template includes QuestionIds', () => {
-    assert.ok(getTemplate('Quiz').includes('QuestionIds:'));
+  it('Quiz template includes Questions', () => {
+    assert.ok(getTemplate('Quiz').includes('Questions:'));
   });
 
   it('Page template includes Content field', () => {
