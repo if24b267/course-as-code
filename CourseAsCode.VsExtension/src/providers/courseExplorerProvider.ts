@@ -101,12 +101,33 @@ export class CourseExplorerProvider implements vscode.TreeDataProvider<CourseNod
   }
 
   private _getActivities(sectionDir: string): ActivityItem[] {
-    const activitiesDir = path.join(sectionDir, 'Activities');
-    if (!fs.existsSync(activitiesDir)) return [];
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const yaml = require('js-yaml') as typeof yamlTypes;
+    const sectionYamlPath = path.join(sectionDir, 'section.yaml');
+    if (!fs.existsSync(sectionYamlPath)) return [];
 
-    return fs.readdirSync(activitiesDir)
-      .filter(f => f.endsWith('.yaml'))
-      .sort()
-      .map(f => new ActivityItem(f, path.join(activitiesDir, f)));
+    let entries: Array<{ ActivityFilePath: string }> = [];
+    try {
+      const parsed = yaml.load(fs.readFileSync(sectionYamlPath, 'utf8')) as {
+        Activities?: Array<{ ActivityFilePath: string }>;
+      } | null;
+      entries = parsed?.Activities ?? [];
+    } catch {
+      return [];
+    }
+
+    return entries
+      .filter(e => typeof e?.ActivityFilePath === 'string' && e.ActivityFilePath.length > 0)
+      .map(e => {
+        const absPath = path.resolve(sectionDir, e.ActivityFilePath);
+        const label = path.basename(e.ActivityFilePath);
+        if (fs.existsSync(absPath)) {
+          return new ActivityItem(label, absPath);
+        }
+        const item = new ActivityItem(`${label} (missing)`, absPath);
+        item.iconPath = new vscode.ThemeIcon('warning');
+        item.command = undefined;
+        return item;
+      });
   }
 }
