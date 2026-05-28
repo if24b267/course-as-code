@@ -136,6 +136,26 @@ describe('checkQuizRefs', () => {
     fs.rmSync(root, { recursive: true });
   });
 
+  it('returns no findings when QuestionId is 0 (falsy but valid)', () => {
+    const root = makeTempDir();
+    const questionPoolDir = path.join(root, 'questionpool');
+    fs.mkdirSync(questionPoolDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(questionPoolDir, 'q-zero.yaml'),
+      'QuestionId: 0\nQuestionText: Valid question\n'
+    );
+    const sectionDir = path.join(root, 'Sections', 'S1');
+    const activitiesDir = path.join(sectionDir, 'Activities');
+    fs.mkdirSync(activitiesDir, { recursive: true });
+    const quizPath = path.join(activitiesDir, 'Quiz_test.yaml');
+    const content = 'Type: QUIZ\nName: Test\nQuestions:\n  - Ref: "../../../questionpool/q-zero"\n';
+    fs.writeFileSync(quizPath, content);
+
+    const findings = checkQuizRefs(quizPath, content);
+    assert.strictEqual(findings.length, 0);
+    fs.rmSync(root, { recursive: true });
+  });
+
   it('returns no findings when Questions list is empty', () => {
     const root = makeTempDir();
     const sectionDir = path.join(root, 'Sections', 'S1');

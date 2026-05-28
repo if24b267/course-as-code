@@ -81,7 +81,7 @@ export function checkQuizRefs(docFsPath: string, content: string): Finding[] {
       } catch {
         // unreadable question file — treat as warning
       }
-      if (!questionParsed?.QuestionId) {
+      if (!questionParsed || !('QuestionId' in questionParsed)) {
         findings.push({
           line: findLineIndex(lines, ref),
           message: `Question file has no QuestionId: ${ref}`,
