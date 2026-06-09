@@ -1,5 +1,5 @@
 Type: ASSIGNMENT
-Name: Document your findings so far!
+Name: Document your findings so far! overwritten attempts
 Description: Write a short summary of all the things you have learned so far in this course. Which things stood out to you especially?
 
 # Assignment Specific Settings
@@ -9,3 +9,5 @@ DueDate: 31-08-2025 23:59
 AllowSubmissionsFromDate: 31-01-2023 00:00
 Grade: 50
 RequireSubmissionStatement: true
+#overwritten max attempts from 1 to 4
+MaxAttempts: 4

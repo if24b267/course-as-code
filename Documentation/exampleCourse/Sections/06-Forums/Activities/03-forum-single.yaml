@@ -13,7 +13,6 @@ SubscriptionMode: Forced
 TrackingType: Forced
 
 # Attachments
-MaxAttachments: 2
 MaxBytes: 2097152
 
 # Completion Requirements
