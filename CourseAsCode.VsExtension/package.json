@@ -10,15 +10,7 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:courseascodetools.initCourse",
-    "onCommand:courseascodetools.updateSections",
-    "onCommand:courseascodetools.createActivity",
-    "onCommand:courseascodetools.createSection",
-    "onCommand:courseascodetools.createQuestion",
-    "onCommand:courseascodetools.refreshExplorer",
-    "onView:courseascodetools.explorer"
-  ],
+  "activationEvents": [],
   "main": "./out/src/extension.js",
   "repository": {
     "type": "git",
@@ -137,8 +129,28 @@
         "url": "./schemas/activity-assignment.schema.json"
       },
       {
-        "fileMatch": "**/defaults/default*.yaml",
+        "fileMatch": "**/defaults.yaml",
         "url": "./schemas/defaults.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/URL_*.yaml",
+        "url": "./schemas/activity-url.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FILE_*.yaml",
+        "url": "./schemas/activity-file.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/TMA_*.yaml",
+        "url": "./schemas/activity-label.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FLD_*.yaml",
+        "url": "./schemas/activity-folder.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/WKI_*.yaml",
+        "url": "./schemas/activity-wiki.schema.json"
       }
     ]
   },
@@ -153,7 +165,7 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
-    "mocha": "^11.7.6",
+    "mocha": "^10.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.0"
   },
@@ -161,9 +173,6 @@
     "js-yaml": "^4.1.1"
   },
   "bundledDependencies": [
-    "js-yaml"
-  ],
-  "bundleDependencies": [
     "js-yaml"
   ]
 }

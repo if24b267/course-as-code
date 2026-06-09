@@ -7,12 +7,21 @@ import { createQuestionCommand } from './commands/createQuestion';
 import { CourseExplorerProvider } from './providers/courseExplorerProvider';
 import { registerSectionWatcher } from './utils/sectionWatcher';
 import { validateDocument } from './utils/cascadeValidator';
+import { RefCompletionProvider } from './providers/refCompletionProvider';
 
 export function activate(context: vscode.ExtensionContext): void {
   const provider = new CourseExplorerProvider();
   vscode.window.registerTreeDataProvider('courseascodetools.explorer', provider);
 
   registerSectionWatcher(context, () => provider.refresh());
+
+  context.subscriptions.push(
+    vscode.languages.registerCompletionItemProvider(
+      { language: 'yaml' },
+      new RefCompletionProvider(),
+      ':'
+    )
+  );
 
   const diagnostics = vscode.languages.createDiagnosticCollection('courseascodetools');
   context.subscriptions.push(diagnostics);

@@ -7,7 +7,7 @@
   "properties": {
     "Type": {
       "type": "string",
-      "enum": ["FORUM", "PAGE", "QUIZ", "ASSIGNMENT"],
+      "enum": ["FORUM", "PAGE", "QUIZ", "ASSIGNMENT", "URL", "FILE", "LABEL", "TEXTMEDIAAREA", "FOLDER", "WIKI"],
       "description": "Default activity type for this directory"
     },
     "DescriptionFormat": {
@@ -90,6 +90,38 @@
     "Grade": {
       "type": "number",
       "description": "Default maximum grade for assignments"
+    },
+    "Format": {
+      "type": "string",
+      "enum": ["AUTO", "HTML", "PLAIN", "MARKDOWN", "auto", "html", "plain", "markdown"],
+      "description": "Default content format for Text and Media Area (Label/TMA) activities"
+    },
+    "VisibleToStudents": {
+      "type": "boolean",
+      "description": "Default visibility for Folder activities"
+    },
+    "DisplayDescription": {
+      "type": "boolean",
+      "description": "Default: show description above file list in Folder activities"
+    },
+    "WikiMode": {
+      "type": "string",
+      "enum": ["Collaborative", "Individual"],
+      "description": "Default wiki mode: Collaborative=shared wiki, Individual=per-student wiki"
+    },
+    "WikiFormat": {
+      "type": "string",
+      "enum": ["Html", "Creole", "Nwiki"],
+      "description": "Default wiki markup format"
+    },
+    "ForceFormat": {
+      "type": "boolean",
+      "description": "Default: prevent users from changing the wiki format"
+    },
+    "IntroFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Default intro format for Wiki activities"
     }
   }
 }

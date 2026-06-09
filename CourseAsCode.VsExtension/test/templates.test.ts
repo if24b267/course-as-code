@@ -70,3 +70,47 @@ describe('getTemplate', () => {
     assert.ok(getTemplate('Page').includes('Content:'));
   });
 });
+
+describe('getTemplate — all types have Type field', () => {
+  it('Url template starts with Type: URL', () => {
+    assert.ok(getTemplate('Url').startsWith('Type: URL'));
+  });
+
+  it('File template starts with Type: FILE', () => {
+    assert.ok(getTemplate('File').startsWith('Type: FILE'));
+  });
+
+  it('Label template starts with Type: LABEL', () => {
+    assert.ok(getTemplate('Label').startsWith('Type: LABEL'));
+  });
+
+  it('Folder template starts with Type: FOLDER', () => {
+    assert.ok(getTemplate('Folder').startsWith('Type: FOLDER'));
+  });
+
+  it('Wiki template starts with Type: WIKI', () => {
+    assert.ok(getTemplate('Wiki').startsWith('Type: WIKI'));
+  });
+});
+
+describe('buildFileName — all activity type prefixes', () => {
+  it('Url uses URL_ prefix', () => {
+    assert.strictEqual(buildFileName('Url', 'my-link'), 'URL_my-link.yaml');
+  });
+
+  it('File uses FILE_ prefix', () => {
+    assert.strictEqual(buildFileName('File', 'handout'), 'FILE_handout.yaml');
+  });
+
+  it('Label uses TMA_ prefix', () => {
+    assert.strictEqual(buildFileName('Label', 'intro-text'), 'TMA_intro-text.yaml');
+  });
+
+  it('Folder uses FLD_ prefix', () => {
+    assert.strictEqual(buildFileName('Folder', 'resources'), 'FLD_resources.yaml');
+  });
+
+  it('Wiki uses WKI_ prefix', () => {
+    assert.strictEqual(buildFileName('Wiki', 'course-wiki'), 'WKI_course-wiki.yaml');
+  });
+});

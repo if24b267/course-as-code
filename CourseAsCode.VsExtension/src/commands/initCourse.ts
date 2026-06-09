@@ -103,6 +103,7 @@ export function scaffoldCourse(root: string): void {
 
   const introDir = path.join(root, 'Sections', 'Introduction');
   fs.mkdirSync(introDir, { recursive: true });
+  fs.mkdirSync(path.join(introDir, 'Activities'), { recursive: true });
   fs.writeFileSync(path.join(introDir, 'section.yaml'), INTRO_SECTION_YAML, 'utf8');
 }
 

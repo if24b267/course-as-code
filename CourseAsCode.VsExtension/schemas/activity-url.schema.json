@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode URL Activity",
+  "description": "Schema for URL_*.yaml URL activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name", "URL"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "description": "Activity type identifier — must be URL (case-insensitive)"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the URL resource"
+    },
+    "URL": {
+      "type": "string",
+      "description": "The target URL"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description shown on the course page"
+    }
+  }
+}

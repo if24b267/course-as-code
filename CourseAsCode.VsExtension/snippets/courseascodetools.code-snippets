@@ -6,5 +6,64 @@
       "  - SectionPath: Sections/$0"
     ],
     "description": "Add a new section path entry to sections.yaml"
+  },
+  "CourseAsCode URL Activity": {
+    "scope": "yaml",
+    "prefix": "url",
+    "body": [
+      "Type: URL",
+      "Name: \"$1\"",
+      "URL: \"$2\"",
+      "Description: \"$3\""
+    ],
+    "description": "CourseAsCode URL activity"
+  },
+  "CourseAsCode File Activity": {
+    "scope": "yaml",
+    "prefix": "file",
+    "body": [
+      "Type: FILE",
+      "Name: \"$1\"",
+      "FilePath: \"$2\""
+    ],
+    "description": "CourseAsCode File download activity"
+  },
+  "CourseAsCode Label/TMA Activity": {
+    "scope": "yaml",
+    "prefix": "label",
+    "body": [
+      "Type: LABEL",
+      "Name: \"$1\"",
+      "Format: MARKDOWN",
+      "Content:",
+      "  - Type: MARKDOWN",
+      "    ContentFilePath: ./content/$2"
+    ],
+    "description": "CourseAsCode Text and Media Area activity"
+  },
+  "CourseAsCode Folder Activity": {
+    "scope": "yaml",
+    "prefix": "folder",
+    "body": [
+      "Type: FOLDER",
+      "Name: \"$1\"",
+      "DisplayDescription: false",
+      "YamlFilePaths:",
+      "  - $2"
+    ],
+    "description": "CourseAsCode Folder activity"
+  },
+  "CourseAsCode Wiki Activity": {
+    "scope": "yaml",
+    "prefix": "wiki",
+    "body": [
+      "Type: WIKI",
+      "Name: \"$1\"",
+      "Intro: \"$2\"",
+      "FirstPageTitle: $3",
+      "WikiMode: Collaborative",
+      "WikiFormat: Html"
+    ],
+    "description": "CourseAsCode Wiki activity"
   }
 }

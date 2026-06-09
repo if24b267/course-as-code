@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode File Activity",
+  "description": "Schema for FILE_*.yaml File download activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name", "FilePath"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "FILE",
+      "description": "Activity type identifier — must be FILE (case-insensitive)"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the file resource"
+    },
+    "FilePath": {
+      "type": "string",
+      "description": "Relative path to the file to be included (e.g. ./files/document.pdf)"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description shown on the course page"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    }
+  }
+}
