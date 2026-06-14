@@ -55,6 +55,21 @@
         "title": "Refresh",
         "category": "CourseAsCode",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "courseascodetools.renameSection",
+        "title": "Rename Section",
+        "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.duplicateActivity",
+        "title": "Duplicate Activity",
+        "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.showCourseOverview",
+        "title": "Show Course Overview",
+        "category": "CourseAsCode"
       }
     ],
     "viewsContainers": {
@@ -94,6 +109,16 @@
           "command": "courseascodetools.createActivity",
           "when": "view == courseascodetools.explorer && viewItem == section",
           "group": "navigation"
+        },
+        {
+          "command": "courseascodetools.renameSection",
+          "when": "view == courseascodetools.explorer && viewItem == section",
+          "group": "inline"
+        },
+        {
+          "command": "courseascodetools.duplicateActivity",
+          "when": "view == courseascodetools.explorer && viewItem == activity",
+          "group": "inline"
         }
       ]
     },
@@ -113,24 +138,44 @@
         "url": "./schemas/section.schema.json"
       },
       {
-        "fileMatch": "**/Activities/Forum_*.yaml",
+        "fileMatch": "**/sections.yaml",
+        "url": "./schemas/section.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/defaults.yaml",
+        "url": "./schemas/defaults.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default.yaml",
+        "url": "./schemas/defaults.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default_quiz.yaml",
+        "url": "./schemas/activity-quiz.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default_forum.yaml",
         "url": "./schemas/activity-forum.schema.json"
       },
       {
-        "fileMatch": "**/Activities/Page_*.yaml",
-        "url": "./schemas/activity-page.schema.json"
+        "fileMatch": "**/defaults/default_assignment.yaml",
+        "url": "./schemas/activity-assignment.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default_question.yaml",
+        "url": "./schemas/activity-quiz.schema.json"
       },
       {
         "fileMatch": "**/Activities/Quiz_*.yaml",
         "url": "./schemas/activity-quiz.schema.json"
       },
       {
-        "fileMatch": "**/Activities/Assignment_*.yaml",
-        "url": "./schemas/activity-assignment.schema.json"
+        "fileMatch": "**/Activities/Forum_*.yaml",
+        "url": "./schemas/activity-forum.schema.json"
       },
       {
-        "fileMatch": "**/defaults.yaml",
-        "url": "./schemas/defaults.schema.json"
+        "fileMatch": "**/Activities/Assignment_*.yaml",
+        "url": "./schemas/activity-assignment.schema.json"
       },
       {
         "fileMatch": "**/Activities/URL_*.yaml",
@@ -151,8 +196,27 @@
       {
         "fileMatch": "**/Activities/WKI_*.yaml",
         "url": "./schemas/activity-wiki.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/Page_*.yaml",
+        "url": "./schemas/activity-page.schema.json"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "CourseAsCode Tools",
+      "properties": {
+        "courseascodetools.executablePath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the CourseAsCode executable (CourseAsCode.exe on Windows, CourseAsCode on Linux/macOS)."
+        },
+        "courseascodetools.outputDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Directory where the generated .mbz backup file will be saved. Leave empty to save next to the course root."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -162,8 +226,8 @@
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.43",
     "@types/vscode": "^1.85.0",
     "mocha": "^10.3.0",
     "ts-node": "^10.9.2",
@@ -173,6 +237,9 @@
     "js-yaml": "^4.1.1"
   },
   "bundledDependencies": [
+    "js-yaml"
+  ],
+  "bundleDependencies": [
     "js-yaml"
   ]
 }
