@@ -7,6 +7,7 @@ import { updateSectionsCommand } from './commands/updateSections';
 import { createActivityCommand } from './commands/createActivity';
 import { createSectionCommand } from './commands/createSection';
 import { createQuestionCommand } from './commands/createQuestion';
+import { generateCourseFileCommand } from './commands/generateCourseFile';
 import { CourseExplorerProvider, SectionItem, ActivityItem } from './providers/courseExplorerProvider';
 import { registerSectionWatcher } from './utils/sectionWatcher';
 import { validateDocument } from './utils/cascadeValidator';
@@ -517,6 +518,18 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       'courseascodetools.showCourseOverview',
       () => showCourseOverviewCommand()
+    ),
+    vscode.commands.registerCommand(
+      'courseascodetools.generateCourseFile',
+      () => generateCourseFileCommand(context.extensionPath)
+    ),
+    vscode.commands.registerCommand(
+      'courseascodetools.revealRelease',
+      (item: { resourceUri?: vscode.Uri }) => {
+        if (item?.resourceUri) {
+          return vscode.commands.executeCommand('revealFileInOS', item.resourceUri);
+        }
+      }
     ),
   );
 }

@@ -70,6 +70,18 @@
         "command": "courseascodetools.showCourseOverview",
         "title": "Show Course Overview",
         "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.generateCourseFile",
+        "title": "Generate Course File",
+        "category": "CourseAsCode",
+        "icon": "$(package)",
+        "enablement": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "courseascodetools.revealRelease",
+        "title": "Reveal in File Explorer",
+        "category": "CourseAsCode"
       }
     ],
     "viewsContainers": {
@@ -102,6 +114,11 @@
           "command": "courseascodetools.refreshExplorer",
           "when": "view == courseascodetools.explorer",
           "group": "navigation"
+        },
+        {
+          "command": "courseascodetools.generateCourseFile",
+          "when": "view == courseascodetools.explorer",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -119,6 +136,11 @@
           "command": "courseascodetools.duplicateActivity",
           "when": "view == courseascodetools.explorer && viewItem == activity",
           "group": "inline"
+        },
+        {
+          "command": "courseascodetools.revealRelease",
+          "when": "view == courseascodetools.explorer && viewItem == release",
+          "group": "navigation"
         }
       ]
     },
@@ -222,7 +244,8 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test": "mocha --require ts-node/register \"test/**/*.test.ts\""
+    "test": "mocha --require ts-node/register \"test/**/*.test.ts\"",
+    "bundle-app": "dotnet publish ../CourseAsCode/CourseAsCode.csproj -c Release -o ./app"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

@@ -460,3 +460,4 @@ fabric.properties
 .vscode/tasks.json
 docs
 extensiontest
+CourseAsCode.VsExtension/app/

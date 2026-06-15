@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type * as yamlTypes from 'js-yaml';
 import { getWorkspaceRoot } from '../utils/workspace';
+import { listReleases } from '../utils/releaseName';
 
 export class SectionItem extends vscode.TreeItem {
   constructor(
@@ -33,7 +34,29 @@ export class ActivityItem extends vscode.TreeItem {
   }
 }
 
-type CourseNode = SectionItem | ActivityItem;
+export class ReleasesRootItem extends vscode.TreeItem {
+  constructor(public readonly outputDir: string) {
+    super('Releases', vscode.TreeItemCollapsibleState.Collapsed);
+    this.contextValue = 'releases';
+    this.iconPath = new vscode.ThemeIcon('archive');
+  }
+}
+
+export class ReleaseItem extends vscode.TreeItem {
+  constructor(mbzPath: string) {
+    super(path.basename(mbzPath), vscode.TreeItemCollapsibleState.None);
+    this.contextValue = 'release';
+    this.resourceUri = vscode.Uri.file(mbzPath);
+    this.iconPath = new vscode.ThemeIcon('file-zip');
+    this.command = {
+      command: 'courseascodetools.revealRelease',
+      title: 'Reveal in File Explorer',
+      arguments: [this],
+    };
+  }
+}
+
+type CourseNode = SectionItem | ActivityItem | ReleasesRootItem | ReleaseItem;
 
 export class CourseExplorerProvider implements vscode.TreeDataProvider<CourseNode> {
   private readonly _onDidChangeTreeData =
@@ -53,11 +76,17 @@ export class CourseExplorerProvider implements vscode.TreeDataProvider<CourseNod
     if (!root) return [];
 
     if (!element) {
-      return this._getSections(root);
+      const nodes: CourseNode[] = [...this._getSections(root)];
+      nodes.push(new ReleasesRootItem(path.join(root, 'output')));
+      return nodes;
     }
 
     if (element instanceof SectionItem) {
       return this._getActivities(element.sectionDir);
+    }
+
+    if (element instanceof ReleasesRootItem) {
+      return this._getReleases(element.outputDir);
     }
 
     return [];
@@ -98,6 +127,21 @@ export class CourseExplorerProvider implements vscode.TreeDataProvider<CourseNod
         }
         return new SectionItem(label, absDir);
       });
+  }
+
+  private _getReleases(outputDir: string): ReleaseItem[] {
+    return listReleases(outputDir)
+      .map(p => {
+        let mtime = 0;
+        try {
+          mtime = fs.statSync(p).mtimeMs;
+        } catch {
+          // file vanished between readdir and stat — sort it last
+        }
+        return { p, mtime };
+      })
+      .sort((a, b) => b.mtime - a.mtime) // newest first
+      .map(({ p }) => new ReleaseItem(p));
   }
 
   private _getActivities(sectionDir: string): ActivityItem[] {
