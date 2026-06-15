@@ -65,5 +65,74 @@
       "WikiFormat: Html"
     ],
     "description": "CourseAsCode Wiki activity"
+  },
+  "CourseAsCode Quiz Activity": {
+    "scope": "yaml",
+    "prefix": "quiz",
+    "body": [
+      "Type: QUIZ",
+      "Name: \"$1\"",
+      "# Description: \"\"",
+      "# OpeningTime: \"01-01-2025 00:00\"  # dd-MM-yyyy HH:mm",
+      "# ClosingTime: \"31-12-2025 23:59\"  # dd-MM-yyyy HH:mm",
+      "# TimeLimit: 0  # seconds; 0 = no limit",
+      "# TimeExpiryHandling: AutoSubmit  # AutoSubmit | GracePeriod | DoNotCount",
+      "# AllowedAttempts: 0  # 0 = unlimited",
+      "# GradingMethod: HighestGrade  # HighestGrade | AverageGrade | FirstAttempt | LastAttempt",
+      "# ShuffleQuestions: false",
+      "Questions:",
+      "  - Ref: \"$2\""
+    ],
+    "description": "CourseAsCode Quiz activity"
+  },
+  "CourseAsCode Forum Activity": {
+    "scope": "yaml",
+    "prefix": "forum",
+    "body": [
+      "Type: FORUM",
+      "Name: \"$1\"",
+      "ForumType: ${2|General,Blog,Single,EachUser,QAndA|}",
+      "# Description: \"\"",
+      "# Intro: \"\"",
+      "# SubscriptionMode: Optional  # Optional | Forced | Auto | Disabled",
+      "# TrackingType: Optional  # Off | Optional | Forced",
+      "# MaxAttachments: 9",
+      "# CompletionDiscussions: 0",
+      "# CompletionReplies: 0",
+      "# CompletionPosts: 0"
+    ],
+    "description": "CourseAsCode Forum activity"
+  },
+  "CourseAsCode Assignment Activity": {
+    "scope": "yaml",
+    "prefix": "assignment",
+    "body": [
+      "Type: ASSIGNMENT",
+      "Name: \"$1\"",
+      "Intro: \"$2\"",
+      "# DueDate: null",
+      "# CutoffDate: null",
+      "# AllowSubmissionsFromDate: null",
+      "# Grade: 100",
+      "# AllowSubmissionDrafts: false",
+      "# SendStudentNotifications: true",
+      "# CompletionSubmit: false",
+      "# BlindMarking: false",
+      "# MarkingWorkflow: false"
+    ],
+    "description": "CourseAsCode Assignment activity"
+  },
+  "CourseAsCode Page Activity": {
+    "scope": "yaml",
+    "prefix": "page",
+    "body": [
+      "Type: PAGE",
+      "Name: \"$1\"",
+      "# Description: \"\"",
+      "Content: |",
+      "  $2",
+      "# ContentFormat: HTML  # MoodleAutoFormat | HTML | PlainText | Markdown"
+    ],
+    "description": "CourseAsCode Page activity"
   }
 }
