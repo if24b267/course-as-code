@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Wiki Activity",
+  "description": "Schema for WKI_*.yaml Wiki activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "WIKI",
+      "description": "Activity type identifier — must be WIKI (case-insensitive)"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the wiki"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description shown on the course page"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    },
+    "Intro": {
+      "type": "string",
+      "description": "Introduction text shown at the top of the wiki"
+    },
+    "IntroFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Intro field"
+    },
+    "FirstPageTitle": {
+      "type": "string",
+      "description": "Title of the wiki's first (home) page"
+    },
+    "WikiMode": {
+      "type": "string",
+      "enum": ["Collaborative", "Individual"],
+      "description": "Collaborative: all students share one wiki; Individual: each student has their own wiki"
+    },
+    "WikiFormat": {
+      "type": "string",
+      "enum": ["Html", "Creole", "Nwiki"],
+      "description": "Default markup format for wiki pages"
+    },
+    "ForceFormat": {
+      "type": "boolean",
+      "description": "Prevent users from changing the wiki format"
+    },
+    "EditBegin": {
+      "type": "integer",
+      "description": "Unix timestamp — start of editing window (0 = no restriction)"
+    },
+    "EditEnd": {
+      "type": "integer",
+      "description": "Unix timestamp — end of editing window (0 = no restriction)"
+    }
+  }
+}

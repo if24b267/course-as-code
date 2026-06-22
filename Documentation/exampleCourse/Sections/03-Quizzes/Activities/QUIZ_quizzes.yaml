@@ -1,16 +1,18 @@
 Name: Graded test about quizzes
 Type: QUIZ
 Description: Test your knowledge about the Quiz Activity!
-DescriptionFormat: MARKDOWN
-OpeningTime: 31-01-2023 00:00
-ClosingTime: 31-12-2025 23:59
 TimeLimit: 600
-TimeExpiryHandling: AutoSubmit
 AllowedAttempts: 1
 GradeToPass: 2
-BuildOnPreviousAttempt: false
 GradingMethod: HighestGrade
-QuestionBehaviour: Deferred
-ShuffleQuestions: true
-AllowRedosDuringAttempt: false
-QuestionIds: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions"
+  - Ref: "../../../questionpool/quiz-questions_1"
+  - Ref: "../../../questionpool/quiz-questions_2"
+  - Ref: "../../../questionpool/quiz-questions_3"
+  - Ref: "../../../questionpool/quiz-questions_4"
+  - Ref: "../../../questionpool/quiz-questions_5"
+  - Ref: "../../../questionpool/quiz-questions_6"
+  - Ref: "../../../questionpool/quiz-questions_7"
+  - Ref: "../../../questionpool/quiz-questions_8"
+ClosingTime: 15-03-2026 23:59

@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Assignment Activity",
+  "description": "Schema for ASN_*.yaml (and legacy Assignment_*.yaml) Assignment activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "ASSIGNMENT",
+      "description": "Activity type identifier — must be ASSIGNMENT"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the assignment"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description of the activity"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    },
+    "Intro": {
+      "type": "string",
+      "description": "Introduction text shown to students"
+    },
+    "AssignmentTextFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Intro/assignment text"
+    },
+    "DueDate": {
+      "type": ["string", "null"],
+      "description": "Due date in ISO 8601 format, or null"
+    },
+    "CutoffDate": {
+      "type": ["string", "null"],
+      "description": "Last date submissions are accepted, or null"
+    },
+    "AllowSubmissionsFromDate": {
+      "type": ["string", "null"],
+      "description": "Date from which submissions are accepted, or null"
+    },
+    "AllowSubmissionDrafts": {
+      "type": "boolean",
+      "description": "Allow students to save draft submissions"
+    },
+    "SendNotifications": {
+      "type": "boolean",
+      "description": "Send notification emails when submissions are graded"
+    },
+    "SendLateNotifications": {
+      "type": "boolean",
+      "description": "Send notification emails for late submissions"
+    },
+    "SendStudentNotifications": {
+      "type": "boolean",
+      "description": "Notify students when their submission is graded"
+    },
+    "CompletionSubmit": {
+      "type": "boolean",
+      "description": "Mark activity complete when student submits"
+    },
+    "Grade": {
+      "type": "number",
+      "description": "Maximum grade for the assignment"
+    }
+  }
+}

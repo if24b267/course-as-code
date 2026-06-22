@@ -122,6 +122,13 @@ namespace CourseAsCode
 
             var courseWriter = serviceProvider.GetRequiredService<IWriter>();
             var courseOutputPath = Path.GetFullPath(Path.Combine(outputPath, "moodleCourse"));
+
+            if (Directory.Exists(courseOutputPath))
+            {
+                _logger.Debug($"Wiping existing moodleCourse directory: {courseOutputPath}");
+                Directory.Delete(courseOutputPath, true);
+            }
+
             var success = courseWriter.WriteCourse(course, courseOutputPath);
 
             if (!success)

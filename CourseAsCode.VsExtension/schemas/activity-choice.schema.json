@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Choice Activity",
+  "description": "Schema for CHO_*.yaml Choice activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "CHOICE",
+      "description": "Activity type identifier — must be CHOICE (case-insensitive)"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the choice"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description shown on the course page"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    },
+    "Context": {
+      "type": "string",
+      "enum": ["System", "User", "CourseCategory", "Course", "Module", "Block"],
+      "description": "Moodle context level (default: Course)"
+    },
+    "Publish": {
+      "type": "boolean",
+      "description": "Publish the results to students"
+    },
+    "ShowResults": {
+      "type": "boolean",
+      "description": "Whether and when to show results to students"
+    },
+    "Display": {
+      "type": "integer",
+      "description": "Display layout (0 = horizontal, 1 = vertical)"
+    },
+    "AllowUpdate": {
+      "type": "boolean",
+      "description": "Allow students to change their choice"
+    },
+    "AllowMultiple": {
+      "type": "boolean",
+      "description": "Allow more than one option to be selected"
+    },
+    "ShowUnanswered": {
+      "type": "boolean",
+      "description": "Show a column for users who have not answered"
+    },
+    "LimitAnswers": {
+      "type": "boolean",
+      "description": "Limit the number of responses allowed per option (uses MaxAnswers)"
+    },
+    "TimeOpen": {
+      "type": "string",
+      "description": "When the choice opens (dd-MM-yyyy HH:mm)"
+    },
+    "TimeClose": {
+      "type": "string",
+      "description": "When the choice closes (dd-MM-yyyy HH:mm)"
+    },
+    "CompletionSubmit": {
+      "type": "boolean",
+      "description": "Mark complete when the student makes a choice"
+    },
+    "ShowPreview": {
+      "type": "boolean",
+      "description": "Allow a preview before the choice opens"
+    },
+    "IncludeInteractive": {
+      "type": "boolean",
+      "description": "Include responses from inactive/suspended users"
+    },
+    "ShowAvailable": {
+      "type": "boolean",
+      "description": "Show the number of remaining responses per option"
+    },
+    "Options": {
+      "type": "array",
+      "description": "The selectable options",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["Text"],
+        "properties": {
+          "Text": {
+            "type": "string",
+            "description": "The option label shown to students"
+          },
+          "MaxAnswers": {
+            "type": "integer",
+            "description": "Max responses for this option when LimitAnswers is true (0 = unlimited)"
+          }
+        }
+      }
+    }
+  }
+}

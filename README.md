@@ -15,6 +15,11 @@ Course as Code is a tool that enables the creation of Moodle courses through tex
   - [Input Directory Structure](#input-directory-structure)
 - [Supported Activity Types](#supported-activity-types)
   - [Supported Question Types](#supported-question-types)
+- [VS Code Extension](#vs-code-extension)
+  - [Features](#features)
+  - [Development](#development)
+  - [Building the VSIX](#building-the-vsix)
+  - [Installing and Testing the VSIX](#installing-and-testing-the-vsix)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 
@@ -161,6 +166,82 @@ cp -r Documentation/exampleCourse my-new-course
 # Customize it to fit your needs, then run CourseAsCode
 CourseAsCode -i my-new-course -o my-output
 ```
+
+## VS Code Extension
+
+The project includes a VS Code extension (`CourseAsCode.VsExtension`) that provides editor support for CourseAsCode YAML files.
+
+### Features
+
+- **YAML validation** — schema-based validation for `config.yaml`, `section.yaml`, and all activity files
+- **Snippets** — quick scaffolding for common YAML structures
+- **Course Explorer** — sidebar tree view of your course structure (sections and activities)
+- **Commands** (accessible via the Command Palette `Ctrl+Shift+P`):
+  - `CourseAsCode: Init Course` — initialize a new course in the current folder
+  - `CourseAsCode: Create Section` — add a new section to the course
+  - `CourseAsCode: Create Activity` — add a new activity to a section
+  - `CourseAsCode: Update Sections` — sync the sections list
+  - `CourseAsCode: Refresh` — reload the Course Explorer tree view
+
+### Development
+
+Prerequisites: Node.js and npm installed.
+
+```bash
+cd CourseAsCode.VsExtension
+
+# Install dependencies
+npm install
+
+# Compile TypeScript once
+npm run compile
+
+# Or watch for changes during development
+npm run watch
+```
+
+To run and debug the extension inside VS Code, open the `CourseAsCode.VsExtension` folder and press `F5`. This launches a new **Extension Development Host** window with the extension loaded.
+
+Run the unit tests with:
+
+```bash
+npm test
+```
+
+### Building the VSIX
+
+Install the VS Code Extension CLI (`vsce`) if you haven't already:
+
+```bash
+npm install -g @vscode/vsce
+```
+
+Then package the extension from the extension directory:
+
+```bash
+cd CourseAsCode.VsExtension
+vsce package
+```
+
+This produces a file like `courseascodetools-<version>.vsix` in the same directory.
+
+### Installing and Testing the VSIX
+
+**Via VS Code UI:**
+
+1. Open VS Code
+2. Go to the Extensions view (`Ctrl+Shift+X`)
+3. Click the `...` menu (top-right of the Extensions panel)
+4. Select **Install from VSIX...**
+5. Choose the generated `.vsix` file
+
+**Via command line:**
+
+```bash
+code --install-extension courseascodetools-0.1.0.vsix
+```
+
+After installation, reload VS Code and open a CourseAsCode project folder to verify that YAML validation, snippets, and the Course Explorer sidebar are working correctly.
 
 ## Troubleshooting
 

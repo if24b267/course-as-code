@@ -1,3 +1,5 @@
 Name: "Self-check: Selection (basic)"
-Type: QUIZ
-QuestionIds: [54, 55]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_53"
+  - Ref: "../../../questionpool/quiz-questions_54"
+

@@ -7,14 +7,12 @@ ForumType: Single
 
 # Introduction displayed at the top of the forum
 Intro: "<p>Welcome to our focused discussion!</p><p>Please share your thoughts on the topic below. You can reply to the main post or respond to other participants' comments.</p>"
-IntroFormat: 1
 
 # Subscription and Tracking - Force subscription for announcements
 SubscriptionMode: Forced
 TrackingType: Forced
 
 # Attachments
-MaxAttachments: 2
 MaxBytes: 2097152
 
 # Completion Requirements
@@ -22,4 +20,3 @@ CompletionReplies: 1
 CompletionPosts: 1
 
 # Display Options
-DisplayWordCount: false

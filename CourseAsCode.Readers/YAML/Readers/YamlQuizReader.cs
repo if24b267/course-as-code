@@ -26,7 +26,7 @@ namespace CourseAsCode.Readers.YAML.Readers
 
             var yamlQuiz = _yamlFileReaderHelper.DeserializeFromFile<YamlQuiz>(modelObjectPath);
 
-            var moodleQuiz = ConvertYamlQuizToMoodleQuiz(yamlQuiz);
+            var moodleQuiz = ConvertYamlQuizToMoodleQuiz(yamlQuiz, modelObjectPath);
 
             var grading = ValueKeeper.GradingInfos.FirstOrDefault(gi => gi.PathToActivity == modelObjectPath);
 
@@ -38,9 +38,9 @@ namespace CourseAsCode.Readers.YAML.Readers
             return moodleQuiz;
         }
 
-        private Quiz ConvertYamlQuizToMoodleQuiz(YamlQuiz yamlQuiz)
+        private Quiz ConvertYamlQuizToMoodleQuiz(YamlQuiz yamlQuiz, string modelObjectPath)
         {
-            List<Question> questions = GetQuestionsFromValueKeeperByIdList(yamlQuiz.QuestionIds);
+            List<Question> questions = GetQuestionsFromValueKeeperByRefs(yamlQuiz.Questions, modelObjectPath);
             return new Quiz()
             {
                 ActivityId = ValueKeeper.CurrentActivityId,
@@ -88,9 +88,31 @@ namespace CourseAsCode.Readers.YAML.Readers
             return moodleQuiz;
         }
 
-        private List<Question?> GetQuestionsFromValueKeeperByIdList(int[] questionIds)
+        private List<Question> GetQuestionsFromValueKeeperByRefs(List<YamlQuestionReference>? refs, string modelObjectPath)
         {
-            return questionIds.Select(questionId => ValueKeeper.Questions.FirstOrDefault(q => q.QuestionId == questionId)).ToList();
+            if (refs == null) return new List<Question>();
+
+            var quizDir = Path.GetDirectoryName(modelObjectPath);
+            if (quizDir == null) return new List<Question>();
+
+            var resolvedQuestions = new List<Question>();
+            foreach (var r in refs)
+            {
+                var targetPath = Path.GetFullPath(Path.Combine(quizDir, r.Ref + ".yaml"));
+
+                var match = ValueKeeper.Questions.FirstOrDefault(vq => 
+                    vq.SourcePath != null && vq.SourcePath.Equals(targetPath, StringComparison.OrdinalIgnoreCase));
+                
+                if (match != null)
+                {
+                    resolvedQuestions.Add(match);
+                }
+                else
+                {
+                    _logger.Warn($"Could not find question matching reference path: {targetPath}");
+                }
+            }
+            return resolvedQuestions;
         }
     }
 }

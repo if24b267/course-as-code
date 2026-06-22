@@ -2,27 +2,11 @@ Type: FORUM
 Name: "My Test Forum"
 Description: "This is a forum activity."
 
-ForumType: "general"
 Intro: "Welcome to the forum!"
-IntroFormat: 1
-DueDate: 0
-CutoffDate: 0
-Assessed: false
-AssessTimeStart: 0
-AssessTimeFinish: 0
-Scale: 0
 MaxAttachments: 5
 MaxBytes: 1048576
-ForceSubscribe: true
+SubscriptionMode: Forced
 TrackingType: 2
-RssType: 0
-RssArticles: 0
-WarnAfter: 0
-BlockAfter: 0
-BlockPeriod: 0
 CompletionDiscussions: 1
 CompletionReplies: 3
 CompletionPosts: 2
-DisplayWordCount: false
-LockDiscussionAfter: 0
-GradeForum: false

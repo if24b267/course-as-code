@@ -1,0 +1,15 @@
+.vscode/**
+errors/**
+.vscode-test/**
+out/test/**
+out/finaltest/**
+test/**
+src/**
+.gitignore
+tsconfig.json
+**/*.map
+node_modules/**
+!node_modules/js-yaml
+!node_modules/js-yaml/**
+!node_modules/argparse
+!node_modules/argparse/**

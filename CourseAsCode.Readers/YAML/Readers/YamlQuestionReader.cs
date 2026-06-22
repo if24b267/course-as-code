@@ -24,7 +24,7 @@ namespace CourseAsCode.Readers.YAML.Readers
     {
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public List<Question>? Read(string modelObjectPath)
+        public Question? Read(string modelObjectPath)
         {
             if (!File.Exists(modelObjectPath))
             {
@@ -33,43 +33,34 @@ namespace CourseAsCode.Readers.YAML.Readers
             }
 
             var baseDir = Path.GetDirectoryName(modelObjectPath);
+            if (baseDir == null) return null;
 
-            var questionList = fileReaderHelper.DeserializeFromFile<YamlQuestionList>(modelObjectPath);
+            var yamlQuestion = fileReaderHelper.DeserializeFromFile<YamlQuestion>(modelObjectPath);
 
-            var finalQuestionList = new List<Question>();
+            if (yamlQuestion == null) return null;
 
-            foreach (YamlQuestion yamlQuestion in questionList.Questions)
+            if (yamlQuestion.QuestionType == QuestionType.CODERUNNER)
             {
-                if (yamlQuestion.QuestionType == QuestionType.CODERUNNER)
+                yamlQuestion.QuestionText = PathUtils.InlineIfFile(yamlQuestion.QuestionText, baseDir);
+                yamlQuestion.AnswerPreload = PathUtils.InlineIfFile(yamlQuestion.AnswerPreload, baseDir);
+                yamlQuestion.Answer = PathUtils.InlineIfFile(yamlQuestion.Answer, baseDir);
+
+                if (yamlQuestion.CodeRunnerTestCases != null)
                 {
-                    yamlQuestion.QuestionText = PathUtils.InlineIfFile(yamlQuestion.QuestionText, baseDir);
-                    yamlQuestion.AnswerPreload = PathUtils.InlineIfFile(yamlQuestion.AnswerPreload, baseDir);
-                    yamlQuestion.Answer = PathUtils.InlineIfFile(yamlQuestion.Answer, baseDir);
-
-                    foreach (YamlCodeRunnerTestCase yamlQuestionCodeRunnerTestCase in yamlQuestion.CodeRunnerTestCases)
+                    foreach (YamlCodeRunnerTestCase testCase in yamlQuestion.CodeRunnerTestCases)
                     {
-                        if (yamlQuestion.CodeRunnerTestCases == null)
-                        {
-                            continue;
-                        }
-
-                        yamlQuestionCodeRunnerTestCase.Expected =
-                            PathUtils.InlineIfFile(yamlQuestionCodeRunnerTestCase.Expected, baseDir);
-                        yamlQuestionCodeRunnerTestCase.StdIn =
-                            PathUtils.InlineIfFile(yamlQuestionCodeRunnerTestCase.StdIn, baseDir);
+                        testCase.Expected = PathUtils.InlineIfFile(testCase.Expected, baseDir);
+                        testCase.StdIn = PathUtils.InlineIfFile(testCase.StdIn, baseDir);
                     }
                 }
-                var question = ConvertYamlQuestionToMoodleQuestion(yamlQuestion, baseDir);
-                if (finalQuestionList.Any(questionFromList => questionFromList.QuestionId == question.QuestionId))
-                {
-                    _logger.Error($"Question with ID {question.QuestionId} already exists in the list.");
-                    // skip if the question id already exists
-                    continue;
-                }
-                finalQuestionList.Add(question);
             }
 
-            return finalQuestionList;
+            var question = ConvertYamlQuestionToMoodleQuestion(yamlQuestion, baseDir);
+            if (question != null)
+            {
+                question.SourcePath = Path.GetFullPath(modelObjectPath);
+            }
+            return question;
         }
 
         private Question? ConvertYamlQuestionToMoodleQuestion(YamlQuestion yamlQuestion, string baseDir)

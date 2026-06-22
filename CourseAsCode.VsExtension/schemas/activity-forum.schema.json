@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Forum Activity",
+  "description": "Schema for FRM_*.yaml Forum activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "FORUM",
+      "description": "Activity type identifier — must be FORUM"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the forum"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description of the activity (from YamlActivity base)"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    },
+    "ForumType": {
+      "type": "string",
+      "enum": ["General", "Blog", "Single", "EachUser", "QAndA"],
+      "description": "Forum type: General=open discussion, Blog=each user posts one thread, Single=one discussion, EachUser=each user posts one topic, QAndA=Q&A forum"
+    },
+    "Intro": {
+      "type": "string",
+      "description": "Introduction text shown at the top of the forum"
+    },
+    "IntroFormat": {
+      "type": "integer",
+      "enum": [0, 1, 2, 4],
+      "description": "Format of the Intro field: 0=MoodleAutoFormat, 1=HTML, 2=PlainText, 4=Markdown. Note: stored as integer unlike other *Format fields"
+    },
+    "SubscriptionMode": {
+      "type": "string",
+      "enum": ["Optional", "Forced", "Auto", "Disabled"],
+      "description": "How users are subscribed: Optional=users choose, Forced=all subscribed, Auto=subscribed initially but can opt out, Disabled=no subscriptions"
+    },
+    "TrackingType": {
+      "type": "string",
+      "enum": ["Off", "Optional", "Forced"],
+      "description": "Read tracking: Off=disabled, Optional=user choice, Forced=always tracked"
+    },
+    "MaxAttachments": {
+      "type": "integer",
+      "description": "Maximum number of file attachments per post"
+    },
+    "MaxBytes": {
+      "type": "integer",
+      "description": "Maximum attachment size in bytes"
+    },
+    "CompletionDiscussions": {
+      "type": "integer",
+      "description": "Number of discussions required for completion"
+    },
+    "CompletionReplies": {
+      "type": "integer",
+      "description": "Number of replies required for completion"
+    },
+    "CompletionPosts": {
+      "type": "integer",
+      "description": "Number of posts (discussions + replies) required for completion"
+    },
+    "DisplayWordCount": {
+      "type": "boolean",
+      "description": "Show word count on each forum post"
+    },
+    "DueDate": {
+      "type": "integer",
+      "description": "Due date as a Unix timestamp"
+    },
+    "CutoffDate": {
+      "type": "integer",
+      "description": "Cutoff date (no posts after this) as a Unix timestamp"
+    },
+    "Assessed": {
+      "type": "boolean",
+      "description": "Whether the forum uses ratings/assessment"
+    },
+    "AssessTimeStart": {
+      "type": "integer",
+      "description": "Start of rating period as a Unix timestamp"
+    },
+    "AssessTimeFinish": {
+      "type": "integer",
+      "description": "End of rating period as a Unix timestamp"
+    },
+    "Scale": {
+      "type": "integer",
+      "description": "Rating scale ID"
+    },
+    "RssType": {
+      "type": "string",
+      "enum": ["None", "Discussions", "Posts"],
+      "description": "RSS feed type: None, Discussions only, or all Posts"
+    },
+    "RssArticles": {
+      "type": "integer",
+      "description": "Number of articles to include in the RSS feed"
+    },
+    "WarnAfter": {
+      "type": "integer",
+      "description": "Warn users after this many posts in a given period"
+    },
+    "BlockAfter": {
+      "type": "integer",
+      "description": "Block users after this many posts in a given period"
+    },
+    "BlockPeriod": {
+      "type": "integer",
+      "description": "Time period (seconds) for post blocking"
+    },
+    "LockDiscussionAfter": {
+      "type": "integer",
+      "description": "Lock discussions after this many seconds of inactivity"
+    },
+    "GradeForum": {
+      "type": "boolean",
+      "description": "Whether the whole forum is graded (as opposed to individual posts)"
+    }
+  }
+}

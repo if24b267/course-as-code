@@ -1,0 +1,288 @@
+{
+  "name": "courseascodetools",
+  "displayName": "CourseAsCode Tools",
+  "description": "Autocomplete, validation, and scaffolding for CourseAsCode YAML files",
+  "version": "0.1.0",
+  "publisher": "courseascodetools",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/src/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/local/courseascodetools"
+  },
+  "extensionDependencies": [
+    "redhat.vscode-yaml"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "courseascodetools.initCourse",
+        "title": "Init Course",
+        "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.updateSections",
+        "title": "Update Sections",
+        "category": "CourseAsCode",
+        "enablement": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "courseascodetools.createActivity",
+        "title": "Create Activity",
+        "category": "CourseAsCode",
+        "enablement": "courseascodetools.hasSections"
+      },
+      {
+        "command": "courseascodetools.createSection",
+        "title": "Create Section",
+        "category": "CourseAsCode",
+        "enablement": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "courseascodetools.createQuestion",
+        "title": "Create Question",
+        "category": "CourseAsCode",
+        "enablement": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "courseascodetools.refreshExplorer",
+        "title": "Refresh",
+        "category": "CourseAsCode",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "courseascodetools.renameSection",
+        "title": "Rename Section",
+        "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.duplicateActivity",
+        "title": "Duplicate Activity",
+        "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.showCourseOverview",
+        "title": "Show Course Overview",
+        "category": "CourseAsCode"
+      },
+      {
+        "command": "courseascodetools.generateCourseFile",
+        "title": "Generate Course File",
+        "category": "CourseAsCode",
+        "icon": "$(package)",
+        "enablement": "workspaceFolderCount > 0"
+      },
+      {
+        "command": "courseascodetools.revealRelease",
+        "title": "Reveal in File Explorer",
+        "category": "CourseAsCode"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "courseExplorer",
+          "title": "Course Explorer",
+          "icon": "resources/course-explorer.svg"
+        }
+      ]
+    },
+    "views": {
+      "courseExplorer": [
+        {
+          "id": "courseascodetools.explorer",
+          "name": "Course Explorer"
+        }
+      ]
+    },
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "courseascodetools.initCourse",
+          "when": "explorerResourceIsFolder",
+          "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "courseascodetools.refreshExplorer",
+          "when": "view == courseascodetools.explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "courseascodetools.generateCourseFile",
+          "when": "view == courseascodetools.explorer",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "courseascodetools.createActivity",
+          "when": "view == courseascodetools.explorer && viewItem == section",
+          "group": "navigation"
+        },
+        {
+          "command": "courseascodetools.renameSection",
+          "when": "view == courseascodetools.explorer && viewItem == section",
+          "group": "inline"
+        },
+        {
+          "command": "courseascodetools.duplicateActivity",
+          "when": "view == courseascodetools.explorer && viewItem == activity",
+          "group": "inline"
+        },
+        {
+          "command": "courseascodetools.revealRelease",
+          "when": "view == courseascodetools.explorer && viewItem == release",
+          "group": "navigation"
+        }
+      ]
+    },
+    "snippets": [
+      {
+        "language": "yaml",
+        "path": "./snippets/courseascodetools.code-snippets"
+      }
+    ],
+    "yamlValidation": [
+      {
+        "fileMatch": "**/config.yaml",
+        "url": "./schemas/config.schema.json"
+      },
+      {
+        "fileMatch": "**/section.yaml",
+        "url": "./schemas/section.schema.json"
+      },
+      {
+        "fileMatch": "**/sections.yaml",
+        "url": "./schemas/section.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/defaults.yaml",
+        "url": "./schemas/defaults.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default.yaml",
+        "url": "./schemas/defaults.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default_quiz.yaml",
+        "url": "./schemas/activity-quiz.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default_forum.yaml",
+        "url": "./schemas/activity-forum.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default_assignment.yaml",
+        "url": "./schemas/activity-assignment.schema.json"
+      },
+      {
+        "fileMatch": "**/defaults/default_question.yaml",
+        "url": "./schemas/activity-quiz.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/Quiz_*.yaml",
+        "url": "./schemas/activity-quiz.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/QUIZ_*.yaml",
+        "url": "./schemas/activity-quiz.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/Forum_*.yaml",
+        "url": "./schemas/activity-forum.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/Assignment_*.yaml",
+        "url": "./schemas/activity-assignment.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/ASN_*.yaml",
+        "url": "./schemas/activity-assignment.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/URL_*.yaml",
+        "url": "./schemas/activity-url.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FILE_*.yaml",
+        "url": "./schemas/activity-file.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/TMA_*.yaml",
+        "url": "./schemas/activity-label.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FLD_*.yaml",
+        "url": "./schemas/activity-folder.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/WKI_*.yaml",
+        "url": "./schemas/activity-wiki.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/Page_*.yaml",
+        "url": "./schemas/activity-page.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/PGE_*.yaml",
+        "url": "./schemas/activity-page.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/CHO_*.yaml",
+        "url": "./schemas/activity-choice.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FBK_*.yaml",
+        "url": "./schemas/activity-feedback.schema.json"
+      }
+    ],
+    "configuration": {
+      "title": "CourseAsCode Tools",
+      "properties": {
+        "courseascodetools.executablePath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the CourseAsCode executable (CourseAsCode.exe on Windows, CourseAsCode on Linux/macOS)."
+        },
+        "courseascodetools.outputDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Directory where the generated .mbz backup file will be saved. Leave empty to save next to the course root."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "mocha --require ts-node/register \"test/**/*.test.ts\"",
+    "bundle-app": "dotnet publish ../CourseAsCode/CourseAsCode.csproj -c Release -o ./app"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.85.0",
+    "mocha": "^10.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.1"
+  },
+  "bundledDependencies": [
+    "js-yaml"
+  ],
+  "bundleDependencies": [
+    "js-yaml"
+  ]
+}

@@ -1,16 +1,17 @@
 Name: Graded test about C
 Type: QUIZ
 Description: Test your knowledge about the basics of the C programming language!
-DescriptionFormat: MARKDOWN
-OpeningTime: 31-01-2023 00:00
-ClosingTime: 31-12-2025 23:59
 TimeLimit: 1200
-TimeExpiryHandling: AutoSubmit
 AllowedAttempts: 2
 GradeToPass: 2
-BuildOnPreviousAttempt: false
 GradingMethod: HighestGrade
-QuestionBehaviour: Deferred
-ShuffleQuestions: true
-AllowRedosDuringAttempt: false
-QuestionIds: [10, 11, 12, 13, 14, 15, 16, 17, 18]
+Questions:
+  - Ref: "../../../questionpool/quiz-questions_9"
+  - Ref: "../../../questionpool/quiz-questions_10"
+  - Ref: "../../../questionpool/quiz-questions_11"
+  - Ref: "../../../questionpool/quiz-questions_12"
+  - Ref: "../../../questionpool/quiz-questions_13"
+  - Ref: "../../../questionpool/quiz-questions_14"
+  - Ref: "../../../questionpool/quiz-questions_15"
+  - Ref: "../../../questionpool/quiz-questions_16"
+  - Ref: "../../../questionpool/quiz-questions_17"

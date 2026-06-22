@@ -1,0 +1,179 @@
+{
+  "CourseAsCode Section Path": {
+    "scope": "yaml",
+    "prefix": "section",
+    "body": [
+      "  - SectionPath: Sections/$0"
+    ],
+    "description": "Add a new section path entry to sections.yaml"
+  },
+  "CourseAsCode URL Activity": {
+    "scope": "yaml",
+    "prefix": "url",
+    "body": [
+      "Type: URL",
+      "Name: \"$1\"",
+      "URL: \"$2\"",
+      "Description: \"$3\""
+    ],
+    "description": "CourseAsCode URL activity"
+  },
+  "CourseAsCode File Activity": {
+    "scope": "yaml",
+    "prefix": "file",
+    "body": [
+      "Type: FILE",
+      "Name: \"$1\"",
+      "FilePath: \"$2\""
+    ],
+    "description": "CourseAsCode File download activity"
+  },
+  "CourseAsCode Label/TMA Activity": {
+    "scope": "yaml",
+    "prefix": "label",
+    "body": [
+      "Type: LABEL",
+      "Name: \"$1\"",
+      "Format: MARKDOWN",
+      "Content:",
+      "  - Type: MARKDOWN",
+      "    ContentFilePath: ./content/$2"
+    ],
+    "description": "CourseAsCode Text and Media Area activity"
+  },
+  "CourseAsCode Folder Activity": {
+    "scope": "yaml",
+    "prefix": "folder",
+    "body": [
+      "Type: FOLDER",
+      "Name: \"$1\"",
+      "DisplayDescription: false",
+      "YamlFilePaths:",
+      "  - $2"
+    ],
+    "description": "CourseAsCode Folder activity"
+  },
+  "CourseAsCode Wiki Activity": {
+    "scope": "yaml",
+    "prefix": "wiki",
+    "body": [
+      "Type: WIKI",
+      "Name: \"$1\"",
+      "Intro: \"$2\"",
+      "FirstPageTitle: $3",
+      "WikiMode: Collaborative",
+      "WikiFormat: Html"
+    ],
+    "description": "CourseAsCode Wiki activity"
+  },
+  "CourseAsCode Quiz Activity": {
+    "scope": "yaml",
+    "prefix": "quiz",
+    "body": [
+      "Type: QUIZ",
+      "Name: \"$1\"",
+      "# Description: \"\"",
+      "# OpeningTime: \"01-01-2025 00:00\"  # dd-MM-yyyy HH:mm",
+      "# ClosingTime: \"31-12-2025 23:59\"  # dd-MM-yyyy HH:mm",
+      "# TimeLimit: 0  # seconds; 0 = no limit",
+      "# TimeExpiryHandling: AutoSubmit  # AutoSubmit | GracePeriod | DoNotCount",
+      "# AllowedAttempts: 0  # 0 = unlimited",
+      "# GradingMethod: HighestGrade  # HighestGrade | AverageGrade | FirstAttempt | LastAttempt",
+      "# ShuffleQuestions: false",
+      "Questions:",
+      "  - Ref: \"$2\""
+    ],
+    "description": "CourseAsCode Quiz activity"
+  },
+  "CourseAsCode Forum Activity": {
+    "scope": "yaml",
+    "prefix": "forum",
+    "body": [
+      "Type: FORUM",
+      "Name: \"$1\"",
+      "ForumType: ${2|General,Blog,Single,EachUser,QAndA|}",
+      "# Description: \"\"",
+      "# Intro: \"\"",
+      "# SubscriptionMode: Optional  # Optional | Forced | Auto | Disabled",
+      "# TrackingType: Optional  # Off | Optional | Forced",
+      "# MaxAttachments: 9",
+      "# CompletionDiscussions: 0",
+      "# CompletionReplies: 0",
+      "# CompletionPosts: 0"
+    ],
+    "description": "CourseAsCode Forum activity"
+  },
+  "CourseAsCode Assignment Activity": {
+    "scope": "yaml",
+    "prefix": "assignment",
+    "body": [
+      "Type: ASSIGNMENT",
+      "Name: \"$1\"",
+      "Intro: \"$2\"",
+      "# DueDate: null",
+      "# CutoffDate: null",
+      "# AllowSubmissionsFromDate: null",
+      "# Grade: 100",
+      "# AllowSubmissionDrafts: false",
+      "# SendStudentNotifications: true",
+      "# CompletionSubmit: false",
+      "# BlindMarking: false",
+      "# MarkingWorkflow: false"
+    ],
+    "description": "CourseAsCode Assignment activity"
+  },
+  "CourseAsCode Page Activity": {
+    "scope": "yaml",
+    "prefix": "page",
+    "body": [
+      "Type: PAGE",
+      "Name: \"$1\"",
+      "# Description: \"\"",
+      "Content: |",
+      "  $2",
+      "# ContentFormat: HTML  # MoodleAutoFormat | HTML | PlainText | Markdown"
+    ],
+    "description": "CourseAsCode Page activity"
+  },
+  "CourseAsCode Choice Activity": {
+    "scope": "yaml",
+    "prefix": "choice",
+    "body": [
+      "Type: CHOICE",
+      "Name: \"$1\"",
+      "AllowMultiple: ${2|false,true|}",
+      "# AllowUpdate: false",
+      "# ShowResults: false",
+      "# TimeOpen: \"01-01-2026 00:00\"   # dd-MM-yyyy HH:mm",
+      "# TimeClose: \"31-12-2026 23:59\"  # dd-MM-yyyy HH:mm",
+      "Options:",
+      "  - Text: \"$3\"",
+      "    MaxAnswers: 0",
+      "  - Text: \"$4\"",
+      "    MaxAnswers: 0"
+    ],
+    "description": "CourseAsCode Choice activity"
+  },
+  "CourseAsCode Feedback Activity": {
+    "scope": "yaml",
+    "prefix": "feedback",
+    "body": [
+      "Type: FEEDBACK",
+      "Name: \"$1\"",
+      "# Anonymous: 2  # 1 = identified, 2 = anonymous",
+      "# MultipleSubmit: 0",
+      "# PublishStats: 1",
+      "Items:",
+      "  - Template: 0",
+      "    Name: \"$2\"",
+      "    Type: ${3|multichoice,textfield,textarea,numeric,label,info|}",
+      "    Presentation: \"r>>>>>1|2|3|4<<<<<1\"",
+      "    HasValue: 1",
+      "    Position: 1",
+      "    Required: 0",
+      "    DependItem: 0",
+      "    Options: h"
+    ],
+    "description": "CourseAsCode Feedback activity"
+  }
+}

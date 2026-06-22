@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Course Configuration",
+  "description": "Schema for config.yaml — the root course configuration file",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["CourseName"],
+  "properties": {
+    "CourseName": {
+      "type": "string",
+      "description": "Full course name displayed in Moodle"
+    },
+    "ShortName": {
+      "type": "string",
+      "description": "Short course name — must be unique across the Moodle instance"
+    },
+    "Summary": {
+      "type": "string",
+      "description": "Course summary shown on the course listing page"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Longer course description"
+    },
+    "Visible": {
+      "type": "boolean",
+      "description": "Whether the course is visible to students"
+    },
+    "Category": {
+      "type": "string",
+      "description": "Moodle course category name"
+    },
+    "CategoryId": {
+      "type": "integer",
+      "description": "Moodle course category ID"
+    },
+    "CategoryDescription": {
+      "type": "string",
+      "description": "Description of the course category"
+    },
+    "StartDate": {
+      "type": "string",
+      "description": "Course start date. Format: DD-MM-YYYY HH:MM",
+      "pattern": "^\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}$"
+    },
+    "EndDate": {
+      "type": "string",
+      "description": "Course end date. Format: DD-MM-YYYY HH:MM",
+      "pattern": "^\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}$"
+    },
+    "IdNumber": {
+      "type": "integer",
+      "description": "Internal Moodle ID number for the course"
+    },
+    "ShowGrades": {
+      "type": "boolean",
+      "description": "Whether the gradebook is visible to students"
+    },
+    "GroupMode": {
+      "type": "integer",
+      "enum": [0, 1, 2],
+      "description": "Group mode: 0=NoGroups, 1=SeparateGroups, 2=VisibleGroups"
+    },
+    "ForceGroupMode": {
+      "type": "boolean",
+      "description": "Force the group mode on all activities"
+    },
+    "EnableCompletionTracking": {
+      "type": "boolean",
+      "description": "Enable course completion tracking"
+    },
+    "NumberOfAnnouncements": {
+      "type": "integer",
+      "description": "Number of recent announcements shown on the course page"
+    },
+    "ForcedLanguage": {
+      "type": "string",
+      "description": "Force the interface language for this course, e.g. 'en'"
+    },
+    "GradeCategoriesPath": {
+      "type": "string",
+      "description": "Relative path to the grade categories YAML file"
+    },
+    "GradingInfosPath": {
+      "type": "string",
+      "description": "Relative path to the grading info YAML file"
+    },
+    "ShowActivityDates": {
+      "type": "boolean",
+      "description": "Show activity open/close dates on the course page"
+    },
+    "ShowCompletionConditions": {
+      "type": "boolean",
+      "description": "Show completion conditions on activity cards"
+    },
+    "QuestionListPaths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of relative paths to question bank YAML files"
+    }
+  }
+}

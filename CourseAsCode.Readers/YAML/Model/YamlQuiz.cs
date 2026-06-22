@@ -17,6 +17,11 @@ namespace CourseAsCode.Readers.YAML.Model
         public QuestionBehaviour QuestionBehaviour { get; set; } = QuizDefaults.DEFAULT_QUESTION_BEHAVIOUR;
         public bool ShuffleQuestions { get; set; } = QuizDefaults.DEFAULT_SHUFFLE_QUESTIONS;
         public string? Password { get; set; }
-        public int[] QuestionIds { get; set; }
+        public List<YamlQuestionReference>? Questions { get; set; }
+    }
+
+    public class YamlQuestionReference
+    {
+        public required string Ref { get; set; }
     }
 }

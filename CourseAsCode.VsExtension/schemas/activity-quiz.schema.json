@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Quiz Activity",
+  "description": "Schema for QUIZ_*.yaml (and legacy Quiz_*.yaml) Quiz activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "QUIZ",
+      "description": "Activity type identifier — must be QUIZ"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the quiz"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description of the activity"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown", "MARKDOWN"],
+      "description": "Formatting of the Description field"
+    },
+    "OpeningTime": {
+      "type": "string",
+      "description": "When students can start the quiz (ISO 8601 or dd-MM-yyyy HH:mm)"
+    },
+    "ClosingTime": {
+      "type": "string",
+      "description": "When the quiz closes (ISO 8601 or dd-MM-yyyy HH:mm)"
+    },
+    "TimeLimit": {
+      "type": "integer",
+      "description": "Time limit in seconds; 0 = no time limit"
+    },
+    "TimeExpiryHandling": {
+      "type": "string",
+      "enum": ["AutoSubmit", "GracePeriod", "Open"],
+      "description": "What happens when time expires"
+    },
+    "AllowedAttempts": {
+      "type": "integer",
+      "description": "Number of allowed attempts; 0 = unlimited"
+    },
+    "AttemptsAllowed": {
+      "type": "integer",
+      "description": "Alias for AllowedAttempts used in some course files"
+    },
+    "GradeToPass": {
+      "type": "number",
+      "description": "Minimum grade required to pass"
+    },
+    "BuildOnPreviousAttempt": {
+      "type": "boolean",
+      "description": "Whether a new attempt starts from the previous attempt's answers"
+    },
+    "GradingMethod": {
+      "type": "string",
+      "enum": ["HighestGrade", "AverageGrade", "FirstAttempt", "LastAttempt"],
+      "description": "How the final grade is calculated across attempts"
+    },
+    "QuestionBehaviour": {
+      "type": "string",
+      "enum": ["DeferredFeedback", "ImmediateFeedback", "InteractiveMultipleTries", "Deferred"],
+      "description": "When and how feedback is shown to students"
+    },
+    "ShuffleQuestions": {
+      "type": "boolean",
+      "description": "Randomize order of questions for each attempt"
+    },
+    "AllowRedosDuringAttempt": {
+      "type": "boolean",
+      "description": "Allow student to redo questions within an attempt"
+    },
+    "Questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["Ref"],
+        "properties": {
+          "Ref": {
+            "type": "string",
+            "description": "Relative path to the question YAML file in the questionpool, without .yaml extension"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "List of question references to include in the quiz"
+    }
+  }
+}
