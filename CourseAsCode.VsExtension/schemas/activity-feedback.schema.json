@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseAsCode Feedback Activity",
+  "description": "Schema for FBK_*.yaml Feedback activity files",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Name"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "const": "FEEDBACK",
+      "description": "Activity type identifier — must be FEEDBACK (case-insensitive)"
+    },
+    "Name": {
+      "type": "string",
+      "description": "Display name of the feedback"
+    },
+    "Description": {
+      "type": "string",
+      "description": "Short description shown on the course page"
+    },
+    "DescriptionFormat": {
+      "type": "string",
+      "enum": ["MoodleAutoFormat", "HTML", "PlainText", "Markdown"],
+      "description": "Formatting of the Description field"
+    },
+    "Anonymous": {
+      "type": "integer",
+      "description": "Record responses anonymously (1 = identified, 2 = anonymous)"
+    },
+    "EmailNotification": {
+      "type": "integer",
+      "description": "Send email notification to teachers on submission (0/1)"
+    },
+    "MultipleSubmit": {
+      "type": "integer",
+      "description": "Allow multiple submissions per user (0/1)"
+    },
+    "Autonumbering": {
+      "type": "integer",
+      "description": "Automatically number the questions (0/1)"
+    },
+    "PublishStats": {
+      "type": "integer",
+      "description": "Show an analysis page to students after submitting (0/1)"
+    },
+    "CompletionSubmit": {
+      "type": "boolean",
+      "description": "Mark complete when the student submits the feedback"
+    },
+    "Items": {
+      "type": "array",
+      "description": "The feedback questions/items",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["Name"],
+        "properties": {
+          "Template": {
+            "type": "integer",
+            "description": "Template id this item came from (0 = none)"
+          },
+          "Name": {
+            "type": "string",
+            "description": "The question text (or label text for label items)"
+          },
+          "Label": {
+            "type": "string",
+            "description": "Optional short label for the item"
+          },
+          "Type": {
+            "type": "string",
+            "description": "Item type: multichoice | textfield | textarea | numeric | label | info | captcha"
+          },
+          "Presentation": {
+            "type": "string",
+            "description": "Moodle presentation/encoding string controlling how the item renders"
+          },
+          "HasValue": {
+            "type": "integer",
+            "description": "Whether the item produces an answer value (0/1)"
+          },
+          "Position": {
+            "type": "integer",
+            "description": "1-based ordering of the item within the feedback"
+          },
+          "Required": {
+            "type": "integer",
+            "description": "Whether an answer is required (0/1)"
+          },
+          "DependItem": {
+            "type": "integer",
+            "description": "Id of an item this one depends on (0 = none)"
+          },
+          "DependValue": {
+            "type": "string",
+            "description": "Value the dependent item must have for this item to show"
+          },
+          "Options": {
+            "type": "string",
+            "description": "Moodle item option flags (e.g. 'h' to hide numbering)"
+          }
+        }
+      }
+    }
+  }
+}

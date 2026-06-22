@@ -194,6 +194,25 @@ describe('RefCompletionProvider - provideCompletionItems', () => {
     fs.rmSync(root, { recursive: true });
   });
 
+  it('also triggers on the new QUIZ_*.yaml prefix on a Ref line', () => {
+    const root = makeTempDir();
+    const qpDir = path.join(root, 'questionpool');
+    fs.mkdirSync(qpDir, { recursive: true });
+    fs.writeFileSync(path.join(qpDir, 'q1.yaml'), 'QuestionId: 1\n');
+    const quizPath = path.join(root, 'Sections', 'S1', 'Activities', 'QUIZ_test.yaml');
+    fs.mkdirSync(path.dirname(quizPath), { recursive: true });
+
+    withVscodeMock(() => {
+      const provider = new RefCompletionProvider();
+      const items = provider.provideCompletionItems(
+        mockDoc(quizPath, '  - Ref: ') as any,
+        { line: 0 } as any
+      );
+      assert.ok(items.length > 0, 'QUIZ_ prefix should return completions');
+    });
+    fs.rmSync(root, { recursive: true });
+  });
+
   it('returns File completions with Activities/ insertText for section.yaml on ActivityFilePath line', () => {
     const root = makeTempDir();
     const sectionDir = path.join(root, 'Sections', 'Intro');

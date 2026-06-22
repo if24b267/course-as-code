@@ -2,20 +2,47 @@ import type * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { sanitizeName } from '../templates';
+import { QUESTION_TYPES, QuestionType, getQuestionTemplate } from '../questionTemplates';
 import { getWorkspaceRoot } from '../utils/workspace';
 
-const QUESTION_TEMPLATE = `QuestionName: ""
-Category: ""
-QuestionId: 0
-QuestionText: ""
-QuestionTextFormat: MARKDOWN
-QuestionType: SINGLECHOICE
-Answers:
-  - AnswerText: ""
-    AnswerTextFormat: MARKDOWN
-    AnswerGrade: 1
-    Feedback: ""
-`;
+/**
+ * Returns the next free QuestionId for a questionpool directory.
+ *
+ * Each question's QuestionId is written verbatim as the Moodle question-bank `id`
+ * (see QuestionsWriter / QuizWriter). If two questions share an id, Moodle treats
+ * them as the same question on import and merges their answers — so every question
+ * file must carry a unique, non-zero QuestionId. We assign max(existing) + 1.
+ */
+export function nextQuestionId(questionPoolDir: string): number {
+  let max = 0;
+  let files: string[] = [];
+  try {
+    files = fs.readdirSync(questionPoolDir).filter(f => f.endsWith('.yaml'));
+  } catch {
+    return 1;
+  }
+  for (const f of files) {
+    try {
+      const content = fs.readFileSync(path.join(questionPoolDir, f), 'utf8');
+      const match = content.match(/^QuestionId:\s*(\d+)/m);
+      if (match) {
+        const id = parseInt(match[1], 10);
+        if (id > max) max = id;
+      }
+    } catch {
+      // unreadable file — skip
+    }
+  }
+  return max + 1;
+}
+
+/** Injects a unique `QuestionId` line right after the leading `QuestionName` line. */
+export function withQuestionId(template: string, id: number): string {
+  if (/^QuestionId:/m.test(template)) {
+    return template.replace(/^QuestionId:.*$/m, `QuestionId: ${id}`);
+  }
+  return template.replace(/^(QuestionName:.*\r?\n)/, `$1QuestionId: ${id}\n`);
+}
 
 export async function createQuestionCommand(): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -32,6 +59,15 @@ export async function createQuestionCommand(): Promise<void> {
     fs.mkdirSync(questionPoolDir, { recursive: true });
   }
 
+  // Step 1: Question type picker
+  const selectedType = await vs.window.showQuickPick(QUESTION_TYPES as string[], {
+    placeHolder: 'Select question type',
+  }) as QuestionType | undefined;
+  if (!selectedType) {
+    return;
+  }
+
+  // Step 2: Filename input
   const rawName = await vs.window.showInputBox({
     prompt: 'Enter a filename for the new question (without .yaml extension)',
     placeHolder: 'e.g. sample-question',
@@ -56,9 +92,11 @@ export async function createQuestionCommand(): Promise<void> {
     return;
   }
 
-  fs.writeFileSync(questionFilePath, QUESTION_TEMPLATE, 'utf8');
+  const id = nextQuestionId(questionPoolDir);
+  const content = withQuestionId(getQuestionTemplate(selectedType), id);
+  fs.writeFileSync(questionFilePath, content, 'utf8');
 
   const doc = await vs.workspace.openTextDocument(questionFilePath);
   await vs.window.showTextDocument(doc);
-  vs.window.showInformationMessage(`Created question ${fileName} in questionpool`);
+  vs.window.showInformationMessage(`Created ${selectedType} question ${fileName} (QuestionId ${id}) in questionpool`);
 }

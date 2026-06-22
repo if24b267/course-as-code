@@ -134,5 +134,46 @@
       "# ContentFormat: HTML  # MoodleAutoFormat | HTML | PlainText | Markdown"
     ],
     "description": "CourseAsCode Page activity"
+  },
+  "CourseAsCode Choice Activity": {
+    "scope": "yaml",
+    "prefix": "choice",
+    "body": [
+      "Type: CHOICE",
+      "Name: \"$1\"",
+      "AllowMultiple: ${2|false,true|}",
+      "# AllowUpdate: false",
+      "# ShowResults: false",
+      "# TimeOpen: \"01-01-2026 00:00\"   # dd-MM-yyyy HH:mm",
+      "# TimeClose: \"31-12-2026 23:59\"  # dd-MM-yyyy HH:mm",
+      "Options:",
+      "  - Text: \"$3\"",
+      "    MaxAnswers: 0",
+      "  - Text: \"$4\"",
+      "    MaxAnswers: 0"
+    ],
+    "description": "CourseAsCode Choice activity"
+  },
+  "CourseAsCode Feedback Activity": {
+    "scope": "yaml",
+    "prefix": "feedback",
+    "body": [
+      "Type: FEEDBACK",
+      "Name: \"$1\"",
+      "# Anonymous: 2  # 1 = identified, 2 = anonymous",
+      "# MultipleSubmit: 0",
+      "# PublishStats: 1",
+      "Items:",
+      "  - Template: 0",
+      "    Name: \"$2\"",
+      "    Type: ${3|multichoice,textfield,textarea,numeric,label,info|}",
+      "    Presentation: \"r>>>>>1|2|3|4<<<<<1\"",
+      "    HasValue: 1",
+      "    Position: 1",
+      "    Required: 0",
+      "    DependItem: 0",
+      "    Options: h"
+    ],
+    "description": "CourseAsCode Feedback activity"
   }
 }

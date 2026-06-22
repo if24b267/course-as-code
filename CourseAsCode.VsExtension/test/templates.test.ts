@@ -24,16 +24,16 @@ describe('buildFileName', () => {
     assert.strictEqual(buildFileName('Forum', 'general-discussion'), 'Forum_general-discussion.yaml');
   });
 
-  it('prefixes Page files with Page_', () => {
-    assert.strictEqual(buildFileName('Page', 'welcome'), 'Page_welcome.yaml');
+  it('prefixes Page files with PGE_', () => {
+    assert.strictEqual(buildFileName('Page', 'welcome'), 'PGE_welcome.yaml');
   });
 
-  it('prefixes Quiz files with Quiz_', () => {
-    assert.strictEqual(buildFileName('Quiz', 'midterm'), 'Quiz_midterm.yaml');
+  it('prefixes Quiz files with QUIZ_', () => {
+    assert.strictEqual(buildFileName('Quiz', 'midterm'), 'QUIZ_midterm.yaml');
   });
 
-  it('prefixes Assignment files with Assignment_', () => {
-    assert.strictEqual(buildFileName('Assignment', 'homework'), 'Assignment_homework.yaml');
+  it('prefixes Assignment files with ASN_', () => {
+    assert.strictEqual(buildFileName('Assignment', 'homework'), 'ASN_homework.yaml');
   });
 
   it('sanitizes the name when it contains spaces', () => {
@@ -91,6 +91,22 @@ describe('getTemplate — all types have Type field', () => {
   it('Wiki template starts with Type: WIKI', () => {
     assert.ok(getTemplate('Wiki').startsWith('Type: WIKI'));
   });
+
+  it('Choice template starts with Type: CHOICE', () => {
+    assert.ok(getTemplate('Choice').startsWith('Type: CHOICE'));
+  });
+
+  it('Feedback template starts with Type: FEEDBACK', () => {
+    assert.ok(getTemplate('Feedback').startsWith('Type: FEEDBACK'));
+  });
+
+  it('Choice template includes Options:', () => {
+    assert.ok(getTemplate('Choice').includes('Options:'));
+  });
+
+  it('Feedback template includes Items:', () => {
+    assert.ok(getTemplate('Feedback').includes('Items:'));
+  });
 });
 
 describe('buildFileName — all activity type prefixes', () => {
@@ -112,5 +128,13 @@ describe('buildFileName — all activity type prefixes', () => {
 
   it('Wiki uses WKI_ prefix', () => {
     assert.strictEqual(buildFileName('Wiki', 'course-wiki'), 'WKI_course-wiki.yaml');
+  });
+
+  it('Choice uses CHO_ prefix', () => {
+    assert.strictEqual(buildFileName('Choice', 'favorite-activity'), 'CHO_favorite-activity.yaml');
+  });
+
+  it('Feedback uses FBK_ prefix', () => {
+    assert.strictEqual(buildFileName('Feedback', 'rate-this-course'), 'FBK_rate-this-course.yaml');
   });
 });

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "CourseAsCode Quiz Activity",
-  "description": "Schema for Quiz_*.yaml Quiz activity files",
+  "description": "Schema for QUIZ_*.yaml (and legacy Quiz_*.yaml) Quiz activity files",
   "type": "object",
   "additionalProperties": false,
   "required": ["Name"],

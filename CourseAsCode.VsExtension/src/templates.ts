@@ -1,15 +1,17 @@
-export type ActivityType = 'Forum' | 'Page' | 'Quiz' | 'Assignment' | 'Url' | 'File' | 'Label' | 'Folder' | 'Wiki';
+export type ActivityType = 'Forum' | 'Page' | 'Quiz' | 'Assignment' | 'Url' | 'File' | 'Label' | 'Folder' | 'Wiki' | 'Choice' | 'Feedback';
 
 const PREFIXES: Record<ActivityType, string> = {
   Forum: 'Forum_',
-  Page: 'Page_',
-  Quiz: 'Quiz_',
-  Assignment: 'Assignment_',
+  Page: 'PGE_',
+  Quiz: 'QUIZ_',
+  Assignment: 'ASN_',
   Url: 'URL_',
   File: 'FILE_',
   Label: 'TMA_',
   Folder: 'FLD_',
   Wiki: 'WKI_',
+  Choice: 'CHO_',
+  Feedback: 'FBK_',
 };
 
 export function sanitizeName(name: string): string {
@@ -160,6 +162,53 @@ const WIKI_TEMPLATE = [
   '',
 ].join('\n');
 
+const CHOICE_TEMPLATE = [
+  'Type: CHOICE',
+  'Name: ""',
+  '# Description: ""',
+  '# DescriptionFormat: HTML  # MoodleAutoFormat | HTML | PlainText | Markdown',
+  '# Publish: false',
+  '# ShowResults: false',
+  '# Display: 0  # 0 = horizontal, 1 = vertical',
+  '# AllowUpdate: false',
+  'AllowMultiple: false',
+  '# ShowUnanswered: true',
+  '# LimitAnswers: false',
+  '# TimeOpen: "01-01-2026 00:00"   # dd-MM-yyyy HH:mm',
+  '# TimeClose: "31-12-2026 23:59"  # dd-MM-yyyy HH:mm',
+  '# CompletionSubmit: false',
+  'Options:',
+  '  - Text: "Option 1"',
+  '    MaxAnswers: 0  # 0 = unlimited; only used when LimitAnswers is true',
+  '  - Text: "Option 2"',
+  '    MaxAnswers: 0',
+  '',
+].join('\n');
+
+const FEEDBACK_TEMPLATE = [
+  'Type: FEEDBACK',
+  'Name: ""',
+  '# Description: ""',
+  '# DescriptionFormat: HTML  # MoodleAutoFormat | HTML | PlainText | Markdown',
+  '# Anonymous: 2  # 1 = identified, 2 = anonymous',
+  '# EmailNotification: 0',
+  '# MultipleSubmit: 0',
+  '# Autonumbering: 0',
+  '# PublishStats: 1',
+  '# CompletionSubmit: false',
+  'Items:',
+  '  - Template: 0',
+  '    Name: "Your question here?"',
+  '    Type: multichoice  # multichoice | textfield | textarea | numeric | label | info',
+  '    Presentation: "r>>>>>1|2|3|4<<<<<1"  # Moodle item encoding',
+  '    HasValue: 1',
+  '    Position: 1',
+  '    Required: 0',
+  '    DependItem: 0',
+  '    Options: h',
+  '',
+].join('\n');
+
 const TEMPLATES: Record<ActivityType, string> = {
   Forum: FORUM_TEMPLATE,
   Page: PAGE_TEMPLATE,
@@ -170,6 +219,8 @@ const TEMPLATES: Record<ActivityType, string> = {
   Label: LABEL_TEMPLATE,
   Folder: FOLDER_TEMPLATE,
   Wiki: WIKI_TEMPLATE,
+  Choice: CHOICE_TEMPLATE,
+  Feedback: FEEDBACK_TEMPLATE,
 };
 
 export function getTemplate(type: ActivityType): string {

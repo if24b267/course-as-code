@@ -37,7 +37,7 @@ describe('buildActivityEntry', () => {
   });
 
   it('works with already-clean names', () => {
-    assert.strictEqual(buildActivityEntry('Quiz', 'midterm'), 'Activities/Quiz_midterm.yaml');
+    assert.strictEqual(buildActivityEntry('Quiz', 'midterm'), 'Activities/QUIZ_midterm.yaml');
   });
 
   it('Url type uses URL_ prefix', () => {

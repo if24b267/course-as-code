@@ -192,11 +192,19 @@
         "url": "./schemas/activity-quiz.schema.json"
       },
       {
+        "fileMatch": "**/Activities/QUIZ_*.yaml",
+        "url": "./schemas/activity-quiz.schema.json"
+      },
+      {
         "fileMatch": "**/Activities/Forum_*.yaml",
         "url": "./schemas/activity-forum.schema.json"
       },
       {
         "fileMatch": "**/Activities/Assignment_*.yaml",
+        "url": "./schemas/activity-assignment.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/ASN_*.yaml",
         "url": "./schemas/activity-assignment.schema.json"
       },
       {
@@ -222,6 +230,18 @@
       {
         "fileMatch": "**/Activities/Page_*.yaml",
         "url": "./schemas/activity-page.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/PGE_*.yaml",
+        "url": "./schemas/activity-page.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/CHO_*.yaml",
+        "url": "./schemas/activity-choice.schema.json"
+      },
+      {
+        "fileMatch": "**/Activities/FBK_*.yaml",
+        "url": "./schemas/activity-feedback.schema.json"
       }
     ],
     "configuration": {

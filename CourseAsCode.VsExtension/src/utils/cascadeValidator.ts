@@ -28,11 +28,11 @@ export function getParentDefaultsPaths(filePath: string, courseRoot: string): st
     if (match) typeSuffix = match[1].toLowerCase();
   } else if (fileName.startsWith('Forum_')) {
     typeSuffix = 'forum';
-  } else if (fileName.startsWith('Page_')) {
+  } else if (fileName.startsWith('Page_') || fileName.startsWith('PGE_')) {
     typeSuffix = 'page';
-  } else if (fileName.startsWith('Quiz_')) {
+  } else if (fileName.startsWith('Quiz_') || fileName.startsWith('QUIZ_')) {
     typeSuffix = 'quiz';
-  } else if (fileName.startsWith('Assignment_')) {
+  } else if (fileName.startsWith('Assignment_') || fileName.startsWith('ASN_')) {
     typeSuffix = 'assignment';
   } else if (fileName.startsWith('Question_')) {
     typeSuffix = 'question';

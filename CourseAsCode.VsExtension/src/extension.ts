@@ -239,14 +239,19 @@ async function duplicateActivityCommand(item?: ActivityItem): Promise<void> {
 
 const ACTIVITY_TYPE_META: Record<string, { label: string; color: string }> = {
   'Quiz_':       { label: 'Quiz',       color: '#7C6AF7' },
+  'QUIZ_':       { label: 'Quiz',       color: '#7C6AF7' },
   'Forum_':      { label: 'Forum',      color: '#2E9E6B' },
   'Assignment_': { label: 'Assignment', color: '#D4860A' },
+  'ASN_':        { label: 'Assignment', color: '#D4860A' },
   'URL_':        { label: 'URL',        color: '#1A8CD8' },
   'FILE_':       { label: 'File',       color: '#6B7280' },
   'TMA_':        { label: 'Label',      color: '#9D5BB5' },
   'FLD_':        { label: 'Folder',     color: '#C97B30' },
   'WKI_':        { label: 'Wiki',       color: '#3B82F6' },
   'Page_':       { label: 'Page',       color: '#0891B2' },
+  'PGE_':        { label: 'Page',       color: '#0891B2' },
+  'CHO_':        { label: 'Choice',     color: '#E0658A' },
+  'FBK_':        { label: 'Feedback',   color: '#16A394' },
 };
 
 function getActivityMeta(fileName: string): { label: string; color: string } {
@@ -310,7 +315,7 @@ function getCourseOverviewHtml(root: string): string {
       const exists = fs.existsSync(absPath);
       const meta = getActivityMeta(path.basename(relPath));
       // Strip prefix from display name
-      const displayName = fileName.replace(/^(Quiz_|Forum_|Assignment_|URL_|FILE_|TMA_|FLD_|WKI_|Page_)/, '');
+      const displayName = fileName.replace(/^(Quiz_|QUIZ_|Forum_|Assignment_|ASN_|URL_|FILE_|TMA_|FLD_|WKI_|Page_|PGE_|CHO_|FBK_)/, '');
       return `<li class="activity${exists ? '' : ' missing'}" data-path="${absPath}">
         <span class="type-badge" style="background:${meta.color}22;color:${meta.color};border:1px solid ${meta.color}44">${meta.label}</span>
         <span class="activity-name">${displayName}</span>

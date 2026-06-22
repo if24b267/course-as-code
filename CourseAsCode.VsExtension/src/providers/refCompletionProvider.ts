@@ -61,7 +61,7 @@ export class RefCompletionProvider implements vscode.CompletionItemProvider {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const vs = require('vscode') as typeof vscode;
-      if (/^Quiz_.*\.yaml$/.test(basename) && /^\s*-\s+Ref:/.test(lineText)) {
+      if (/^quiz_.*\.yaml$/i.test(basename) && /^\s*-\s+Ref:/.test(lineText)) {
         return getQuestionPoolCompletions(fileName).map(ref => {
           // insertText matches label for Ref — kept explicit for consistency with the other cases
           const item = new vs.CompletionItem(ref, vs.CompletionItemKind.File);
