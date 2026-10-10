@@ -263,4 +263,4 @@ Logging is performed using **Nlog**. The logs are written to:
 - `logs/app.log` (detailed)
 
 ## Documentation
-Additional documentation is available at [davimalu.github.io/course-as-code/](https://davimalu.github.io/course-as-code/)
+Additional documentation is available at [if24b267.github.io/course-as-code](https://if24b267.github.io/course-as-code/)
