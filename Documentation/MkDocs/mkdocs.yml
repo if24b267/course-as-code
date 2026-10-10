@@ -1,13 +1,13 @@
 site_name: Course as Code
-site_url: https://davimalu.github.io/course-as-code/
-repo_url: https://github.com/Davimalu/course-as-code
-repo_name: davimalu/course-as-code
+site_url: https://if24b267.github.io/course-as-code/
+repo_url: https://github.com/if24b267/course-as-code
+repo_name: if24b267/course-as-code
 copyright: Created by Davimalu, lkalchhauser, david051202, if24b270 and xSulo for InnoLab 1-3
 
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Davimalu/course-as-code/
+      link: https://github.com/if24b267/course-as-code/
 
 theme:
   name: material
