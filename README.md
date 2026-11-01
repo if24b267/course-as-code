@@ -243,13 +243,12 @@ code --install-extension courseascodetools-0.1.0.vsix
 
 After installation, reload VS Code and open a CourseAsCode project folder to verify that YAML validation, snippets, and the Course Explorer sidebar are working correctly.
 
-### Executing the Automatic Uploader to moodle
-To execute the automatic uploader to moodle you need to install playwright and chromium
+### Automatic Course Upload to Moodle
+
+CourseAsCode can automatically upload and restore your course into Moodle right after compiling it by using the `--upload` (or `-u`) flag:
+
 ```bash
-dotnet tool install --global Microsoft.Playwright.CLI
-```
-```bash
-playwright install chromium
+CourseAsCode -i "/path/to/course" -o "/path/to/output" --upload
 ```
 
 ## Troubleshooting

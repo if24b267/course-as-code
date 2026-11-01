@@ -2,6 +2,7 @@ using System.IO.Compression;
 using CourseAsCode.Readers;
 using CourseAsCode.Readers.Enums;
 using CourseAsCode.Readers.Interfaces;
+using CourseAsCode.Uploader;
 using CourseAsCode.Writers.Interfaces;
 using CourseAsCode.Writers.XML.Helper.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ namespace CourseAsCode
             string? outputPath = null;
             var courseFormat = CourseFormat.YAML; // default
             var showHelp = false;
+            var uploadToMoodle = false;
 
             for (var i = 0; i < args.Length; i++)
             {
@@ -73,6 +75,11 @@ namespace CourseAsCode
                             }
                         }
 
+                        break;
+                    case "-u":
+                    case "--upload":
+                        _logger.Debug("Upload to Moodle requested");
+                        uploadToMoodle = true;
                         break;
                     case "-h":
                     case "--help":
@@ -149,6 +156,21 @@ namespace CourseAsCode
             _logger.Debug($"Creating MBZ file: {mbzFilePath}");
             ZipFile.CreateFromDirectory(courseOutputPath, mbzFilePath);
             Console.WriteLine("DONE!");
+
+            if (uploadToMoodle)
+            {
+                Console.WriteLine($"Restoring MBZ file to Moodle: {mbzFilePath}");
+                var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions());
+                var restoreResult = uploader.RestoreCourseAsync(mbzFilePath).GetAwaiter().GetResult();
+                if (restoreResult.Success)
+                {
+                    Console.WriteLine($"Moodle course restore succeeded! Restored Course ID: {restoreResult.CourseId?.ToString() ?? "Unknown"}");
+                }
+                else
+                {
+                    Console.WriteLine($"Error: Moodle course restore failed: {restoreResult.ErrorMessage}");
+                }
+            }
         }
 
         private static string ResolvePath(string path)
@@ -168,6 +190,7 @@ namespace CourseAsCode
             Console.WriteLine("  -i <Input Path>     - Required: The input directory path (relative or absolute).");
             Console.WriteLine("  -o <Output Path>    - Required: The output folder path (relative or absolute).");
             Console.WriteLine("  -f <Format>         - Optional: The input format (currently only YAML is supported).");
+            Console.WriteLine("  -u or --upload      - Optional: Automatically uploads and restores the generated .mbz into Moodle.");
             Console.WriteLine("  -h or --help        - Optional: Displays this help message.");
         }
     }
