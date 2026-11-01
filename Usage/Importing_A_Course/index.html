@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -94,6 +94,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#importing-a-course-into-moodle" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -684,6 +689,26 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing a Course
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -701,6 +726,47 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Upload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-import-via-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Import via Web UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2665,6 +2731,38 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Upload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-import-via-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Import via Web UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2732,9 +2830,26 @@
   
 
 
-  <h1>Importing a Course</h1>
-
-<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><div class='dd-left'><span class='dd-item' data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span><span class='dd-item' data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span></div><div class='dd-right'><span class='material-icons' data-icon='doc_author'></span><div class='author-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='accounts@zeugner.dev' /></div></div></div></div></div>
+<h1 id="importing-a-course-into-moodle">Importing a Course into Moodle</h1>
+<h2 id="automatic-upload">Automatic Upload</h2>
+<p>To automatically upload and restore your course into Moodle, use the <code>--upload</code> (or <code>-u</code>) flag when running CourseAsCode:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Build and automatically restore into Moodle:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>CourseAsCode<span class="w"> </span>-i<span class="w"> </span><span class="s2">"/path/to/course"</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">"/path/to/output"</span><span class="w"> </span>--upload
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># When running from source:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>CourseAsCode/CourseAsCode.csproj<span class="w"> </span>-i<span class="w"> </span><span class="s2">"Documentation/exampleCourse"</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">"output"</span><span class="w"> </span>--upload
+</span></code></pre></div>
+<p>This compiles your course into a <code>.mbz</code> file and immediately restores it into the local Moodle container.</p>
+<hr />
+<h2 id="manual-import-via-web-ui">Manual Import via Web UI</h2>
+<p>If you build without the <code>--upload</code> flag, you can manually upload the <code>.mbz</code> file through the Moodle browser interface:</p>
+<ol>
+<li>Log in to Moodle as an administrator or teacher.</li>
+<li>Navigate to <strong>Site administration</strong> &gt; <strong>Courses</strong> &gt; <strong>Restore course</strong>.</li>
+<li>Drag and drop your <code>.mbz</code> file into the upload box and click <strong>Restore this course</strong>.</li>
+<li>Confirm the settings and select the destination category to finish the restore.</li>
+</ol>
+<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><div class='dd-left'><span class='dd-item' data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span><span class='dd-item' data-tippy-content data-tippy-raw='2026-11-01'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2026-11-01T21:21:20+00:00'>2026-11-01</time></span></div><div class='dd-right'><span class='material-icons' data-icon='doc_authors'></span><div class='author-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='accounts@zeugner.dev' /></div><div class='avatar-wrapper' data-name='kinzl' data-tippy-content data-tippy-raw='<a href="mailto:kinzl.emil@eclipso.at">kinzl</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='kinzl.emil@eclipso.at' /></div></div></div></div></div>
 
 
 
@@ -2855,10 +2970,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.top", "navigation.tabs", "navigation.expand", "navigation.indexes", "navigation.path", "search.suggest", "search.highlight", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.top", "navigation.tabs", "navigation.expand", "navigation.indexes", "navigation.path", "search.suggest", "search.highlight", "navigation.footer", "toc.follow", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../assets/mkdocs_puml/puml.js"></script>
       
