@@ -461,3 +461,6 @@ fabric.properties
 docs
 extensiontest
 CourseAsCode.VsExtension/app/
+
+# Lokale Upload-Konfiguration (nie einchecken)
+moodle-upload.json

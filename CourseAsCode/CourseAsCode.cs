@@ -160,7 +160,18 @@ namespace CourseAsCode
             if (uploadToMoodle)
             {
                 Console.WriteLine($"Restoring MBZ file to Moodle: {mbzFilePath}");
-                var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions());
+                var uploadConfig = MoodleUploadConfigLoader.Load();
+                if (!uploadConfig.IsValid)
+                {
+                    foreach (var configError in uploadConfig.Errors)
+                    {
+                        Console.WriteLine($"Error: Invalid upload configuration: {configError}");
+                    }
+
+                    return;
+                }
+
+                var uploader = new MoodlePhpCliUploader(uploadConfig.Options);
                 var restoreResult = uploader.RestoreCourseAsync(mbzFilePath).GetAwaiter().GetResult();
                 if (restoreResult.Success)
                 {
