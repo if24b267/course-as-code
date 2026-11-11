@@ -66,5 +66,33 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        public void Read_ValidFile_ReturnsForum()
+        {
+            string testYamlContent = @"
+                                        Name: Test Forum
+                                        ForumType: General
+                                        Intro: Forum Testing
+                                        IntroFormat: 0
+                                        DueDate: 0
+                                        CutoffDate: 0
+                                        Assessed: false
+                                        AssessTimeStart: 0
+                                        AssessTimeFinish: 0
+                                      ";
+
+            var validFilePath = CreateTestYamlFile("valid_forum.yaml", testYamlContent);
+
+            var result = _reader.Read(validFilePath);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Name, Is.EqualTo("Test Forum"));
+                Assert.That(result.ForumType, Is.EqualTo(CourseAsCode.Model.Enums.Forums.ForumType.General));
+                Assert.That(result.Intro, Is.EqualTo("Forum Testing"));
+            });
+        }
     }
 }
