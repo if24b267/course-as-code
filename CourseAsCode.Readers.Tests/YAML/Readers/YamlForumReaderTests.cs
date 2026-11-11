@@ -36,13 +36,7 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
                         {
                             Name = "Test Forum",
                             ForumType = CourseAsCode.Model.Enums.Forums.ForumType.General,
-                            Intro = "Forum Testing",
-                            IntroFormat = 0,
-                            DueDate = 0,
-                            CutoffDate = 0,
-                            Assessed = false,
-                            AssessTimeStart = 0,
-                            AssessTimeFinish = 0
+                            Intro = "Forum Testing"
                         };
                     }
 
@@ -74,12 +68,6 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
                                         Name: Test Forum
                                         ForumType: General
                                         Intro: Forum Testing
-                                        IntroFormat: 0
-                                        DueDate: 0
-                                        CutoffDate: 0
-                                        Assessed: false
-                                        AssessTimeStart: 0
-                                        AssessTimeFinish: 0
                                       ";
 
             var validFilePath = CreateTestYamlFile("valid_forum.yaml", testYamlContent);
@@ -101,12 +89,6 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
             string testYamlContent = @"
                                         ForumType: General
                                         Intro: Forum Testing
-                                        IntroFormat: 0
-                                        DueDate: 0
-                                        CutoffDate: 0
-                                        Assessed: false
-                                        AssessTimeStart: 0
-                                        AssessTimeFinish: 0
                                       ";
             var invalidFilePath = CreateTestYamlFile("invalid_forum.yaml", testYamlContent);
 
@@ -122,12 +104,6 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
                                         Name: Test Forum
                                         ForumType: General
                                         Intro: Forum Testing
-                                        IntroFormat: 0
-                                        DueDate: 0
-                                        CutoffDate: 0
-                                        Assessed: false
-                                        AssessTimeStart: 0
-                                        AssessTimeFinish: 0
                                       ";
 
             var validFilePath = CreateTestYamlFile("valid_forum.yaml", testYamlContent);
