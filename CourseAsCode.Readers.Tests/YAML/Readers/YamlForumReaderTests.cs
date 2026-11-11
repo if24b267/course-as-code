@@ -56,5 +56,15 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
             _reader = new YamlForumReader(mockYamlFileReader);
             ValueKeeper.CurrentActivityId = 1;
         }
+
+        [Test]
+        public void Read_FileDoesNotExist_ReturnsNull()
+        {
+            var nonExistentPath = Path.Combine(TempDirectory, "nonexistent.yaml");
+
+            var result = _reader.Read(nonExistentPath);
+
+            Assert.That(result, Is.Null);
+        }
     }
 }
