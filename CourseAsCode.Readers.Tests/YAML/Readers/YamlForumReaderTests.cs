@@ -30,13 +30,13 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
                     }
 
                     var content = File.ReadAllText(path);
-                    if (content.FirstOrDefault().GetType() == typeof(YamlForum))
+                    if (content.Contains("Name:"))
                     {
                         return new YamlForum
                         {
                             Name = "Test Forum",
                             ForumType = CourseAsCode.Model.Enums.Forums.ForumType.General,
-                            Intro = "Forum Introduction",
+                            Intro = "Forum Testing",
                             IntroFormat = 0,
                             DueDate = 0,
                             CutoffDate = 0,
