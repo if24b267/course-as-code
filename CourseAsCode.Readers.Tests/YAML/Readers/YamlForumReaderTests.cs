@@ -114,5 +114,33 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        public void Read_UsesCurrentActivityId()
+        {
+            string testYamlContent = @"
+                                        Name: Test Forum
+                                        ForumType: General
+                                        Intro: Forum Testing
+                                        IntroFormat: 0
+                                        DueDate: 0
+                                        CutoffDate: 0
+                                        Assessed: false
+                                        AssessTimeStart: 0
+                                        AssessTimeFinish: 0
+                                      ";
+
+            var validFilePath = CreateTestYamlFile("valid_forum.yaml", testYamlContent);
+
+            ValueKeeper.CurrentActivityId = 42;
+
+            var result = _reader.Read(validFilePath);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.ActivityId, Is.EqualTo(42));
+            });
+        }
     }
 }
