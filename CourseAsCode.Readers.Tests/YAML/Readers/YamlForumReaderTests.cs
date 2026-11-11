@@ -94,5 +94,25 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
                 Assert.That(result.Intro, Is.EqualTo("Forum Testing"));
             });
         }
+
+        [Test]
+        public void Read_MissingNameField_ReturnsNull()
+        {
+            string testYamlContent = @"
+                                        ForumType: General
+                                        Intro: Forum Testing
+                                        IntroFormat: 0
+                                        DueDate: 0
+                                        CutoffDate: 0
+                                        Assessed: false
+                                        AssessTimeStart: 0
+                                        AssessTimeFinish: 0
+                                      ";
+            var invalidFilePath = CreateTestYamlFile("invalid_forum.yaml", testYamlContent);
+
+            var result = _reader.Read(invalidFilePath);
+
+            Assert.That(result, Is.Null);
+        }
     }
 }
