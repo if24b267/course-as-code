@@ -15,5 +15,46 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
     {
         private YamlForumReader _reader;
         private IYamlFileReaderHelper _mockYamlFileReader;
+
+        [SetUp]
+        public void Setup()
+        {
+            var mockYamlFileReader = Substitute.For<IYamlFileReaderHelper>();
+            mockYamlFileReader.DeserializeFromFile<YamlForum>(Arg.Any<string>())
+                .Returns(callInfo =>
+                {
+                    var path = callInfo.Arg<string>();
+                    if (!File.Exists(path))
+                    {
+                        return null;
+                    }
+
+                    var content = File.ReadAllText(path);
+                    if (content.FirstOrDefault().GetType() == typeof(YamlForum))
+                    {
+                        return new YamlForum
+                        {
+                            Name = "Test Forum",
+                            ForumType = CourseAsCode.Model.Enums.Forums.ForumType.General,
+                            Intro = "Forum Introduction",
+                            IntroFormat = 0,
+                            DueDate = 0,
+                            CutoffDate = 0,
+                            Assessed = false,
+                            AssessTimeStart = 0,
+                            AssessTimeFinish = 0
+                        };
+                    }
+
+                    // Throw exception for invalid files
+                    throw new YamlDotNet.Core.YamlException("Required property missing");
+                });
+
+            mockYamlFileReader.ValidateObject(Arg.Any<object>())
+                .Returns(new List<System.ComponentModel.DataAnnotations.ValidationResult>());
+
+            _reader = new YamlForumReader(mockYamlFileReader);
+            ValueKeeper.CurrentActivityId = 1;
+        }
     }
 }
