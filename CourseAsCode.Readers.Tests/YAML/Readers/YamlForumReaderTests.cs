@@ -54,16 +54,20 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
         [Test]
         public void Read_FileDoesNotExist_ReturnsNull()
         {
+            // Arrange
             var nonExistentPath = Path.Combine(TempDirectory, "nonexistent.yaml");
 
+            // Act
             var result = _reader.Read(nonExistentPath);
 
+            // Assert
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public void Read_ValidFile_ReturnsForum()
         {
+            // Arrange
             string testYamlContent = @"
                                         Name: Test Forum
                                         ForumType: General
@@ -72,8 +76,10 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 
             var validFilePath = CreateTestYamlFile("valid_forum.yaml", testYamlContent);
 
+            // Act
             var result = _reader.Read(validFilePath);
 
+            // Assert
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.Not.Null);
@@ -86,20 +92,24 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
         [Test]
         public void Read_MissingNameField_ReturnsNull()
         {
+            // Arrange
             string testYamlContent = @"
                                         ForumType: General
                                         Intro: Forum Testing
                                       ";
             var invalidFilePath = CreateTestYamlFile("invalid_forum.yaml", testYamlContent);
 
+            // Act
             var result = _reader.Read(invalidFilePath);
 
+            // Assert
             Assert.That(result, Is.Null);
         }
 
         [Test]
         public void Read_UsesCurrentActivityId()
         {
+            // Arrange
             string testYamlContent = @"
                                         Name: Test Forum
                                         ForumType: General
@@ -110,8 +120,10 @@ namespace CourseAsCode.Readers.Tests.YAML.Readers
 
             ValueKeeper.CurrentActivityId = 42;
 
+            // Act
             var result = _reader.Read(validFilePath);
 
+            // Assert
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.Not.Null);
