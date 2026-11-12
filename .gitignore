@@ -459,5 +459,6 @@ fabric.properties
 .vscode/launch.json
 .vscode/tasks.json
 docs
+!Documentation/MkDocs/docs/
 extensiontest
 CourseAsCode.VsExtension/app/

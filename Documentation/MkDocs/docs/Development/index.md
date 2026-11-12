@@ -2,4 +2,4 @@ This part of the documentation is primarily intended for future developers and m
 
 - The [Roadmap](./Roadmap.md) shows which features are desired by the Product Owner for the (distant) future. Their documentation serves to record them so that this knowledge is not lost and does not have to be gathered again.
 - The [Known Issues](Known_Issues.md) describe currently known problems in Course As Code that could not be fixed (yet) due to a lack of time and/or low prioritization, and which may potentially affect the use of Course As Code as well as the addition of new features.
-- The [Kurzanleitung: Reader-Tests schreiben](./Overview_Reader-Tests.md) provides a step-by-step guide for creating unit tests for new YAML readers.
+- The [Writing Reader Tests Guide](./Writing_Reader_Tests.md) provides a step-by-step guide for creating unit tests for new YAML readers.
