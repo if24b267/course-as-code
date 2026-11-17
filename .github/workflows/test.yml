@@ -21,6 +21,9 @@ jobs:
     - name: Run Reader NUnit tests
       run: dotnet test CourseAsCode.Readers.Tests --logger "trx;LogFileName=reader-test_results.trx"
 
+    - name: Run Uploader NUnit tests
+      run: dotnet test CourseAsCode.Uploader.Tests --logger "trx;LogFileName=uploader-test_results.trx"
+
     - name: Publish Test Results
       uses: dorny/test-reporter@v2
       if: always() # Always run this step, even if tests fail
