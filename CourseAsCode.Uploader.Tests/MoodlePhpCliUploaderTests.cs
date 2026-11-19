@@ -37,18 +37,18 @@ public class MoodlePhpCliUploaderTests
     }
 
     [Test]
-    public void RestoreCourseAsync_ThrowsArgumentException_WhenPathIsNullOrEmpty()
+    public async Task RestoreCourseAsync_ThrowsArgumentException_WhenPathIsNullOrEmpty()
     {
         var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions());
-        Assert.ThrowsAsync<ArgumentException>(async () => await uploader.RestoreCourseAsync(string.Empty));
+        await Assert.ThrowsAsync<ArgumentException>(async () => await uploader.RestoreCourseAsync(string.Empty));
     }
 
     [Test]
-    public void RestoreCourseAsync_ThrowsFileNotFoundException_WhenFileDoesNotExist()
+    public async Task RestoreCourseAsync_ThrowsFileNotFoundException_WhenFileDoesNotExist()
     {
         var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions());
         var nonExistentPath = Path.Combine(_tempTestDir, "missing.mbz");
-        Assert.ThrowsAsync<FileNotFoundException>(async () => await uploader.RestoreCourseAsync(nonExistentPath));
+        await Assert.ThrowsAsync<FileNotFoundException>(async () => await uploader.RestoreCourseAsync(nonExistentPath));
     }
 
     [Test]
