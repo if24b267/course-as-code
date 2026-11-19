@@ -88,6 +88,8 @@ Required arguments:
 
 Optional arguments:
 - `-f, --format <format>`: The input format (currently only YAML is supported)
+- `--deploy <container>`: Restore the generated `.mbz` into the given Moodle Docker container
+- `-u, --upload`: Like `--deploy`, but detects the Moodle container automatically
 - `-h, --help`: Display help information
 - `-v, --version`: Display version information
 
@@ -245,10 +247,10 @@ After installation, reload VS Code and open a CourseAsCode project folder to ver
 
 ### Automatic Course Upload to Moodle
 
-CourseAsCode can automatically upload and restore your course into Moodle right after compiling it by using the `--upload` (or `-u`) flag:
+CourseAsCode can automatically restore your course into a Moodle Docker container right after compiling it by using the `--deploy <container>` flag (or `--upload`/`-u` to detect the container automatically):
 
 ```bash
-CourseAsCode -i "/path/to/course" -o "/path/to/output" --upload
+CourseAsCode -i "/path/to/course" -o "/path/to/output" --deploy course-as-code-moodle-1
 ```
 
 ## Troubleshooting
