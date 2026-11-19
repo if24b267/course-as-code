@@ -1,0 +1,143 @@
+﻿diff --git a/CourseAsCode/CourseAsCode.cs b/CourseAsCode/CourseAsCode.cs
+index 43b0878..be22d46 100644
+--- a/CourseAsCode/CourseAsCode.cs
++++ b/CourseAsCode/CourseAsCode.cs
+@@ -160,7 +160,8 @@ namespace CourseAsCode
+             if (uploadToMoodle)
+             {
+                 Console.WriteLine($"Restoring MBZ file to Moodle: {mbzFilePath}");
+-                var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions());
++                var uploadLogger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<MoodlePhpCliUploader>();
++                var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions(), logger: uploadLogger);
+                 var restoreResult = uploader.RestoreCourseAsync(mbzFilePath).GetAwaiter().GetResult();
+                 if (restoreResult.Success)
+                 {
+diff --git a/CourseAsCode/NLog.config b/CourseAsCode/NLog.config
+index 381de0c..a7b78a8 100644
+--- a/CourseAsCode/NLog.config
++++ b/CourseAsCode/NLog.config
+@@ -1,4 +1,4 @@
+-´╗┐<?xml version="1.0" encoding="utf-8" ?>
++<?xml version="1.0" encoding="utf-8" ?>
+ <nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ 
+@@ -14,11 +14,11 @@
+ 	</targets>
+ 
+ 	<!-- Define logging rules -->
+-	<rules>
+-		<!-- Log everything (Trace and higher) to the file -->
+-		<logger name="*" minlevel="Trace" writeTo="fileLogger" />
++    <rules>
++        <!-- Log everything (Trace and higher) to the file -->
++        <logger name="*" minlevel="Trace" writeTo="fileLogger" />
+ 
+-		<!-- Log only Warning and higher to the console -->
+-		<logger name="*" minlevel="Trace" writeTo="console" />
+-	</rules>
+-</nlog>
+\ No newline at end of file
++        <!-- Log Info and higher to the console (full details stay in the log file) -->
++        <logger name="*" minlevel="Info" writeTo="console" />
++    </rules>
++</nlog>
+diff --git a/Documentation/MkDocs/docs/Usage/Moodle_Environment_Setup.md b/Documentation/MkDocs/docs/Usage/Moodle_Environment_Setup.md
+index ec66b2f..e652489 100644
+--- a/Documentation/MkDocs/docs/Usage/Moodle_Environment_Setup.md
++++ b/Documentation/MkDocs/docs/Usage/Moodle_Environment_Setup.md
+@@ -58,4 +58,15 @@ user: user
+ password: bitnami
+ ```
+ 6. Go to **Site Administration** > **Courses** > **Backups** > **Asynchronous backup/restore** and disable `Enable asynchronous backups`.
+-7. Go to **Site Administration** > **Plugins** > **Install plugins** and install the [**CodeRunner** plugin](https://moodle.org/plugins/qtype_coderunner).
+\ No newline at end of file
++7. Go to **Site Administration** > **Plugins** > **Install plugins** and install the [**CodeRunner** plugin](https://moodle.org/plugins/qtype_coderunner).
++
++
++## Quick setup with a script (Windows PowerShell)
++
++Instead of steps 3 to 6 you can run the setup script from the repository root:
++
++```powershell
++powershell -ExecutionPolicy Bypass -File scripts\setup-test-moodle.ps1
++```
++
++The script starts the containers, waits until Moodle is ready, disables asynchronous backup/restore and creates a small dummy course so that the first import of a Course as Code course works (see [Known Issues](../Development/Known_Issues.md)). After running the script, the first import into a fresh instance succeeded. The CodeRunner plugin (step 7) is not installed by the script.
+\ No newline at end of file
+diff --git a/scripts/setup-test-moodle.ps1 b/scripts/setup-test-moodle.ps1
+new file mode 100644
+index 0000000..78bba30
+--- /dev/null
++++ b/scripts/setup-test-moodle.ps1
+@@ -0,0 +1,70 @@
++´╗┐<#
++.SYNOPSIS
++  Richtet die lokale Moodle-Testinstanz f├╝r Course as Code ein.
++.DESCRIPTION
++  Startet docker compose, wartet bis Moodle erreichbar ist, schaltet das asynchrone
++  Backup/Restore aus und legt einen Dummy-Kurs an (Workaround f├╝r den Known Issue
++  "erster Import in eine leere Instanz schl├ñgt fehl").
++  Alle Moodle-CLI-Schritte laufen als Benutzer daemon, damit keine root-Dateien in moodledata entstehen.
++#>
++param(
++    [int]$TimeoutSeconds = 600,
++    [string]$DummyShortName = "DUMMY"
++)
++
++$ErrorActionPreference = "Continue"
++Set-Location (Join-Path $PSScriptRoot "..")
++
++function Invoke-Native {
++    param([string]$Description, [scriptblock]$Command)
++    Write-Host "==> $Description"
++    & $Command
++    if ($LASTEXITCODE -ne 0) {
++        throw "Fehlgeschlagen: $Description (Exit-Code $LASTEXITCODE)"
++    }
++}
++
++# 1) Docker vorhanden?
++docker version *> $null
++if ($LASTEXITCODE -ne 0) { throw "Docker ist nicht erreichbar. Bitte Docker Desktop starten." }
++
++# 2) Container starten
++Invoke-Native "Container starten (docker compose up -d)" { docker compose up -d }
++
++$container = (docker compose ps -q moodle).Trim()
++if (-not $container) { throw "Moodle-Container wurde nicht gefunden." }
++
++# 3) Warten, bis Moodle antwortet
++Write-Host "==> Warte auf Moodle (max. $TimeoutSeconds s) ..."
++$deadline = (Get-Date).AddSeconds($TimeoutSeconds)
++$ready = $false
++while ((Get-Date) -lt $deadline) {
++    try {
++        $response = Invoke-WebRequest -Uri "http://localhost" -UseBasicParsing -TimeoutSec 5
++        if ($response.StatusCode -eq 200) { $ready = $true; break }
++    } catch { }
++    Write-Host "    Moodle startet noch ..."
++    Start-Sleep -Seconds 10
++}
++if (-not $ready) { throw "Moodle war nach $TimeoutSeconds s nicht erreichbar." }
++
++# 4) Sind die CLI-Skripte da?
++Invoke-Native "Moodle-CLI pr├╝fen" { docker exec $container test -f /bitnami/moodle/admin/cli/cfg.php }
++
++# 5) Asynchrones Backup/Restore ausschalten
++Invoke-Native "Asynchrones Backup/Restore ausschalten" {
++    docker exec -u daemon $container php /bitnami/moodle/admin/cli/cfg.php --name=enableasyncbackup --set=0
++}
++
++# 6) Dummy-Kurs anlegen (falls es ihn schon gibt, kommt eine Meldung, das ist kein Fehler)
++Write-Host "==> Dummy-Kurs '$DummyShortName' anlegen"
++docker exec -u daemon $container php /bitnami/moodle/admin/tool/generator/cli/maketestcourse.php --shortname=$DummyShortName --size=XS --bypasscheck
++if ($LASTEXITCODE -ne 0) {
++    Write-Warning "Dummy-Kurs konnte nicht angelegt werden (existiert er schon?). Ausgabe oben pr├╝fen."
++}
++
++# 7) Zusammenfassung
++Write-Host ""
++Write-Host "Fertig. Moodle l├ñuft unter http://localhost (Login: user / bitnami)."
++Write-Host "Container-Name f├╝r den Upload: $((docker inspect -f '{{.Name}}' $container).TrimStart('/'))"
++Write-Host 'Tipp: $env:COURSEASCODE_MOODLE_CONTAINER = "<Container-Name>"'
