@@ -57,17 +57,17 @@
     
       <link rel="stylesheet" href="../../assets/document_dates/fonts/material-icons.css">
     
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/shift-away.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/backdrop.css">
+    
       <link rel="stylesheet" href="../../assets/document_dates/tippy/tippy.css">
     
       <link rel="stylesheet" href="../../assets/document_dates/tippy/scale.css">
     
-      <link rel="stylesheet" href="../../assets/document_dates/tippy/shift-away.css">
-    
       <link rel="stylesheet" href="../../assets/document_dates/tippy/light.css">
     
       <link rel="stylesheet" href="../../assets/document_dates/tippy/material.css">
-    
-      <link rel="stylesheet" href="../../assets/document_dates/tippy/backdrop.css">
     
       <link rel="stylesheet" href="../../assets/document_dates/core/core.css">
     
@@ -743,13 +743,30 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#automatic-upload" class="md-nav__link">
+  <a href="#automatic-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Automatic Upload
+        Automatic Deployment
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Automatic Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2741,13 +2758,30 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#automatic-upload" class="md-nav__link">
+  <a href="#automatic-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Automatic Upload
+        Automatic Deployment
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Automatic Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2831,25 +2865,40 @@
 
 
 <h1 id="importing-a-course-into-moodle">Importing a Course into Moodle</h1>
-<h2 id="automatic-upload">Automatic Upload</h2>
-<p>To automatically upload and restore your course into Moodle, use the <code>--upload</code> (or <code>-u</code>) flag when running CourseAsCode:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Build and automatically restore into Moodle:</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>CourseAsCode<span class="w"> </span>-i<span class="w"> </span><span class="s2">"/path/to/course"</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">"/path/to/output"</span><span class="w"> </span>--upload
+<h2 id="automatic-deployment">Automatic Deployment</h2>
+<p>To automatically restore your course into Moodle, use the <code>--deploy &lt;container&gt;</code> flag when running CourseAsCode:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Build and automatically restore into the given Moodle Docker container:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>CourseAsCode<span class="w"> </span>-i<span class="w"> </span><span class="s2">"/path/to/course"</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">"/path/to/output"</span><span class="w"> </span>--deploy<span class="w"> </span>course-as-code-moodle-1
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># When running from source:</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>CourseAsCode/CourseAsCode.csproj<span class="w"> </span>-i<span class="w"> </span><span class="s2">"Documentation/exampleCourse"</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">"output"</span><span class="w"> </span>--upload
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dotnet<span class="w"> </span>run<span class="w"> </span>--project<span class="w"> </span>CourseAsCode/CourseAsCode.csproj<span class="w"> </span>-i<span class="w"> </span><span class="s2">"Documentation/exampleCourse"</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">"output"</span><span class="w"> </span>--deploy<span class="w"> </span>course-as-code-moodle-1
 </span></code></pre></div>
-<p>This compiles your course into a <code>.mbz</code> file and immediately restores it into the local Moodle container.</p>
+<p><code>&lt;container&gt;</code> is the name or ID of the Docker container running Moodle (see <code>docker ps</code>). If you don't know it, use <code>--upload</code> (or <code>-u</code>) instead: it does the same, but detects a running container whose name contains <code>moodle</code> automatically.</p>
+<p>This compiles your course into a <code>.mbz</code> file and immediately restores it as a new course into category <code>1</code> (Miscellaneous).</p>
+<h3 id="how-it-works">How it works</h3>
+<p>Deployment is abstracted by the <code>IDeployer</code> interface (<code>CourseAsCode.Uploader</code>), implemented by <code>MoodleDeployer</code>. It uses Moodle's own CLI restore script:</p>
+<ol>
+<li><code>docker cp &lt;file&gt;.mbz &lt;container&gt;:/tmp/...</code> copies the backup into the container.</li>
+<li><code>docker exec &lt;container&gt; php /opt/bitnami/moodle/admin/cli/restore_backup.php --file=... --categoryid=1</code> restores it.</li>
+<li>The temporary file is removed from the container again.</li>
+</ol>
+<p>We chose this approach over automating the web UI (Playwright, see <code>MoodleUploader</code>) because:</p>
+<ul>
+<li><code>restore_backup.php</code> is Moodle's official, stable restore entry point; UI automation breaks whenever the Moodle UI changes.</li>
+<li>No login credentials and no browser installation are required.</li>
+<li>The restore runs synchronously and reports success via its exit code, independent of the <em>asynchronous backup/restore</em> setting.</li>
+</ul>
+<p>The trade-off: the Moodle instance must run in a Docker container reachable via <code>docker exec</code> (e.g. the local setup from <a href="../Moodle_Environment_Setup/">Moodle Environment Setup</a>). Remote Moodle servers are not supported.</p>
 <hr />
 <h2 id="manual-import-via-web-ui">Manual Import via Web UI</h2>
-<p>If you build without the <code>--upload</code> flag, you can manually upload the <code>.mbz</code> file through the Moodle browser interface:</p>
+<p>If you build without <code>--deploy</code>/<code>--upload</code>, you can manually upload the <code>.mbz</code> file through the Moodle browser interface:</p>
 <ol>
 <li>Log in to Moodle as an administrator or teacher.</li>
 <li>Navigate to <strong>Site administration</strong> &gt; <strong>Courses</strong> &gt; <strong>Restore course</strong>.</li>
 <li>Drag and drop your <code>.mbz</code> file into the upload box and click <strong>Restore this course</strong>.</li>
 <li>Confirm the settings and select the destination category to finish the restore.</li>
 </ol>
-<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><div class='dd-left'><span class='dd-item' data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span><span class='dd-item' data-tippy-content data-tippy-raw='2026-11-01'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2026-11-01T21:21:20+00:00'>2026-11-01</time></span></div><div class='dd-right'><span class='material-icons' data-icon='doc_authors'></span><div class='author-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='accounts@zeugner.dev' /></div><div class='avatar-wrapper' data-name='kinzl' data-tippy-content data-tippy-raw='<a href="mailto:kinzl.emil@eclipso.at">kinzl</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='kinzl.emil@eclipso.at' /></div></div></div></div></div>
+<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><div class='dd-left'><span class='dd-item' data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span><span class='dd-item' data-tippy-content data-tippy-raw='2026-11-19'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2026-11-19T12:07:05+00:00'>2026-11-19</time></span></div><div class='dd-right'><span class='material-icons' data-icon='doc_authors'></span><div class='author-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='accounts@zeugner.dev' /></div><div class='avatar-wrapper' data-name='kinzl' data-tippy-content data-tippy-raw='<a href="mailto:kinzl.emil@eclipso.at">kinzl</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='kinzl.emil@eclipso.at' /></div><div class='avatar-wrapper' data-name='if25b206' data-tippy-content data-tippy-raw='<a href="mailto:if25b206@technikum-wien.at">if25b206</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='if25b206@technikum-wien.at' /></div></div></div></div></div>
 
 
 

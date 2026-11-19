@@ -57,17 +57,17 @@
     
       <link rel="stylesheet" href="../../assets/document_dates/fonts/material-icons.css">
     
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/shift-away.css">
+    
+      <link rel="stylesheet" href="../../assets/document_dates/tippy/backdrop.css">
+    
       <link rel="stylesheet" href="../../assets/document_dates/tippy/tippy.css">
     
       <link rel="stylesheet" href="../../assets/document_dates/tippy/scale.css">
     
-      <link rel="stylesheet" href="../../assets/document_dates/tippy/shift-away.css">
-    
       <link rel="stylesheet" href="../../assets/document_dates/tippy/light.css">
     
       <link rel="stylesheet" href="../../assets/document_dates/tippy/material.css">
-    
-      <link rel="stylesheet" href="../../assets/document_dates/tippy/backdrop.css">
     
       <link rel="stylesheet" href="../../assets/document_dates/core/core.css">
     
@@ -580,24 +580,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Moodle Environment Setup
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -614,36 +596,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#quick-setup-with-a-script-windows-powershell" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick setup with a script (Windows PowerShell)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -2723,25 +2675,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#quick-setup-with-a-script-windows-powershell" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick setup with a script (Windows PowerShell)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -2866,12 +2799,7 @@
 <li>Go to <strong>Site Administration</strong> &gt; <strong>Courses</strong> &gt; <strong>Backups</strong> &gt; <strong>Asynchronous backup/restore</strong> and disable <code>Enable asynchronous backups</code>.</li>
 <li>Go to <strong>Site Administration</strong> &gt; <strong>Plugins</strong> &gt; <strong>Install plugins</strong> and install the <a href="https://moodle.org/plugins/qtype_coderunner"><strong>CodeRunner</strong> plugin</a>.</li>
 </ol>
-<h2 id="quick-setup-with-a-script-windows-powershell">Quick setup with a script (Windows PowerShell)</h2>
-<p>Instead of steps 3 to 6 you can run the setup script from the repository root:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">powershell</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span> <span class="o">-File</span> <span class="n">scripts</span><span class="p">\</span><span class="n">setup-test-moodle</span><span class="p">.</span><span class="n">ps1</span>
-</span></code></pre></div>
-<p>The script starts the containers, waits until Moodle is ready, disables asynchronous backup/restore and creates a small dummy course so that the first import of a Course as Code course works (see <a href="../../Development/Known_Issues/">Known Issues</a>). After running the script, the first import into a fresh instance succeeded. The CodeRunner plugin (step 7) is not installed by the script.</p>
-<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><div class='dd-left'><span class='dd-item' data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span><span class='dd-item' data-tippy-content data-tippy-raw='2026-11-19'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2026-11-19T11:11:24+00:00'>2026-11-19</time></span></div><div class='dd-right'><span class='material-icons' data-icon='doc_authors'></span><div class='author-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='accounts@zeugner.dev' /></div><div class='avatar-wrapper' data-name='StefanVukmirovic' data-tippy-content data-tippy-raw='<a href="mailto:Stefan.Vukmirkovic@studierende.htl-donaustadt.at">StefanVukmirovic</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='Stefan.Vukmirkovic@studierende.htl-donaustadt.at' /></div></div></div></div></div>
+<div class='document-dates-plugin-wrapper document-dates-bottom'><div class='document-dates-plugin' locale=''><div class='dd-left'><span class='dd-item' data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_created'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span><span class='dd-item' data-tippy-content data-tippy-raw='2025-11-18'><span class='material-icons' data-icon='doc_updated'></span><time datetime='2025-11-18T16:11:15+00:00'>2025-11-18</time></span></div><div class='dd-right'><span class='material-icons' data-icon='doc_author'></span><div class='author-group'><div class='avatar-wrapper' data-name='Davimalu' data-tippy-content data-tippy-raw='<a href="mailto:accounts@zeugner.dev">Davimalu</a>'><span class='avatar-text'></span><img class='avatar' data-src='' data-email='accounts@zeugner.dev' /></div></div></div></div></div>
 
 
 
