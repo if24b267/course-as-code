@@ -59,3 +59,14 @@ password: bitnami
 ```
 6. Go to **Site Administration** > **Courses** > **Backups** > **Asynchronous backup/restore** and disable `Enable asynchronous backups`.
 7. Go to **Site Administration** > **Plugins** > **Install plugins** and install the [**CodeRunner** plugin](https://moodle.org/plugins/qtype_coderunner).
+
+
+## Quick setup with a script (Windows PowerShell)
+
+Instead of steps 3 to 6 you can run the setup script from the repository root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup-test-moodle.ps1
+```
+
+The script starts the containers, waits until Moodle is ready, disables asynchronous backup/restore and creates a small dummy course so that the first import of a Course as Code course works (see [Known Issues](../Development/Known_Issues.md)). After running the script, the first import into a fresh instance succeeded. The CodeRunner plugin (step 7) is not installed by the script.

@@ -160,7 +160,8 @@ namespace CourseAsCode
             if (uploadToMoodle)
             {
                 Console.WriteLine($"Restoring MBZ file to Moodle: {mbzFilePath}");
-                var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions());
+                var uploadLogger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<MoodlePhpCliUploader>();
+                var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions(), logger: uploadLogger);
                 var restoreResult = uploader.RestoreCourseAsync(mbzFilePath).GetAwaiter().GetResult();
                 if (restoreResult.Success)
                 {
