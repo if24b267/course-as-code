@@ -25,7 +25,7 @@ Course as Code is a tool that enables the creation of Moodle courses through tex
 
 ## Requirements
 
-- .NET 8.0 SDK / Runtime or later
+- .NET 10.0 SDK / Runtime or later
 - **Windows** or **Linux** operating system (macOS *may* work, but is not officially supported)
 
 For deployment:
