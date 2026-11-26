@@ -67,4 +67,4 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host ""
 Write-Host "Fertig. Moodle läuft unter http://localhost (Login: user / bitnami)."
 Write-Host "Container-Name für den Upload: $((docker inspect -f '{{.Name}}' $container).TrimStart('/'))"
-Write-Host 'Tipp: $env:COURSEASCODE_MOODLE_CONTAINER = "<Container-Name>"'
+Write-Host 'Tipp: dotnet run --project CourseAsCode -- -i <Kurs> -o <Ausgabe> --deploy <Container-Name>'
