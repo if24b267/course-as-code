@@ -23,7 +23,7 @@ namespace CourseAsCode
             string? outputPath = null;
             var courseFormat = CourseFormat.YAML; // default
             var showHelp = false;
-            var uploadToMoodle = false;
+            DeployConfig? deployConfig = null; // null = no deployment
 
             for (var i = 0; i < args.Length; i++)
             {
@@ -76,10 +76,25 @@ namespace CourseAsCode
                         }
 
                         break;
+                    case "--deploy":
+                        if (i + 1 < args.Length)
+                        {
+                            _logger.Debug($"Parsing value for --deploy: {args[i + 1]}");
+                            deployConfig = new DeployConfig { Target = args[++i] };
+                        }
+                        else
+                        {
+                            _logger.Debug("Error: Missing value for --deploy (Moodle Docker container)!");
+                            Console.WriteLine("Error: Missing value for --deploy (Moodle Docker container)!");
+                            return;
+                        }
+
+                        break;
                     case "-u":
                     case "--upload":
+                        // Shorthand for --deploy with automatic container detection
                         _logger.Debug("Upload to Moodle requested");
-                        uploadToMoodle = true;
+                        deployConfig = new DeployConfig();
                         break;
                     case "-h":
                     case "--help":
@@ -123,6 +138,7 @@ namespace CourseAsCode
 
             CourseReader.ConfigureYamlServices(serviceCollection);
             Writers.XML.Logic.DependencyService.ConfigureXmlServices(serviceCollection);
+            serviceCollection.AddSingleton<IDeployer, MoodleDeployer>();
             var serviceProvider = serviceCollection.BuildServiceProvider();
             var courseReader = serviceProvider.GetRequiredService<ICourseReader>();
             var course = courseReader.Read(inputPath, courseFormat);
@@ -157,12 +173,11 @@ namespace CourseAsCode
             ZipFile.CreateFromDirectory(courseOutputPath, mbzFilePath);
             Console.WriteLine("DONE!");
 
-            if (uploadToMoodle)
+            if (deployConfig != null)
             {
                 Console.WriteLine($"Restoring MBZ file to Moodle: {mbzFilePath}");
-                var uploadLogger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<MoodlePhpCliUploader>();
-                var uploader = new MoodlePhpCliUploader(new MoodlePhpCliOptions(), logger: uploadLogger);
-                var restoreResult = uploader.RestoreCourseAsync(mbzFilePath).GetAwaiter().GetResult();
+                var deployer = serviceProvider.GetRequiredService<IDeployer>();
+                var restoreResult = deployer.DeployAsync(mbzFilePath, deployConfig).GetAwaiter().GetResult();
                 if (restoreResult.Success)
                 {
                     Console.WriteLine($"Moodle course restore succeeded! Restored Course ID: {restoreResult.CourseId?.ToString() ?? "Unknown"}");
@@ -188,11 +203,12 @@ namespace CourseAsCode
         private static void PrintHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine("  -i <Input Path>     - Required: The input directory path (relative or absolute).");
-            Console.WriteLine("  -o <Output Path>    - Required: The output folder path (relative or absolute).");
-            Console.WriteLine("  -f <Format>         - Optional: The input format (currently only YAML is supported).");
-            Console.WriteLine("  -u or --upload      - Optional: Automatically uploads and restores the generated .mbz into Moodle.");
-            Console.WriteLine("  -h or --help        - Optional: Displays this help message.");
+            Console.WriteLine("  -i <Input Path>       - Required: The input directory path (relative or absolute).");
+            Console.WriteLine("  -o <Output Path>      - Required: The output folder path (relative or absolute).");
+            Console.WriteLine("  -f <Format>           - Optional: The input format (currently only YAML is supported).");
+            Console.WriteLine("  --deploy <Container>  - Optional: Restores the generated .mbz into the given Moodle Docker container.");
+            Console.WriteLine("  -u or --upload        - Optional: Like --deploy, but detects the Moodle container automatically.");
+            Console.WriteLine("  -h or --help          - Optional: Displays this help message.");
         }
     }
 }
